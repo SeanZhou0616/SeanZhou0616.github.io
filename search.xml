@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>First-Blog</title>
+    <url>/2022/11/01/First-Blog/</url>
+    <content><![CDATA[<p>第一篇使用Hexo发布的文章！</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Potential Flow Analysis - Magnus Effect</title>
+    <url>/2022/11/01/Potential-Flow-Analysis-Magnus-Effect/</url>
+    <content><![CDATA[<h2 id="velocity-vector-representation">Velocity vector representation</h2>
+<p>Potential flow describes the velocity field as the gradient of the velocity potential. For any position vector <span class="math inline">\(\pmb{r}\)</span> in the vector field, write down the velocity potential as <span class="math inline">\(\phi\)</span>, then in the 2D polar coordinate system, the velocity vector can be represented as <span class="math display">\[
+\pmb{v} = \frac{\partial \phi}{\partial r}\pmb{e}_r + \frac{1}{r}\frac{\partial \phi}{\partial \theta}\pmb{e}_{\theta}
+\]</span> and the components of the velocity vector along two directions are <span class="math display">\[
+\begin{aligned}
+&amp;\pmb{v}_r = \frac{\partial \phi}{\partial r} \pmb{e}_r\\
+&amp;\pmb{v}_{\theta} = \frac{1}{r}\frac{\partial \phi}{\partial \theta} \pmb{e}_{\theta}
+\end{aligned}
+\]</span></p>
+<span id="more"></span>
+<h2 id="d-potential-flow-expression">2D potential flow expression</h2>
+<p>Let's assume that there is a 2D velocity field with uniform velocity <span class="math inline">\(U\)</span> and pressure <span class="math inline">\(p_{\infty}\)</span>. Somewhere in this velocity field, there is a rotating circular cylinder with radius <span class="math inline">\(R\)</span> and angular velocity <span class="math inline">\(\displaystyle \frac{d\theta}{dt}\)</span>. Taking the center of the cylinder as the origin, a polar coordinate system could be established, and the velocity potential at a random point <span class="math inline">\((r, \theta)\)</span> would be constructed by the following 3 parts:</p>
+<ol type="1">
+<li>Uniform Stream - <span class="math inline">\(\phi_1 = Urcos\theta\)</span></li>
+<li>Source Doublet - <span class="math inline">\(\phi_2 = UR^2 \displaystyle \frac{cos\theta}{r}\)</span></li>
+<li>Potential Vortex - <span class="math inline">\(\phi_3 = \displaystyle \frac{\Gamma \theta}{2\pi}\)</span></li>
+</ol>
+<p><span class="math inline">\(\Gamma\)</span> represents a potential vortex with circulation, which has a counterclockwise direction. Thus, velocity potential at a random point <span class="math inline">\((r, \theta)\)</span> is <span class="math display">\[
+\phi = \phi_1 + \phi_2 + \phi_3 = Urcos\theta + UR^2\frac{cos\theta}{r} + \frac{\Gamma \theta}{2\pi}
+\]</span></p>
+<h2 id="velocity-pressure-field">Velocity &amp; Pressure field</h2>
+<p>We can derive the expression of two components of the velocity vector as <span class="math display">\[
+\begin{aligned}
+&amp;u_r= \frac{\partial \phi}{\partial r} = Ucos\theta - \frac{UR^2cos\theta}{r^2} \\
+&amp;u_{\theta} = \frac{1}{r}\frac{\partial \phi}{\partial \theta} = \frac{1}{r}(-Ursin\theta - UR^2\frac{sin\theta}{r}+\frac{\Gamma}{2\pi})
+=-Usin\theta - \frac{UR^2sin\theta}{r^2} +\frac{\Gamma}{2\pi r} \\
+\end{aligned}
+\]</span> According to Bernoulli equation, pressure at a random point <span class="math inline">\((r, \theta)\)</span> will be derived as <span class="math display">\[
+p = p_{\infty}+\frac{\rho}{2}(U^2-\pmb{v}^2)=p_{\infty}+\frac{\rho}{2}[U^2-(u_r^2 + u_{\theta}^2)]
+\]</span> <span class="math display">\[
+p = p_{\infty} +\frac{\rho}{2}[U^2(\frac{R^4}{r^4}-2cos2\theta\frac{R^2}{r^2})+(\frac{\Gamma}{2\pi r})^2-\frac{\Gamma}{\pi r}Usin\theta(1+\frac{R^2}{r^2})]
+\]</span></p>
+<h2 id="dimensionless-pressure-coefficient">Dimensionless pressure coefficient</h2>
+<p>The dimensionless pressure coefficient <span class="math inline">\(c_p\)</span> can be expressed as <span class="math display">\[
+c_p = \frac{p - p_{\infty}}{\displaystyle\frac{\rho}{2}u_{\infty}}= 1-\frac{\pmb{v}^2}{u^2_{\infty}}
+\]</span> <span class="math display">\[
+c_p = \frac{p - p_{\infty}}{\displaystyle\frac{\rho}{2}u_{\infty}}= 1-\frac{\pmb{v}^2}{u^2_{\infty}} = -\frac{U^2(\displaystyle\frac{R^4}{r^4}-2cos2\theta\frac{R^2}{r^2})+(\frac{\Gamma}{2\pi r})^2-\frac{\Gamma}{\pi r}Usin\theta(1+\frac{R^2}{r^2})}{U^2}
+\]</span></p>
+<h2 id="magnus-force">Magnus force</h2>
+<p>As Magnus force is the force acting on the target cylinder, let's take a look at the pressure along the contour. Let <span class="math inline">\(r=R\)</span>, the velocity vector will be <span class="math display">\[
+\begin{aligned}
+&amp;u_r = 0\\
+&amp;u_{\theta} = -2Usin\theta + \frac{\Gamma}{2\pi r}
+\end{aligned}
+\]</span> And the pressure along the contour will be simplified as <span class="math display">\[
+p_{r=R} = p_{\infty} + \frac{\rho}{2} [U^2(1-4sin^2\theta) + \frac{2\Gamma U sin\theta}{\pi r} - (\frac{\Gamma}{2\pi r})^2]
+\]</span> Then it will be possible to calculate Magnus force by integrating the pressure around cylinder <span class="math display">\[
+F_{L}=\int_0^{2\pi}-p_{r=R} \cdot Rsin\theta d\theta
+\]</span> The expression will be simplified as follows due to the odd power integral property of sine function <span class="math display">\[
+F_L = -\frac{\rho \Gamma U}{\pi}\int_0^{2\pi}sin^2\theta d\theta
+\]</span> Because that <span class="math display">\[
+\int_0^{2\pi}sin^2\theta d\theta = \int_0^{2\pi} \frac{1-cos2\theta}{2} d\theta = \pi
+\]</span> then Magnus force can be expressed in an elegant form <span class="math display">\[
+F_L = -\rho \Gamma U
+\]</span></p>
+<h2 id="potential-flow-plots">Potential flow plots</h2>
+<figure>
+<img src="/2022/11/01/Potential-Flow-Analysis-Magnus-Effect//potential-flow-analysis-velocity-field-plot.png" alt><figcaption>Potential Flow Plots by Sean Zhou</figcaption>
+</figure>
+]]></content>
+      <categories>
+        <category>Assignment</category>
+      </categories>
+      <tags>
+        <tag>Aerodynamic</tag>
+      </tags>
+  </entry>
+</search>
