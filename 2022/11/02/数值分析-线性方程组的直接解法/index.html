@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本章概述 我们发现，在科学计算中有非常多的问题到最后都会转变为对大规模线性方程组求解的问题，因此对线性方程组进行高效求解，是科学计算中非常重要的一个需求。 在本章的学习中，我们先了解一下线性方程组最基本的求解方法，叫做直接法求解线性方程组。在不考虑浮点误差的情况下，直接法求解可以得到线性方程组的精确解（在方程组有解的前提下），而且解法也很简单普适。但缺点是计算量比较大，对于大规模线性方程组的求解，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数值分析笔记-第二章 线性方程组的直接解法">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/11/02/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E7%9B%B4%E6%8E%A5%E8%A7%A3%E6%B3%95/">
+<meta property="og:site_name" content="Elysium">
+<meta property="og:description" content="本章概述 我们发现，在科学计算中有非常多的问题到最后都会转变为对大规模线性方程组求解的问题，因此对线性方程组进行高效求解，是科学计算中非常重要的一个需求。 在本章的学习中，我们先了解一下线性方程组最基本的求解方法，叫做直接法求解线性方程组。在不考虑浮点误差的情况下，直接法求解可以得到线性方程组的精确解（在方程组有解的前提下），而且解法也很简单普适。但缺点是计算量比较大，对于大规模线性方程组的求解，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-02T01:50:45.000Z">
+<meta property="article:modified_time" content="2022-11-02T01:54:33.752Z">
+<meta property="article:author" content="Sean Zhou">
+<meta property="article:tag" content="数值计算">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/11/02/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E7%9B%B4%E6%8E%A5%E8%A7%A3%E6%B3%95/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/11/02/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E7%9B%B4%E6%8E%A5%E8%A7%A3%E6%B3%95/","path":"2022/11/02/数值分析-线性方程组的直接解法/","title":"数值分析笔记-第二章 线性方程组的直接解法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数值分析笔记-第二章 线性方程组的直接解法 | Elysium</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Elysium</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Tech, Race, Game</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E7%AB%A0%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">本章概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E6%96%AF%E6%B6%88%E5%8E%BB%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">2.1 高斯消去法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E6%96%AF%E6%B6%88%E5%8E%BB%E6%B3%95%E6%B1%82%E8%A7%A3%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.1 高斯消去法求解线性方程组</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%88%E5%8E%BB%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.1.</span> <span class="nav-text">消去过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9E%E4%BB%A3%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.2.</span> <span class="nav-text">回代过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7"><span class="nav-number">2.1.3.</span> <span class="nav-text">缺陷</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E6%96%AF%E6%B6%88%E5%8E%BB%E6%B3%95%E7%9A%84%E9%80%89%E4%B8%BB%E5%85%83%E7%AD%96%E7%95%A5"><span class="nav-number">2.2.</span> <span class="nav-text">2.1.2 高斯消去法的选主元策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%9A%84%E4%B8%89%E8%A7%92%E5%88%86%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">2.2 矩阵的三角分解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%B8%89%E8%A7%92%E9%98%B5%E4%B8%8E%E4%B8%8B%E4%B8%89%E8%A7%92%E9%98%B5"><span class="nav-number">3.1.</span> <span class="nav-text">2.2.1 上三角阵与下三角阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#doolittle%E5%88%86%E8%A7%A3"><span class="nav-number">3.1.1.</span> <span class="nav-text">Doolittle分解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#crout%E5%88%86%E8%A7%A3"><span class="nav-number">3.1.2.</span> <span class="nav-text">Crout分解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ldu%E5%88%86%E8%A7%A3"><span class="nav-number">3.1.3.</span> <span class="nav-text">\(LDU\)分解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lu%E5%88%86%E8%A7%A3%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">3.2.</span> <span class="nav-text">2.2.2 \(LU\)分解的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><span class="nav-number">3.2.1.</span> <span class="nav-text">前提条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%94%AF%E4%B8%80%E6%80%A7"><span class="nav-number">3.2.2.</span> <span class="nav-text">唯一性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lu%E5%88%86%E8%A7%A3%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">2.2.3 \(LU\)分解的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cholesky%E5%88%86%E8%A7%A3"><span class="nav-number">3.4.</span> <span class="nav-text">2.2.4 Cholesky分解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%AF%B9%E8%A7%92%E7%9F%A9%E9%98%B5%E7%9A%84lu%E5%88%86%E8%A7%A3"><span class="nav-number">3.5.</span> <span class="nav-text">2.2.5 三对角矩阵的\(LU\)分解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E5%8F%98%E9%87%8Fy%E7%9A%84%E7%94%B1%E6%9D%A5"><span class="nav-number">3.5.1.</span> <span class="nav-text">中间变量\(y\)的由来</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%88%E5%8E%BB%E8%BF%87%E7%A8%8B-1"><span class="nav-number">3.5.2.</span> <span class="nav-text">消去过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9E%E4%BB%A3%E8%BF%87%E7%A8%8B-1"><span class="nav-number">3.5.3.</span> <span class="nav-text">回代过程</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sean Zhou"
+      src="/images/Yeah.jpg">
+  <p class="site-author-name" itemprop="name">Sean Zhou</p>
+  <div class="site-description" itemprop="description">Sean Zhou's personal blog.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/SeanZhou0616" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SeanZhou0616" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:seanzhou616@gmail.com" title="E-Mail → mailto:seanzhou616@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/02/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E7%9B%B4%E6%8E%A5%E8%A7%A3%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数值分析笔记-第二章 线性方程组的直接解法 | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数值分析笔记-第二章 线性方程组的直接解法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-02 09:50:45 / 修改时间：09:54:33" itemprop="dateCreated datePublished" datetime="2022-11-02T09:50:45+08:00">2022-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/University/" itemprop="url" rel="index"><span itemprop="name">University</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="本章概述">本章概述</h2>
+<p>我们发现，在科学计算中有非常多的问题到最后都会转变为对大规模线性方程组求解的问题，因此对线性方程组进行高效求解，是科学计算中非常重要的一个需求。</p>
+<p>在本章的学习中，我们先了解一下线性方程组最基本的求解方法，叫做<strong>直接法</strong>求解线性方程组。在不考虑浮点误差的情况下，直接法求解可以得到线性方程组的精确解（在方程组有解的前提下），而且解法也很简单普适。但缺点是计算量比较大，对于大规模线性方程组的求解，我们一般不会利用直接法进行求解，而是会选择使用<strong>迭代法</strong>，通过逐次逼近的方式得到目标线性方程组的近似解。迭代法的具体内容会在后续的章节中涉及。</p>
+<span id="more"></span>
+<h2 id="高斯消去法">2.1 高斯消去法</h2>
+<p>线性方程组的直接法，也叫做<strong>高斯消去法</strong>。对于一个<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>，若有线性方程组<span class="math inline">\(Ax=b\)</span>，可以使用高斯消去法对方程进行直接的求解，如下</p>
+<h3 id="高斯消去法求解线性方程组">2.1.1 高斯消去法求解线性方程组</h3>
+<p>高斯消去法求解线性方程组分为<strong>消去过程</strong>和<strong>回代过程</strong>。消去过程其实是将<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>转换为上三角矩阵的过程，回代过程则是利用转换好的上三角矩阵来求解<span class="math inline">\(x\)</span>的过程。</p>
+<h4 id="消去过程">消去过程</h4>
+<p>消去的目标：将目标列对角线以下元素全部消去为0。</p>
+<p>消去的方法也很简单，对于<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>，假如我们想要将第一列除<span class="math inline">\(a_{11}\)</span>以外的元素全部消去为0，那么只需要将第一行元素乘上<span class="math inline">\(\displaystyle -\frac{a_{i1}}{a_{11}}\)</span>，然后加到第<span class="math inline">\(i\)</span>行上，那么第<span class="math inline">\(i\)</span>行的行首元素<span class="math inline">\(a_{i1}\)</span>就恰好被消去了。接下来，我们再对从<span class="math inline">\(a_{22}\)</span>开始的<span class="math inline">\(n-1\)</span>阶子阵进行同样的操作，经过有限次初等变换之后，就能够将一个<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>转换为一个上三角矩阵<span class="math inline">\(A^{(n)}\)</span>。</p>
+<h4 id="回代过程">回代过程</h4>
+<p>得到上三角矩阵<span class="math inline">\(A^{(n)}\)</span>后，从<span class="math inline">\(a^{(n)}_{nn}\)</span>开始，可以根据<span class="math inline">\(a^{(n)}_{nn}x_n=b_n\)</span>计算得到<span class="math inline">\(x_n\)</span>，然后从下往上，利用<span class="math inline">\(x_n, b_{n-1}, b_n, a^{n-1}_{(n-1)(n-1)}\)</span>计算得到<span class="math inline">\(x_{n-1}\)</span>，以此类推，最后计算得到整个向量<span class="math inline">\(x\)</span>。</p>
+<h4 id="缺陷">缺陷</h4>
+<ol type="1">
+<li>计算量大。整个高斯消去法的计算量达到<span class="math inline">\(O(n^3)\)</span>，对于大规模线性方程组来说这个计算量是不可接受的。</li>
+<li>行首元素不能是0，否则高斯消去法会异常中止；当然，我们可以通过交换行来处理，但也有可能出现当前列可用行首元素全为0的情况。</li>
+<li>在考虑浮点误差的时候，如果选中行的行首元素比较小，那么可能会出现转换系数太大的情况，导致选中行乘上转换系数之后，某些元素变得太大，然后因为浮点数的“大数吃小数”现象而引发比较大的计算误差。</li>
+</ol>
+<h3 id="高斯消去法的选主元策略">2.1.2 高斯消去法的选主元策略</h3>
+<p>行首元素，简称为主元，是可以通过交换行来进行主元的选取的。选主元策略可以有效解决上述缺陷中的第三点问题。在进行消去之前，我们将当前列中行首元素最大的行交换上来，以这一行的行首元素作为主元，那么转换系数必然小于等于1，这样可以避免当前行乘以转换系数之后出现元素太大的现象。这种修正之后的算法称为<strong>列主元素高斯消去法</strong>。</p>
+<p>当然，假如原来的矩阵中元素的大小分布本来就差距极大，那么这总会导致引入浮点误差的时候，最后计算的精度比较差，但这不是高斯消去法本身的缺陷，而是浮点计算的缺陷。选主元策略能够最大程度上减小浮点误差对结果的影响，但并不能完全规避浮点误差。</p>
+<h2 id="矩阵的三角分解">2.2 矩阵的三角分解</h2>
+<h3 id="上三角阵与下三角阵">2.2.1 上三角阵与下三角阵</h3>
+<p>前面提到，高斯消去法的消去过程本质上就是通过矩阵的初等变换，将一个任意的<span class="math inline">\(n\)</span>阶方阵转换为一个上三角阵。线性代数中，我们也学过，对一个矩阵进行某种类型的初等变换，等价于给这个矩阵乘上一个初等矩阵。所以，将<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>转换为上三角阵的过程，可以用矩阵乘法来描述。</p>
+<p>需要进一步补充的是，消去过程中出现的初等矩阵，其实都是对角阵加上第<span class="math inline">\(i\)</span>列的转换系数构成的下三角矩阵。所以，上述过程可以描述为<span class="math inline">\(A\)</span>与<span class="math inline">\(n-1\)</span>个下三角矩阵做矩阵乘法的过程 <span class="math display">\[
+L_{n-1}...L_2L_1A
+\]</span> 最后的结果是一个上三角矩阵，我们可以将其记作<span class="math inline">\(U\)</span>。</p>
+<p>需要说明的是，初等变换矩阵总是可逆的，所以矩阵<span class="math inline">\(A\)</span>其实可以写作 <span class="math display">\[
+A=L_1^{-1}L_2^{-1}...L_{n-1}^{-1}U
+\]</span> 令<span class="math inline">\(L=L_1^{-1}L_2^{-1}...L_{n-1}^{-1}\)</span>，有 <span class="math display">\[
+A=LU
+\]</span> 需要注意的是，下三角矩阵的逆仍然是下三角矩阵，两个下三角阵的乘积同样也仍然是下三角矩阵，所以<span class="math inline">\(L\)</span>也是一个下三角矩阵。另外，下三角阵<span class="math inline">\(L\)</span>的对角线元素全为1，所以<span class="math inline">\(L\)</span>还是一个单位下三角阵。</p>
+<p>前面的下三角阵<span class="math inline">\(L_1\)</span>等，可以写为 <span class="math display">\[
+L_i=
+\begin{pmatrix}
+1 &amp; &amp; &amp; &amp; &amp; &amp; &amp;  \\
+&amp; 1 &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; &amp; ... &amp; &amp; &amp; &amp; \\
+&amp; &amp; &amp; 1 \\
+&amp; &amp; &amp; m_{i+1,i}&amp; 1 \\
+&amp; &amp; &amp; m_{i+2,i} &amp; &amp; 1 \\
+&amp; &amp; &amp; ... &amp; \\
+&amp; &amp; &amp; m_{n,i} &amp; &amp; ... &amp; &amp; &amp; 1
+\end{pmatrix}
+\]</span> 可以证明，<span class="math inline">\(L_i^{-1}\)</span>为 <span class="math display">\[
+L_i^{-1}=
+\begin{pmatrix}
+1 &amp; &amp; &amp; &amp; &amp; &amp; &amp;  \\
+&amp; 1 &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; &amp; ... &amp; &amp; &amp; &amp; \\
+&amp; &amp; &amp; 1 \\
+&amp; &amp; &amp; -m_{i+1,i}&amp; 1 \\
+&amp; &amp; &amp; -m_{i+2,i} &amp; &amp; 1 \\
+&amp; &amp; &amp; ... &amp; \\
+&amp; &amp; &amp; -m_{n,i} &amp; &amp; ... &amp; &amp; &amp; 1
+\end{pmatrix}
+\]</span> 上述初等矩阵的逆之积<span class="math inline">\(L\)</span>可以证明是 <span class="math display">\[
+L=\begin{pmatrix}
+1 \\
+-m_{21} &amp; 1 \\
+-m_{31} &amp; -m_{32} &amp; 1 \\
+&amp; &amp; &amp; ... \\
+... &amp; &amp; &amp; &amp; 1 \\
+-m_{n1} &amp; ... &amp; &amp; &amp; &amp; 1
+\end{pmatrix}
+\]</span></p>
+<p>也就是说，任一<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>，都能够写作一个单位下三角矩阵<span class="math inline">\(L\)</span>和一个上三角阵<span class="math inline">\(U\)</span>的乘积。这个分解过程称为Doolittle分解，或直接称为<span class="math inline">\(LU\)</span>分解。</p>
+<h4 id="doolittle分解">Doolittle分解</h4>
+<p>Doolittle分解是<span class="math inline">\(LU\)</span>分解最常见的分解形式，注意<span class="math inline">\(L\)</span>是<strong>单位下三角阵</strong>，而<span class="math inline">\(U\)</span>是普通的上三角阵。</p>
+<h4 id="crout分解">Crout分解</h4>
+<p>Crout分解也是一种<span class="math inline">\(LU\)</span>分解，但和Doolittle分解刚好相反，这里<span class="math inline">\(U\)</span>是<strong>单位上三角阵</strong>，而<span class="math inline">\(L\)</span>是普通的下三角阵。</p>
+<h4 id="ldu分解"><span class="math inline">\(LDU\)</span>分解</h4>
+<p>可以发现，在<span class="math inline">\(LU\)</span>分解中，总归是只有一个矩阵对角线全1；实际上我们也可以将矩阵<span class="math inline">\(A\)</span>拆分成三个矩阵，使得下三角阵<span class="math inline">\(L\)</span>和上三角阵<span class="math inline">\(U\)</span>均为单位三角阵，原来那个非单位对角阵的对角线元素提取出来变为一个对角阵<span class="math inline">\(D\)</span>即可，这被称为<span class="math inline">\(LDU\)</span>分解。</p>
+<h3 id="lu分解的性质">2.2.2 <span class="math inline">\(LU\)</span>分解的性质</h3>
+<h4 id="前提条件">前提条件</h4>
+<p>对方阵<span class="math inline">\(A\)</span>进行<span class="math inline">\(LU\)</span>分解本质上和高斯消去法并没有什么不同，所以也要求方阵<span class="math inline">\(A\)</span>的所有顺序余子式均非0。这个条件是充要的。</p>
+<h4 id="唯一性">唯一性</h4>
+<p>给定方阵<span class="math inline">\(A\)</span>的<span class="math inline">\(LU\)</span>分解是唯一的，证明很简单，利用三角阵和单位三角阵的性质即可，如下</p>
+<p>假如方阵<span class="math inline">\(A\)</span>存在两组<span class="math inline">\(LU\)</span>分解，分别记作<span class="math inline">\(A=LU\)</span>，<span class="math inline">\(A=L_1U_1\)</span>，那么有 <span class="math display">\[
+LU=L_1U_1
+\]</span> 可以证明，<span class="math inline">\(L\)</span>和<span class="math inline">\(U\)</span>都是可逆阵，所以有 <span class="math display">\[
+L_1^{-1}L=U_1U^{-1}
+\]</span> 单位下三角阵的乘积仍然是单位下三角阵，上三角阵的乘积仍然是上三角阵，因此上式要成立，必须取等式左右两边可能情况的交集，也就是要找到一种矩阵，既是单位下三角阵，同时又是上三角阵，那么这个阵只能是单位对角阵，也就是说<span class="math inline">\(L_1^{-1}L=U_1U^{-1}=I\)</span>。那么显然，<span class="math inline">\(L_1=L\)</span>，<span class="math inline">\(U_1=U\)</span>，所以方阵<span class="math inline">\(A\)</span>的<span class="math inline">\(LU\)</span>分解唯一性得证。</p>
+<h3 id="lu分解的作用">2.2.3 <span class="math inline">\(LU\)</span>分解的作用</h3>
+<p><span class="math inline">\(LU\)</span>分解的作用，主要还是提供一种除了高斯消去法以外的线性方程组解法。单位下三角阵<span class="math inline">\(L\)</span>和上三角阵<span class="math inline">\(U\)</span>的构造过程，本质上就是高斯消去法的消去过程；利用这两个三角阵进行<span class="math inline">\(x\)</span>求解的过程，本质上就是高斯消去法的回代过程。</p>
+<p>另外，对于一些特殊的方阵，<span class="math inline">\(LU\)</span>分解可以简化高斯消去法的计算过程。</p>
+<h3 id="cholesky分解">2.2.4 Cholesky分解</h3>
+<p>Cholesky分解就是一种可以简化特殊线性方程组求解过程的分解方法。</p>
+<p>Cholesky分解面向的对象是对称正定矩阵。这里，补充一下对称正定矩阵的定义。对称正定矩阵，指的是这样一种对称方阵<span class="math inline">\(M\)</span>，对于任意的非0实系数向量<span class="math inline">\(z\)</span>，都满足<span class="math inline">\(z^TMz&gt;0\)</span>。</p>
+<p>如果我们将对称正定矩阵<span class="math inline">\(M\)</span>进行<span class="math inline">\(LDU\)</span>分解，可以得到 <span class="math display">\[
+M = LDU
+\]</span> 由对称正定矩阵的对称性，可得 <span class="math display">\[
+M=M^T
+\]</span> 即 <span class="math display">\[
+LDU=U^TDL^T
+\]</span> 由<span class="math inline">\(LU\)</span>分解的唯一性，可知 <span class="math display">\[
+L=U^T
+\]</span> 所以，对称正定矩阵<span class="math inline">\(M\)</span>可以分解为 <span class="math display">\[
+M=LDL^T
+\]</span> 如果我们将对角阵<span class="math inline">\(D\)</span>进行开方处理，那么对称正定矩阵<span class="math inline">\(M\)</span>可以改写为 <span class="math display">\[
+M=LD^{\frac{1}{2}}(LD^{\frac{1}{2}})^T
+\]</span> 记<span class="math inline">\(G=LD^{\frac{1}{2}}\)</span>，有 <span class="math display">\[
+M=GG^T
+\]</span> 由于<span class="math inline">\(L\)</span>是一个单位下三角阵，<span class="math inline">\(D^{\frac{1}{2}}\)</span>是一个对角阵，所以<span class="math inline">\(G\)</span>是一个对角线非0的下三角阵。需要特别强调的是，Cholesky分解仅适用于对称正定矩阵，对非正定矩阵是不适用的。</p>
+<p>Cholesky分解为对称正定矩阵的线性方程组求解节省了大量的计算量，这也是<span class="math inline">\(LU\)</span>分解的意义所在。</p>
+<h3 id="三对角矩阵的lu分解">2.2.5 三对角矩阵的<span class="math inline">\(LU\)</span>分解</h3>
+<p>三对角矩阵也是科学计算中一种非常常见的矩阵，其形式如 <span class="math display">\[
+A=\begin{pmatrix}
+b_1 &amp; c_1 \\
+a_2 &amp; b_2 &amp; c_2 \\
+&amp; a_3 &amp; b_3 &amp; c_3 \\
+&amp; &amp; &amp; ... &amp; \\
+&amp; &amp; &amp; &amp; ... &amp; \\
+&amp; &amp; &amp; &amp; a_{n-1} &amp; b_{n-1} &amp; c_{n-1} \\
+&amp; &amp; &amp; &amp; &amp;a_n &amp; b_n \\
+\end{pmatrix}
+\]</span> 假如我们需要求解<span class="math inline">\(Ax=d\)</span>，那么可以对<span class="math inline">\(A\)</span>进行Crout分解，将其转换为下三角阵<span class="math inline">\(L\)</span>和单位上三角阵<span class="math inline">\(U\)</span>，如下 <span class="math display">\[
+L = \begin{pmatrix}
+l_1 \\
+v_2 &amp; l_2 \\
+&amp; &amp; ... \\
+&amp; &amp; &amp; ... \\
+&amp; &amp; &amp; v_n &amp; l_n \\
+\end{pmatrix}
+\]</span> <span class="math display">\[
+U = \begin{pmatrix}
+1 &amp; u_1 \\
+&amp; 1 &amp; u_2 \\
+&amp; &amp; &amp; ... \\
+&amp; &amp; &amp; 1 &amp; u_{n-1} \\
+&amp; &amp; &amp; &amp; 1
+\end{pmatrix}
+\]</span> 教材中，将这种三对角阵的求解方法称为追赶法，其实就是消去和回代，我不想用这种很无厘头的说法，还是用消去和回代来说明这两个流程。</p>
+<h4 id="中间变量y的由来">中间变量<span class="math inline">\(y\)</span>的由来</h4>
+<p>首先，我们需要明确，<span class="math inline">\(A=LU\)</span>，所以要求的方程组为<span class="math inline">\(LUx=d\)</span>，一般来说，我们会先令<span class="math inline">\(y=Ux\)</span>，然后求<span class="math inline">\(Ly=d\)</span>，所以要声明一个中间变量<span class="math inline">\(y\)</span>，这个<span class="math inline">\(y\)</span>是一个n阶向量。</p>
+<h4 id="消去过程-1">消去过程</h4>
+<p>由<span class="math inline">\(A=LU\)</span>和<span class="math inline">\(Ly=d\)</span>可以整理得到 <span class="math display">\[
+\begin{aligned}
+&amp; a_i = v_i \\
+&amp; b_i = l_i + v_i u_{i-1}\\
+&amp; c_i = l_iu_i\\
+&amp; d_i = v_iy_{i-1} + l_iy_i
+\end{aligned}
+\]</span> 其中，<span class="math inline">\(a_i, b_i, c_i, d_i\)</span>均为已知量，所以可以移项得到 <span class="math display">\[
+\begin{aligned}
+&amp;l_i = b_i - a_iu_{i-1}\\
+&amp;u_i = \frac{c_i}{l_i} \\
+&amp;y_i = \frac{d_i - a_iy_{i-1}}{l_i}
+\end{aligned}
+\]</span> 根据上面这些关系，可以递推得到<span class="math inline">\(L\)</span>，<span class="math inline">\(U\)</span>以及<span class="math inline">\(y\)</span>。</p>
+<h4 id="回代过程-1">回代过程</h4>
+<p>根据<span class="math inline">\(y=Ux\)</span>，可以得到 <span class="math display">\[
+x_i+u_ix_{i+1}=y_i
+\]</span> 那么，先求得<span class="math inline">\(x_n=y_n\)</span>，然后从下向上进行<span class="math inline">\(x\)</span>的求解即可 <span class="math display">\[
+x_i = y_i - u_ix_{i+1}
+\]</span></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E5%80%BC%E8%AE%A1%E7%AE%97/" rel="tag"># 数值计算</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/01/hexo%E5%8D%9A%E6%96%87%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98-SOLVED/" rel="prev" title="hexo博文图片显示问题[SOLVED]">
+                  <i class="fa fa-chevron-left"></i> hexo博文图片显示问题[SOLVED]
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/11/02/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0-%E5%A4%9A%E9%A1%B9%E5%BC%8F%E6%8F%92%E5%80%BC/" rel="next" title="数值分析笔记-第三章 多项式插值">
+                  数值分析笔记-第三章 多项式插值 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sean Zhou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

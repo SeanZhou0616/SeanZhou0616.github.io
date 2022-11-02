@@ -70,10 +70,10 @@ F_L = -\rho \Gamma U
 </figure>
 ]]></content>
       <categories>
-        <category>Assignment</category>
+        <category>University</category>
       </categories>
       <tags>
-        <tag>Aerodynamic</tag>
+        <tag>空气动力学</tag>
       </tags>
   </entry>
   <entry>
@@ -82,16 +82,356 @@ F_L = -\rho \Gamma U
     <content><![CDATA[<p>在使用hexo进行博客搭建的过程，发现使用Markdown语法的文档，无法正常加载上传的图片，例如</p>
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">Potential Flow Analysis</span>](<span class="link">./2022-11-1-Potential-Flow-Analysis-Magnus-Effect/potential-flow-analysis-velocity-field-plot.png</span>)</span><br></pre></td></tr></table></figure>
 <p>通过观察构建信息，发现图片总是指向一个以 <code>/.io/</code> 开头的文件夹。经过在hexo官网的搜索，在评论区发现（😓）这个问题似乎是 <code>hexo-asset-image</code> 包的一个bug，只需要修改 <code>node_modules/hexo-asset-image/index.js</code> 的第24行，将其改为</p>
-<figure class="highlight javascript"><figcaption><span>node_modules/hexo-asset-image/index.js</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> endPos = link.<span class="property">length</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><figcaption><span>node_modules/hexo-asset-image/index.js</span></figcaption><table><tr><td class="code"><pre><span class="line"># <span class="title class_">JavaScript</span> </span><br><span class="line"><span class="keyword">var</span> endPos = link.<span class="property">length</span>;</span><br></pre></td></tr></table></figure>
 <p>即可。</p>
 ]]></content>
       <categories>
         <category>hexo</category>
       </categories>
       <tags>
-        <tag>Web</tag>
         <tag>Technical Issues</tag>
-        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数值分析笔记-第二章 线性方程组的直接解法</title>
+    <url>/2022/11/02/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E7%9B%B4%E6%8E%A5%E8%A7%A3%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="本章概述">本章概述</h2>
+<p>我们发现，在科学计算中有非常多的问题到最后都会转变为对大规模线性方程组求解的问题，因此对线性方程组进行高效求解，是科学计算中非常重要的一个需求。</p>
+<p>在本章的学习中，我们先了解一下线性方程组最基本的求解方法，叫做<strong>直接法</strong>求解线性方程组。在不考虑浮点误差的情况下，直接法求解可以得到线性方程组的精确解（在方程组有解的前提下），而且解法也很简单普适。但缺点是计算量比较大，对于大规模线性方程组的求解，我们一般不会利用直接法进行求解，而是会选择使用<strong>迭代法</strong>，通过逐次逼近的方式得到目标线性方程组的近似解。迭代法的具体内容会在后续的章节中涉及。</p>
+<span id="more"></span>
+<h2 id="高斯消去法">2.1 高斯消去法</h2>
+<p>线性方程组的直接法，也叫做<strong>高斯消去法</strong>。对于一个<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>，若有线性方程组<span class="math inline">\(Ax=b\)</span>，可以使用高斯消去法对方程进行直接的求解，如下</p>
+<h3 id="高斯消去法求解线性方程组">2.1.1 高斯消去法求解线性方程组</h3>
+<p>高斯消去法求解线性方程组分为<strong>消去过程</strong>和<strong>回代过程</strong>。消去过程其实是将<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>转换为上三角矩阵的过程，回代过程则是利用转换好的上三角矩阵来求解<span class="math inline">\(x\)</span>的过程。</p>
+<h4 id="消去过程">消去过程</h4>
+<p>消去的目标：将目标列对角线以下元素全部消去为0。</p>
+<p>消去的方法也很简单，对于<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>，假如我们想要将第一列除<span class="math inline">\(a_{11}\)</span>以外的元素全部消去为0，那么只需要将第一行元素乘上<span class="math inline">\(\displaystyle -\frac{a_{i1}}{a_{11}}\)</span>，然后加到第<span class="math inline">\(i\)</span>行上，那么第<span class="math inline">\(i\)</span>行的行首元素<span class="math inline">\(a_{i1}\)</span>就恰好被消去了。接下来，我们再对从<span class="math inline">\(a_{22}\)</span>开始的<span class="math inline">\(n-1\)</span>阶子阵进行同样的操作，经过有限次初等变换之后，就能够将一个<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>转换为一个上三角矩阵<span class="math inline">\(A^{(n)}\)</span>。</p>
+<h4 id="回代过程">回代过程</h4>
+<p>得到上三角矩阵<span class="math inline">\(A^{(n)}\)</span>后，从<span class="math inline">\(a^{(n)}_{nn}\)</span>开始，可以根据<span class="math inline">\(a^{(n)}_{nn}x_n=b_n\)</span>计算得到<span class="math inline">\(x_n\)</span>，然后从下往上，利用<span class="math inline">\(x_n, b_{n-1}, b_n, a^{n-1}_{(n-1)(n-1)}\)</span>计算得到<span class="math inline">\(x_{n-1}\)</span>，以此类推，最后计算得到整个向量<span class="math inline">\(x\)</span>。</p>
+<h4 id="缺陷">缺陷</h4>
+<ol type="1">
+<li>计算量大。整个高斯消去法的计算量达到<span class="math inline">\(O(n^3)\)</span>，对于大规模线性方程组来说这个计算量是不可接受的。</li>
+<li>行首元素不能是0，否则高斯消去法会异常中止；当然，我们可以通过交换行来处理，但也有可能出现当前列可用行首元素全为0的情况。</li>
+<li>在考虑浮点误差的时候，如果选中行的行首元素比较小，那么可能会出现转换系数太大的情况，导致选中行乘上转换系数之后，某些元素变得太大，然后因为浮点数的“大数吃小数”现象而引发比较大的计算误差。</li>
+</ol>
+<h3 id="高斯消去法的选主元策略">2.1.2 高斯消去法的选主元策略</h3>
+<p>行首元素，简称为主元，是可以通过交换行来进行主元的选取的。选主元策略可以有效解决上述缺陷中的第三点问题。在进行消去之前，我们将当前列中行首元素最大的行交换上来，以这一行的行首元素作为主元，那么转换系数必然小于等于1，这样可以避免当前行乘以转换系数之后出现元素太大的现象。这种修正之后的算法称为<strong>列主元素高斯消去法</strong>。</p>
+<p>当然，假如原来的矩阵中元素的大小分布本来就差距极大，那么这总会导致引入浮点误差的时候，最后计算的精度比较差，但这不是高斯消去法本身的缺陷，而是浮点计算的缺陷。选主元策略能够最大程度上减小浮点误差对结果的影响，但并不能完全规避浮点误差。</p>
+<h2 id="矩阵的三角分解">2.2 矩阵的三角分解</h2>
+<h3 id="上三角阵与下三角阵">2.2.1 上三角阵与下三角阵</h3>
+<p>前面提到，高斯消去法的消去过程本质上就是通过矩阵的初等变换，将一个任意的<span class="math inline">\(n\)</span>阶方阵转换为一个上三角阵。线性代数中，我们也学过，对一个矩阵进行某种类型的初等变换，等价于给这个矩阵乘上一个初等矩阵。所以，将<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>转换为上三角阵的过程，可以用矩阵乘法来描述。</p>
+<p>需要进一步补充的是，消去过程中出现的初等矩阵，其实都是对角阵加上第<span class="math inline">\(i\)</span>列的转换系数构成的下三角矩阵。所以，上述过程可以描述为<span class="math inline">\(A\)</span>与<span class="math inline">\(n-1\)</span>个下三角矩阵做矩阵乘法的过程 <span class="math display">\[
+L_{n-1}...L_2L_1A
+\]</span> 最后的结果是一个上三角矩阵，我们可以将其记作<span class="math inline">\(U\)</span>。</p>
+<p>需要说明的是，初等变换矩阵总是可逆的，所以矩阵<span class="math inline">\(A\)</span>其实可以写作 <span class="math display">\[
+A=L_1^{-1}L_2^{-1}...L_{n-1}^{-1}U
+\]</span> 令<span class="math inline">\(L=L_1^{-1}L_2^{-1}...L_{n-1}^{-1}\)</span>，有 <span class="math display">\[
+A=LU
+\]</span> 需要注意的是，下三角矩阵的逆仍然是下三角矩阵，两个下三角阵的乘积同样也仍然是下三角矩阵，所以<span class="math inline">\(L\)</span>也是一个下三角矩阵。另外，下三角阵<span class="math inline">\(L\)</span>的对角线元素全为1，所以<span class="math inline">\(L\)</span>还是一个单位下三角阵。</p>
+<p>前面的下三角阵<span class="math inline">\(L_1\)</span>等，可以写为 <span class="math display">\[
+L_i=
+\begin{pmatrix}
+1 &amp; &amp; &amp; &amp; &amp; &amp; &amp;  \\
+&amp; 1 &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; &amp; ... &amp; &amp; &amp; &amp; \\
+&amp; &amp; &amp; 1 \\
+&amp; &amp; &amp; m_{i+1,i}&amp; 1 \\
+&amp; &amp; &amp; m_{i+2,i} &amp; &amp; 1 \\
+&amp; &amp; &amp; ... &amp; \\
+&amp; &amp; &amp; m_{n,i} &amp; &amp; ... &amp; &amp; &amp; 1
+\end{pmatrix}
+\]</span> 可以证明，<span class="math inline">\(L_i^{-1}\)</span>为 <span class="math display">\[
+L_i^{-1}=
+\begin{pmatrix}
+1 &amp; &amp; &amp; &amp; &amp; &amp; &amp;  \\
+&amp; 1 &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; &amp; ... &amp; &amp; &amp; &amp; \\
+&amp; &amp; &amp; 1 \\
+&amp; &amp; &amp; -m_{i+1,i}&amp; 1 \\
+&amp; &amp; &amp; -m_{i+2,i} &amp; &amp; 1 \\
+&amp; &amp; &amp; ... &amp; \\
+&amp; &amp; &amp; -m_{n,i} &amp; &amp; ... &amp; &amp; &amp; 1
+\end{pmatrix}
+\]</span> 上述初等矩阵的逆之积<span class="math inline">\(L\)</span>可以证明是 <span class="math display">\[
+L=\begin{pmatrix}
+1 \\
+-m_{21} &amp; 1 \\
+-m_{31} &amp; -m_{32} &amp; 1 \\
+&amp; &amp; &amp; ... \\
+... &amp; &amp; &amp; &amp; 1 \\
+-m_{n1} &amp; ... &amp; &amp; &amp; &amp; 1
+\end{pmatrix}
+\]</span></p>
+<p>也就是说，任一<span class="math inline">\(n\)</span>阶方阵<span class="math inline">\(A\)</span>，都能够写作一个单位下三角矩阵<span class="math inline">\(L\)</span>和一个上三角阵<span class="math inline">\(U\)</span>的乘积。这个分解过程称为Doolittle分解，或直接称为<span class="math inline">\(LU\)</span>分解。</p>
+<h4 id="doolittle分解">Doolittle分解</h4>
+<p>Doolittle分解是<span class="math inline">\(LU\)</span>分解最常见的分解形式，注意<span class="math inline">\(L\)</span>是<strong>单位下三角阵</strong>，而<span class="math inline">\(U\)</span>是普通的上三角阵。</p>
+<h4 id="crout分解">Crout分解</h4>
+<p>Crout分解也是一种<span class="math inline">\(LU\)</span>分解，但和Doolittle分解刚好相反，这里<span class="math inline">\(U\)</span>是<strong>单位上三角阵</strong>，而<span class="math inline">\(L\)</span>是普通的下三角阵。</p>
+<h4 id="ldu分解"><span class="math inline">\(LDU\)</span>分解</h4>
+<p>可以发现，在<span class="math inline">\(LU\)</span>分解中，总归是只有一个矩阵对角线全1；实际上我们也可以将矩阵<span class="math inline">\(A\)</span>拆分成三个矩阵，使得下三角阵<span class="math inline">\(L\)</span>和上三角阵<span class="math inline">\(U\)</span>均为单位三角阵，原来那个非单位对角阵的对角线元素提取出来变为一个对角阵<span class="math inline">\(D\)</span>即可，这被称为<span class="math inline">\(LDU\)</span>分解。</p>
+<h3 id="lu分解的性质">2.2.2 <span class="math inline">\(LU\)</span>分解的性质</h3>
+<h4 id="前提条件">前提条件</h4>
+<p>对方阵<span class="math inline">\(A\)</span>进行<span class="math inline">\(LU\)</span>分解本质上和高斯消去法并没有什么不同，所以也要求方阵<span class="math inline">\(A\)</span>的所有顺序余子式均非0。这个条件是充要的。</p>
+<h4 id="唯一性">唯一性</h4>
+<p>给定方阵<span class="math inline">\(A\)</span>的<span class="math inline">\(LU\)</span>分解是唯一的，证明很简单，利用三角阵和单位三角阵的性质即可，如下</p>
+<p>假如方阵<span class="math inline">\(A\)</span>存在两组<span class="math inline">\(LU\)</span>分解，分别记作<span class="math inline">\(A=LU\)</span>，<span class="math inline">\(A=L_1U_1\)</span>，那么有 <span class="math display">\[
+LU=L_1U_1
+\]</span> 可以证明，<span class="math inline">\(L\)</span>和<span class="math inline">\(U\)</span>都是可逆阵，所以有 <span class="math display">\[
+L_1^{-1}L=U_1U^{-1}
+\]</span> 单位下三角阵的乘积仍然是单位下三角阵，上三角阵的乘积仍然是上三角阵，因此上式要成立，必须取等式左右两边可能情况的交集，也就是要找到一种矩阵，既是单位下三角阵，同时又是上三角阵，那么这个阵只能是单位对角阵，也就是说<span class="math inline">\(L_1^{-1}L=U_1U^{-1}=I\)</span>。那么显然，<span class="math inline">\(L_1=L\)</span>，<span class="math inline">\(U_1=U\)</span>，所以方阵<span class="math inline">\(A\)</span>的<span class="math inline">\(LU\)</span>分解唯一性得证。</p>
+<h3 id="lu分解的作用">2.2.3 <span class="math inline">\(LU\)</span>分解的作用</h3>
+<p><span class="math inline">\(LU\)</span>分解的作用，主要还是提供一种除了高斯消去法以外的线性方程组解法。单位下三角阵<span class="math inline">\(L\)</span>和上三角阵<span class="math inline">\(U\)</span>的构造过程，本质上就是高斯消去法的消去过程；利用这两个三角阵进行<span class="math inline">\(x\)</span>求解的过程，本质上就是高斯消去法的回代过程。</p>
+<p>另外，对于一些特殊的方阵，<span class="math inline">\(LU\)</span>分解可以简化高斯消去法的计算过程。</p>
+<h3 id="cholesky分解">2.2.4 Cholesky分解</h3>
+<p>Cholesky分解就是一种可以简化特殊线性方程组求解过程的分解方法。</p>
+<p>Cholesky分解面向的对象是对称正定矩阵。这里，补充一下对称正定矩阵的定义。对称正定矩阵，指的是这样一种对称方阵<span class="math inline">\(M\)</span>，对于任意的非0实系数向量<span class="math inline">\(z\)</span>，都满足<span class="math inline">\(z^TMz&gt;0\)</span>。</p>
+<p>如果我们将对称正定矩阵<span class="math inline">\(M\)</span>进行<span class="math inline">\(LDU\)</span>分解，可以得到 <span class="math display">\[
+M = LDU
+\]</span> 由对称正定矩阵的对称性，可得 <span class="math display">\[
+M=M^T
+\]</span> 即 <span class="math display">\[
+LDU=U^TDL^T
+\]</span> 由<span class="math inline">\(LU\)</span>分解的唯一性，可知 <span class="math display">\[
+L=U^T
+\]</span> 所以，对称正定矩阵<span class="math inline">\(M\)</span>可以分解为 <span class="math display">\[
+M=LDL^T
+\]</span> 如果我们将对角阵<span class="math inline">\(D\)</span>进行开方处理，那么对称正定矩阵<span class="math inline">\(M\)</span>可以改写为 <span class="math display">\[
+M=LD^{\frac{1}{2}}(LD^{\frac{1}{2}})^T
+\]</span> 记<span class="math inline">\(G=LD^{\frac{1}{2}}\)</span>，有 <span class="math display">\[
+M=GG^T
+\]</span> 由于<span class="math inline">\(L\)</span>是一个单位下三角阵，<span class="math inline">\(D^{\frac{1}{2}}\)</span>是一个对角阵，所以<span class="math inline">\(G\)</span>是一个对角线非0的下三角阵。需要特别强调的是，Cholesky分解仅适用于对称正定矩阵，对非正定矩阵是不适用的。</p>
+<p>Cholesky分解为对称正定矩阵的线性方程组求解节省了大量的计算量，这也是<span class="math inline">\(LU\)</span>分解的意义所在。</p>
+<h3 id="三对角矩阵的lu分解">2.2.5 三对角矩阵的<span class="math inline">\(LU\)</span>分解</h3>
+<p>三对角矩阵也是科学计算中一种非常常见的矩阵，其形式如 <span class="math display">\[
+A=\begin{pmatrix}
+b_1 &amp; c_1 \\
+a_2 &amp; b_2 &amp; c_2 \\
+&amp; a_3 &amp; b_3 &amp; c_3 \\
+&amp; &amp; &amp; ... &amp; \\
+&amp; &amp; &amp; &amp; ... &amp; \\
+&amp; &amp; &amp; &amp; a_{n-1} &amp; b_{n-1} &amp; c_{n-1} \\
+&amp; &amp; &amp; &amp; &amp;a_n &amp; b_n \\
+\end{pmatrix}
+\]</span> 假如我们需要求解<span class="math inline">\(Ax=d\)</span>，那么可以对<span class="math inline">\(A\)</span>进行Crout分解，将其转换为下三角阵<span class="math inline">\(L\)</span>和单位上三角阵<span class="math inline">\(U\)</span>，如下 <span class="math display">\[
+L = \begin{pmatrix}
+l_1 \\
+v_2 &amp; l_2 \\
+&amp; &amp; ... \\
+&amp; &amp; &amp; ... \\
+&amp; &amp; &amp; v_n &amp; l_n \\
+\end{pmatrix}
+\]</span> <span class="math display">\[
+U = \begin{pmatrix}
+1 &amp; u_1 \\
+&amp; 1 &amp; u_2 \\
+&amp; &amp; &amp; ... \\
+&amp; &amp; &amp; 1 &amp; u_{n-1} \\
+&amp; &amp; &amp; &amp; 1
+\end{pmatrix}
+\]</span> 教材中，将这种三对角阵的求解方法称为追赶法，其实就是消去和回代，我不想用这种很无厘头的说法，还是用消去和回代来说明这两个流程。</p>
+<h4 id="中间变量y的由来">中间变量<span class="math inline">\(y\)</span>的由来</h4>
+<p>首先，我们需要明确，<span class="math inline">\(A=LU\)</span>，所以要求的方程组为<span class="math inline">\(LUx=d\)</span>，一般来说，我们会先令<span class="math inline">\(y=Ux\)</span>，然后求<span class="math inline">\(Ly=d\)</span>，所以要声明一个中间变量<span class="math inline">\(y\)</span>，这个<span class="math inline">\(y\)</span>是一个n阶向量。</p>
+<h4 id="消去过程-1">消去过程</h4>
+<p>由<span class="math inline">\(A=LU\)</span>和<span class="math inline">\(Ly=d\)</span>可以整理得到 <span class="math display">\[
+\begin{aligned}
+&amp; a_i = v_i \\
+&amp; b_i = l_i + v_i u_{i-1}\\
+&amp; c_i = l_iu_i\\
+&amp; d_i = v_iy_{i-1} + l_iy_i
+\end{aligned}
+\]</span> 其中，<span class="math inline">\(a_i, b_i, c_i, d_i\)</span>均为已知量，所以可以移项得到 <span class="math display">\[
+\begin{aligned}
+&amp;l_i = b_i - a_iu_{i-1}\\
+&amp;u_i = \frac{c_i}{l_i} \\
+&amp;y_i = \frac{d_i - a_iy_{i-1}}{l_i}
+\end{aligned}
+\]</span> 根据上面这些关系，可以递推得到<span class="math inline">\(L\)</span>，<span class="math inline">\(U\)</span>以及<span class="math inline">\(y\)</span>。</p>
+<h4 id="回代过程-1">回代过程</h4>
+<p>根据<span class="math inline">\(y=Ux\)</span>，可以得到 <span class="math display">\[
+x_i+u_ix_{i+1}=y_i
+\]</span> 那么，先求得<span class="math inline">\(x_n=y_n\)</span>，然后从下向上进行<span class="math inline">\(x\)</span>的求解即可 <span class="math display">\[
+x_i = y_i - u_ix_{i+1}
+\]</span></p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>数值计算</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数值分析笔记-第三章 多项式插值</title>
+    <url>/2022/11/02/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0-%E5%A4%9A%E9%A1%B9%E5%BC%8F%E6%8F%92%E5%80%BC/</url>
+    <content><![CDATA[<h2 id="本章概述">本章概述</h2>
+<p>在实际应用中，我们经常会遇到利用多项式拟合去拟合一组数据，从而进行数据预测的情况。这个方法在数值计算中被称为多项式插值。本章，主要介绍多项式插值的基本概念，Lagrange插值多项式，Newton插值多项式，插值多项式的误差分析以及Hermite插值多项式。</p>
+<span id="more"></span>
+<h2 id="插值多项式的基本概念">3.1 插值多项式的基本概念</h2>
+<h3 id="插值多项式的定义">3.1.1 插值多项式的定义</h3>
+<p>假如在区间<span class="math inline">\([a,b]\)</span>上，有<span class="math inline">\(n+1\)</span>个函数<span class="math inline">\(f(x)\)</span>的采样点<span class="math inline">\(x_0, x_1, ..., x_n\)</span>，以及相应的函数值<span class="math inline">\(f(x_0), f(x_1), ..., f(x_n)\)</span>，那么存在一个不超过<span class="math inline">\(n\)</span>次的多项式<span class="math inline">\(p_n(x)\)</span>，满足<span class="math inline">\(p_n(x_0) = f(x_0), p_n(x_1) = f(x_1), ..., p_n(x_n) = f(x_n)\)</span>。这个多项式<span class="math inline">\(p_n(x)\)</span>称为函数<span class="math inline">\(f(x)\)</span>在区间<span class="math inline">\([a,b]\)</span>上的<span class="math inline">\(n\)</span>次插值多项式。</p>
+<p>这里有几个概念：</p>
+<ul>
+<li>采样点<span class="math inline">\(x_0, x_1, ..., x_n\)</span>被称为<strong>插值节点</strong></li>
+<li>区间<span class="math inline">\([a,b]\)</span>被称为<strong>插值区间</strong></li>
+</ul>
+<h3 id="插值多项式的存在性与唯一性">3.1.2 插值多项式的存在性与唯一性</h3>
+<p><span class="math inline">\(f(x)\)</span>在给定插值节点与插值区间的情况下，<span class="math inline">\(n\)</span>次插值多项式是存在且唯一的。这个性质可以通过Vandermonde法得证。</p>
+<h4 id="vandermonde法">Vandermonde法</h4>
+<p>如果我们将插值节点代入插值多项式，并将系数<span class="math inline">\(a\)</span>视作未知量，可以得到<span class="math inline">\(n+1\)</span>条方程形成的<span class="math inline">\(n+1\)</span>元线性方程组，例如</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_0 + a_1x_0+a_2x_0^2+...+a_nx_0^n=y_0 \\
+&amp;a_0 + a_1x_1 + a_2x_1^2+ ... + a_nx_1^n = y1\\
+&amp;...\\
+&amp;a_0+a_1x_n+a_2x_n^2+...+a_nx_n^n=y_n
+\end{aligned}
+\]</span> 可以将<span class="math inline">\(x_i\)</span>看作系数矩阵，如 <span class="math display">\[
+\begin{pmatrix}
+1 &amp; x_0 &amp; x_0^2 &amp; ... &amp; x_0^n \\
+1 &amp; x_1 &amp; x_1^2 &amp; ... &amp; x_1^n \\
+... &amp; &amp; &amp; ...\\
+1 &amp; x_n &amp; x_n^2 &amp; ... &amp; x_n^n
+\end{pmatrix}
+\]</span> 上述矩阵的行列式就是Vandermonde行列式 <span class="math display">\[
+\begin{vmatrix}
+1 &amp; x_0 &amp; x_0^2 &amp; ... &amp; x_0^n \\
+1 &amp; x_1 &amp; x_1^2 &amp; ... &amp; x_1^n \\
+... &amp; &amp; &amp; ...\\
+1 &amp; x_n &amp; x_n^2 &amp; ... &amp; x_n^n
+\end{vmatrix}=\prod_{i=1}^n\prod_{j=0}^{i-1}(x_i-x_j)
+\]</span> 书上没太讲明白Vandermonde法具体是怎么证明插值多项式的存在性和唯一性的。存在性大概就是，对于上面这个Vandermonde矩阵，总归存在一个子阵的行列式不为0，那么这个子阵对应的不大于n阶的插值多项式就必然存在。唯一性的证明不太清楚。</p>
+<h2 id="lagrange插值多项式">3.2 Lagrange插值多项式</h2>
+<h3 id="插值多项式的基函数法">3.2.1 插值多项式的基函数法</h3>
+<p>线性代数中可以证明，在<span class="math inline">\(n\)</span>次的线性空间中，插值多项式的基是不唯一的，也就是说同一个插值多项式可以用多组基函数的组合来表示。也就是说，我们可以定义<span class="math inline">\(n+1\)</span>个线性无关的多项式<span class="math inline">\(\varphi_0(x), \varphi_1(x), ..., \varphi_n(x)\)</span>，作为插值多项式的基函数，通过这些基函数的线性组合来表示一个插值多项式。 <span class="math display">\[
+p_n(x) = a_0\varphi_0(x)+a_1\varphi_1(x)+a_2\varphi_2(x)+...+a_n\varphi_n(x)
+\]</span> 最基础的基函数就是<span class="math inline">\(\varphi_i(x)=x^i\)</span>，也就是前面的插值多项式定义中的写法。接下来，我们会介绍Lagrange基函数以及用Lagrange基函数的线性组合表示的Lagrange插值多项式。</p>
+<h3 id="lagrange插值多项式-1">3.2.2 Lagrange插值多项式</h3>
+<h4 id="lagrange基函数">Lagrange基函数</h4>
+<p>Lagrange基函数的定义出于这样的一种想法：能不能找一种基函数，使得参数恰好与某一个节点相等的时候，函数值为1，其他情况下函数值为0呢？这就相当于我们基于插值节点，找到一组正交的基函数，从而满足了线性无关条件。</p>
+<p>满足这个条件的基函数其实也很好构造。参数非指定节点的时候，基函数的某一乘项恰好为0；参数为指定节点的时候，基函数的分子分母恰好相等。这样就可以满足上面的条件了。这个函数可以表示为 <span class="math display">\[
+l_k(x) = \prod_{i=0\&amp;i\neq k}^{n}\frac{(x-x_i)}{(x_k-x_i)}
+\]</span> 那么，<span class="math inline">\(x\neq x_k\)</span>时，分子上总有一项为0，因此结果为0；<span class="math inline">\(x=x_k\)</span>时，分子分母相同，因此结果为1。</p>
+<h4 id="lagrange插值多项式-2">Lagrange插值多项式</h4>
+<p>以Lagrange基函数为基，可以写出Lagrange插值多项式 <span class="math display">\[
+L_n(x)=a_0l_0(x)+a_1l_1(x)+...+a_nl_n(x)
+\]</span> Lagrange插值多项式的系数很容易求得，因为代入某一个插值节点的时候，其他的Lagrange基函数全为0，对应的Lagrange基函数为1，所以只剩下一个系数，也就是说 <span class="math display">\[
+L_n(x_i) = a_i = y_i
+\]</span> 所以Lagrange插值多项式实际上可以写成 <span class="math display">\[
+L_n(x)=y_0l_0(x)+y_1l_1(x)+...+y_nl_n(x)
+\]</span></p>
+<p>习惯上，我们将一次的Lagrange插值多项式称为Lagrange线性插值，将二次的称为Lagrange二次插值或者抛物线插值。 <span class="math display">\[
+L_1(x)=y_0\frac{x-x_1}{x_0-x_1}+y_1\frac{x-x_0}{x_1-x_0}
+\]</span> <span class="math display">\[
+L_2(x)=y_0\frac{(x-x_1)(x-x_2)}{(x_0-x_1)(x_0-x_2)}+y_1\frac{(x-x_0)(x-x_2)}{(x_1-x_0)(x_1-x_2)}+y_2\frac{(x-x_0)(x-x_1)}{(x_2-x_0)(x_2-x_1)}
+\]</span> 可以看出，Lagrange插值多项式的对称性还是很明显的。</p>
+<h4 id="lagrange插值多项式的误差估计">Lagrange插值多项式的误差估计</h4>
+<p>写出了Lagrange插值多项式之后，我们希望能够估计用Lagrange插值多项式进行多项式拟合的结果误差，也就是希望能够求出插值余项<span class="math inline">\(R_n(x)\)</span>。首先，给出插值余项多项式的定义 <span class="math display">\[
+R_n(x)=f(x)-L_n(x)
+\]</span> 这个定义的重要之处在于，明确了<span class="math inline">\(R_n(x)\)</span>至少有<span class="math inline">\(x+1\)</span>个零点，因为在插值节点上<span class="math inline">\(f(x_i)=L_n(x_i)\)</span>。</p>
+<p>因此，我们可以设<span class="math inline">\(R_n(x)=K(x)\prod_{i=0}^n(x-x_i)\)</span>，或者将其简写为<span class="math inline">\(R_n(x)=K(x)\Pi(x)\)</span>。</p>
+<p>接下来，引入一个辅助函数<span class="math inline">\(\varphi(x) = R_n(x)-K(x)\Pi(x)=f(x)-L_n(x)-K(x)\Pi(x)\)</span>，如果将<span class="math inline">\(x\)</span>视作插值区间上的一个定点，则<span class="math inline">\(\varphi(t)=f(t)-L_n(t)-K(x)\Pi(t)\)</span>在插值区间上有<span class="math inline">\(n+2\)</span>个零点。根据罗尔定理，<span class="math inline">\(\varphi^{(n+1)}(t)\)</span>在插值区间上必有1个零点。我们将这个零点记为<span class="math inline">\(t=\xi\)</span>，那么可以得到 <span class="math display">\[
+\varphi^{(n+1)}(\xi)=0
+\]</span> 由于<span class="math inline">\(L_n(t)\)</span>是不大于<span class="math inline">\(n\)</span>阶的多项式，因此<span class="math inline">\(L_n^{(n+1)}(t)=0\)</span>；<span class="math inline">\(\Pi(t)\)</span>则是一个<span class="math inline">\(n+1\)</span>阶多项式，因此<span class="math inline">\(\Pi^{(n+1)}(t)=(n+1)!\)</span>，那么由<span class="math inline">\(\varphi^{(n+1)}(\xi)=0\)</span>可以推得 <span class="math display">\[
+f^{(n+1)}(\xi)=K(x)(n+1)!
+\]</span> 所以，<span class="math inline">\(K(x)=\displaystyle\frac{f^{(n+1)}(\xi)}{(n+1)!}\)</span>，那么整个Lagrange插值多项式的插值余项就可以写为 <span class="math display">\[
+R_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\Pi(x)
+\]</span> Lagrange插值余项并不是一个精确的值，因为<span class="math inline">\(\xi\)</span>是不知道的，但我们可以根据余项的表达式进行误差上界的估计 <span class="math display">\[
+R_n(x)\leq\frac{max|f^{(n+1)}(x)|}{(n+1)!}\Pi(x)
+\]</span></p>
+<h2 id="newton插值多项式">3.3 Newton插值多项式</h2>
+<h3 id="newton基函数">3.3.1 Newton基函数</h3>
+<p>Newton基函数的定义为 <span class="math display">\[
+n_0(x)=1
+\]</span> <span class="math display">\[
+n_j(x)=\prod_{i=0}^{j-1}(x-x_i),\ j&gt;0
+\]</span></p>
+<h3 id="newton插值多项式-1">3.3.2 Newton插值多项式</h3>
+<p>Newton插值多项式是Newton基函数的线性组合，即 <span class="math display">\[
+N_n(x)=a_0+a_1(x-x_0)+a_2(x-x_0)(x-x_1)+...+a_n\prod_{i=0}^{n-1}(x-x_i)
+\]</span> Newton插值多项式比较有趣的地方在于系数。 <span class="math display">\[
+y_0 = a_0
+\]</span> <span class="math display">\[
+y_1 = y_0 + a_1(x_1-x_0)
+\]</span> 那么 <span class="math display">\[
+a_1 = \frac{y_1-y_0}{x_1-x_0}
+\]</span> 那么 <span class="math display">\[
+a_2 = \frac{\displaystyle\frac{y_2-y_0}{x_2-x_0}-\frac{y_1-y_0}{x_1-x_0}}{x_2-x_1}
+\]</span> 这个系数很明显是有规律的，这个规律可以用差商来简化描述。</p>
+<h4 id="差商和newton插值多项式系数的关系">差商和Newton插值多项式系数的关系</h4>
+<p>我们将<span class="math inline">\(f[x_i, x_k]=\displaystyle\frac{f_i-f_k}{x_i-x_k}\)</span>记为<span class="math inline">\(f(x)\)</span>关于节点<span class="math inline">\(x_i, x_k\)</span>的一阶差商，将<span class="math inline">\(f[x_i, x_j,x_k] = \displaystyle\frac{\displaystyle\frac{f_i-f_k}{x_i-x_k}-\frac{f_i-f_j}{x_i-x_j}}{x_k-x_j}=\frac{f[x_i, x_k]-f[x_i, x_j]}{x_k-x_j}\)</span>记为<span class="math inline">\(f(x)\)</span>关于节点<span class="math inline">\(x_i, x_j, x_k\)</span>的二阶差商。</p>
+<p>可以证明，Newton插值多项式的第<span class="math inline">\(n\)</span>阶系数<span class="math inline">\(a_n\)</span>就是<span class="math inline">\(f(x)\)</span>关于<span class="math inline">\(n\)</span>个节点的<span class="math inline">\(n\)</span>阶差商。</p>
+<h4 id="差商的性质">差商的性质</h4>
+<ol type="1">
+<li>差商可以表示为函数值<span class="math inline">\(f(x_i)\)</span>的线性组合</li>
+<li>差商所含节点具有对称性，交换两个节点的位置并不会影响最终的结果</li>
+<li>若<span class="math inline">\(f(x)\)</span>在插值区间上<span class="math inline">\(n\)</span>阶可导，那么插值区间上存在一点<span class="math inline">\(\xi\)</span>使得<span class="math inline">\(f[x_0, x_1, ...,x_n]=\displaystyle\frac{f^{(n)}(\xi)}{n!}\)</span>成立</li>
+</ol>
+<p>关于第一条性质，可以用下式表示 <span class="math display">\[
+f[x_0, x_1, ..., x_k] = \sum_{j=0}^{k}\frac{f(x_j)}{\prod_{i=0\&amp;i\neq j}^{k}(x_j-x_i)}
+\]</span> 关于第三条性质，将在Newton插值多项式的余项计算中给出证明。</p>
+<h3 id="newton插值多项式的余项">3.3.3 Newton插值多项式的余项</h3>
+<p>Newton插值多项式相较于Lagrange插值多项式，有一个非常明显的好处：当插值阶数上升时，除了最高阶项以外，其他的所有项都不会发生变化。所以，Newton插值多项式提高插值阶数非常灵活。假定有一<span class="math inline">\(n\)</span>阶Newton插值多项式<span class="math inline">\(N_n(x)\)</span>，如果我们考虑上升一阶插值阶数，可以得到<span class="math inline">\(N_{n+1}(x)\)</span>，此时比较其差值 <span class="math display">\[
+N_{n+1}(x)-N_n(x)=f[x_0, x_1, ..., x_n, x]\prod_{i=0}^{n}(x-x_i)
+\]</span> 假定<span class="math inline">\(x\)</span>也是一个节点，将上式换元为 <span class="math display">\[
+N_{n+1}(t) - N_n(t)=f[x_0, x_1, ..., x_n, x]\Pi_{i=0}^n(t-x_i)
+\]</span> 由于<span class="math inline">\(x\)</span>是一个节点，所以有<span class="math inline">\(N_{n+1}(x)=f(x)\)</span>，那么上式可以写作 <span class="math display">\[
+f(x)=N_n(x) + f[x_0, x_1, ..., x_n, x] \Pi_{i=0}^n(x-x_i)
+\]</span> 那么余项其实就是 <span class="math display">\[
+R_n(x)=f(x) - N_n(x) = f[x_0, x_1, ..., x_n, x]\Pi_{i=0}^n(x-x_i)
+\]</span> 也就是说，通过Newton插值多项式能够直接得到插值余项的表达式。</p>
+<p>注意，<span class="math inline">\(n\)</span>阶插值多项式具有唯一性，那么余项也具有唯一性，所以Newton插值多项式的余项应该和Lagrange插值多项式的余项相等，那么 <span class="math display">\[
+f[x_0, x_1, ..., x_n,x]\Pi_{i=0}^n(x-x_i)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\Pi_{i=0}^n(x-x_i)
+\]</span> 注意，这里的差商是<span class="math inline">\(n+2\)</span>项。所以，我们可以证明得到差商的第三个性质，即 <span class="math display">\[
+f[x_0, x_1, ..., x_n]=\frac{f^{(n)}(\xi)}{n!}
+\]</span></p>
+<h3 id="等距节点与差分">3.3.4 等距节点与差分</h3>
+<p>在实际应用中，我们一般会按照固定的间隔取插值节点，即相邻的两个插值节点的差值是固定的，这个差值称为步长，一般用符号<span class="math inline">\(h\)</span>来表示。</p>
+<p>若有 <span class="math display">\[
+\Delta f_i = f(x_i + h) - f(x_i) = f_{i+1}- f_i
+\]</span> 称这个<span class="math inline">\(\Delta f_i\)</span>为<span class="math inline">\(f(x)\)</span>在节点<span class="math inline">\(x_i\)</span>处步长为<span class="math inline">\(h\)</span>的一阶向前差分。</p>
+<p>有一阶差分，自然也有更高阶的差分，例如 <span class="math display">\[
+\Delta^2f_i = \Delta f_{i+1} - \Delta f_i
+\]</span> 这个<span class="math inline">\(\Delta^2f_i\)</span>称为<span class="math inline">\(f(x)\)</span>在节点<span class="math inline">\(x_i\)</span>处步长为<span class="math inline">\(h\)</span>的二阶向前差分。</p>
+<p>另外，除了向前差分，还有向后差分以及中心差分。向后差分就是<span class="math inline">\(\Delta f_i = f(x_i)-f(x_i - h)\)</span>，中心差分就是<span class="math inline">\(\Delta f_i = f(x_i+\frac{1}{2}h)- f(x_i - \frac{1}{2}h)\)</span>。</p>
+<p>在插值节点等距分布的情况下，<span class="math inline">\(k+1\)</span>阶差商也可以简化为 <span class="math display">\[
+f[x_0, x_1, ..., x_k] = \frac{\Delta^k f_0}{k!h^k}
+\]</span></p>
+<h2 id="hermite多项式">3.4 Hermite多项式</h2>
+<h3 id="hermite插值问题">3.4.1 Hermite插值问题</h3>
+<p>与Lagrange和Newton插值不同，Hermite插值问题不仅要考虑插值多项式在插值点上的值和函数相同，而且在全部或部分插值点上，还要满足一阶导数甚至高阶导数相同的条件。</p>
+<p>若函数值、导数值的相同条件共有<span class="math inline">\(n+1\)</span>条，那么插值区间上存在一个不超过<span class="math inline">\(n\)</span>阶的Hermite多项式，满足在插值点上的函数值和导数值符合要求。</p>
+<h3 id="hermite基函数">3.4.2 Hermite基函数</h3>
+<p>Hermite插值多项式的求解其实是比较灵活的，下面介绍一种比较基础的、通过Hermite基函数来求解Hermite插值多项式的方法。</p>
+<p>例如，在插值点<span class="math inline">\(x_0, x_1\)</span>上，要求找出一个插值多项式<span class="math inline">\(H(x)\)</span>，满足<span class="math inline">\(H(x_0)=f(x_0), H(x_1)=f(x_1), H^{(1)}(x_0)=f^{(1)}(x_0), H^{(1)}(x_1)=f^{(1)}(x_1)\)</span>，那么可以构造三次Hermite插值多项式如下 <span class="math display">\[
+H(x) = f(x_0)h_0(x)+f(x_1)h_1(x)+f^{(1)}(x_0)\bar h_0(x) + f^{(1)}(x_1)\bar h_1(x)
+\]</span> 其中，<span class="math inline">\(h(x)\)</span>被称为Hermite基函数。<span class="math inline">\(h_0(x)\)</span>满足<span class="math inline">\(h_0(x_0)=1, h_0(x_1)=0, h_0^{(1)}(x_0)=0, h^{(1)}(x_1)=0\)</span>的条件，<span class="math inline">\(h_1(x)\)</span>满足<span class="math inline">\(h_1(x_0)=0, h_1(x_1)=1, h_1^{(1)}(x_0)=0, h_1^{(1)}(x_1)=0\)</span>的条件，<span class="math inline">\(\bar h_0(x)\)</span>满足<span class="math inline">\(\bar h_0(x_0)=0, \bar h_0(x_1)=0, \bar h_0^{(1)}(x_0)=1, \bar h_0^{(1)}(x_1)=0\)</span>的条件，<span class="math inline">\(\bar h_1(x)\)</span>满足<span class="math inline">\(\bar h_1(x_0)=0, \bar h_1(x_1)=0, \bar h_1^{(1)}(x_0)=0, \bar h_1^{(1)}(x_1)=1\)</span>的条件。其实这种构造基函数的方式和Lagrange基函数非常相似，只不过推广到了导数条件上去。</p>
+<p>为了满足上述条件，需要进行各个基函数的构造。以<span class="math inline">\(h_0(x)\)</span>为例，由于<span class="math inline">\(x=x_1\)</span>时函数值和导数值均为0，因此<span class="math inline">\(x_1\)</span>肯定是<span class="math inline">\(h_0(x)\)</span>的二重零点，所以<span class="math inline">\(h_0(x)\)</span>必有因子<span class="math inline">\((x-x_1)^2\)</span>；由于<span class="math inline">\(H(x)\)</span>是三次多项式，所以所有的基函数都可能是三次多项式，那么可以令<span class="math inline">\(h_0(x)=(a+bx)(x-x_1)^2\)</span>。事实上，为了方便计算，我们会令<span class="math inline">\(h_0(x)=(a+b\displaystyle \frac{x-x_0}{x_1-x_0})(\frac{x-x_1}{x_0-x_1})^2\)</span>。那么将<span class="math inline">\(x=x_0\)</span>时的函数值和导数值条件代入，可以得到 <span class="math display">\[
+\begin{aligned}
+&amp;h_0(x_0)=(a+b\frac{x_0-x_0}{x_1-x_0})(\frac{x_0-x_1}{x_0-x_1})^2=1\\
+&amp;h_0^{(1)}(x_0)=\frac{b}{x_1-x_0}(\frac{x_0-x_1}{x_0-x_1})^2+(a+b\frac{x_0-x_0}{x_1-x_0})\frac{2}{x_0-x_1}\frac{x_0-x_1}{x_0-x_1}=0
+\end{aligned}
+\]</span> 那么 <span class="math display">\[
+\begin{aligned}
+&amp;a=1\\
+&amp;b=2
+\end{aligned}
+\]</span> 即 <span class="math display">\[
+h_0(x)=(1+2\frac{x-x_0}{x_1-x_0})(\frac{x-x_1}{x_0-x_1})^2
+\]</span> 其他的基函数同理，都可以求出来。</p>
+<p>很明显，Hermite基函数的构造也是比较繁琐的，特别是在未知数的数量增多之后，求解起来将会非常麻烦。对于导数条件比较少的情况，其实可以找一些其他的方法进行Hermite插值多项式的求解。</p>
+<h3 id="hermite多项式的其他解法">3.4.3 Hermite多项式的其他解法</h3>
+<p>假设我们现在需要对插值区间内的5个插值点进行Hermite插值，但是只要求在某一个插值点上导数值相同，也就是说，Hermite插值问题中的6个条件只有1个是导数条件。对于这种问题，我们完全可以先进行函数值条件的插值，得到一个不大于4次的插值多项式，然后再利用最后一个导数条件以及前面的5个零点条件求出另一个不大于5次的插值多项式，最后将上面两个插值多项式相加，就可以得到不大于5次的Hermite多项式了。</p>
+<h3 id="hermite多项式的余项">3.4.4 Hermite多项式的余项</h3>
+<p>假定在插值区间上有3个插值点<span class="math inline">\(x_0, x_1, x_2\)</span>，5个插值条件<span class="math inline">\(f(x_0), f(x_1), f(x_2), f^{(1)}(x_0), f^{(1)}(x_1)\)</span>，那么有余项 <span class="math display">\[
+R_4(x) = \frac{f^{(5)}(\xi)}{5!}(x-x_0)^2(x-x_1)^2(x-x_0)
+\]</span> 余项的组成是很有规律的。前面的<span class="math inline">\(\displaystyle \frac{f^{(n+1)}(\xi)}{(n+1)!}\)</span>的阶数永远和插值条件个数相等，后面的连乘项中，每个插值点上有几个条件，那这个<span class="math inline">\(x-x_i\)</span>就是多少次方。</p>
+<h2 id="样条插值">3.5 样条插值</h2>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>数值分析</tag>
       </tags>
   </entry>
 </search>
