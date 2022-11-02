@@ -76,4 +76,22 @@ F_L = -\rho \Gamma U
         <tag>Aerodynamic</tag>
       </tags>
   </entry>
+  <entry>
+    <title>hexo博文图片显示问题[SOLVED]</title>
+    <url>/2022/11/01/hexo%E5%8D%9A%E6%96%87%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98-SOLVED/</url>
+    <content><![CDATA[<p>在使用hexo进行博客搭建的过程，发现使用Markdown语法的文档，无法正常加载上传的图片，例如</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">Potential Flow Analysis</span>](<span class="link">./2022-11-1-Potential-Flow-Analysis-Magnus-Effect/potential-flow-analysis-velocity-field-plot.png</span>)</span><br></pre></td></tr></table></figure>
+<p>通过观察构建信息，发现图片总是指向一个以 <code>/.io/</code> 开头的文件夹。经过在hexo官网的搜索，在评论区发现（😓）这个问题似乎是 <code>hexo-asset-image</code> 包的一个bug，只需要修改 <code>node_modules/hexo-asset-image/index.js</code> 的第24行，将其改为</p>
+<figure class="highlight javascript"><figcaption><span>node_modules/hexo-asset-image/index.js</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> endPos = link.<span class="property">length</span>;</span><br></pre></td></tr></table></figure>
+<p>即可。</p>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>Web</tag>
+        <tag>Technical Issues</tag>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
 </search>
