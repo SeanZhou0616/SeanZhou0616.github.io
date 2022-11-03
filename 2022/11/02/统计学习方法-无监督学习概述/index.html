@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文是李航老师的《统计学习方法》无监督学习部分的学习笔记。 概述 特征  数据集无标签 \(U &#x3D; \{x_1, x_2, ..., x_n\}\)  一般用 \(z&#x3D;g_{\theta}(x)\) 或 \(P_{\theta}(z|x)\) 来表示模型，其中 \(z\) 表示分析结果，以与监督学习区分。 常用方法  聚类 降维 Dimensionality Reduction 概率模型估计  混">
+<meta property="og:type" content="article">
+<meta property="og:title" content="统计学习方法-无监督学习概述">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/">
+<meta property="og:site_name" content="Elysium">
+<meta property="og:description" content="本文是李航老师的《统计学习方法》无监督学习部分的学习笔记。 概述 特征  数据集无标签 \(U &#x3D; \{x_1, x_2, ..., x_n\}\)  一般用 \(z&#x3D;g_{\theta}(x)\) 或 \(P_{\theta}(z|x)\) 来表示模型，其中 \(z\) 表示分析结果，以与监督学习区分。 常用方法  聚类 降维 Dimensionality Reduction 概率模型估计  混">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-02T13:45:40.000Z">
+<meta property="article:modified_time" content="2022-11-02T14:04:21.036Z">
+<meta property="article:author" content="Sean Zhou">
+<meta property="article:tag" content="Machine Learning">
+<meta property="article:tag" content="Unsupervised Learning">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/","path":"2022/11/02/统计学习方法-无监督学习概述/","title":"统计学习方法-无监督学习概述"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>统计学习方法-无监督学习概述 | Elysium</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Elysium</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Tech, Race, Game</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%BE%81"><span class="nav-number">1.1.</span> <span class="nav-text">特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">常用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E8%A6%81%E7%B4%A0"><span class="nav-number">1.3.</span> <span class="nav-text">三要素</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB-cluster"><span class="nav-number">2.</span> <span class="nav-text">类 Cluster</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E7%89%B9%E5%BE%81"><span class="nav-number">2.1.</span> <span class="nav-text">类的特征</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E4%B8%AD%E5%BF%83-bar-x_g"><span class="nav-number">2.1.1.</span> <span class="nav-text">类的中心 \(\bar x_G\)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E7%9B%B4%E5%BE%84-d_g"><span class="nav-number">2.1.2.</span> <span class="nav-text">类的直径 \(D_G\)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E6%A0%B7%E6%9C%AC%E6%95%A3%E5%B8%83%E7%9F%A9%E9%98%B5-a_g-%E5%92%8C%E6%A0%B7%E6%9C%AC%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5-s_g"><span class="nav-number">2.1.3.</span> <span class="nav-text">类的样本散布矩阵 \(A_G\) 和样本协方差矩阵 \(S_G\)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E4%B8%8E%E7%B1%BB%E4%B9%8B%E9%97%B4%E7%9A%84%E8%B7%9D%E7%A6%BB"><span class="nav-number">2.2.</span> <span class="nav-text">类与类之间的距离</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E7%9F%AD%E8%B7%9D%E7%A6%BB-%E6%88%96-%E5%8D%95%E8%BF%9E%E6%8E%A5-single-linkage"><span class="nav-number">2.2.1.</span> <span class="nav-text">最短距离 或 单连接 Single Linkage</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E9%95%BF%E8%B7%9D%E7%A6%BB-%E6%88%96-%E5%AE%8C%E5%85%A8%E8%BF%9E%E6%8E%A5-complete-linkage"><span class="nav-number">2.3.</span> <span class="nav-text">最长距离 或 完全连接 Complete Linkage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E5%BF%83%E8%B7%9D%E7%A6%BB"><span class="nav-number">2.4.</span> <span class="nav-text">中心距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E5%9D%87%E8%B7%9D%E7%A6%BB"><span class="nav-number">2.5.</span> <span class="nav-text">平均距离</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E8%81%9A%E7%B1%BB%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">常用的聚类方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%82%E6%AC%A1%E8%81%9A%E7%B1%BB"><span class="nav-number">3.1.</span> <span class="nav-text">层次聚类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#k%E5%9D%87%E5%80%BC%E8%81%9A%E7%B1%BB"><span class="nav-number">3.2.</span> <span class="nav-text">k均值聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AD%96%E7%95%A5"><span class="nav-number">3.2.1.</span> <span class="nav-text">策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A6%81%E7%82%B9"><span class="nav-number">3.2.2.</span> <span class="nav-text">要点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E8%BF%87%E7%A8%8B"><span class="nav-number">3.3.</span> <span class="nav-text">迭代过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81-1"><span class="nav-number">3.3.1.</span> <span class="nav-text">特征</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sean Zhou"
+      src="/images/Yeah.jpg">
+  <p class="site-author-name" itemprop="name">Sean Zhou</p>
+  <div class="site-description" itemprop="description">Sean Zhou's personal blog.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/SeanZhou0616" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SeanZhou0616" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:seanzhou616@gmail.com" title="E-Mail → mailto:seanzhou616@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="统计学习方法-无监督学习概述 | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          统计学习方法-无监督学习概述
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-02 21:45:40 / 修改时间：22:04:21" itemprop="dateCreated datePublished" datetime="2022-11-02T21:45:40+08:00">2022-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Computer-Science/" itemprop="url" rel="index"><span itemprop="name">Computer Science</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文是李航老师的《统计学习方法》无监督学习部分的学习笔记。</p>
+<h2 id="概述">概述</h2>
+<h3 id="特征">特征</h3>
+<ul>
+<li>数据集无标签 <span class="math inline">\(U = \{x_1, x_2, ..., x_n\}\)</span></li>
+</ul>
+<p>一般用 <span class="math inline">\(z=g_{\theta}(x)\)</span> 或 <span class="math inline">\(P_{\theta}(z|x)\)</span> 来表示模型，其中 <span class="math inline">\(z\)</span> 表示分析结果，以与监督学习区分。</p>
+<h3 id="常用方法">常用方法</h3>
+<ol type="1">
+<li>聚类</li>
+<li>降维 Dimensionality Reduction</li>
+<li>概率模型估计
+<ol type="1">
+<li>混合模型</li>
+<li>概率图模型
+<ol type="1">
+<li>有向图模型</li>
+<li>无向图模型</li>
+</ol></li>
+</ol></li>
+</ol>
+<span id="more"></span>
+<h3 id="三要素">三要素</h3>
+<p>无监督学习和监督学习一样，都有三要素：模型、策略、算法。</p>
+<p>策略方面</p>
+<ul>
+<li>聚类：样本与所属类别中心距离的最小化</li>
+<li>降维：降维过程中信息损失的最小化</li>
+<li>概率模型：模型生成概率的最大化</li>
+</ul>
+<h2 id="类-cluster">类 Cluster</h2>
+<p>用 <span class="math inline">\(G\)</span> 表示一个类，用 <span class="math inline">\(x_i, x_j\)</span> 表示类中的两个元素，用 <span class="math inline">\(n_G\)</span> 表示类的大小，用 <span class="math inline">\(d_{ij}\)</span> 表示元素 <span class="math inline">\(x_i, x_j\)</span> 之间的距离，可以给出类的定义</p>
+<p>若有实数值 <span class="math inline">\(T &gt; 0\)</span>，对于任意 <span class="math inline">\(x_i, x_j \in G\)</span>，满足 <span class="math inline">\(d_{ij} \leq T\)</span>，则称 <span class="math inline">\(G\)</span> 为一个类。</p>
+<h3 id="类的特征">类的特征</h3>
+<h4 id="类的中心-bar-x_g">类的中心 <span class="math inline">\(\bar x_G\)</span></h4>
+<p>类的中心一般取类中所有元素的平均值。</p>
+<p><span class="math display">\[
+\bar x_G = \frac{1}{n_G} \sum^{n_G}_{i=1}x_i
+\]</span></p>
+<h4 id="类的直径-d_g">类的直径 <span class="math inline">\(D_G\)</span></h4>
+<p>类的直径一般取类中相隔最远的两个元素之间的间距。</p>
+<p><span class="math display">\[
+D_G = \mathop{max}\limits_{x_i, x_j \in G}d_{ij}
+\]</span></p>
+<h4 id="类的样本散布矩阵-a_g-和样本协方差矩阵-s_g">类的样本散布矩阵 <span class="math inline">\(A_G\)</span> 和样本协方差矩阵 <span class="math inline">\(S_G\)</span></h4>
+<ul>
+<li>样本散布矩阵 Scatter Matrix</li>
+<li>样本协方差矩阵 Covariance Matrix</li>
+</ul>
+<p><span class="math display">\[
+A_G = \sum^{n_G}_{i=1}(x_i - \bar x_G)(x_i - \bar x_G)^T
+\]</span></p>
+<p><span class="math display">\[
+S_G = \frac{1}{m-1}A_G
+\]</span></p>
+<p>其中，<span class="math inline">\(m\)</span> 为样本的维数。</p>
+<h3 id="类与类之间的距离">类与类之间的距离</h3>
+<p>类 <span class="math inline">\(G_p\)</span> 和 类 <span class="math inline">\(G_q\)</span> 之间的距离 <span class="math inline">\(D(p, q)\)</span>，也称为类之间的连接(Linkage)。</p>
+<h4 id="最短距离-或-单连接-single-linkage">最短距离 或 单连接 Single Linkage</h4>
+<p><span class="math display">\[
+D(p, q) = min\{d_{ij}|x_i \in G_p, x_j \in G_q\}
+\]</span></p>
+<h3 id="最长距离-或-完全连接-complete-linkage">最长距离 或 完全连接 Complete Linkage</h3>
+<p><span class="math display">\[
+D(p, q) = max\{d_{ij}|x_i \in G_p, x_j \in G_q\}
+\]</span></p>
+<h3 id="中心距离">中心距离</h3>
+<p><span class="math display">\[
+D(p, q) = d_{\bar x_p, \bar x_q}
+\]</span></p>
+<h3 id="平均距离">平均距离</h3>
+<p><span class="math display">\[
+D(p, q) = \frac{1}{n_pn_q}\sum_{x_i \in G_p}\sum_{x_j \in G_q}d_{ij}
+\]</span></p>
+<h2 id="常用的聚类方法">常用的聚类方法</h2>
+<h3 id="层次聚类">层次聚类</h3>
+<p>层次聚类分成聚合和分解两种方向，但原理基本类似。从聚合的角度来看，层次聚类的过程主要是</p>
+<ol type="1">
+<li>第一次迭代，每一个数据都看作一个类</li>
+<li>根据一定的规则，进行类的合并，直到达到收敛条件</li>
+</ol>
+<p>层次聚类的主要元素</p>
+<ol type="1">
+<li>距离定义</li>
+<li>合并规则</li>
+<li>收敛条件（如类个数或类直径阈值）</li>
+</ol>
+<h3 id="k均值聚类">k均值聚类</h3>
+<h4 id="策略">策略</h4>
+<p>通过损失函数的最小化来选择样本集合的最优划分</p>
+<h4 id="要点">要点</h4>
+<ol type="1">
+<li>距离采用欧式距离定义</li>
+<li>各个元素与所属类中心的距离之和定义为损失函数</li>
+<li><span class="math inline">\(k\)</span> 的值需要预先定义好</li>
+</ol>
+<p>如果将优化目标写作 <span class="math inline">\(C^{*}\)</span>，那么有定义</p>
+<p><span class="math display">\[
+C^* = \mathop{argmin}\limits_{C}W(C) = \mathop{argmin}\limits_{C}\sum^k_{i=1}\sum_{C(i)=l}||x_i - \bar x_l||^2
+\]</span></p>
+<p>其实就是先计算每个类中所有元素到类中心点的距离之和，再把所有类的这个距离之和再求和，求解使得这个损失函数最小的元素划分方案。</p>
+<h3 id="迭代过程">迭代过程</h3>
+<ol type="1">
+<li>在样本中随机选取 <span class="math inline">\(k\)</span> 个点，作为初始类的中心，然后对剩余的每个点进行距离计算，将点放到离自己最近的类中心点对应的那个类中去</li>
+<li>重新计算类的中心，然后用新的类中心去计算每个点与类之间的距离，并调整点的归属，直到收敛</li>
+</ol>
+<h4 id="特征-1">特征</h4>
+<ol type="1">
+<li>算法复杂度 <span class="math inline">\(O(mnk)\)</span>，其中 <span class="math inline">\(m\)</span> 为数据维度，<span class="math inline">\(n\)</span> 为样本数量，<span class="math inline">\(k\)</span> 为类的数量</li>
+<li>初始点的选取会对最终的聚类结果造成很大的影响</li>
+<li>必须事先给定 <span class="math inline">\(k\)</span> 的取值才能进行聚类，如果事先无法确定最优的 <span class="math inline">\(k\)</span> 值，可以选择若干个 <span class="math inline">\(k\)</span> 值进行试验，选择效果最好的那个 <span class="math inline">\(k\)</span> 值</li>
+<li>聚类效果可以用类的平均直径来衡量</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
+              <a href="/tags/Unsupervised-Learning/" rel="tag"># Unsupervised Learning</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/02/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%9F%BA%E7%A1%80/" rel="prev" title="卡尔曼滤波器基础">
+                  <i class="fa fa-chevron-left"></i> 卡尔曼滤波器基础
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/" rel="next" title="统计学习方法-模型评估与选择">
+                  统计学习方法-模型评估与选择 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sean Zhou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
