@@ -1340,4 +1340,27 @@ e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \i
         <tag>Rust</tag>
       </tags>
   </entry>
+  <entry>
+    <title>win10关闭terminal的提示音[SOLVED]</title>
+    <url>/2022/11/03/win10%E5%85%B3%E9%97%ADterminal%E7%9A%84%E6%8F%90%E7%A4%BA%E9%9F%B3/</url>
+    <content><![CDATA[<p>Win10的Terminal挺好用，但是按下tab的时候经常出现很烦人的提示音。下面记录一下如何删除这个提示音。</p>
+<ol type="1">
+<li>点击Settings</li>
+<li>点击Profiles-Defaults</li>
+<li>点击Advanced</li>
+<li>将Bell notification style中的复选框全不选</li>
+</ol>
+<span id="more"></span>
+<figure>
+<img src="/2022/11/03/win10%E5%85%B3%E9%97%ADterminal%E7%9A%84%E6%8F%90%E7%A4%BA%E9%9F%B3//win10取消terminal的提示音.png" alt><figcaption>默认情况下第一项是选中的，取消第一项的选中</figcaption>
+</figure>
+]]></content>
+      <categories>
+        <category>Technical Issues</category>
+      </categories>
+      <tags>
+        <tag>win10</tag>
+        <tag>terminal</tag>
+      </tags>
+  </entry>
 </search>
