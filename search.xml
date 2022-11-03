@@ -71,6 +71,22 @@ F_L = -\rho \Gamma U
       </tags>
   </entry>
   <entry>
+    <title>hexo博文图片显示问题[SOLVED]</title>
+    <url>/2022/11/01/hexo%E5%8D%9A%E6%96%87%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98-SOLVED/</url>
+    <content><![CDATA[<p>在使用hexo进行博客搭建的过程，发现使用Markdown语法的文档，无法正常加载上传的图片，例如</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">Potential Flow Analysis</span>](<span class="link">./2022-11-1-Potential-Flow-Analysis-Magnus-Effect/potential-flow-analysis-velocity-field-plot.png</span>)</span><br></pre></td></tr></table></figure>
+<p>通过观察构建信息，发现图片总是指向一个以 <code>/.io/</code> 开头的文件夹。经过在hexo官网的搜索，在评论区发现（😓）这个问题似乎是 <code>hexo-asset-image</code> 包的一个bug，只需要修改 <code>node_modules/hexo-asset-image/index.js</code> 的第24行，将其改为</p>
+<figure class="highlight javascript"><figcaption><span>node_modules/hexo-asset-image/index.js</span></figcaption><table><tr><td class="code"><pre><span class="line"># <span class="title class_">JavaScript</span> </span><br><span class="line"><span class="keyword">var</span> endPos = link.<span class="property">length</span>;</span><br></pre></td></tr></table></figure>
+<p>即可。</p>
+]]></content>
+      <categories>
+        <category>Technical Issues</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>C语言标准</title>
     <url>/2022/11/02/C%E8%AF%AD%E8%A8%80%E6%A0%87%E5%87%86/</url>
     <content><![CDATA[<h2 id="classic-c">Classic C</h2>
@@ -94,22 +110,6 @@ F_L = -\rho \Gamma U
       <tags>
         <tag>C</tag>
         <tag>Programming Language</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo博文图片显示问题[SOLVED]</title>
-    <url>/2022/11/01/hexo%E5%8D%9A%E6%96%87%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98-SOLVED/</url>
-    <content><![CDATA[<p>在使用hexo进行博客搭建的过程，发现使用Markdown语法的文档，无法正常加载上传的图片，例如</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">Potential Flow Analysis</span>](<span class="link">./2022-11-1-Potential-Flow-Analysis-Magnus-Effect/potential-flow-analysis-velocity-field-plot.png</span>)</span><br></pre></td></tr></table></figure>
-<p>通过观察构建信息，发现图片总是指向一个以 <code>/.io/</code> 开头的文件夹。经过在hexo官网的搜索，在评论区发现（😓）这个问题似乎是 <code>hexo-asset-image</code> 包的一个bug，只需要修改 <code>node_modules/hexo-asset-image/index.js</code> 的第24行，将其改为</p>
-<figure class="highlight javascript"><figcaption><span>node_modules/hexo-asset-image/index.js</span></figcaption><table><tr><td class="code"><pre><span class="line"># <span class="title class_">JavaScript</span> </span><br><span class="line"><span class="keyword">var</span> endPos = link.<span class="property">length</span>;</span><br></pre></td></tr></table></figure>
-<p>即可。</p>
-]]></content>
-      <categories>
-        <category>Technical Issues</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -1206,36 +1206,6 @@ e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \i
       </tags>
   </entry>
   <entry>
-    <title>Rust基本语法</title>
-    <url>/2022/11/03/Rust%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="基本语法">基本语法</h2>
-<p>下面通过一段简单的代码来认识一下Rust的基本语法。</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span>: <span class="type">i32</span> = <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">c</span> = <span class="number">30i32</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d</span> = <span class="number">30_i32</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">e</span> = <span class="title function_ invoke__">add</span>(<span class="title function_ invoke__">add</span>(a, b), <span class="title function_ invoke__">add</span>(c, d));</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;( a + b ) + ( c + d ) = &#123;&#125;&quot;</span>, e);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">add</span>(i: <span class="type">i32</span>, j: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    i + j</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<span id="more"></span>
-<h3 id="面向表达式的语言">面向表达式的语言</h3>
-<p>在Rust中需要特别注意区分两个不同的概念：语句 Statement 和表达式 Expression。从结构上来看，最大的区别就在于代码行尾有没有 <code>;</code> 符号，有 <code>;</code> 的是语句，没有的则是表达式。</p>
-<p>Rust的函数可以通过 <code>return</code> 返回值，也可以直接通过表达式来返回值，例如 <code>fn add(i, j)</code> 函数中的返回值就是通过 <code>i + j</code> 进行返回的。注意不要加上 <code>;</code>，否则返回的就是一个空的 <code>()</code>。</p>
-<h3 id="指定变量类型">指定变量类型</h3>
-<h4 id="immutable">immutable</h4>
-<p>通过 <code>let</code> 修饰符可以将一个变量声明为不可变的变量，即 immutables。</p>
-<h4 id="mutable">mutable</h4>
-<p>通过 <code>let mut</code> 修饰符可以将一个变量声明为可变变量，即 mutables。</p>
-<h4 id="数据类型">数据类型</h4>
-<p>通过 <code>let</code> 声明变量时，编译器会自动判断合适的数据类型。我们也可以手动为变量声明数据类型，例如 <code>let b: i32 = 20;</code> 就是将 <code>b</code> 声明为不可变的 <code>i32</code> 类型变量，即32位 <code>integer</code>。也可以通过 <code>30i32</code> 或 <code>30_i32</code> 来在赋值时声明数据类型。</p>
-<h4 id="string和char的区别">string和char的区别</h4>
-<p>在Rust中，用 <code>""</code> 来表示字符串，用 <code>''</code> 来表示字符，这里规定相较于 <code>Python</code> 更加严格。</p>
-<h3 id="函数签名">函数签名</h3>
-<p>Rust中的函数签名和 <code>Python</code> 非常相似，通过 <code>:</code> 来表示入参的数据类型，通过 <code>-&gt;</code> 来表示返回值的类型。</p>
-]]></content>
-      <categories>
-        <category>Computer Science</category>
-      </categories>
-      <tags>
-        <tag>Programming Language</tag>
-        <tag>Rust</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Rust基本类型</title>
     <url>/2022/11/03/Rust%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B/</url>
     <content><![CDATA[<h2 id="基本类型">基本类型</h2>
@@ -1282,6 +1252,36 @@ e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \i
 <h2 id="有理数和复数">有理数和复数</h2>
 <p>Rust标准库中不支持有理数和复数，但是社区开发的 <code>num</code> 库中可以支持。只需要在 <code>Cargo.toml</code> 文件的 <code>[dependencies]</code> 中加入 <code>num = "0.4.0"</code> 即可。</p>
 <figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> num::complex::Complex;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = Complex&#123; re: <span class="number">2.1</span>, im: -<span class="number">1.2</span> &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span> = Complex::<span class="title function_ invoke__">new</span>(<span class="number">11.1</span>, <span class="number">22.2</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = a + b;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Result = &#123;&#125; + &#123;&#125;i&quot;</span>, result.re, result.im);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Computer Science</category>
+      </categories>
+      <tags>
+        <tag>Programming Language</tag>
+        <tag>Rust</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Rust基本语法</title>
+    <url>/2022/11/03/Rust%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="基本语法">基本语法</h2>
+<p>下面通过一段简单的代码来认识一下Rust的基本语法。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span>: <span class="type">i32</span> = <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">c</span> = <span class="number">30i32</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d</span> = <span class="number">30_i32</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">e</span> = <span class="title function_ invoke__">add</span>(<span class="title function_ invoke__">add</span>(a, b), <span class="title function_ invoke__">add</span>(c, d));</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;( a + b ) + ( c + d ) = &#123;&#125;&quot;</span>, e);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">add</span>(i: <span class="type">i32</span>, j: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    i + j</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h3 id="面向表达式的语言">面向表达式的语言</h3>
+<p>在Rust中需要特别注意区分两个不同的概念：语句 Statement 和表达式 Expression。从结构上来看，最大的区别就在于代码行尾有没有 <code>;</code> 符号，有 <code>;</code> 的是语句，没有的则是表达式。</p>
+<p>Rust的函数可以通过 <code>return</code> 返回值，也可以直接通过表达式来返回值，例如 <code>fn add(i, j)</code> 函数中的返回值就是通过 <code>i + j</code> 进行返回的。注意不要加上 <code>;</code>，否则返回的就是一个空的 <code>()</code>。</p>
+<h3 id="指定变量类型">指定变量类型</h3>
+<h4 id="immutable">immutable</h4>
+<p>通过 <code>let</code> 修饰符可以将一个变量声明为不可变的变量，即 immutables。</p>
+<h4 id="mutable">mutable</h4>
+<p>通过 <code>let mut</code> 修饰符可以将一个变量声明为可变变量，即 mutables。</p>
+<h4 id="数据类型">数据类型</h4>
+<p>通过 <code>let</code> 声明变量时，编译器会自动判断合适的数据类型。我们也可以手动为变量声明数据类型，例如 <code>let b: i32 = 20;</code> 就是将 <code>b</code> 声明为不可变的 <code>i32</code> 类型变量，即32位 <code>integer</code>。也可以通过 <code>30i32</code> 或 <code>30_i32</code> 来在赋值时声明数据类型。</p>
+<h4 id="string和char的区别">string和char的区别</h4>
+<p>在Rust中，用 <code>""</code> 来表示字符串，用 <code>''</code> 来表示字符，这里规定相较于 <code>Python</code> 更加严格。</p>
+<h3 id="函数签名">函数签名</h3>
+<p>Rust中的函数签名和 <code>Python</code> 非常相似，通过 <code>:</code> 来表示入参的数据类型，通过 <code>-&gt;</code> 来表示返回值的类型。</p>
 ]]></content>
       <categories>
         <category>Computer Science</category>
