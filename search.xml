@@ -1364,26 +1364,70 @@ e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \i
       </tags>
   </entry>
   <entry>
-    <title>开始学习Rust!</title>
-    <url>/2022/11/04/%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0Rust/</url>
-    <content><![CDATA[<h2 id="rust是什么">Rust是什么？</h2>
-<p>Rust是目前为止在内存安全方面设计最牛逼的语言。</p>
+    <title>Rust入门-猜数字游戏</title>
+    <url>/2022/11/04/Rust%E5%85%A5%E9%97%A8-%E7%8C%9C%E6%95%B0%E5%AD%97%E6%B8%B8%E6%88%8F/</url>
+    <content><![CDATA[<h2 id="引入">引入</h2>
+<p>Rust是一门很有意思的语言。《Rust程序设计语言》中，在Rust入门章节介绍了一个猜数字小游戏的编程，对于Rust的入门非常有帮助，因此简单记录一下。</p>
 <span id="more"></span>
-<h2 id="rust安装与更新">Rust安装与更新</h2>
-<h3 id="如何安装rust">如何安装Rust</h3>
-<p>笔者以WSL-Debian为开发环境，使用以下命令进行 <code>rustup</code> 的安装。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl --proto <span class="string">&#x27;=https&#x27;</span> --tlsv1.2 https://sh.rustup.rs -sSf | sh</span><br></pre></td></tr></table></figure>
-<p>运行上述命令，将自动从Rust官网下载 <code>rustup</code> 工具，然后帮助我们安装Rust整套工具链。除此以外，我们还需要一个链接器，可以通过安装 <code>build-essential</code> 进行 <code>GNU C Compiler</code> 的安装。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install build-essential</span><br></pre></td></tr></table></figure>
-<h3 id="如何更新rust">如何更新Rust</h3>
-<p>安装了 <code>rustup</code> 之后，更新Rust工具链只需要运行</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rustup update</span><br></pre></td></tr></table></figure>
-<p>即可。</p>
-<h3 id="如何卸载rust">如何卸载Rust</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rustup self uninstall</span><br></pre></td></tr></table></figure>
-<h3 id="检查是否正确安装rust">检查是否正确安装Rust</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rustc --version</span><br></pre></td></tr></table></figure>
-<p>如果看到命令行返回 <code>rustc</code> 版本等信息，说明Rust已经成功安装。</p>
+<h2 id="猜数字小游戏总览">猜数字小游戏总览</h2>
+<p>我们希望随机生成一个 <span class="math inline">\([0, 100]\)</span> 区间内的整数，让用户来猜这个数字。如果猜错了，要提示猜大了还是猜小了，然后让用户继续猜；如果猜对了，则提示用户猜对了，并结束游戏；如果用户不想玩了，可以输入 <code>quit</code> 退出游戏。</p>
+<h3 id="生成一个新项目">生成一个新项目</h3>
+<p><code>cargo</code> 是Rust的项目管理工具，可以实现非常便捷的依赖管理。我们使用</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cargo new guessing_game</span><br></pre></td></tr></table></figure>
+<p>命令，进行 <code>guessing_game</code> 项目工程的新建。</p>
+<h3 id="获取用户的输入">获取用户的输入</h3>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;来玩一个猜数字游戏，我们会随机生成0-100之间的一个整数，你来猜&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;请输入你的猜测&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">guess</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>();</span><br><span class="line">    io::<span class="title function_ invoke__">stdin</span>()</span><br><span class="line">        .<span class="title function_ invoke__">read_line</span>(&amp;<span class="keyword">mut</span> guess)</span><br><span class="line">        .<span class="title function_ invoke__">expect</span>(<span class="string">&quot;Failed to read line&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;你输入的数字是：&#123;&#125;&quot;</span>, guess);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面简单分析一下上面这段代码中所蕴含的Rust概念：</p>
+<ul>
+<li><code>println!()</code> 是Rust中最常用的输出方式，注意 <code>!</code> 表示这是一个宏，而不是一个函数。Rust中提供了两个输出内容到命令行的方式，<code>println!()</code> 为其一，另一个宏是 <code>print!()</code>，这两者的相同之处在于它们都会将内容格式化为字符串，打印到命令行上；不同之处在于，<code>println!()</code> 会在格式化之后的字符串末尾自动加上 <code>\n</code> 换行符，而 <code>print!()</code> 是不会加换行符的。</li>
+<li><code>let</code> 是Rust中新建变量的关键字；<code>mut</code> 是Rust中可变变量的意思。Rust中默认新建的变量是不可变的 <code>immutables</code>，如果要新建可变变量必须声明 <code>mut</code> 类型。也就是说，Rust强迫程序员在声明可变变量的时候付出更多的成本，这也是出于保障内存安全的考虑而设计的机制。</li>
+<li><code>String::new()</code> 表示新建一个 <code>String</code> 类型的实例。</li>
+<li><code>std::io</code> 是Rust标准库中的io库，这是为了获取用户的输入。
+<ul>
+<li>本程序的第一行代码 <code>use std::io;</code> 表示这个文件中可以使用 <code>std::io</code> 库中的功能，所以代码中可以直接使用 <code>io::stdin()</code> 来使用库中的 <code>stdin()</code> 函数；如果不声明 <code>use std::io;</code>，也可以使用 <code>std::io::stdin()</code> 来使用。</li>
+<li>本例中的 <code>io::stdin()</code> 函数将会在调用后返回一个 <code>std::io::Stdin</code> 实例。我们需要调用该实例的 <code>read_line()</code> 方法，读取命令行输入的数据；</li>
+<li><code>read_line(&amp;mut guess)</code> 表示，将命令行读取到的数据存入之前创建的可变变量 <code>mut guess</code> 中去，这里有一个 <code>&amp;</code> 符号，表示引用，实际上在机器层面，是将 <code>read_line()</code> 读取到的数据存入 <code>mut guess</code> 这个可变变量对应的内存地址中去；</li>
+<li><code>read_line()</code> 其实会返回一个 <code>Result</code> 实例，这是一个枚举类型，包括 <code>Ok</code> 以及 <code>Err</code> 两个成员，如果 <code>read_line()</code> 成功，<code>Result</code> 将是 <code>Ok</code>，反之 <code>Result</code> 将为 <code>Err</code>；其实这隐含了异常处理机制，我们可以使用 <code>Result</code> 实例的 <code>expect()</code> 方法进行异常的处理。
+<ul>
+<li>如果 <code>Result</code> 实例是 <code>Err</code>，那么调用 <code>expect()</code> 会导致程序崩溃；我们可以在 <code>expect()</code> 中输入错误信息，例如程序中所示的 <code>expect("Failed to read line")</code>，将会使得程序崩溃之后给出错误信息提示，有点类似于其他语言中抛出异常时给一个异常的信息</li>
+<li>如果 <code>Result</code> 实例是 <code>Ok</code>，那么调用 <code>expect()</code> 不会出现任何问题，而是会返回 <code>Ok</code> 中的值；<code>read_line()</code> 方法的返回值是读到的字符串的字节长度，我们这里不需要这个值，所以并没有将这个值和某个变量进行绑定。</li>
+</ul></li>
+</ul></li>
+<li>最后，我们再次调用了 <code>println!()</code> 把 <code>guess</code> 变量的值输出到命令行；注意，我们这里使用了 <code>println!()</code> 函数的格式化功能，和Python的 <code>print(f'')</code> 函数很类似，只需要用 <code>&#123;&#125;</code> 在需要格式化输出的地方进行标记，然后在字符串后面跟上对应的变量，Rust会自动将对应变量的值转为字符串，插入到标记的位置，连前缀 <code>f</code> 都不需要写，非常方便。</li>
+</ul>
+<h3 id="生成随机数">生成随机数</h3>
+<h4 id="项目依赖的介绍">项目依赖的介绍</h4>
+<p>Rust的标准库中没有随机数生成的相关功能，因此必须从外部引入库。前面我们用 <code>cargo new</code> 命令生成了整个项目，可以在 <code>Cargo.toml</code> 文件中的 <code>[dependencies]</code> 项中，声明项目的外部库依赖。这里顺带提一下，Rust中的外部库称为 <code>crate</code>，因为在英语中一个 <code>crate</code> 就代指一箱货物，和 <code>cargo</code> 这个集装箱的概念就对应上了。<code>crate</code> 分为 <code>binary crate</code> 和 <code>library crate</code>，主要的区别在于 <code>binary crate</code> 的产物是一个可执行文件，所以这样的 <code>crate</code> 中一定会存在一个 <code>main.rs</code> 作为入口文件；<code>library crate</code> 主要提供一些函数，用来给别人调用，因此不要求存在 <code>main.rs</code>。</p>
+<p>打开 <code>Cargo.toml</code> 文件，在 <code>[dependencies]</code> 下面添加 <code>rand["0.9.3"]</code> 项。然后，我们运行一次 <code>cargo build</code>，<code>cargo</code> 会自动帮我们从 <code>crate.io</code> 拉取对应的代码，随后完成一次构建。注意到我们在添加依赖项的时候，必须按照 <code>a.b.c</code> 的格式进行版本号声明。事实上，<code>a.b.c</code> 是 <code>^a.b.c</code> 的简化版本，这暗示了 <code>cargo</code> 会自动帮我们从 <code>crate.io</code> 中找到 <code>a.b.x</code> 版本的依赖，这个 <code>x</code> 是大于等于 <code>c</code> 的。也就是说，<code>cargo</code> 会自动帮助我们在构建他人的项目时，下载依赖的最新小版本代码。</p>
+<p>这很方便，但也存在问题，例如依赖的小版本更新恰好影响了项目的功能。为了解决这个问题，在 <code>Cargo.lock</code> 文件中会保存初次构建时使用的依赖版本，这个机制主要是为了使得所有人都能够复现成功的构建，而不会由于依赖的版本变更导致无法进行构建。</p>
+<p><code>cargo update</code> 可以将当前的依赖版本更新到最新的小版本，这点和我们去构建别人的项目行为一致。如果要在 <code>b</code> 上进行版本变更，必须手动修改 <code>Cargo.toml</code> 文件。例如原来是 <code>"0.8.4"</code> 的依赖，想要更新到 <code>"0.9.0"</code>，那么必须要手动修改；如果是 <code>"0.8.4"</code> 更新到 <code>"0.8.5"</code>，是可以用 <code>cargo update</code> 更新的。</p>
+<h4 id="使用-rand-库">使用 <code>rand</code> 库</h4>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> rand::Rng;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 前面的代码不再重复出现</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">secret_number</span> = rand::<span class="title function_ invoke__">thread_rng</span>().<span class="title function_ invoke__">gen_range</span>(<span class="number">0</span>..<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最上方的 <code>use rand::Rng</code> 是一个 <code>trait</code>，定义了随机数生成器应当实现的方法。<code>trait</code> 的定义在后面会详细介绍，这里只需要知道我们想要使用随机数生成器，就必须引入这个 <code>trait</code>。随后，利用 <code>rand</code> 库中的 <code>thread_rng()</code> 函数，获取一个随机数生成器，这个生成器位于当前线程的环境中，从操作系统获取 <code>seed</code>。最后，我们调用随机数生成器的 <code>gen_range()</code> 方法，进行 <span class="math inline">\([0, 100]\)</span> 区间内随机整数的生成，这个方法是 <code>rand::Rng</code> 这个 <code>trait</code> 定义的。注意 <code>0..101</code> 表示 <span class="math inline">\([0, 101)\)</span>，也就是左闭右开区间。</p>
+<h3 id="比较随机数和用户输入的数字">比较随机数和用户输入的数字</h3>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::cmp::Ordering;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 前面的代码不再重复出现</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">guess</span>: <span class="type">u32</span> = guess.<span class="title function_ invoke__">trim</span>().<span class="title function_ invoke__">parse</span>().<span class="title function_ invoke__">expect</span>(<span class="string">&quot;请输入一个数字！&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> guess.<span class="title function_ invoke__">cmp</span>(&amp;secret_number) &#123;</span><br><span class="line">        Ordering::Equal =&gt; <span class="built_in">println!</span>(<span class="string">&quot;你猜对了！&quot;</span>),</span><br><span class="line">        Ordering::Greater =&gt; <span class="built_in">println!</span>(<span class="string">&quot;你猜大了！&quot;</span>),</span><br><span class="line">        Ordering::Less =&gt; <span class="built_in">println!</span>(<span class="string">&quot;你猜小了！&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码中，首先要将 <code>guess</code> 变量从字符串类型转换为整型，否则无法进行比较。</p>
+<ul>
+<li><code>let guess: u32 = ...</code> 表示创建一个 <code>u32</code> 类型的不可变变量，其中 <code>u32</code> 表示32位无符号整型</li>
+<li><code>guess.trim()</code> 是在 <code>guess</code> 作为一个 <code>String</code> 实例时，调用了其 <code>trim()</code> 方法，这个方法可以将字符串头尾的换行符、制表符以及空白符号去除掉；注意我们之前的 <code>std::io::Stdin.read_line()</code> 方法在读取命令行输入时，会把用户的回车也读取进来，这导致字符串总是以 <code>"\n"</code> 结尾，所以必须使用 <code>trim()</code> 方法进行换行符的去除</li>
+<li><code>guess.trim().parse()</code> 是对 <code>guess.trim()</code> 返回的字符串进行类型转换。前面我们已经定义了 <code>guess</code> 为 <code>u32</code> 类型，所以这里不需要重复指明转换后的类型，Rust编译器会自动判断；当然，如果我们没有事先定义好 <code>u32</code> 数据类型的话，必须要指明转换类型；这个 <code>parse()</code> 函数和前面的 <code>std::io::Stdin.read_line()</code> 函数一样，会返回一个 <code>Result</code> 实例；如果 <code>Result</code> 为 <code>Ok</code>，那么可以从 <code>Result</code> 中获得 <code>parse()</code> 成功转换之后的值，例如从 <code>"1"</code> 转换为 <code>1</code>；如果 <code>Result</code> 为 <code>Err</code>，那么说明 <code>parse()</code> 的过程中发生了错误，例如 <code>guess</code> 变量中存在非数字字符，例如 <code>"hero"</code> 是无法进行到整型的类型转换的。为了避免这种错误，我们应该在这里也使用 <code>expect()</code> 函数进行错误处理，否则Rust编译器会报警。这不会影响编译，但是最好养成良好的编程习惯，利用 <code>expect()</code> 捕获 <code>Err</code> 并退出程序。</li>
+<li><code>guess.cmp()</code> 方法用于比较两个变量值的关系，并给出一个 <code>std::cmp::Ordering</code> 类型枚举量。
+<ul>
+<li>利用 <code>match</code> 语句，我们可以写出一个类似于C语言中 <code>switch</code> 的语言结构，即 <code>guess.cmp()</code> 比较出来的结果是 <code>A</code> 的时候执行什么语句。</li>
+<li>可以观察到 <code>match</code> 语句的内部，存在三种条件判断
+<ul>
+<li><code>if guess.cmp(&amp;secret_number) == Ordering::Equal</code> 则 <code>println!("你猜对了！")</code></li>
+<li><code>if guess.cmp(&amp;secret_number) == Ordering::Greater</code> 则 <code>println!("你猜大了！")</code></li>
+<li><code>if guess.cmp(&amp;secret_number) == Ordering::Less</code> 则 <code>println!("你猜小了！")</code></li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="引入循环">引入循环</h3>
+<p>其实代码写到这里，这个游戏就可以进行一次完成的流程了。但是，我们希望用户能够多猜几次数字，毕竟一次要猜中非常困难。为此，我们需要在程序中引入循环。如果用户猜中了，本轮游戏结束；如果用户猜错了，则让用户继续猜数字；如果用户不想玩了，则输入 <code>quit</code> 退出游戏。</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"><span class="keyword">use</span> std::cmp::Ordering;</span><br><span class="line"><span class="keyword">use</span> rand::Rng;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;我们来玩一个猜数字游戏，我会在0-100之间随机生成一个整数，然后你来猜！&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">secret_number</span> = rand::<span class="title function_ invoke__">thread_rng</span>().<span class="title function_ invoke__">gen_range</span>(<span class="number">0</span>..<span class="number">101</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">loop</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">guess</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>();</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;请输入你的猜测！&quot;</span>);</span><br><span class="line">        io::<span class="title function_ invoke__">stdin</span>()</span><br><span class="line">            .<span class="title function_ invoke__">read_line</span>(&amp;<span class="keyword">mut</span> guess)</span><br><span class="line">            .<span class="title function_ invoke__">expect</span>(<span class="string">&quot;Failed to read line&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> guess.<span class="title function_ invoke__">trim</span>() == <span class="string">&quot;quit&quot;</span> &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> <span class="variable">guess</span>: <span class="type">u32</span> = guess.<span class="title function_ invoke__">trim</span>().<span class="title function_ invoke__">parse</span>().<span class="title function_ invoke__">expect</span>(<span class="string">&quot;请输入一个数字！&quot;</span>);</span><br><span class="line">        <span class="keyword">match</span> guess.<span class="title function_ invoke__">cmp</span>(&amp;secret_number) &#123;</span><br><span class="line">            Ordering::Equal =&gt; &#123;</span><br><span class="line">                <span class="built_in">println!</span>(<span class="string">&quot;你猜对了！&quot;</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;,</span><br><span class="line">            Ordering::Greater =&gt; <span class="built_in">println!</span>(<span class="string">&quot;你猜大了！&quot;</span>),</span><br><span class="line">            Ordering::Less =&gt; <span class="built_in">println!</span>(<span class="string">&quot;你猜小了!&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;再见！&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们引入了 <code>loop</code> 语句，这和C语言中的 <code>while(1)</code> 是类似的，就是一个无限的循环，可以通过 <code>break</code> 跳出。我们在用户输入之后，先判断是否为 <code>"quit"</code>，如果是就跳出循环，从而退出程序；如果不是，则判断能不能正常转为整型，然后再与 <code>secret_number</code> 进行比较，如果猜对了就跳出循环，从而退出程序，如果猜错就重新开始循环。</p>
+<h2 id="总结">总结</h2>
+<p>这个小程序非常简单，但是涉及到了Rust中非常多的概念和流程语句，因此作为一个Rust入门程序非常好。</p>
 ]]></content>
       <categories>
         <category>Computer Science</category>
