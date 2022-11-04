@@ -22,26 +22,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Sean Zhou&#39;s personal blog.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Elysium">
-<meta property="og:url" content="http://seanzhou0616.github.io/tags/hexo/">
+    <meta name="description" content="Rust是什么？ Rust是目前为止在内存安全方面设计最牛逼的语言。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开始学习Rust!">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/11/04/%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0Rust/">
 <meta property="og:site_name" content="Elysium">
-<meta property="og:description" content="Sean Zhou&#39;s personal blog.">
+<meta property="og:description" content="Rust是什么？ Rust是目前为止在内存安全方面设计最牛逼的语言。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-04T04:19:56.000Z">
+<meta property="article:modified_time" content="2022-11-04T04:57:20.389Z">
 <meta property="article:author" content="Sean Zhou">
-<meta property="article:tag" content="Personal-Blog">
+<meta property="article:tag" content="Programming Language">
+<meta property="article:tag" content="Rust">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://seanzhou0616.github.io/tags/hexo/">
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/11/04/%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0Rust/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"tags/hexo/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/11/04/%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0Rust/","path":"2022/11/04/开始学习Rust/","title":"开始学习Rust!"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>标签: hexo | Elysium</title>
+<title>开始学习Rust! | Elysium</title>
   
 
 
@@ -132,7 +135,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -145,6 +148,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rust%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">Rust是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rust%E5%AE%89%E8%A3%85%E4%B8%8E%E6%9B%B4%E6%96%B0"><span class="nav-number">2.</span> <span class="nav-text">Rust安装与更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%89%E8%A3%85rust"><span class="nav-number">2.1.</span> <span class="nav-text">如何安装Rust</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%9B%B4%E6%96%B0rust"><span class="nav-number">2.2.</span> <span class="nav-text">如何更新Rust</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%8D%B8%E8%BD%BDrust"><span class="nav-number">2.3.</span> <span class="nav-text">如何卸载Rust</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE%E5%AE%89%E8%A3%85rust"><span class="nav-number">2.4.</span> <span class="nav-text">检查是否正确安装Rust</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -207,50 +211,119 @@
 </noscript>
 
 
-    <div class="main-inner tag posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
+
+
+<div class="post-block">
   
   
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h1 class="collection-header">hexo
-          <small>标签</small>
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/04/%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0Rust/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="开始学习Rust! | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          开始学习Rust!
         </h1>
-      </div>
 
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
+
+      <time title="创建时间：2022-11-04 12:19:56 / 修改时间：12:57:20" itemprop="dateCreated datePublished" datetime="2022-11-04T12:19:56+08:00">2022-11-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Computer-Science/" itemprop="url" rel="index"><span itemprop="name">Computer Science</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="rust是什么">Rust是什么？</h2>
+<p>Rust是目前为止在内存安全方面设计最牛逼的语言。</p>
+<span id="more"></span>
+<h2 id="rust安装与更新">Rust安装与更新</h2>
+<h3 id="如何安装rust">如何安装Rust</h3>
+<p>笔者以WSL-Debian为开发环境，使用以下命令进行 <code>rustup</code> 的安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --proto <span class="string">&#x27;=https&#x27;</span> --tlsv1.2 https://sh.rustup.rs -sSf | sh</span><br></pre></td></tr></table></figure>
+<p>运行上述命令，将自动从Rust官网下载 <code>rustup</code> 工具，然后帮助我们安装Rust整套工具链。除此以外，我们还需要一个链接器，可以通过安装 <code>build-essential</code> 进行 <code>GNU C Compiler</code> 的安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install build-essential</span><br></pre></td></tr></table></figure>
+<h3 id="如何更新rust">如何更新Rust</h3>
+<p>安装了 <code>rustup</code> 之后，更新Rust工具链只需要运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup update</span><br></pre></td></tr></table></figure>
+<p>即可。</p>
+<h3 id="如何卸载rust">如何卸载Rust</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup self uninstall</span><br></pre></td></tr></table></figure>
+<h3 id="检查是否正确安装rust">检查是否正确安装Rust</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustc --version</span><br></pre></td></tr></table></figure>
+<p>如果看到命令行返回 <code>rustc</code> 版本等信息，说明Rust已经成功安装。</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-11-01T19:56:57+08:00"
-              content="2022-11-01">
-          11-01
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/11/01/hexo%E5%8D%9A%E6%96%87%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98-SOLVED/" itemprop="url">
-            <span itemprop="name">hexo博文图片显示问题[SOLVED]</span>
-          </a>
-      </div>
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Programming-Language/" rel="tag"># Programming Language</a>
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+          </div>
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/03/win10%E5%85%B3%E9%97%ADterminal%E7%9A%84%E6%8F%90%E7%A4%BA%E9%9F%B3/" rel="prev" title="win10关闭terminal的提示音[SOLVED]">
+                  <i class="fa fa-chevron-left"></i> win10关闭terminal的提示音[SOLVED]
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
   </article>
+</div>
 
-    </div>
-  </div>
-  
-  
-  
+
+
+
+
 
 </div>
   </main>
