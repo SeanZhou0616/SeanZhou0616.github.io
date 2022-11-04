@@ -30,7 +30,7 @@
 <meta property="og:description" content="引入 Rust是一门很有意思的语言。《Rust程序设计语言》中，在Rust入门章节介绍了一个猜数字小游戏的编程，对于Rust的入门非常有帮助，因此简单记录一下。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-11-04T06:50:33.000Z">
-<meta property="article:modified_time" content="2022-11-04T09:45:59.199Z">
+<meta property="article:modified_time" content="2022-11-04T09:47:57.599Z">
 <meta property="article:author" content="Sean Zhou">
 <meta property="article:tag" content="Programming Language">
 <meta property="article:tag" content="Rust">
@@ -252,7 +252,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-11-04 14:50:33 / 修改时间：17:45:59" itemprop="dateCreated datePublished" datetime="2022-11-04T14:50:33+08:00">2022-11-04</time>
+      <time title="创建时间：2022-11-04 14:50:33 / 修改时间：17:47:57" itemprop="dateCreated datePublished" datetime="2022-11-04T14:50:33+08:00">2022-11-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -321,7 +321,7 @@
 <li><code>guess.trim().parse()</code> 是对 <code>guess.trim()</code> 返回的字符串进行类型转换。前面我们已经定义了 <code>guess</code> 为 <code>u32</code> 类型，所以这里不需要重复指明转换后的类型，Rust编译器会自动判断；当然，如果我们没有事先定义好 <code>u32</code> 数据类型的话，必须要指明转换类型；这个 <code>parse()</code> 函数和前面的 <code>std::io::Stdin.read_line()</code> 函数一样，会返回一个 <code>Result</code> 实例；如果 <code>Result</code> 为 <code>Ok</code>，那么可以从 <code>Result</code> 中获得 <code>parse()</code> 成功转换之后的值，例如从 <code>"1"</code> 转换为 <code>1</code>；如果 <code>Result</code> 为 <code>Err</code>，那么说明 <code>parse()</code> 的过程中发生了错误，例如 <code>guess</code> 变量中存在非数字字符，例如 <code>"hero"</code> 是无法进行到整型的类型转换的。为了避免这种错误，我们应该在这里也使用 <code>expect()</code> 函数进行错误处理，否则Rust编译器会报警。这不会影响编译，但是最好养成良好的编程习惯，利用 <code>expect()</code> 捕获 <code>Err</code> 并退出程序。</li>
 <li><code>guess.cmp()</code> 方法用于比较两个变量值的关系，并给出一个 <code>std::cmp::Ordering</code> 类型枚举量。
 <ul>
-<li>利用 <code>match</code> 语句，我们可以写出一个类似于C语言中 <code>switch</code> 的语言结构，即 <code>guess.cmp()</code> 比较出来的结果是 <code>A</code> 的时候执行什么语句。</li>
+<li>利用 <code>match</code> 语句，我们可以写出一个类似于C语言中 <code>switch</code> 的语言结构，即 <code>guess.cmp()</code> 比较出来的结果是 <code>A</code> 的时候执行什么语句；<code>match</code> 的分支称为 <code>arm</code>，一个 <code>arm</code> 对应一个 <code>pattern</code>；<code>match</code> 应当遍历目标变量的所有 <code>pattern</code>。</li>
 <li>可以观察到 <code>match</code> 语句的内部，存在三种条件判断
 <ul>
 <li><code>if guess.cmp(&amp;secret_number) == Ordering::Equal</code> 则 <code>println!("你猜对了！")</code></li>
