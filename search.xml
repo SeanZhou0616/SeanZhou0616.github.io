@@ -950,6 +950,27 @@ R_4(x) = \frac{f^{(5)}(\xi)}{5!}(x-x_0)^2(x-x_1)^2(x-x_0)
       </tags>
   </entry>
   <entry>
+    <title>服务器最大TCP连接数问题</title>
+    <url>/2022/11/02/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9C%80%E5%A4%A7TCP%E8%BF%9E%E6%8E%A5%E6%95%B0%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>在不考虑硬件资源的情况下，一个服务器（对应公网的一个 ip 地址）最大能够建立多少个TCP连接？</p>
+<p>需要明确的一点是，一个TCP连接有四要素：</p>
+<ol type="1">
+<li>服务器 ip 地址</li>
+<li>服务器端口</li>
+<li>客户端 ip 地址</li>
+<li>客户端端口</li>
+</ol>
+<p>所以TCP最大连接数其实就是求一个组合问题。在 ipv4 的情况下，同一网络中最多能够存在 <span class="math inline">\(2^{32}\)</span> 个 ip 地址；服务器往往只监听一个特殊的端口，所以服务器这边的 ip 地址和端口是唯一确定的；TCP 中端口是用一个16位无符号整型数来表示的，再考虑到1000以内的端口一般是保留的，所以粗略估计一下，一个服务器最多能够建立起 <span class="math inline">\((2^{32}-1) \times (2^{16}-1000)\)</span> 个TCP连接。</p>
+]]></content>
+      <categories>
+        <category>Computer Science</category>
+      </categories>
+      <tags>
+        <tag>Computer Networking</tag>
+        <tag>TCP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>栈和堆</title>
     <url>/2022/11/02/%E6%A0%88%E5%92%8C%E5%A0%86/</url>
     <content><![CDATA[<h2 id="栈和堆分别是什么">栈和堆分别是什么</h2>
@@ -979,24 +1000,35 @@ R_4(x) = \frac{f^{(5)}(\xi)}{5!}(x-x_0)^2(x-x_1)^2(x-x_0)
       </tags>
   </entry>
   <entry>
-    <title>服务器最大TCP连接数问题</title>
-    <url>/2022/11/02/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9C%80%E5%A4%A7TCP%E8%BF%9E%E6%8E%A5%E6%95%B0%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p>在不考虑硬件资源的情况下，一个服务器（对应公网的一个 ip 地址）最大能够建立多少个TCP连接？</p>
-<p>需要明确的一点是，一个TCP连接有四要素：</p>
-<ol type="1">
-<li>服务器 ip 地址</li>
-<li>服务器端口</li>
-<li>客户端 ip 地址</li>
-<li>客户端端口</li>
-</ol>
-<p>所以TCP最大连接数其实就是求一个组合问题。在 ipv4 的情况下，同一网络中最多能够存在 <span class="math inline">\(2^{32}\)</span> 个 ip 地址；服务器往往只监听一个特殊的端口，所以服务器这边的 ip 地址和端口是唯一确定的；TCP 中端口是用一个16位无符号整型数来表示的，再考虑到1000以内的端口一般是保留的，所以粗略估计一下，一个服务器最多能够建立起 <span class="math inline">\((2^{32}-1) \times (2^{16}-1000)\)</span> 个TCP连接。</p>
+    <title>统计学习方法-模型评估与选择</title>
+    <url>/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/</url>
+    <content><![CDATA[<h2 id="模型评估参数">模型评估参数</h2>
+<h3 id="训练误差">训练误差</h3>
+<p>将训练得到的模型记为 <span class="math inline">\(Y = \hat f(X)\)</span>，那么训练误差就是模型 <span class="math inline">\(\hat f\)</span> 在训练集 <span class="math inline">\(T\)</span> 中的经验风险函数。</p>
+<p><span class="math display">\[
+R_{emp}(\hat f) = \frac{1}{N}\sum^N_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \in T
+\]</span></p>
+<h3 id="测试误差">测试误差</h3>
+<p>测试误差指的是模型 <span class="math inline">\(\hat f\)</span> 在测试集中的经验风险函数。</p>
+<p><span class="math display">\[
+e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \in T_{test}
+\]</span></p>
+<h3 id="模型评估方法">模型评估方法</h3>
+<p>训练误差对于模型的好坏评价意义不大，主要用来判断假设空间选取是否合适；测试误差对于模型的泛化能力评估意义比较大。</p>
+<h2 id="交叉验证-cross-validation">交叉验证 Cross Validation</h2>
+<p>为了更好地评估训练得到模型的性能，交叉验证是必要的。利用测试集进行模型泛化能力的评估是交叉验证的结果，本小节的重点是记录交叉验证的方法，或者说如何进行训练集和测试集的划分。</p>
+<h3 id="简单交叉验证">简单交叉验证</h3>
+<p>随机将数据集的70%作为训练集，剩余30%作为测试集。</p>
+<h3 id="s折交叉验证-s-fold">S折交叉验证 S-Fold</h3>
+<p>S折交叉验证是工业中最常用的交叉验证方法，因为这种方法能最大程度上发挥数据集的作用。具体的做法是，将数据集随机分成S个子集，随后进行S次迭代，每一次迭代都将S个子集中的其中一个子集作为测试集，其他的S-1个子集作为训练集。经过S次迭代之后，选出平均测试误差最小的模型作为最优模型。</p>
+<h3 id="留一交叉验证-leave-one-cut">留一交叉验证 Leave-one-cut</h3>
+<p>留一交叉验证是S折交叉验证的一种特殊情况，即取S的值为样本容量。</p>
 ]]></content>
       <categories>
         <category>Computer Science</category>
       </categories>
       <tags>
-        <tag>Computer Networking</tag>
-        <tag>TCP</tag>
+        <tag>Machine Learning</tag>
       </tags>
   </entry>
   <entry>
@@ -1122,173 +1154,6 @@ C^* = \mathop{argmin}\limits_{C}W(C) = \mathop{argmin}\limits_{C}\sum^k_{i=1}\su
       <tags>
         <tag>Machine Learning</tag>
         <tag>Unsupervised Learning</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Rust变量绑定与解构</title>
-    <url>/2022/11/03/Rust%E5%8F%98%E9%87%8F%E7%BB%91%E5%AE%9A%E4%B8%8E%E8%A7%A3%E6%9E%84/</url>
-    <content><![CDATA[<h2 id="为什么要设定变量的可变性">为什么要设定变量的可变性？</h2>
-<p>不可变的变量能够使得代码更加安全，可变变量可以使得代码更加灵活，如果既要实现可变又要不可变，那么需要在底层实现上花非常大的力气。</p>
-<p>另外，不可变变量的声明可以在运行时避免多余的 <code>runtime</code> 检查，由此提升运行时性能。</p>
-<span id="more"></span>
-<h2 id="变量绑定">变量绑定</h2>
-<p>在Rust中，我们不说变量的赋值，而是说变量的绑定。因为这里涉及到Rust的核心概念——<strong>所有权</strong>。简单来说，Rust将内存看作对象，变量绑定就是将某一个内存对象的所有权赋予目标变量的过程，而原来的变量对这个内存对象的所有权就失效了。</p>
-<p>内存对象在Rust中就像财产，变量就像一个个人，将某一个内存对象绑定给某一个变量，就类似于声明这个内存对象现在由这个变量所拥有。</p>
-<h2 id="变量默认不可变">变量默认不可变</h2>
-<p>Rust中通过 <code>let</code> 声明的变量默认是不能变更的，必须使用 <code>let mut</code> 声明，变量才能够变更，例如</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;x = &#123;&#125;&quot;</span>, x);</span><br><span class="line">    x = <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;x = &#123;&#125;&quot;</span>, x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上述代码在Rust中会报错，必须改为</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">x</span> = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;x = &#123;&#125;&quot;</span>, x);</span><br><span class="line">    x = <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;x = &#123;&#125;&quot;</span>, x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>代码才能通过编译。</p>
-<p>变量默认声明为immutables的好处在于，强迫程序员去避免对变量值的变更，从而使得代码更加安全。但Rust又提供了声明为mutables的途径，而不是像ClojureScript一样每次变更必须重新生成一个对象，付出大量内存拷贝的成本。</p>
-<h2 id="忽略未使用变量">忽略未使用变量</h2>
-<p>Rust默认会在一个变量没有被使用的时候提供一个警告，但是在项目开发初期我们可能会声明一些暂时用不到的变量。为了避免Rust反复警告，可以用下划线开头来命名变量，这样Rust就会忽略这个未使用的变量。</p>
-<h2 id="不可变变量和常量的区别">不可变变量和常量的区别</h2>
-<p>immutable和constant是有区别的。</p>
-<ul>
-<li>在声明常量的时候，必须使用 <code>const</code> 关键字，并且必须在声明的时候就标注常量的值</li>
-<li>常量在编译时就固定了，运行时永远不可变，因此不允许使用 <code>mut</code></li>
-</ul>
-<p>Rust中，推荐用全大写作为常量名，例如</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> PI: <span class="type">f32</span> = <span class="number">3.1415926</span>;</span><br></pre></td></tr></table></figure>
-<p>常量可以在任意作用域内声明，并在所在的作用域内有效。</p>
-<h2 id="变量遮蔽-shadowing">变量遮蔽 shadowing</h2>
-<p>Rust允许声明相同的变量，在后面声明的变量会遮蔽之前的变量，例如</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = x + <span class="number">1</span>;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">x</span> = x * <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;The value of x is &#123;&#125;&quot;</span>, x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The value of x is &#123;&#125;&quot;</span>, x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>观察输出为12和6。注意，在同一个作用域内，调用相同命名的变量时总是调用声明靠后的那一个，但是变量遮蔽不代表原来的变量被抹去了，原来的变量仍然存在，只是这个名字不再能访问之前那个变量。（这一点通过作用域就可以看出）</p>
-<p>我们将 <code>let x = 5;</code> 声明的 <code>x</code> 称为 original x，将 <code>let x = x + 1;</code> 声明的这个 <code>x</code> 称为 old x，将 <code>let x = x * 2;</code> 声明的这个 <code>x</code> 称为 new x。在声明完 original x 后，对应于5的变量x是当前唯一的名为x的变量，Rust访问x肯定返回5；声明完 old x 后，在 <code>main()</code> 函数作用域内，old x 成为了最新的一个名为x的变量，Rust访问x就返回6了。注意，在这个时候 original x 仍然存在，它仍然与存储了5的内存地址绑定，只不过当前的 <code>x</code> 已经不指向 original x，即由于变量遮蔽，original x目前不可访问了，但它仍然存活。声明完new x之后，此时作用域中最新的名为x的变量是 new x，因此Rust访问 <code>x</code> 返回12；但这个小作用域结束返回到 <code>main()</code> 函数作用域之后，new x就不存在了，当前最新的名为x的变量又变成了old x，所以Rust访问 <code>x</code> 会访问old x，并得到内存中存储的值6。</p>
-<p>所以变量遮蔽本质上是定义了一个访问队列，当前存活的最新的同名变量排在最前面，其他的变量按照声明的时间先后进行排列，如果最前面的变量因为作用域的切换而灰飞烟灭了，那么排在后面的变量就会顶上，Rust呢总是访问排在最前面的那个同名变量。</p>
-<p>从上面这个结论，也可以推出，如果两个变量的类型不同，也是允许进行变量遮蔽的，例如</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">spaces</span> = <span class="string">&quot;   &quot;</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">spaces</span> = spaces.<span class="title function_ invoke__">len</span>();</span><br></pre></td></tr></table></figure>
-<p>但注意，可变变量的类型是确定的，下面的代码是不能通过编译的</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">spaces</span> = <span class="string">&quot;   &quot;</span>;</span><br><span class="line">spaces = spaces.<span class="title function_ invoke__">len</span>();</span><br></pre></td></tr></table></figure>
-<h2 id="什么是变量解构">什么是变量解构？</h2>
-<p>对于比较复杂的类型，可以通过模式匹配进行变量解构，实际上就是将一个结构复杂的变量分解成若干个结构不那么复杂的变量，或者干脆就是基本变量类型，例如从一个结构体中提取一个整型。</p>
-]]></content>
-      <categories>
-        <category>Computer Science</category>
-      </categories>
-      <tags>
-        <tag>Programming Language</tag>
-        <tag>Rust</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>统计学习方法-模型评估与选择</title>
-    <url>/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/</url>
-    <content><![CDATA[<h2 id="模型评估参数">模型评估参数</h2>
-<h3 id="训练误差">训练误差</h3>
-<p>将训练得到的模型记为 <span class="math inline">\(Y = \hat f(X)\)</span>，那么训练误差就是模型 <span class="math inline">\(\hat f\)</span> 在训练集 <span class="math inline">\(T\)</span> 中的经验风险函数。</p>
-<p><span class="math display">\[
-R_{emp}(\hat f) = \frac{1}{N}\sum^N_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \in T
-\]</span></p>
-<h3 id="测试误差">测试误差</h3>
-<p>测试误差指的是模型 <span class="math inline">\(\hat f\)</span> 在测试集中的经验风险函数。</p>
-<p><span class="math display">\[
-e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \in T_{test}
-\]</span></p>
-<h3 id="模型评估方法">模型评估方法</h3>
-<p>训练误差对于模型的好坏评价意义不大，主要用来判断假设空间选取是否合适；测试误差对于模型的泛化能力评估意义比较大。</p>
-<h2 id="交叉验证-cross-validation">交叉验证 Cross Validation</h2>
-<p>为了更好地评估训练得到模型的性能，交叉验证是必要的。利用测试集进行模型泛化能力的评估是交叉验证的结果，本小节的重点是记录交叉验证的方法，或者说如何进行训练集和测试集的划分。</p>
-<h3 id="简单交叉验证">简单交叉验证</h3>
-<p>随机将数据集的70%作为训练集，剩余30%作为测试集。</p>
-<h3 id="s折交叉验证-s-fold">S折交叉验证 S-Fold</h3>
-<p>S折交叉验证是工业中最常用的交叉验证方法，因为这种方法能最大程度上发挥数据集的作用。具体的做法是，将数据集随机分成S个子集，随后进行S次迭代，每一次迭代都将S个子集中的其中一个子集作为测试集，其他的S-1个子集作为训练集。经过S次迭代之后，选出平均测试误差最小的模型作为最优模型。</p>
-<h3 id="留一交叉验证-leave-one-cut">留一交叉验证 Leave-one-cut</h3>
-<p>留一交叉验证是S折交叉验证的一种特殊情况，即取S的值为样本容量。</p>
-]]></content>
-      <categories>
-        <category>Computer Science</category>
-      </categories>
-      <tags>
-        <tag>Machine Learning</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Rust基本类型</title>
-    <url>/2022/11/03/Rust%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B/</url>
-    <content><![CDATA[<h2 id="基本类型">基本类型</h2>
-<ul>
-<li>数值类型
-<ul>
-<li>有符号整数 <code>i8, i16, i32, i64, isize</code></li>
-<li>无符号整数 <code>u8, u16, u32, u64, usize</code></li>
-<li>浮点数 <code>f32, f64</code></li>
-<li>有理数和复数</li>
-</ul></li>
-<li>字符串</li>
-<li>布尔类型 <code>true, false</code></li>
-<li>字符类型 <code>char</code>，表示单个Unicode字符</li>
-<li>单元类型，即 <code>()</code>，相当于 <code>null</code></li>
-</ul>
-<span id="more"></span>
-<p><code>isize</code> 和 <code>usize</code> 取决于当前处理器的位数，如果是64位处理器就对应 <code>i64</code> 和 <code>u64</code>。Rust默认使用 <code>i32</code> 作为整型的数值类型。</p>
-<p>Rust编译器会自动推断变量的类型，但在某些情况下Rust编译器无法自动推断，例如将一个字符串中的数字转为一个数值类型的变量，此时如果没有显式地定义变量类型，编译器将会报错。</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">guess</span> = <span class="string">&quot;42&quot;</span>.<span class="title function_ invoke__">parse</span>();</span><br></pre></td></tr></table></figure>
-<p>如果我们改写为</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">guess</span>: <span class="type">i32</span> = <span class="string">&quot;42&quot;</span>.<span class="title function_ invoke__">parse</span>();</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">guess</span> = <span class="string">&quot;42&quot;</span>.parse::&lt;<span class="type">i32</span>&gt;();</span><br></pre></td></tr></table></figure>
-<p>那么编译器就知道该将这个 <code>"42"</code> 解析为哪个数值类型，就不会报错了。</p>
-<h2 id="整型溢出规则">整型溢出规则</h2>
-<p>在 <code>debug</code> 模式下，Rust会检查整型的溢出；在 <code>release</code> 模式下，Rust不会检查整型溢出，如果出现溢出则按照补码的规则进行循环。</p>
-<p>为了显式地处理可能的溢出，可以用标准库的方法进行检查</p>
-<ul>
-<li><code>wrapping_*</code> 方法在所有模式下都会按照补码循环规则进行溢出处理，例如 <code>wrapping_add</code></li>
-<li><code>checked_*</code> 方法会在溢出时返回 <code>None</code></li>
-<li><code>overflowing_*</code> 方法会返回运算结果和指示是否溢出的布尔量</li>
-<li><code>saturating_*</code> 方法会在溢出时返回当前数据类型能够表示的最大或最小值</li>
-</ul>
-<h2 id="浮点类型">浮点类型</h2>
-<p><strong>Rust默认使用 <code>f64</code> 类型浮点数，处理速度与 <code>f32</code> 几乎相同且精度更高</strong>。</p>
-<p>浮点数并非小数，存在精度损失问题，这一点就不过多展开了；对于无法表示的结果，会用 <code>NaN</code> 来表示。如果一个浮点运算可能会出现无法表示的结果，那么可以使用 <code>.is_nan()</code> 来确认运算结果是否正常。</p>
-<h2 id="代码可读性">代码可读性</h2>
-<p>在数值中插入 <code>_</code> 是允许的，可以提升代码可读性，没有实际意义，例如</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">one_million</span>: <span class="type">i64</span> = <span class="number">1_000_000</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="序列">序列</h2>
-<p><code>1..5</code> 相当于 <code>Python</code> 中的 <code>range(1, 5)</code>，可以生成1~4的连续数字；如果需要包括5，则需要声明为 <code>1..=5</code>，这样可以生成1~5的连续数字。</p>
-<p>注意，Rust序列仅允许用于数字或者字符。</p>
-<h2 id="有理数和复数">有理数和复数</h2>
-<p>Rust标准库中不支持有理数和复数，但是社区开发的 <code>num</code> 库中可以支持。只需要在 <code>Cargo.toml</code> 文件的 <code>[dependencies]</code> 中加入 <code>num = "0.4.0"</code> 即可。</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> num::complex::Complex;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = Complex&#123; re: <span class="number">2.1</span>, im: -<span class="number">1.2</span> &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span> = Complex::<span class="title function_ invoke__">new</span>(<span class="number">11.1</span>, <span class="number">22.2</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = a + b;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Result = &#123;&#125; + &#123;&#125;i&quot;</span>, result.re, result.im);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Computer Science</category>
-      </categories>
-      <tags>
-        <tag>Programming Language</tag>
-        <tag>Rust</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Rust基本语法</title>
-    <url>/2022/11/03/Rust%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="基本语法">基本语法</h2>
-<p>下面通过一段简单的代码来认识一下Rust的基本语法。</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span>: <span class="type">i32</span> = <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">c</span> = <span class="number">30i32</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d</span> = <span class="number">30_i32</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">e</span> = <span class="title function_ invoke__">add</span>(<span class="title function_ invoke__">add</span>(a, b), <span class="title function_ invoke__">add</span>(c, d));</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;( a + b ) + ( c + d ) = &#123;&#125;&quot;</span>, e);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">add</span>(i: <span class="type">i32</span>, j: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    i + j</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<span id="more"></span>
-<h3 id="面向表达式的语言">面向表达式的语言</h3>
-<p>在Rust中需要特别注意区分两个不同的概念：语句 Statement 和表达式 Expression。从结构上来看，最大的区别就在于代码行尾有没有 <code>;</code> 符号，有 <code>;</code> 的是语句，没有的则是表达式。</p>
-<p>Rust的函数可以通过 <code>return</code> 返回值，也可以直接通过表达式来返回值，例如 <code>fn add(i, j)</code> 函数中的返回值就是通过 <code>i + j</code> 进行返回的。注意不要加上 <code>;</code>，否则返回的就是一个空的 <code>()</code>。</p>
-<h3 id="指定变量类型">指定变量类型</h3>
-<h4 id="immutable">immutable</h4>
-<p>通过 <code>let</code> 修饰符可以将一个变量声明为不可变的变量，即 immutables。</p>
-<h4 id="mutable">mutable</h4>
-<p>通过 <code>let mut</code> 修饰符可以将一个变量声明为可变变量，即 mutables。</p>
-<h4 id="数据类型">数据类型</h4>
-<p>通过 <code>let</code> 声明变量时，编译器会自动判断合适的数据类型。我们也可以手动为变量声明数据类型，例如 <code>let b: i32 = 20;</code> 就是将 <code>b</code> 声明为不可变的 <code>i32</code> 类型变量，即32位 <code>integer</code>。也可以通过 <code>30i32</code> 或 <code>30_i32</code> 来在赋值时声明数据类型。</p>
-<h4 id="string和char的区别">string和char的区别</h4>
-<p>在Rust中，用 <code>""</code> 来表示字符串，用 <code>''</code> 来表示字符，这里规定相较于 <code>Python</code> 更加严格。</p>
-<h3 id="函数签名">函数签名</h3>
-<p>Rust中的函数签名和 <code>Python</code> 非常相似，通过 <code>:</code> 来表示入参的数据类型，通过 <code>-&gt;</code> 来表示返回值的类型。</p>
-]]></content>
-      <categories>
-        <category>Computer Science</category>
-      </categories>
-      <tags>
-        <tag>Programming Language</tag>
-        <tag>Rust</tag>
       </tags>
   </entry>
   <entry>
@@ -1435,6 +1300,97 @@ e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \i
       <tags>
         <tag>Programming Language</tag>
         <tag>Rust</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数值分析笔记-最小二乘法</title>
+    <url>/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="由函数表估计函数关系的常见方法">由函数表估计函数关系的常见方法</h2>
+<ol type="1">
+<li>多项式插值</li>
+<li>样条曲线拟合</li>
+</ol>
+<p>多项式插值是一种很简单的函数拟合方法，对于关系比较简单的函数表来说效果还可以，但是如果函数表中的点复杂一些，就会有很大的误差，而且很容易出现Runge现象；样条曲线拟合是一种很好的函数拟合方式，每两个函数点之间都进行一次三次样条插值，且在插值点上能够实现一阶或两阶导数相等，但是计算量非常大。</p>
+<p>上面提到的两种方法都有各自的优势和弊端。下面介绍另外一种函数拟合的方式——最小二乘法。最小二乘法可以克服数值振荡的问题，同时计算量也能够得到控制。</p>
+<span id="more"></span>
+<h2 id="什么是最小二乘法">什么是最小二乘法？</h2>
+<p>最小二乘法是这样一系列操作：在函数空间 <span class="math inline">\(\Phi\)</span> 中，求一个最优的函数 <span class="math inline">\(s^*(x)\)</span>，使得</p>
+<p><span class="math display">\[
+\sum_{i=0}^m\omega_i [s^*(x_i) - f(x_i)]^2=min_{s(x)\in \Phi} \sum_{i=0}^m \omega_i [s(x_i) - f(x_i)]^2
+\]</span></p>
+<p>其中 <span class="math inline">\(\omega_i\)</span> 表示 <span class="math inline">\(x=x_i\)</span> 处的权。最小二乘法本质上是函数逼近。</p>
+<h2 id="最小二乘法的具体做法">最小二乘法的具体做法</h2>
+<p>求上面所述的 <span class="math inline">\(s^*(x)\)</span> 可以等价为求一系列 <span class="math inline">\(\{a_n\}\)</span> 使得</p>
+<p><span class="math display">\[
+\sum_{i=0}^m [a_i\varphi_i(x_i)-f(x_i)]^2
+\]</span></p>
+<p>取得极小值。为此可以写出在第 <span class="math inline">\(k\)</span> 个基函数 <span class="math inline">\(\varphi_k(x)\)</span> 上的法方程</p>
+<p><span class="math display">\[
+\sum_{j=0}^m (\varphi_j, \varphi_k)a_j = (f, \varphi_k), k = 0, 1, 2, ..., n
+\]</span></p>
+<p>其中，<span class="math inline">\((f, g)\)</span> 表示函数 <span class="math inline">\(f\)</span> 和 <span class="math inline">\(g\)</span> 在所有插值点上的函数值之积求和。法方程可以总结为被逼近函数 <span class="math inline">\(f(x)\)</span> 与基函数 <span class="math inline">\(\varphi_k(x)\)</span> 在插值点上的积之总和等于基函数 <span class="math inline">\(\varphi_k(x)\)</span> 与其他所有线性无关基函数 <span class="math inline">\(\varphi_j(x)\)</span> 在插值点上的积之总和的加权和，其中加权系数为 <span class="math inline">\(a_j\)</span>。</p>
+<p>法方程展开可以得到以下等式</p>
+<p><span class="math display">\[
+\sum_{j=0}^m a_j\sum_{i=0}^n \omega_i(x_i) \varphi_j(x_i) \varphi_k(x_i) = \sum_{i=0}^n \omega_i(x_i) \varphi_k(x_i) f(x_i), k=0, 1, 2, ..., n
+\]</span></p>
+<p><em>由法方程可以推导出 <span class="math inline">\(s^*(x)\)</span> 的唯一性</em> 由于 <span class="math inline">\({\varphi(x)}\)</span> 是一组线性无关的基函数，因此上述方程组是非奇异的，那么必然能够解出唯一的一组 <span class="math inline">\(\{a_j\}\)</span>，所以 <span class="math inline">\(s^*(x)\)</span> 存在且唯一。</p>
+<h2 id="最小二乘逼近的技巧">最小二乘逼近的技巧</h2>
+<p>提高最小二乘法拟合精度的技巧主要在于选择合适的函数空间 <span class="math inline">\(\Phi\)</span>。所谓选择合适的函数空间，其实就是选择合适的拟合模型，这一点对于做ECM拟合的人来说应该是非常熟悉的事情了。一种常用的模型是多项式模型 <span class="math inline">\(\{x^n\}\)</span>，但用这个模型进行最小二乘法拟合的效果比多项式插值可能还要差，因为多项式的次数太高了，很容易出现病态问题——即函数表的数据稍有变化，拟合函数的参数 <span class="math inline">\(a_j\)</span> 就出现剧烈的变化。所以多项式模型做最小二乘逼近是很少使用的。</p>
+<p>一种比较好的方法是，采用<strong>正交多项式族</strong>作为基函数。所谓的正交多项式族，是指一些形如 <span class="math inline">\(ax^3 + bx^2 + cx\)</span> 以及 <span class="math inline">\(ax^2 + bx + c\)</span> 的函数组成的一组基函数，这些多项式函数两两正交。</p>
+<h3 id="正交多项式族">正交多项式族</h3>
+<p>正交多项式族可以用以下公式求得</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;p_0(x) = 1\\
+&amp;p_{k+1}(x) = (x -\alpha_k)p_k(x) - \beta_{k-1} p_{k-1}(x)\\
+\end{aligned}
+\]</span></p>
+<p>其中 <span class="math display">\[
+\begin{aligned}
+&amp; \alpha_k = \frac{(xp_k, p_k)}{(p_k, p_k)}\\
+&amp; \beta_{k-1} = \frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\\
+\end{aligned}
+\]</span></p>
+<p>同样，<span class="math inline">\((p_k, p_k)\)</span> 表示函数 <span class="math inline">\(p_k(x)\)</span> 和自己在所有插值点上的函数值之积求和。</p>
+<p>由于正交多项式族是通过给定的插值点构造出来的，因此最易于计算的一组正交多项式族应当满足在插值点上正交，即在插值点上与其他所有基函数的函数值之积求和恰好为0，那么法方程就可以简化为</p>
+<p><span class="math display">\[
+a_k(\varphi_k, \varphi_k) = (f, \varphi_k), k= 0, 1, 2, ..., n
+\]</span></p>
+<p>所以，加权系数 <span class="math inline">\({a_k}\)</span> 的表达式就变得非常简单</p>
+<p><span class="math display">\[
+a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
+\]</span></p>
+<h3 id="利用正交多项式族进行最小二乘逼近">利用正交多项式族进行最小二乘逼近</h3>
+<ol type="1">
+<li>写出第 <span class="math inline">\(k\)</span> 项正交多项式 <span class="math inline">\(p_k(x) = (x - \alpha_{k-1})p_{k-1}(x) - \beta_{k-2}p_{k-2}(x)\)</span></li>
+<li>由 <span class="math inline">\(p_k(x)\)</span> 可以计算得到 <span class="math inline">\(a_k=\displaystyle\frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}\)</span></li>
+<li>第 <span class="math inline">\(k\)</span> 项正交多项式基函数 <span class="math inline">\(g_k(x)=a_kp_k(x)+g_{k-1}(x)\)</span></li>
+<li>为了求出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span>，必须求出 <span class="math inline">\(\alpha_k\)</span> 和 <span class="math inline">\(\beta_{k-1}\)</span>，<span class="math inline">\(\alpha_k=\displaystyle\frac{(xp_k, p_k)}{(p_k, p_k)}\)</span>, <span class="math inline">\(\beta_{k-1} = \displaystyle\frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\)</span></li>
+<li>写出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span></li>
+</ol>
+<h2 id="周期函数逼近">周期函数逼近</h2>
+<p>如果被逼近函数是一个周期函数，那么可以在函数空间 <span class="math inline">\(\Phi = \{1, sinx, cosx, sin2x, cos2x, ..., sinnx, cosnx\}\)</span> 上求最佳平方逼近函数 <span class="math inline">\(s_n(x) = \displaystyle\frac{a_0}{2} + \sum_{j=1}^n(a_jcosjx + b_jsinjx)\)</span>，其中</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) cosjxdx, \ j = 0, 1, ...,n\\
+&amp;b_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) sinjxdx, \ j = 1, 2, ..., n
+\end{aligned}
+\]</span></p>
+<p>其实实际应用中不可能进行连续积分，一般只能给出离散的采样点 <span class="math inline">\((x_i, y_i)\)</span>，那么可以将上面的连续积分离散化，得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_j = \frac{2}{N}\sum_{i=0}^{N-1}y_icoskx_i, \  k=0, 1, ..., n\\
+&amp;b_j = \frac{2}{N}\sum_{i=0}^{N-1}y_isinkx_i, \ k = 1, 2, ..., n
+\end{aligned}
+\]</span></p>
+<p>不过需要注意，上面的 <span class="math inline">\(x\)</span> 应线性变换至 <span class="math inline">\((0, 2\pi)\)</span>。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
       </tags>
   </entry>
 </search>

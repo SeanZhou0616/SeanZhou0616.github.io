@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="由函数表估计函数关系的常见方法  多项式插值 样条曲线拟合  多项式插值是一种很简单的函数拟合方法，对于关系比较简单的函数表来说效果还可以，但是如果函数表中的点复杂一些，就会有很大的误差，而且很容易出现Runge现象；样条曲线拟合是一种很好的函数拟合方式，每两个函数点之间都进行一次三次样条插值，且在插值点上能够实现一阶或两阶导数相等，但是计算量非常大。 上面提到的两种方法都有各自的优势和弊端。下面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数值分析笔记-最小二乘法">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/">
+<meta property="og:site_name" content="Elysium">
+<meta property="og:description" content="由函数表估计函数关系的常见方法  多项式插值 样条曲线拟合  多项式插值是一种很简单的函数拟合方法，对于关系比较简单的函数表来说效果还可以，但是如果函数表中的点复杂一些，就会有很大的误差，而且很容易出现Runge现象；样条曲线拟合是一种很好的函数拟合方式，每两个函数点之间都进行一次三次样条插值，且在插值点上能够实现一阶或两阶导数相等，但是计算量非常大。 上面提到的两种方法都有各自的优势和弊端。下面">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-07T12:37:12.000Z">
+<meta property="article:modified_time" content="2022-11-07T14:11:31.054Z">
+<meta property="article:author" content="Sean Zhou">
+<meta property="article:tag" content="Numerical Analysis">
+<meta property="article:tag" content="Mathematics">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/","path":"2022/11/07/数值分析笔记-最小二乘法/","title":"数值分析笔记-最小二乘法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数值分析笔记-最小二乘法 | Elysium</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Elysium</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Tech, Race, Game</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B1%E5%87%BD%E6%95%B0%E8%A1%A8%E4%BC%B0%E8%AE%A1%E5%87%BD%E6%95%B0%E5%85%B3%E7%B3%BB%E7%9A%84%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">由函数表估计函数关系的常见方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">什么是最小二乘法？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95%E7%9A%84%E5%85%B7%E4%BD%93%E5%81%9A%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">最小二乘法的具体做法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E9%80%BC%E8%BF%91%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="nav-number">4.</span> <span class="nav-text">最小二乘逼近的技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E4%BA%A4%E5%A4%9A%E9%A1%B9%E5%BC%8F%E6%97%8F"><span class="nav-number">4.1.</span> <span class="nav-text">正交多项式族</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E6%AD%A3%E4%BA%A4%E5%A4%9A%E9%A1%B9%E5%BC%8F%E6%97%8F%E8%BF%9B%E8%A1%8C%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E9%80%BC%E8%BF%91"><span class="nav-number">4.2.</span> <span class="nav-text">利用正交多项式族进行最小二乘逼近</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0%E9%80%BC%E8%BF%91"><span class="nav-number">5.</span> <span class="nav-text">周期函数逼近</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sean Zhou"
+      src="/images/Yeah.jpg">
+  <p class="site-author-name" itemprop="name">Sean Zhou</p>
+  <div class="site-description" itemprop="description">Sean Zhou's personal blog.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/SeanZhou0616" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SeanZhou0616" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:seanzhou616@gmail.com" title="E-Mail → mailto:seanzhou616@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数值分析笔记-最小二乘法 | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数值分析笔记-最小二乘法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-07 20:37:12 / 修改时间：22:11:31" itemprop="dateCreated datePublished" datetime="2022-11-07T20:37:12+08:00">2022-11-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/University/" itemprop="url" rel="index"><span itemprop="name">University</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="由函数表估计函数关系的常见方法">由函数表估计函数关系的常见方法</h2>
+<ol type="1">
+<li>多项式插值</li>
+<li>样条曲线拟合</li>
+</ol>
+<p>多项式插值是一种很简单的函数拟合方法，对于关系比较简单的函数表来说效果还可以，但是如果函数表中的点复杂一些，就会有很大的误差，而且很容易出现Runge现象；样条曲线拟合是一种很好的函数拟合方式，每两个函数点之间都进行一次三次样条插值，且在插值点上能够实现一阶或两阶导数相等，但是计算量非常大。</p>
+<p>上面提到的两种方法都有各自的优势和弊端。下面介绍另外一种函数拟合的方式——最小二乘法。最小二乘法可以克服数值振荡的问题，同时计算量也能够得到控制。</p>
+<span id="more"></span>
+<h2 id="什么是最小二乘法">什么是最小二乘法？</h2>
+<p>最小二乘法是这样一系列操作：在函数空间 <span class="math inline">\(\Phi\)</span> 中，求一个最优的函数 <span class="math inline">\(s^*(x)\)</span>，使得</p>
+<p><span class="math display">\[
+\sum_{i=0}^m\omega_i [s^*(x_i) - f(x_i)]^2=min_{s(x)\in \Phi} \sum_{i=0}^m \omega_i [s(x_i) - f(x_i)]^2
+\]</span></p>
+<p>其中 <span class="math inline">\(\omega_i\)</span> 表示 <span class="math inline">\(x=x_i\)</span> 处的权。最小二乘法本质上是函数逼近。</p>
+<h2 id="最小二乘法的具体做法">最小二乘法的具体做法</h2>
+<p>求上面所述的 <span class="math inline">\(s^*(x)\)</span> 可以等价为求一系列 <span class="math inline">\(\{a_n\}\)</span> 使得</p>
+<p><span class="math display">\[
+\sum_{i=0}^m [a_i\varphi_i(x_i)-f(x_i)]^2
+\]</span></p>
+<p>取得极小值。为此可以写出在第 <span class="math inline">\(k\)</span> 个基函数 <span class="math inline">\(\varphi_k(x)\)</span> 上的法方程</p>
+<p><span class="math display">\[
+\sum_{j=0}^m (\varphi_j, \varphi_k)a_j = (f, \varphi_k), k = 0, 1, 2, ..., n
+\]</span></p>
+<p>其中，<span class="math inline">\((f, g)\)</span> 表示函数 <span class="math inline">\(f\)</span> 和 <span class="math inline">\(g\)</span> 在所有插值点上的函数值之积求和。法方程可以总结为被逼近函数 <span class="math inline">\(f(x)\)</span> 与基函数 <span class="math inline">\(\varphi_k(x)\)</span> 在插值点上的积之总和等于基函数 <span class="math inline">\(\varphi_k(x)\)</span> 与其他所有线性无关基函数 <span class="math inline">\(\varphi_j(x)\)</span> 在插值点上的积之总和的加权和，其中加权系数为 <span class="math inline">\(a_j\)</span>。</p>
+<p>法方程展开可以得到以下等式</p>
+<p><span class="math display">\[
+\sum_{j=0}^m a_j\sum_{i=0}^n \omega_i(x_i) \varphi_j(x_i) \varphi_k(x_i) = \sum_{i=0}^n \omega_i(x_i) \varphi_k(x_i) f(x_i), k=0, 1, 2, ..., n
+\]</span></p>
+<p><em>由法方程可以推导出 <span class="math inline">\(s^*(x)\)</span> 的唯一性</em> 由于 <span class="math inline">\({\varphi(x)}\)</span> 是一组线性无关的基函数，因此上述方程组是非奇异的，那么必然能够解出唯一的一组 <span class="math inline">\(\{a_j\}\)</span>，所以 <span class="math inline">\(s^*(x)\)</span> 存在且唯一。</p>
+<h2 id="最小二乘逼近的技巧">最小二乘逼近的技巧</h2>
+<p>提高最小二乘法拟合精度的技巧主要在于选择合适的函数空间 <span class="math inline">\(\Phi\)</span>。所谓选择合适的函数空间，其实就是选择合适的拟合模型，这一点对于做ECM拟合的人来说应该是非常熟悉的事情了。一种常用的模型是多项式模型 <span class="math inline">\(\{x^n\}\)</span>，但用这个模型进行最小二乘法拟合的效果比多项式插值可能还要差，因为多项式的次数太高了，很容易出现病态问题——即函数表的数据稍有变化，拟合函数的参数 <span class="math inline">\(a_j\)</span> 就出现剧烈的变化。所以多项式模型做最小二乘逼近是很少使用的。</p>
+<p>一种比较好的方法是，采用<strong>正交多项式族</strong>作为基函数。所谓的正交多项式族，是指一些形如 <span class="math inline">\(ax^3 + bx^2 + cx\)</span> 以及 <span class="math inline">\(ax^2 + bx + c\)</span> 的函数组成的一组基函数，这些多项式函数两两正交。</p>
+<h3 id="正交多项式族">正交多项式族</h3>
+<p>正交多项式族可以用以下公式求得</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;p_0(x) = 1\\
+&amp;p_{k+1}(x) = (x -\alpha_k)p_k(x) - \beta_{k-1} p_{k-1}(x)\\
+\end{aligned}
+\]</span></p>
+<p>其中 <span class="math display">\[
+\begin{aligned}
+&amp; \alpha_k = \frac{(xp_k, p_k)}{(p_k, p_k)}\\
+&amp; \beta_{k-1} = \frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\\
+\end{aligned}
+\]</span></p>
+<p>同样，<span class="math inline">\((p_k, p_k)\)</span> 表示函数 <span class="math inline">\(p_k(x)\)</span> 和自己在所有插值点上的函数值之积求和。</p>
+<p>由于正交多项式族是通过给定的插值点构造出来的，因此最易于计算的一组正交多项式族应当满足在插值点上正交，即在插值点上与其他所有基函数的函数值之积求和恰好为0，那么法方程就可以简化为</p>
+<p><span class="math display">\[
+a_k(\varphi_k, \varphi_k) = (f, \varphi_k), k= 0, 1, 2, ..., n
+\]</span></p>
+<p>所以，加权系数 <span class="math inline">\({a_k}\)</span> 的表达式就变得非常简单</p>
+<p><span class="math display">\[
+a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
+\]</span></p>
+<h3 id="利用正交多项式族进行最小二乘逼近">利用正交多项式族进行最小二乘逼近</h3>
+<ol type="1">
+<li>写出第 <span class="math inline">\(k\)</span> 项正交多项式 <span class="math inline">\(p_k(x) = (x - \alpha_{k-1})p_{k-1}(x) - \beta_{k-2}p_{k-2}(x)\)</span></li>
+<li>由 <span class="math inline">\(p_k(x)\)</span> 可以计算得到 <span class="math inline">\(a_k=\displaystyle\frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}\)</span></li>
+<li>第 <span class="math inline">\(k\)</span> 项正交多项式基函数 <span class="math inline">\(g_k(x)=a_kp_k(x)+g_{k-1}(x)\)</span></li>
+<li>为了求出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span>，必须求出 <span class="math inline">\(\alpha_k\)</span> 和 <span class="math inline">\(\beta_{k-1}\)</span>，<span class="math inline">\(\alpha_k=\displaystyle\frac{(xp_k, p_k)}{(p_k, p_k)}\)</span>, <span class="math inline">\(\beta_{k-1} = \displaystyle\frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\)</span></li>
+<li>写出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span></li>
+</ol>
+<h2 id="周期函数逼近">周期函数逼近</h2>
+<p>如果被逼近函数是一个周期函数，那么可以在函数空间 <span class="math inline">\(\Phi = \{1, sinx, cosx, sin2x, cos2x, ..., sinnx, cosnx\}\)</span> 上求最佳平方逼近函数 <span class="math inline">\(s_n(x) = \displaystyle\frac{a_0}{2} + \sum_{j=1}^n(a_jcosjx + b_jsinjx)\)</span>，其中</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) cosjxdx, \ j = 0, 1, ...,n\\
+&amp;b_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) sinjxdx, \ j = 1, 2, ..., n
+\end{aligned}
+\]</span></p>
+<p>其实实际应用中不可能进行连续积分，一般只能给出离散的采样点 <span class="math inline">\((x_i, y_i)\)</span>，那么可以将上面的连续积分离散化，得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_j = \frac{2}{N}\sum_{i=0}^{N-1}y_icoskx_i, \  k=0, 1, ..., n\\
+&amp;b_j = \frac{2}{N}\sum_{i=0}^{N-1}y_isinkx_i, \ k = 1, 2, ..., n
+\end{aligned}
+\]</span></p>
+<p>不过需要注意，上面的 <span class="math inline">\(x\)</span> 应线性变换至 <span class="math inline">\((0, 2\pi)\)</span>。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Numerical-Analysis/" rel="tag"># Numerical Analysis</a>
+              <a href="/tags/Mathematics/" rel="tag"># Mathematics</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/04/Rust%E5%85%A5%E9%97%A8-%E7%8C%9C%E6%95%B0%E5%AD%97%E6%B8%B8%E6%88%8F/" rel="prev" title="Rust入门-猜数字游戏">
+                  <i class="fa fa-chevron-left"></i> Rust入门-猜数字游戏
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sean Zhou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
