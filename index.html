@@ -159,7 +159,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -208,6 +208,103 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/07/Rust%E5%85%A5%E9%97%A8-%E9%80%9A%E7%94%A8%E7%BC%96%E7%A8%8B%E6%A6%82%E5%BF%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/11/07/Rust%E5%85%A5%E9%97%A8-%E9%80%9A%E7%94%A8%E7%BC%96%E7%A8%8B%E6%A6%82%E5%BF%B5/" class="post-title-link" itemprop="url">Rust入门-通用编程概念</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-11-07 22:24:06" itemprop="dateCreated datePublished" datetime="2022-11-07T22:24:06+08:00">2022-11-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-08 00:18:27" itemprop="dateModified" datetime="2022-11-08T00:18:27+08:00">2022-11-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Computer-Science/" itemprop="url" rel="index"><span itemprop="name">Computer Science</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="变量与可变性">变量与可变性</h2>
+<h3 id="可变变量与不可变变量">可变变量与不可变变量</h3>
+<p>Rust与其他的编程语言有一个很大的不同——Rust的变量分为可变变量 <code>mutable variable</code> 和不可变变量 <code>immutable variable</code> 两种。</p>
+<p>可变变量就是普通的变量，例如在Python中，我们可以通过 <code>x = 1</code> 定义一个 <code>int</code> 类型的变量 <code>x</code>，然后再通过 <code>x = 2</code> 令变量 <code>x</code> 的值改为 <code>2</code>；在 <code>Rust</code> 中也是相同的，我们可以通过 <code>let mut x: u32 = 1;</code> 定义一个 <code>u32</code> 整型可变变量 <code>x</code>，然后通过 <code>x = 2u32;</code> 令可变变量 <code>x</code> 的值变为 <code>2</code>。</p>
+<p>Rust最神奇的设计就是不可变变量，而且变量默认就是不可变的。例如 <code>let x = 1;</code> 会定义一个 <code>i32</code> 整型不可变变量 <code>x</code>，如果我们想把上面这个 <code>x</code> 的值改成 <code>2</code> 将会导致编译不通过。这种机制对于内存安全要求高的代码来说很棒，因为Rust从语言机制上确保了不可变变量的内存安全，特别是在多线程异步开发中，某些逻辑上应该保持不变的量可能因为错误的程序设计导致在运行时发生了变化，而这些错误是非常难追溯的。因此，Rust在注重内存安全的领域受到了广泛应用，例如区块链领域。</p>
+<p>定义变量的关键字是 <code>let</code>；若要定义可变变量，还需要加上修饰词 <code>mut</code>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/11/07/Rust%E5%85%A5%E9%97%A8-%E9%80%9A%E7%94%A8%E7%BC%96%E7%A8%8B%E6%A6%82%E5%BF%B5/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1026,110 +1123,6 @@ e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \i
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/02/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/Yeah.jpg">
-      <meta itemprop="name" content="Sean Zhou">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Elysium">
-      <meta itemprop="description" content="Sean Zhou's personal blog.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Elysium">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/11/02/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">卡尔曼滤波器基础</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2022-11-02 21:37:10 / 修改时间：22:02:28" itemprop="dateCreated datePublished" datetime="2022-11-02T21:37:10+08:00">2022-11-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Control-Engineering/" itemprop="url" rel="index"><span itemprop="name">Control Engineering</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="引入">引入</h2>
-<p>卡尔曼滤波器是一种利用观测数据来修正先验数据的滤波器，适用于<em>线性高斯系统</em>。</p>
-<p>以直线运动的车辆为例。记<span class="math inline">\(t\)</span>时刻的车辆位置为<span class="math inline">\(p_t\)</span>，速度为<span class="math inline">\(v_t\)</span>，加速度为<span class="math inline">\(u_t\)</span>，那么在纵向应有车辆运动学模型</p>
-<p><span class="math display">\[
-\left \{ \begin{aligned}
-&amp; p_t = p_{t-1} + \Delta t \ v_{t-1} + \frac{(\Delta t)^2}{2} u_{t-1}  \\
-&amp; v_t = v_{t-1} + \Delta t \ u_{t-1}
-\end{aligned}
-\right.
-\]</span></p>
-<p>令</p>
-<p><span class="math display">\[
-\boldsymbol x_t = \begin{pmatrix} p_t \\ v_t \end{pmatrix}
-\]</span></p>
-<p>有</p>
-<p><span class="math display">\[
-\boldsymbol x_t = \begin{pmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{pmatrix}\boldsymbol x_{t-1} + \begin{pmatrix} \displaystyle \frac{(\Delta t)^2}{2} \\ \Delta t \end{pmatrix}u_{t-1} \tag{1}
-\]</span></p>
-<p>当然，这样的运动学模型是非常简单的。一方面，只考虑了纵向的运动，而且假设加速度的测量是noise-free的；另一方面，由于采样数据是离散的，在<span class="math inline">\(\Delta t\)</span>时间内的加速度变化我们不得而知。因此，利用这样的运动学模型对车辆的运动状态进行估计，误差必然会随着时间的推移而增大。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/11/02/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%9F%BA%E7%A1%80/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
