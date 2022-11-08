@@ -253,7 +253,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-08 00:18:27" itemprop="dateModified" datetime="2022-11-08T00:18:27+08:00">2022-11-08</time>
+      <time title="修改时间：2022-11-08 15:51:21" itemprop="dateModified" datetime="2022-11-08T15:51:21+08:00">2022-11-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -278,7 +278,7 @@
           <h2 id="变量与可变性">变量与可变性</h2>
 <h3 id="可变变量与不可变变量">可变变量与不可变变量</h3>
 <p>Rust与其他的编程语言有一个很大的不同——Rust的变量分为可变变量 <code>mutable variable</code> 和不可变变量 <code>immutable variable</code> 两种。</p>
-<p>可变变量就是普通的变量，例如在Python中，我们可以通过 <code>x = 1</code> 定义一个 <code>int</code> 类型的变量 <code>x</code>，然后再通过 <code>x = 2</code> 令变量 <code>x</code> 的值改为 <code>2</code>；在 <code>Rust</code> 中也是相同的，我们可以通过 <code>let mut x: u32 = 1;</code> 定义一个 <code>u32</code> 整型可变变量 <code>x</code>，然后通过 <code>x = 2u32;</code> 令可变变量 <code>x</code> 的值变为 <code>2</code>。</p>
+<p>可变变量就是普通的变量，例如在Python中，我们可以通过 <code>x = 1</code> 定义一个 <code>int</code> 类型的变量 <code>x</code>，然后再通过 <code>x = 2</code> 令变量 <code>x</code> 的值改为 <code>2</code>；在Rust中也是相同的，我们可以通过 <code>let mut x: u32 = 1;</code> 定义一个 <code>u32</code> 整型可变变量 <code>x</code>，然后通过 <code>x = 2u32;</code> 令可变变量 <code>x</code> 的值变为 <code>2</code>。</p>
 <p>Rust最神奇的设计就是不可变变量，而且变量默认就是不可变的。例如 <code>let x = 1;</code> 会定义一个 <code>i32</code> 整型不可变变量 <code>x</code>，如果我们想把上面这个 <code>x</code> 的值改成 <code>2</code> 将会导致编译不通过。这种机制对于内存安全要求高的代码来说很棒，因为Rust从语言机制上确保了不可变变量的内存安全，特别是在多线程异步开发中，某些逻辑上应该保持不变的量可能因为错误的程序设计导致在运行时发生了变化，而这些错误是非常难追溯的。因此，Rust在注重内存安全的领域受到了广泛应用，例如区块链领域。</p>
 <p>定义变量的关键字是 <code>let</code>；若要定义可变变量，还需要加上修饰词 <code>mut</code>。</p>
           <!--noindex-->

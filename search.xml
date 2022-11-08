@@ -971,6 +971,35 @@ R_4(x) = \frac{f^{(5)}(\xi)}{5!}(x-x_0)^2(x-x_1)^2(x-x_0)
       </tags>
   </entry>
   <entry>
+    <title>栈和堆</title>
+    <url>/2022/11/02/%E6%A0%88%E5%92%8C%E5%A0%86/</url>
+    <content><![CDATA[<h2 id="栈和堆分别是什么">栈和堆分别是什么</h2>
+<h3 id="stack">Stack</h3>
+<p>栈是比较熟悉的一个概念。栈是内存中一个后进先出的存储区域，数据进栈和出栈就像把书一层一层叠起来，然后又一层一层取出来的过程。</p>
+<h3 id="heap">Heap</h3>
+<p>内存中的堆和数据结构中的堆不是一个概念。数据结构中的堆是什么二叉树之类的，内存中的堆指的是一片无序的内存空间。我们经常会听说为数据变量分配内存空间(Allocate)这种说法，其实分配内存的过程就是在堆中找一片空白内存给指定的变量进行数据存储的过程。</p>
+<span id="more"></span>
+<h2 id="栈和堆的主要区别">栈和堆的主要区别</h2>
+<h3 id="存储的区别">存储的区别</h3>
+<p>栈是一片有序的内存，所有进栈的数据长度都必须是已知且固定的。并且，栈是紧凑的，数据被连续地存放，就像一摞书，书与书之间不会有空隙。</p>
+<p>堆是一片无序的内存空间。这里的无序并不是说堆中的数据存放非常混乱，而是相较于栈并不紧凑。在堆中存放数据，就像去饭店吃饭，服务员会先问我们有几个人，然后找到一张合适的空桌子，再记下桌子的编号。假如我们暂时离开，去上个厕所，那么从厕所回来时可以根据桌号去找到这张被分配好的桌子。上面的例子中，桌子的编号就相当于是指针，这个指针的类型和长度都是已知的，会被存入栈中；我们有几个人就相当于数据长度，系统需要根据当前的数据长度从空闲的内存中找到一片足够大小的连续空间，用于存放这些数据。</p>
+<h3 id="性能的区别">性能的区别</h3>
+<h4 id="写入速度">写入速度</h4>
+<p>向栈中写数据比堆更快，因为向栈中写数据只需要把数据往栈上放就行了。向堆中写数据则必须找到一段长度足够的空内存，才能写数据。</p>
+<h4 id="读取速度">读取速度</h4>
+<p>从栈中读数据更快，因为栈中的数据经常可以被临时存入Cache中以加速访问，而访问堆中的数据则必须先从栈中取指针，然后再到内存中的对应地址读数据。</p>
+<h2 id="堆栈对于rust编程的重要性">堆栈对于Rust编程的重要性</h2>
+<p>在某些高级语言中，例如Java，变量在内存中的存储细节对于程序员来说被隐藏了。但对于一些偏底层的语言，例如C/C++，搞清楚变量在堆和栈中的行为是非常有必要的，不当的处理会导致内存泄漏等严重的内存安全问题，因为堆中的数据结构非常松散。</p>
+<p>Rust以内存安全特性著名，这种特性是由底层的<strong>所有权机制</strong>保证的，内存不安全的代码在编译时就会被发现。也正因此，Rust程序员必须对堆栈的原理有一定了解，否则在<strong>所有权机制</strong>的保护下，我们所编写的Rust代码可能根本无法通过编译。</p>
+]]></content>
+      <categories>
+        <category>Computer Science</category>
+      </categories>
+      <tags>
+        <tag>Computer System</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>统计学习方法-无监督学习概述</title>
     <url>/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/</url>
     <content><![CDATA[<p>本文是李航老师的《统计学习方法》无监督学习部分的学习笔记。</p>
@@ -1093,35 +1122,6 @@ C^* = \mathop{argmin}\limits_{C}W(C) = \mathop{argmin}\limits_{C}\sum^k_{i=1}\su
       <tags>
         <tag>Machine Learning</tag>
         <tag>Unsupervised Learning</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>栈和堆</title>
-    <url>/2022/11/02/%E6%A0%88%E5%92%8C%E5%A0%86/</url>
-    <content><![CDATA[<h2 id="栈和堆分别是什么">栈和堆分别是什么</h2>
-<h3 id="stack">Stack</h3>
-<p>栈是比较熟悉的一个概念。栈是内存中一个后进先出的存储区域，数据进栈和出栈就像把书一层一层叠起来，然后又一层一层取出来的过程。</p>
-<h3 id="heap">Heap</h3>
-<p>内存中的堆和数据结构中的堆不是一个概念。数据结构中的堆是什么二叉树之类的，内存中的堆指的是一片无序的内存空间。我们经常会听说为数据变量分配内存空间(Allocate)这种说法，其实分配内存的过程就是在堆中找一片空白内存给指定的变量进行数据存储的过程。</p>
-<span id="more"></span>
-<h2 id="栈和堆的主要区别">栈和堆的主要区别</h2>
-<h3 id="存储的区别">存储的区别</h3>
-<p>栈是一片有序的内存，所有进栈的数据长度都必须是已知且固定的。并且，栈是紧凑的，数据被连续地存放，就像一摞书，书与书之间不会有空隙。</p>
-<p>堆是一片无序的内存空间。这里的无序并不是说堆中的数据存放非常混乱，而是相较于栈并不紧凑。在堆中存放数据，就像去饭店吃饭，服务员会先问我们有几个人，然后找到一张合适的空桌子，再记下桌子的编号。假如我们暂时离开，去上个厕所，那么从厕所回来时可以根据桌号去找到这张被分配好的桌子。上面的例子中，桌子的编号就相当于是指针，这个指针的类型和长度都是已知的，会被存入栈中；我们有几个人就相当于数据长度，系统需要根据当前的数据长度从空闲的内存中找到一片足够大小的连续空间，用于存放这些数据。</p>
-<h3 id="性能的区别">性能的区别</h3>
-<h4 id="写入速度">写入速度</h4>
-<p>向栈中写数据比堆更快，因为向栈中写数据只需要把数据往栈上放就行了。向堆中写数据则必须找到一段长度足够的空内存，才能写数据。</p>
-<h4 id="读取速度">读取速度</h4>
-<p>从栈中读数据更快，因为栈中的数据经常可以被临时存入Cache中以加速访问，而访问堆中的数据则必须先从栈中取指针，然后再到内存中的对应地址读数据。</p>
-<h2 id="堆栈对于rust编程的重要性">堆栈对于Rust编程的重要性</h2>
-<p>在某些高级语言中，例如Java，变量在内存中的存储细节对于程序员来说被隐藏了。但对于一些偏底层的语言，例如C/C++，搞清楚变量在堆和栈中的行为是非常有必要的，不当的处理会导致内存泄漏等严重的内存安全问题，因为堆中的数据结构非常松散。</p>
-<p>Rust以内存安全特性著名，这种特性是由底层的<strong>所有权机制</strong>保证的，内存不安全的代码在编译时就会被发现。也正因此，Rust程序员必须对堆栈的原理有一定了解，否则在<strong>所有权机制</strong>的保护下，我们所编写的Rust代码可能根本无法通过编译。</p>
-]]></content>
-      <categories>
-        <category>Computer Science</category>
-      </categories>
-      <tags>
-        <tag>Computer System</tag>
       </tags>
   </entry>
   <entry>
@@ -1308,7 +1308,7 @@ e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \i
     <content><![CDATA[<h2 id="变量与可变性">变量与可变性</h2>
 <h3 id="可变变量与不可变变量">可变变量与不可变变量</h3>
 <p>Rust与其他的编程语言有一个很大的不同——Rust的变量分为可变变量 <code>mutable variable</code> 和不可变变量 <code>immutable variable</code> 两种。</p>
-<p>可变变量就是普通的变量，例如在Python中，我们可以通过 <code>x = 1</code> 定义一个 <code>int</code> 类型的变量 <code>x</code>，然后再通过 <code>x = 2</code> 令变量 <code>x</code> 的值改为 <code>2</code>；在 <code>Rust</code> 中也是相同的，我们可以通过 <code>let mut x: u32 = 1;</code> 定义一个 <code>u32</code> 整型可变变量 <code>x</code>，然后通过 <code>x = 2u32;</code> 令可变变量 <code>x</code> 的值变为 <code>2</code>。</p>
+<p>可变变量就是普通的变量，例如在Python中，我们可以通过 <code>x = 1</code> 定义一个 <code>int</code> 类型的变量 <code>x</code>，然后再通过 <code>x = 2</code> 令变量 <code>x</code> 的值改为 <code>2</code>；在Rust中也是相同的，我们可以通过 <code>let mut x: u32 = 1;</code> 定义一个 <code>u32</code> 整型可变变量 <code>x</code>，然后通过 <code>x = 2u32;</code> 令可变变量 <code>x</code> 的值变为 <code>2</code>。</p>
 <p>Rust最神奇的设计就是不可变变量，而且变量默认就是不可变的。例如 <code>let x = 1;</code> 会定义一个 <code>i32</code> 整型不可变变量 <code>x</code>，如果我们想把上面这个 <code>x</code> 的值改成 <code>2</code> 将会导致编译不通过。这种机制对于内存安全要求高的代码来说很棒，因为Rust从语言机制上确保了不可变变量的内存安全，特别是在多线程异步开发中，某些逻辑上应该保持不变的量可能因为错误的程序设计导致在运行时发生了变化，而这些错误是非常难追溯的。因此，Rust在注重内存安全的领域受到了广泛应用，例如区块链领域。</p>
 <p>定义变量的关键字是 <code>let</code>；若要定义可变变量，还需要加上修饰词 <code>mut</code>。</p>
 <span id="more"></span>
@@ -1319,6 +1319,8 @@ e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \i
 <p>上面提到了作用域这个概念，所谓的作用域简单理解就是 <code>&#123;&#125;</code> 围成的区域，例如</p>
 <figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 这是main函数作用域</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">2</span>;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 这是内部作用域</span></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">3</span>;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;x = &#123;&#125;&quot;</span>, x);</span><br><span class="line">        <span class="comment">// 离开内部作用域后，let x = 3; 语句定义的变量x失效</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;x = &#123;&#125;&quot;</span>, x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上述代码运行后，将会输出 <code>x = 3</code> 和 <code>x = 2</code> 结果。</p>
+<h3 id="变量的命名风格">变量的命名风格</h3>
+<p>在Rust中，变量的命名遵循 <code>snake_case</code>，这和Python是一样的命名风格。</p>
 <h3 id="不可变变量与常量">不可变变量与常量</h3>
 <p>不可变变量听上去很像是一个常量，毕竟这两个概念都要求对应内存地址的值不可被改变。但是不可变变量和常量是存在区别的，是两个完全不同的概念。</p>
 <p>首先，不可变变量虽然不可变，但仍然是一个变量，定义关键字为 <code>let</code>；常量不是变量，定义关键字也不一样，是 <code>const</code>。</p>
@@ -1418,6 +1420,47 @@ e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \i
 <figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">arr</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = arr[<span class="number">0</span>];</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;x = &#123;&#125;&quot;</span>, x);</span><br></pre></td></tr></table></figure>
 <p>上述代码将会输出 <code>x = 1</code>。</p>
 <p>注意，如果Rust访问数组时出现索引越界，程序会因为panic而异常退出，以保证不存在通过索引越界访问相邻内存的漏洞。</p>
+<h2 id="函数">函数</h2>
+<h3 id="rust函数">Rust函数</h3>
+<p>Rust中的函数以 <code>fn</code> 标识，一个典型的Rust函数定义如下</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">add</span>(x: <span class="type">u32</span>, y: <span class="type">u32</span>) <span class="punctuation">-&gt;</span> <span class="type">u32</span> &#123;</span><br><span class="line">    x + y</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，Rust中的函数签名和Python是非常相似的，同样是用 <code>:</code> 进行形参数据类型的标注，用 <code>-&gt;</code> 进行返回值数据类型的标注；不同之处在于Python使用 <code>:</code> 标注函数作用域，而Rust使用 <code>&#123;&#125;</code> 标注函数作用域。</p>
+<p>函数签名中的参数称为形参(parameter)，在调用函数时传入的实值称为实参(argument)，不过在日常交流中一般不区分parameter和argument这两个概念的区别。</p>
+<h3 id="语句和表达式">语句和表达式</h3>
+<p>Rust是一门基于表达式(expression)的语言。所谓的表达式，指的是有返回值的一个语句，例如 <code>x &gt; 1</code> 这个表达式会返回一个布尔量，例如上面我们定义的 <code>add()</code> 函数会返回一个 <code>u32</code> 整型。语句(statement)则不会产生返回值，例如 <code>let x = 1;</code>，就是一个语句。由于语句不产生返回值，因此形如 <code>let x = (let y = 1);</code> 这样的代码是错误的。这和C等语言有一定的区别，这些语言允许形如 <code>x = y = 1;</code> 这样的赋值语句，因为在这些语言中赋值也会返回一个值。</p>
+<p>在Rust函数中，我们可以不通过 <code>return</code> 来返回一个值，而是可以通过不写分号，利用表达式来作为函数的返回值。例如上面的 <code>add()</code> 函数，函数体内只有一句 <code>x + y</code>，注意这行代码是没有分号的，所以这是一个表达式，相当于 <code>return x + y;</code>。当然，这是因为表达式出现在函数的尾部，所以Rust会自动将这句表达式作为函数的返回值。</p>
+<p>Rust函数定义是一个语句，但函数调用是一个表达式，所以 <code>let z = add(x, y);</code> 这样的代码是合法的；另外，定义作用域的大括号 <code>&#123;&#125;</code> 也形成一个表达式，因此 <code>let a = &#123;let x = 1; x + 1&#125;;</code> 也是合法的。和函数一样，作用域的末行代码必须是一条表达式，否则这个作用域将会是没有返回值的表达式，返回值将是一个 <code>()</code>。</p>
+<h2 id="注释">注释</h2>
+<p>Rust的注释风格与C语言类似，单行注释以 <code>//</code> 开头。Rust不建议出现以下风格的注释</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="number">1</span>; <span class="comment">// define a variable</span></span><br></pre></td></tr></table></figure>
+<p>Rust建议的注释风格如下</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="comment">// define a variable</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>即同一行代码中尽量不要既存在普通代码，又存在注释。</p>
+<p>Rust还支持文档注释，这一点将在后面的包管理章节进行介绍。</p>
+<h2 id="控制流">控制流</h2>
+<p>在猜数字游戏中提到了 <code>match</code> 控制流，这是一个类似于C语言中 <code>switch</code> 的控制流。由于 <code>match</code> 属于Rust独有的控制流，因此本章节暂不做介绍。下面介绍Rust中的 <code>if-else</code> 控制流、<code>loop</code> 控制流、<code>for</code> 控制流和 <code>while</code> 控制流。</p>
+<h3 id="if-else-控制流"><code>if-else</code> 控制流</h3>
+<p>Rust中的 <code>if-else</code> 控制几乎与C语言完全相同，但是前面在介绍布尔量时也提到了，不像C语言，Rust严格要求 <code>if</code> 或 <code>else</code> 后面的条件表达式返回值类型为 <code>bool</code>，如果返回值类型为整型、浮点型或其他别的类型，Rust编译器将会报错。</p>
+<p><code>if</code> 控制流还可以用在 <code>let</code> 语句中，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="keyword">if</span> a &gt; <span class="number">1</span> &#123;<span class="number">1</span>&#125; <span class="keyword">else</span> &#123;<span class="number">2</span>&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="loop-控制流"><code>loop</code> 控制流</h3>
+<h4 id="循环标签">循环标签</h4>
+<p><code>loop</code> 控制流是Rust中一个比较有趣的循环控制流。<code>loop &#123;&#125;</code> 本身和 <code>while true &#123;&#125;</code> 是一样的，都是无限循环，但是 <code>loop</code> 控制流支持对 <code>loop</code> 打标签(loop label)，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="symbol">&#x27;outer_loop</span>: <span class="keyword">loop</span> &#123;</span><br><span class="line">    <span class="symbol">&#x27;inner_loop</span>: <span class="keyword">loop</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，这个 <code>loop label</code> 是一个形如 <code>'loop_name: loop</code> 的标签。</p>
+<p><code>loop</code> 循环可以用 <code>break</code> 关键字跳出，不过 <code>loop label</code> 的存在使得我们可以指定 <code>break</code> 跳出哪一个 <code>loop</code>，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="symbol">&#x27;outer_loop</span>: <span class="keyword">loop</span> &#123;</span><br><span class="line">    <span class="symbol">&#x27;inner_loop</span>: <span class="keyword">loop</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> x &gt; <span class="number">1</span> &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">break</span> <span class="symbol">&#x27;outer_loop</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Rust的这个 <code>loop label</code> 机制在循环嵌套的时候非常有用，因为我们可能会在应用中碰到内层循环中判定某个条件，然后直接跳出整个嵌套循环的场景，但普通的 <code>break</code> 只能跳出当前的循环。在Rust中，通过标识最外层 <code>loop</code>，我们就可以直接通过 <code>break</code> 最外层的 <code>loop</code> 跳出整个大循环。</p>
+<h4 id="从循环返回值">从循环返回值</h4>
+<p><code>loop</code> 循环在 <code>break</code> 时可以提供一个返回值，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">cnt</span> = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="keyword">loop</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> cnt &lt; <span class="number">10</span> &#123;</span><br><span class="line">        cnt = cnt + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">break</span> cnt;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码将会在结束循环后返回 <code>cnt</code> 的值，这种设计在一些重连机制中非常实用。</p>
+<h3 id="while-控制流"><code>while</code> 控制流</h3>
+<p><code>while</code> 控制流和C语言基本上是一致的，没有什么特别之处。</p>
+<h3 id="for-控制流"><code>for</code> 控制流</h3>
+<p>Rust中的 <code>for</code> 控制流和Python中的 <code>for</code> 比较类似，可以遍历集合中的元素。对于一些需要用到索引的地方，可以这样使用 <code>for</code> 循环，如下</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">cnt</span> <span class="keyword">in</span> (<span class="number">1</span>..<span class="number">4</span>) &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Current counter = &#123;&#125;&quot;</span>, cnt);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的循环就会在数组 <code>[1, 2, 3]</code> 中完成元素的遍历。</p>
 ]]></content>
       <categories>
         <category>Computer Science</category>
