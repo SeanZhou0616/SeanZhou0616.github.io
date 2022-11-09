@@ -971,35 +971,6 @@ R_4(x) = \frac{f^{(5)}(\xi)}{5!}(x-x_0)^2(x-x_1)^2(x-x_0)
       </tags>
   </entry>
   <entry>
-    <title>栈和堆</title>
-    <url>/2022/11/02/%E6%A0%88%E5%92%8C%E5%A0%86/</url>
-    <content><![CDATA[<h2 id="栈和堆分别是什么">栈和堆分别是什么</h2>
-<h3 id="stack">Stack</h3>
-<p>栈是比较熟悉的一个概念。栈是内存中一个后进先出的存储区域，数据进栈和出栈就像把书一层一层叠起来，然后又一层一层取出来的过程。</p>
-<h3 id="heap">Heap</h3>
-<p>内存中的堆和数据结构中的堆不是一个概念。数据结构中的堆是什么二叉树之类的，内存中的堆指的是一片无序的内存空间。我们经常会听说为数据变量分配内存空间(Allocate)这种说法，其实分配内存的过程就是在堆中找一片空白内存给指定的变量进行数据存储的过程。</p>
-<span id="more"></span>
-<h2 id="栈和堆的主要区别">栈和堆的主要区别</h2>
-<h3 id="存储的区别">存储的区别</h3>
-<p>栈是一片有序的内存，所有进栈的数据长度都必须是已知且固定的。并且，栈是紧凑的，数据被连续地存放，就像一摞书，书与书之间不会有空隙。</p>
-<p>堆是一片无序的内存空间。这里的无序并不是说堆中的数据存放非常混乱，而是相较于栈并不紧凑。在堆中存放数据，就像去饭店吃饭，服务员会先问我们有几个人，然后找到一张合适的空桌子，再记下桌子的编号。假如我们暂时离开，去上个厕所，那么从厕所回来时可以根据桌号去找到这张被分配好的桌子。上面的例子中，桌子的编号就相当于是指针，这个指针的类型和长度都是已知的，会被存入栈中；我们有几个人就相当于数据长度，系统需要根据当前的数据长度从空闲的内存中找到一片足够大小的连续空间，用于存放这些数据。</p>
-<h3 id="性能的区别">性能的区别</h3>
-<h4 id="写入速度">写入速度</h4>
-<p>向栈中写数据比堆更快，因为向栈中写数据只需要把数据往栈上放就行了。向堆中写数据则必须找到一段长度足够的空内存，才能写数据。</p>
-<h4 id="读取速度">读取速度</h4>
-<p>从栈中读数据更快，因为栈中的数据经常可以被临时存入Cache中以加速访问，而访问堆中的数据则必须先从栈中取指针，然后再到内存中的对应地址读数据。</p>
-<h2 id="堆栈对于rust编程的重要性">堆栈对于Rust编程的重要性</h2>
-<p>在某些高级语言中，例如Java，变量在内存中的存储细节对于程序员来说被隐藏了。但对于一些偏底层的语言，例如C/C++，搞清楚变量在堆和栈中的行为是非常有必要的，不当的处理会导致内存泄漏等严重的内存安全问题，因为堆中的数据结构非常松散。</p>
-<p>Rust以内存安全特性著名，这种特性是由底层的<strong>所有权机制</strong>保证的，内存不安全的代码在编译时就会被发现。也正因此，Rust程序员必须对堆栈的原理有一定了解，否则在<strong>所有权机制</strong>的保护下，我们所编写的Rust代码可能根本无法通过编译。</p>
-]]></content>
-      <categories>
-        <category>Computer Science</category>
-      </categories>
-      <tags>
-        <tag>Computer System</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>统计学习方法-无监督学习概述</title>
     <url>/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/</url>
     <content><![CDATA[<p>本文是李航老师的《统计学习方法》无监督学习部分的学习笔记。</p>
@@ -1559,6 +1530,135 @@ a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
       <tags>
         <tag>Numerical Analysis</tag>
         <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Rust入门-所有权系统</title>
+    <url>/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[<p>什么是所有权？</p>
+<p>所有权机制是Rust保证内存安全的一个重要机制。形如Java和C#的编程语言通过垃圾回收(Garbage collector, GC)机制进行内存管理，程序员在编程时无需关心变量在内存中的位置，也无需关心内存的占用与释放，所有的内存都由一个Runtime来管理，因此程序的性能会受到一定的影响，内存占用也比较多；形如C和C++的编程语言要求开发者自行进行内存的申请与释放，其哲学是充分信任程序员的内存管理能力，但经验不足的程序员很容易在编程时遇到内存安全问题；Rust则是另类，通过所有权机制对内存进行管理，由编译器在编译时找出可能存在的内存安全问题。</p>
+<p>本笔记将整理Rust中的所有权概念。</p>
+<span id="more"></span>
+<h2 id="栈stack和堆heap">栈(stack)和堆(heap)</h2>
+<p>栈和堆是内存中的两片区域。对于Rust来说，变量的值存储在栈还是堆上与所有权机制是挂钩的，为了更好地理解所有权机制，在这里要强调一下栈和堆这两个不同的概念。</p>
+<h3 id="栈">栈</h3>
+<p>栈是一个后进先出(LIFO)的结构，就像叠盘子一样，我们总是往一堆盘子的最上方加叠盘子，取的时候也总是从最上方取盘子。这个特性决定了栈是一个紧凑、有序的结构，数据按顺序进栈(push into)，也按顺序出栈(pop off)；在栈中数据总是紧密相邻，数据之间不会出现空位，因此只有数据长度已知的数据才能入栈。</p>
+<h3 id="堆">堆</h3>
+<p>堆是一个无序、稀疏的结构，就像在一片沙滩上堆沙子一样，我们可以在这里堆一座城堡，在那里堆一个土包，城堡和土包之间可能相隔很远。一般来说，当一个数据的长度未知时，我们会将这个数据存到堆的一个比较稀疏的位置，以便数据扩张，这个过程叫做在堆上给数据分配(allocate)内存空间。分配完内存之后，Rust会返回指向这段数据起始位置的指针，并将这段内存标记为已使用。</p>
+<h3 id="栈和堆之间的速度差异">栈和堆之间的速度差异</h3>
+<p>数据入栈的速度明显快于在堆上分配内存，因为数据入栈时只要往栈顶上放就可以了，而在堆上分配内存要先在内存中找到一片大小足够的空间，然后才能把这些数据存进去，存完了还得将这一片内存标记为已使用，工作量明显大很多。</p>
+<p>从栈中读数据的速度也要比从堆上读数据更快，因为在堆上读数据必须要通过指针，而现代处理器在内存中跳转越多读取速度越慢。</p>
+<h3 id="所有权系统的工作">所有权系统的工作</h3>
+<p>所有权系统会跟踪哪部分代码正在使用堆上的哪些数据，最大程度上减少堆中的重复数据，并且会清理堆中不再使用的数据。所以总体来说，所有权系统主要任务就是进行堆的管理。</p>
+<h2 id="所有权系统">所有权系统</h2>
+<h3 id="所有权规则">所有权规则</h3>
+<ol type="1">
+<li>内存中的每一个值都有一个对应的 <code>Owner</code> 变量</li>
+<li>内存中的每一个值在同一时刻只能有一个 <code>Owner</code></li>
+<li>当 <code>Owner</code> 离开对应的变量作用域，这个值将从内存中被丢弃</li>
+</ol>
+<p>变量作用域的概念在函数部分简单说明过，这里不再赘述。</p>
+<h3 id="演示所有权规则">演示所有权规则</h3>
+<p>在变量数据类型中，基本的标量类型和复合类型变量在完成定义后，其数据长度总是已知的，因此总是被存入栈中。这些变量在离开作用域以后，其对应的值会从栈中被移除。所以这些基本的数据类型不会涉及到堆的管理。</p>
+<p>下面介绍一种更加复杂的数据类型，来演示一下Rust的所有权规则。</p>
+<h4 id="string-变量"><code>String</code> 变量</h4>
+<p>Rust中提供了一种非常易懂的字符串字面值机制，即直接通过硬编码定义一串字符串，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = <span class="string">&quot;hello&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>这个字符串字面值是不可变的。如果我们想要创建一个长度可变的字符串变量要怎么操作呢？Rust为此定义了 <code>String</code> 类型的字符串变量。可以使用 <code>String::from()</code> 方法从字符串字面值创建一个 <code>String</code> 变量，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello, world!&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>如果我们将其定义为一个可变变量，那么可以使用 <code>String</code> 的 <code>push_str()</code> 方法进行追加字符串，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">s.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;, world!&quot;</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="string-类型的内存分配"><code>String</code> 类型的内存分配</h4>
+<p>由于 <code>String</code> 类型可变变量的长度是可增长的，因此它们的值不能存在栈中，只能存到堆里面。这意味着 <code>String</code> 类型变量的内存是在运行时分配的，而且在 <code>String</code> 类型的变量使用完毕以后，这部分内存需要被回收。</p>
+<p>运行时分配内存由形如 <code>String::from()</code> 等变量构造的方法进行实现，这种构造变量的方法在其他的编程语言中非常常见；比较棘手的是如何去回收变量在堆中占据的内存。在形如C这种可以直接操作内存的语言中，程序员需要手动为前面 <code>allocate</code> 的内存进行 <code>free</code> 操作，并且这个对应关系必须梳理清楚，否则代码将会出现异常的行为；Rust提供了另一种策略，即内存会在其绑定的变量离开作用域之后自动释放，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 运行到这里的时候 s 对应的内存已经被释放了</span></span><br></pre></td></tr></table></figure>
+<p>这是一种很自然的做法，对于程序员也是如此：变量在它应该起作用的地方起作用，在它不应该起作用的地方失效。在变量离开作用域的时候，Rust会隐式地对这个变量调用用于释放内存的 <code>drop</code> 函数。</p>
+<h4 id="string-类型变量在内存中的移动"><code>String</code> 类型变量在内存中的移动</h4>
+<p>下面来考虑另外一个问题。对于普通的标量类型变量，如果我们要创建一份变量的拷贝，那么只需要将一个变量的值赋值给另一个变量即可，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = x;</span><br></pre></td></tr></table></figure>
+<p>这是很自然的做法。上面的操作在内存中的行为也很容易理解，其实就是在栈中存入了两个 <code>i32</code> 类型的整型变量。但是，<code>String</code> 类型的变量如果这样操作的话，在内存中的行为就有明显区别了。前面提到，这个 <code>String</code> 类型的变量是变长的变量，因此只能存入堆中，然后将指针等描述信息存入栈中。实际上一个 <code>String</code> 变量对应了三个栈中的变量</p>
+<ul>
+<li>指针</li>
+<li>长度</li>
+<li>容量</li>
+</ul>
+<p>其中，长度指的是当前这个 <code>String</code> 变量在堆中占据了多少字节的内存；容量这个概念暂时不重要，可以先不去管它。<code>String</code> 变量真正的字符串值被存储在内存的堆中，由栈中的指针指示内存地址。</p>
+<figure>
+<img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-01.svg" alt><figcaption>String变量在内存中的存储</figcaption>
+</figure>
+<p>所以，将一个 <code>String</code> 变量的值拷贝给另外一个 <code>String</code> 变量，并不像标量类型那么简单，对于下面的代码</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = x;</span><br></pre></td></tr></table></figure>
+<p>在内存中实际上的操作是，CPU复制了 <code>x</code> 在栈中的指针、长度和容量，然后将这些值绑定给变量 <code>y</code>，对于堆中的内容则不动。也就是说，变量 <code>x</code> 和 <code>y</code> 会指向相同的堆地址，这种拷贝方式很像是其他编程语言中的<strong>浅拷贝</strong>（但Rust中的操作与其他语言不完全相同，因此并非浅拷贝，<em>需要注意以下叙述中所有被称为浅拷贝的行为都不是在Rust中发生的行为</em>）。</p>
+<figure>
+<img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-02.svg" alt><figcaption>String变量在内存中的拷贝</figcaption>
+</figure>
+<p>浅拷贝在拷贝的时候，只拷贝了栈上存储的类似于Metadata的部分，对于真正存储在堆上的Data部分是不会拷贝的，所以浅拷贝的速度非常快。但浅拷贝存在一个问题，这个问题出现在内存释放的时候。浅拷贝之后，程序的内存栈中出现了两个指向内存中同一堆地址的指针，假如在释放内存的时候，我们只释放了变量 <code>y</code> 的内存，那么操作系统会回收对应堆的内存，但是栈中仍然存在一个指向那个堆地址的指针信息在 <code>x</code> 中。这将会导致一个严重的内存安全漏洞，因此在第一次释放内存以后，操作系统以为它已经收回了访问这一段内存堆地址的访问权限，但实际上栈中还有一个 <code>x</code> 的指针可以访问这段内存。</p>
+<p>为了形象地说明上面这个问题的严重性，下面以租房为例。<code>let x = String::from("hello");</code> 就相当于房东将它的一间房子出租给了变量 <code>x</code>，然后把钥匙（指向内存堆地址的指针）给了它；过段时间 <code>x</code> 跟房东说它不租了，要转租给 <code>y</code>，但偷偷留了一把钥匙，但房东以为只有 <code>y</code> 有钥匙；等 <code>y</code> 退租了以后，房东收回了 <code>y</code> 的那把钥匙，却不知道 <code>x</code> 那里还有一把钥匙。假如 <code>x</code> 在某个时刻突然想起来自己这里还有一把钥匙，要把它还给房东，而恰好房东在这之前已经将房子租给了 <code>z</code>，那么这就会导致 <code>z</code> 因为 <code>x</code> 交还了钥匙而被房东赶了出去。如果你是 <code>z</code> 你崩不崩溃？反正程序是会崩溃的。</p>
+<p>上面的这个问题被称为<strong>二次释放(double free)</strong>。事实上，恶意人员拿到一个指向堆中内存地址的指针可能并不能拿来偷取内存中的数据，因为堆中的数据是一般是无序的，除非刚好在这个地址附近有什么机密数据；主要的问题在于，操作系统栈中还有一个指针指向这片内存，假如恰好这片内存在第一次释放之后，又分配给了其他的变量，那么再次释放指针将会破坏其他变量的数据结构，很可能导致程序崩溃。事实上，在C语言中，如果程序员申请了一段堆中的内存，经过一些操作以后释放了这些内存，但没有把指针置为 <code>NULL</code>，而是再次调用释放内存的API进行了一次内存的释放，那么程序将会马上崩溃。</p>
+<p>所有权机制为二次释放问题提供了解决方案。假如我们定义了一个 <code>String</code> 类型变量 <code>x</code>，然后将其栈中的值拷贝至 <code>y</code> 的栈上，那么 <code>x</code> 马上就会被弃用，因为我们前面提到——一个内存中的值在同一时刻只能存在一个 <code>Owner</code> ——当 <code>x</code> 在栈中的值被拷贝至 <code>y</code> 的栈上以后，堆中那些值的 <code>Owner</code> 马上由 <code>x</code> 转为 <code>y</code>；而一旦 <code>x</code> 不是任何内存中值的 <code>Owner</code> 以后，这个变量就不再能够访问，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = x;</span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(x);</span><br></pre></td></tr></table></figure>
+<p>这段代码将无法通过编译，因为Rust编译器认为 <code>x</code> 是一个无效的引用。</p>
+<p>前面我们说，只拷贝栈上Metadata而不拷贝堆上Data的拷贝，一般可以称为<strong>浅拷贝(shallow copy)</strong>。需要注意的是，这与Rust中的行为并不完全相同，因为浅拷贝不会影响原来变量的那些Metadata，而在Rust中原来的变量直接变为不可引用，所以在Rust中与其称其为拷贝，不如直接称其为<strong>移动(move)</strong>，就像将一个文件从一个位置移动到另一个位置之后，原来那个位置就不再能访问这个文件了。</p>
+<figure>
+<img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-04.svg" alt><figcaption>String类型变量移动后原变量被弃用</figcaption>
+</figure>
+<h4 id="string-类型变量的深拷贝"><code>String</code> 类型变量的深拷贝</h4>
+<p>有时候我们确实是需要将一个 <code>String</code> 类型变量栈中的值和堆中的值都进行一次拷贝，那么Rust也提供了一种称为 <code>clone</code> 的方法，如下</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = x.<span class="title function_ invoke__">clone</span>();</span><br></pre></td></tr></table></figure>
+<p>上面这段代码在内存中的行为就是完全拷贝了 <code>x</code> 变量在栈中的值和在堆中的值到 <code>y</code> 变量上，图示如下</p>
+<figure>
+<img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-03.svg" alt><figcaption>String类型变量的克隆</figcaption>
+</figure>
+<h3 id="函数与所有权">函数与所有权</h3>
+<p>对于向函数传参这种情况，其实也涉及到变量的复制和移动的问题。如果是一个 <code>String</code> 要传入函数中，那么在传参的过程中将会出现 <code>String</code> 变量的移动，即函数外部的 <code>String</code> 变量由于传入了函数，导致在内存中发生了移动，最后的结果是</p>
+<ul>
+<li>原来的那个变量在传入函数之后不再能引用</li>
+<li>这一段内存在函数执行结束之后将会自动被释放，除非函数返回了这个变量</li>
+</ul>
+<p>例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 s 传入 take_ownership() 函数后，s 将会被移动到函数的作用域中去</span></span><br><span class="line">    <span class="title function_ invoke__">take_ownership</span>(s);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从这里开始 s 已经不再能访问了</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">take_ownership</span>(s: <span class="type">String</span>) &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>值得注意的是，如果是变量的值仅存储在栈上，那么不会遇到上面这种问题，变量传入函数时Rust将会自动在栈上复制一份数据传到函数里，而不是将原来的变量移动到函数里。</p>
+<p>对于前者，我们经常会碰到这样一种情况：我先拿到了一串数据，然后传入函数得到另一串数据，最后我希望比较传入函数的这串数据和函数计算得到的另一串数据的差异。这个时候，Rust的实现就有点复杂了，似乎只能让这个函数将传入的数据和计算结果一起使用元组返回才能满足我们的需求。这无疑是非常尴尬的设计，每次调个函数还得把数据传进去再传出来，太麻烦了。万幸的是，Rust在调用函数的时候，提供了一种引用机制，能够省去上面说的这些麻烦。</p>
+<h2 id="引用与借用">引用与借用</h2>
+<p>Rust中允许通过 <code>&amp;</code> 符号创建一个指向某个变量的引用(reference)，而这个创建引用的过程称为借用(borrowing)。引用可以理解为一个变量的快捷方式，不拥有对内存的所有权，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">length</span> = <span class="title function_ invoke__">get_length</span>(&amp;s);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">get_length</span>(s_ref: &amp;<span class="type">String</span>) <span class="punctuation">-&gt;</span> <span class="type">u32</span> &#123;</span><br><span class="line">    s_ref.<span class="title function_ invoke__">len</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这段代码定义了一个 <code>String</code> 类型变量 <code>s</code>，然后创建了一个 <code>s</code> 的引用 <code>&amp;s</code> 并传入 <code>get_length()</code> 函数。注意这个函数的签名就是 <code>String</code> 的引用类型 <code>&amp;String</code>。<code>get_length()</code> 函数返回 <code>&amp;s</code> 这个引用指向的 <code>String</code> 变量长度，并返回给到 <code>length</code> 变量，最后 <code>println!(s)</code> 仍然能够输出 <code>s</code> 的值。这说明，将引用传入一个函数，并不会影响引用的那个变量本身。</p>
+<p>需要注意的是，不可变变量的引用被称为不可变引用，这是只读的，任何尝试通过不可变引用来改变原变量值的行为都无法通过编译。</p>
+<h3 id="创建可变引用">创建可变引用</h3>
+<p>如果我们真的需要改变引用变量的值，那么</p>
+<ol type="1">
+<li>确保原变量是可变变量</li>
+<li>使用可变引用</li>
+</ol>
+<p>例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;你好&quot;</span>);</span><br><span class="line">    <span class="title function_ invoke__">change</span>(&amp;<span class="keyword">mut</span> s);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">change</span>(s: &amp;<span class="keyword">mut</span> <span class="type">String</span>) &#123;</span><br><span class="line">    s.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;，世界！&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于同一个变量，同一时刻允许存在多个不可变引用，但只允许存在一个可变引用，而且不允许同时存在可变引用和不可变引用。这个限制主要是为了在编译时就避免数据竞争(data race)情况的出现。</p>
+<h3 id="引用作用域">引用作用域</h3>
+<p>一个变量引用的作用域从创建开始，一直持续到最后一次使用结束。例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;你好&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s_ref</span>: &amp;<span class="type">String</span> = &amp;s;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s_ref);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s_mut_ref</span>: &amp;<span class="type">String</span> = &amp;s;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s_mut_ref);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于最后一次使用 <code>s_ref</code> 在定义 <code>s_mut_ref</code> 之前，所以可变引用 <code>s_ref</code> 和不可变引用 <code>s_mut_ref</code> 的作用域错开了，因此这不会与可变引用和不可变引用无法共存的规则相冲突。</p>
+<h3 id="悬垂引用">悬垂引用</h3>
+<p>悬垂引用(dangling reference)在一些支持指针的语言中是可能出现的，这个错误来源于释放了堆中的内存，但是栈中的指针没有随之释放掉。其实这和二次释放是类似的问题，只不过悬垂引用不会引发和二次释放一样的严重错误。Rust通过编译器进行悬垂引用的检查，形如下面的代码是无法通过编译的</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span>: &amp;<span class="type">String</span> = <span class="title function_ invoke__">dangle</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">dangle</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"></span><br><span class="line">    &amp;s</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码试图通过从函数返回一个引用来创建悬垂引用，因为 <code>dangle()</code> 函数完成以后 <code>s</code> 离开了作用域，<code>s</code> 的内存会被释放掉；如果这样成功返回了 <code>s</code> 的指针，那么确实会出现悬垂引用，不过Rust编译器能够检查到这个错误，并阻止编译通过。所以，Rust中是不会在运行时出现悬垂引用的。</p>
+<h2 id="slice切片">slice切片</h2>
+<h3 id="字符串切片">字符串切片</h3>
+<p>有时候我们可能想取一个 <code>String</code> 变量中的一部分，或者说某一个字符串的子串。Rust提供了字符串slice的方式，进行字符串子串提取。不过需要注意，字符串slice同样是一种引用，不拥有对应内存的所有权，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">sub_string</span> = &amp;s[..<span class="number">7</span>];</span><br></pre></td></tr></table></figure>
+<p>这个 <code>&amp;s[..7]</code> 表示引用 <code>s</code> 的第0至第6个字符，形成一个字符串slice引用。这里由于从 <code>0</code> 开始引用，因此可以不写开头的索引，如果要引用第1至第6字符，则要写 <code>&amp;s[1..7]</code>，注意Rust中的区间永远是左闭右开的；如果我们要一直引用到末尾，则可以不写右边的索引，例如 <code>&amp;s[1..]</code>。</p>
+<p>我们在写函数签名的时候，可能会需要注明字符串slice的数据类型，这里记一下字符串slice的数据类型为 <code>&amp;str</code>。实际上，字符串字面值(string literal)的数据类型就是 <code>&amp;str</code>！</p>
+<p>另外，字符串的slice还能继续被切片，其语法和对字符串进行切片是一致的。</p>
+<h3 id="数组切片">数组切片</h3>
+<p>不只是字符串能够被切片，数组也是可以切片的，例如</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">a</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">a_slice</span> = &amp;a[..<span class="number">3</span>];</span><br></pre></td></tr></table></figure>
+<p>那么 <code>a_slice</code> 就会对应 <code>[1, 2, 3]</code>。这里强调一下，数组的切片数据类型形如 <code>&amp;[i32]</code>，这里原数组内的元素是 <code>i32</code> 类型的整型；如果是一个 <code>f64</code> 数组，那么其数组切片数据类型就是 <code>&amp;[f64]</code>。</p>
+]]></content>
+      <categories>
+        <category>Computer Science</category>
+      </categories>
+      <tags>
+        <tag>Programming Language</tag>
+        <tag>Rust</tag>
       </tags>
   </entry>
 </search>
