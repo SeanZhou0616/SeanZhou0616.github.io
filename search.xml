@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>hexo博文图片显示问题[SOLVED]</title>
+    <url>/2022/11/01/hexo%E5%8D%9A%E6%96%87%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98-SOLVED/</url>
+    <content><![CDATA[<p>在使用hexo进行博客搭建的过程，发现使用Markdown语法的文档，无法正常加载上传的图片，例如</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">Potential Flow Analysis</span>](<span class="link">./2022-11-1-Potential-Flow-Analysis-Magnus-Effect/potential-flow-analysis-velocity-field-plot.png</span>)</span><br></pre></td></tr></table></figure>
+<p>通过观察构建信息，发现图片总是指向一个以 <code>/.io/</code> 开头的文件夹。经过在hexo官网的搜索，在评论区发现（😓）这个问题似乎是 <code>hexo-asset-image</code> 包的一个bug，只需要修改 <code>node_modules/hexo-asset-image/index.js</code> 的第24行，将其改为</p>
+<figure class="highlight javascript"><figcaption><span>node_modules/hexo-asset-image/index.js</span></figcaption><table><tr><td class="code"><pre><span class="line"># <span class="title class_">JavaScript</span> </span><br><span class="line"><span class="keyword">var</span> endPos = link.<span class="property">length</span>;</span><br></pre></td></tr></table></figure>
+<p>即可。</p>
+]]></content>
+      <categories>
+        <category>Technical Issues</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Potential Flow Analysis - Magnus Effect</title>
     <url>/2022/11/01/Potential-Flow-Analysis-Magnus-Effect/</url>
     <content><![CDATA[<h2 id="velocity-vector-representation">Velocity vector representation</h2>
@@ -68,22 +84,6 @@ F_L = -\rho \Gamma U
       </categories>
       <tags>
         <tag>Aerodynamics</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo博文图片显示问题[SOLVED]</title>
-    <url>/2022/11/01/hexo%E5%8D%9A%E6%96%87%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98-SOLVED/</url>
-    <content><![CDATA[<p>在使用hexo进行博客搭建的过程，发现使用Markdown语法的文档，无法正常加载上传的图片，例如</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">Potential Flow Analysis</span>](<span class="link">./2022-11-1-Potential-Flow-Analysis-Magnus-Effect/potential-flow-analysis-velocity-field-plot.png</span>)</span><br></pre></td></tr></table></figure>
-<p>通过观察构建信息，发现图片总是指向一个以 <code>/.io/</code> 开头的文件夹。经过在hexo官网的搜索，在评论区发现（😓）这个问题似乎是 <code>hexo-asset-image</code> 包的一个bug，只需要修改 <code>node_modules/hexo-asset-image/index.js</code> 的第24行，将其改为</p>
-<figure class="highlight javascript"><figcaption><span>node_modules/hexo-asset-image/index.js</span></figcaption><table><tr><td class="code"><pre><span class="line"># <span class="title class_">JavaScript</span> </span><br><span class="line"><span class="keyword">var</span> endPos = link.<span class="property">length</span>;</span><br></pre></td></tr></table></figure>
-<p>即可。</p>
-]]></content>
-      <categories>
-        <category>Technical Issues</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -1583,15 +1583,11 @@ a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
 <li>容量</li>
 </ul>
 <p>其中，长度指的是当前这个 <code>String</code> 变量在堆中占据了多少字节的内存；容量这个概念暂时不重要，可以先不去管它。<code>String</code> 变量真正的字符串值被存储在内存的堆中，由栈中的指针指示内存地址。</p>
-<figure>
-<img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-01.svg" alt><figcaption>String变量在内存中的存储</figcaption>
-</figure>
+<p><img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-01.svg" width="50%" height="50%" align="center" alt="String变量在内存中的存储"></p>
 <p>所以，将一个 <code>String</code> 变量的值拷贝给另外一个 <code>String</code> 变量，并不像标量类型那么简单，对于下面的代码</p>
 <figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = x;</span><br></pre></td></tr></table></figure>
 <p>在内存中实际上的操作是，CPU复制了 <code>x</code> 在栈中的指针、长度和容量，然后将这些值绑定给变量 <code>y</code>，对于堆中的内容则不动。也就是说，变量 <code>x</code> 和 <code>y</code> 会指向相同的堆地址，这种拷贝方式很像是其他编程语言中的<strong>浅拷贝</strong>（但Rust中的操作与其他语言不完全相同，因此并非浅拷贝，<em>需要注意以下叙述中所有被称为浅拷贝的行为都不是在Rust中发生的行为</em>）。</p>
-<figure>
-<img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-02.svg" alt><figcaption>String变量在内存中的拷贝</figcaption>
-</figure>
+<p><img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-02.svg" width="50%" height="50%" align="center" alt="String变量在内存中的拷贝"></p>
 <p>浅拷贝在拷贝的时候，只拷贝了栈上存储的类似于Metadata的部分，对于真正存储在堆上的Data部分是不会拷贝的，所以浅拷贝的速度非常快。但浅拷贝存在一个问题，这个问题出现在内存释放的时候。浅拷贝之后，程序的内存栈中出现了两个指向内存中同一堆地址的指针，假如在释放内存的时候，我们只释放了变量 <code>y</code> 的内存，那么操作系统会回收对应堆的内存，但是栈中仍然存在一个指向那个堆地址的指针信息在 <code>x</code> 中。这将会导致一个严重的内存安全漏洞，因此在第一次释放内存以后，操作系统以为它已经收回了访问这一段内存堆地址的访问权限，但实际上栈中还有一个 <code>x</code> 的指针可以访问这段内存。</p>
 <p>为了形象地说明上面这个问题的严重性，下面以租房为例。<code>let x = String::from("hello");</code> 就相当于房东将它的一间房子出租给了变量 <code>x</code>，然后把钥匙（指向内存堆地址的指针）给了它；过段时间 <code>x</code> 跟房东说它不租了，要转租给 <code>y</code>，但偷偷留了一把钥匙，但房东以为只有 <code>y</code> 有钥匙；等 <code>y</code> 退租了以后，房东收回了 <code>y</code> 的那把钥匙，却不知道 <code>x</code> 那里还有一把钥匙。假如 <code>x</code> 在某个时刻突然想起来自己这里还有一把钥匙，要把它还给房东，而恰好房东在这之前已经将房子租给了 <code>z</code>，那么这就会导致 <code>z</code> 因为 <code>x</code> 交还了钥匙而被房东赶了出去。如果你是 <code>z</code> 你崩不崩溃？反正程序是会崩溃的。</p>
 <p>上面的这个问题被称为<strong>二次释放(double free)</strong>。事实上，恶意人员拿到一个指向堆中内存地址的指针可能并不能拿来偷取内存中的数据，因为堆中的数据是一般是无序的，除非刚好在这个地址附近有什么机密数据；主要的问题在于，操作系统栈中还有一个指针指向这片内存，假如恰好这片内存在第一次释放之后，又分配给了其他的变量，那么再次释放指针将会破坏其他变量的数据结构，很可能导致程序崩溃。事实上，在C语言中，如果程序员申请了一段堆中的内存，经过一些操作以后释放了这些内存，但没有把指针置为 <code>NULL</code>，而是再次调用释放内存的API进行了一次内存的释放，那么程序将会马上崩溃。</p>
@@ -1599,16 +1595,12 @@ a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
 <figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = x;</span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(x);</span><br></pre></td></tr></table></figure>
 <p>这段代码将无法通过编译，因为Rust编译器认为 <code>x</code> 是一个无效的引用。</p>
 <p>前面我们说，只拷贝栈上Metadata而不拷贝堆上Data的拷贝，一般可以称为<strong>浅拷贝(shallow copy)</strong>。需要注意的是，这与Rust中的行为并不完全相同，因为浅拷贝不会影响原来变量的那些Metadata，而在Rust中原来的变量直接变为不可引用，所以在Rust中与其称其为拷贝，不如直接称其为<strong>移动(move)</strong>，就像将一个文件从一个位置移动到另一个位置之后，原来那个位置就不再能访问这个文件了。</p>
-<figure>
-<img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-04.svg" alt><figcaption>String类型变量移动后原变量被弃用</figcaption>
-</figure>
+<p><img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-04.svg" width="50%" height="50%" align="center" alt="String类型变量移动后原变量被弃用"></p>
 <h4 id="string-类型变量的深拷贝"><code>String</code> 类型变量的深拷贝</h4>
 <p>有时候我们确实是需要将一个 <code>String</code> 类型变量栈中的值和堆中的值都进行一次拷贝，那么Rust也提供了一种称为 <code>clone</code> 的方法，如下</p>
 <figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = x.<span class="title function_ invoke__">clone</span>();</span><br></pre></td></tr></table></figure>
 <p>上面这段代码在内存中的行为就是完全拷贝了 <code>x</code> 变量在栈中的值和在堆中的值到 <code>y</code> 变量上，图示如下</p>
-<figure>
-<img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-03.svg" alt><figcaption>String类型变量的克隆</figcaption>
-</figure>
+<p><img src="/2022/11/08/Rust%E5%85%A5%E9%97%A8-%E6%89%80%E6%9C%89%E6%9D%83%E7%B3%BB%E7%BB%9F//trpl04-03.svg" width="50%" height="50%" align="center" alt="String类型变量的克隆"></p>
 <h3 id="函数与所有权">函数与所有权</h3>
 <p>对于向函数传参这种情况，其实也涉及到变量的复制和移动的问题。如果是一个 <code>String</code> 要传入函数中，那么在传参的过程中将会出现 <code>String</code> 变量的移动，即函数外部的 <code>String</code> 变量由于传入了函数，导致在内存中发生了移动，最后的结果是</p>
 <ul>
