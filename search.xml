@@ -705,185 +705,6 @@ T_n^{(m)} = \frac{T_{2n}^{(m-1)}-2^{-2m}T_n^{(m-1)}}{1-2^{-2m}}
       </tags>
   </entry>
   <entry>
-    <title>卡尔曼滤波器基础</title>
-    <url>/2022/11/02/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h2 id="引入">引入</h2>
-<p>卡尔曼滤波器是一种利用观测数据来修正先验数据的滤波器，适用于<em>线性高斯系统</em>。</p>
-<p>以直线运动的车辆为例。记<span class="math inline">\(t\)</span>时刻的车辆位置为<span class="math inline">\(p_t\)</span>，速度为<span class="math inline">\(v_t\)</span>，加速度为<span class="math inline">\(u_t\)</span>，那么在纵向应有车辆运动学模型</p>
-<p><span class="math display">\[
-\left \{ \begin{aligned}
-&amp; p_t = p_{t-1} + \Delta t \ v_{t-1} + \frac{(\Delta t)^2}{2} u_{t-1}  \\
-&amp; v_t = v_{t-1} + \Delta t \ u_{t-1}
-\end{aligned}
-\right.
-\]</span></p>
-<p>令</p>
-<p><span class="math display">\[
-\boldsymbol x_t = \begin{pmatrix} p_t \\ v_t \end{pmatrix}
-\]</span></p>
-<p>有</p>
-<p><span class="math display">\[
-\boldsymbol x_t = \begin{pmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{pmatrix}\boldsymbol x_{t-1} + \begin{pmatrix} \displaystyle \frac{(\Delta t)^2}{2} \\ \Delta t \end{pmatrix}u_{t-1} \tag{1}
-\]</span></p>
-<p>当然，这样的运动学模型是非常简单的。一方面，只考虑了纵向的运动，而且假设加速度的测量是noise-free的；另一方面，由于采样数据是离散的，在<span class="math inline">\(\Delta t\)</span>时间内的加速度变化我们不得而知。因此，利用这样的运动学模型对车辆的运动状态进行估计，误差必然会随着时间的推移而增大。</p>
-<span id="more"></span>
-<p>既然估计得到的运动状态并不是精确的，那么我们需要修正一下式(1)中的符号。用<span class="math inline">\(\hat{\boldsymbol{x}}_t^-\)</span>表示先验估计状态，用<span class="math inline">\(\hat{\boldsymbol{x}}_t\)</span>表示最优估计状态，没有^符号的视为真值。需要注意的是，在本例中我们将加速度输入视作真值。那么式(1)可以改写为</p>
-<p><span class="math display">\[
-\hat{\boldsymbol{x}}_t^- = \begin{pmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{pmatrix}\hat{\boldsymbol{x}}_{t-1} + \begin{pmatrix} \displaystyle \frac{(\Delta t)^2}{2} \\ \Delta t \end{pmatrix}u_{t-1} \tag{2}
-\]</span></p>
-<p>假设我们为这辆测试车安装了GNSS导航系统，可以利用RTK定位数据进行车辆位置的观测。不过GNSS只能观测车辆的位置，而不能观测车辆的速度，所以我们可以将观测到的状态量记为<span class="math inline">\(\boldsymbol{z}_t = \begin{pmatrix} z_p \\ z_v \end{pmatrix}\)</span>，将观测矩阵记为<span class="math inline">\(H=\begin{pmatrix} 1 &amp; 0 \end{pmatrix}\)</span>然后写出以下观测方程</p>
-<p><span class="math display">\[
-\boldsymbol{z}_t = H\boldsymbol{x}_t \tag{3}
-\]</span></p>
-<p>很显然，无论是先验估计得到的值还是观测得到的值都与真值有一定偏离，那么如何用观测到的状态量<span class="math inline">\(z_t\)</span>修正先验估计状态呢？下面就介绍一下卡尔曼滤波器。</p>
-<h2 id="卡尔曼滤波器---估计部分">卡尔曼滤波器 - 估计部分</h2>
-<p>卡尔曼滤波器总体上可以分为两个部分，估计部分与更新部分。先来讲估计部分。式(2)是卡尔曼滤波器估计部分的主体，不过我们需要考虑估计中可能存在的噪声，所以将式(2)修正为</p>
-<p><span class="math display">\[
-\hat{\boldsymbol{x}}_t^- = \begin{pmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{pmatrix}\hat{\boldsymbol{x}}_{t-1} + \begin{pmatrix} \displaystyle \frac{(\Delta t)^2}{2} \\ \Delta t \end{pmatrix}u_{t-1} + w_t
-\]</span></p>
-<p>在卡尔曼滤波器的假设中，过程噪声服从高斯分布，即<span class="math inline">\(w_t \in \mathcal N (0, Q)\)</span>，其中<span class="math inline">\(Q\)</span>为过程噪声的协方差矩阵。</p>
-<p>我们将<span class="math inline">\(\begin{pmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{pmatrix}\)</span>记作<span class="math inline">\(F_t\)</span>，将<span class="math inline">\(\begin{pmatrix} \displaystyle \frac{(\Delta t)^2}{2} \\ \Delta t \end{pmatrix}\)</span>记作<span class="math inline">\(B_t\)</span>，将上述公式一般化为</p>
-<p><span class="math display">\[
-\hat{\boldsymbol{x}}_t^- = F_t \hat{\boldsymbol{x}}_{t-1} + B_t u_{t-1} + w_t \tag{4}
-\]</span></p>
-<p>其中<span class="math inline">\(F_t\)</span>被称为状态转移矩阵，<span class="math inline">\(B_t\)</span>被称为控制矩阵，<span class="math inline">\(u_t\)</span>被称为控制输入量。</p>
-<p>估计部分的另一部分是先验估计状态的协方差矩阵<span class="math inline">\(P_t^-\)</span>，先给出公式</p>
-<p><span class="math display">\[
-P_t^- = FP_{t-1}F^T + Q \tag{5}
-\]</span></p>
-<p>其中，<span class="math inline">\(P_{t-1}\)</span>是最优估计状态<span class="math inline">\(\hat{\boldsymbol{x}}_{t-1}\)</span>的协方差矩阵。那么这个先验估计状态的协方差矩阵是怎么来的呢？首先，要引入一条公式</p>
-<p><span class="math display">\[
-cov(Ax, Ax) = Acov(x, x)A^T
-\]</span></p>
-<p>很显然，只需要将式(4)代入，即可得到</p>
-<p><span class="math display">\[
-\begin{aligned}
-cov(\hat{\boldsymbol{x}}_t^-, \hat{\boldsymbol{x}}_t^-) &amp;= cov(F_t \hat{\boldsymbol{x}}_{t-1} + B_t u_{t-1} + w_t, F_t \hat{\boldsymbol{x}}_{t-1} + B_t u_{t-1} + w_t) \\
-&amp;= cov(F_t \hat{\boldsymbol{x}}_{t-1}+w_t, F_t \hat{\boldsymbol{x}}_{t-1}+w_t) \\
-&amp;= cov(F_t \hat{\boldsymbol{x}}_{t-1}, F_t \hat{\boldsymbol{x}}_{t-1}) + cov(w_t, w_t) \\
-&amp;= F_t cov(\hat{\boldsymbol{x}}_{t-1}) F_t^T + Q \\
-&amp;= F_t P_{t-1} F_t^T + Q
-\end{aligned}
-\]</span></p>
-<p>请注意，这里之所以能够将<span class="math inline">\(cov(F_t \hat{\boldsymbol{x}}_{t-1} + w_t, F_t \hat{\boldsymbol{x}}_{t-1} + w_t)\)</span>拆分为<span class="math inline">\(cov(F_t \hat{\boldsymbol{x}}_{t-1}, F_t \hat{\boldsymbol{x}}_{t-1}) + cov(w_t, w_t)\)</span>是因为卡尔曼滤波器作用的对象是线性高斯系统；另外，控制量视为真值，不考虑其协方差。</p>
-<p>总结一下，卡尔曼滤波器的估计部分，就是</p>
-<ol type="1">
-<li>t时刻先验估计状态 = 状态转移矩阵 X t-1时刻最优估计状态 + 控制矩阵 X 控制输入量 + 过程噪声</li>
-<li>t时刻先验估计状态的协方差矩阵 = 状态转移矩阵 X t-1时刻最优估计状态的协方差矩阵 X 状态转移矩阵的转置 + 过程噪声的协方差矩阵</li>
-</ol>
-<h2 id="卡尔曼滤波器---更新部分">卡尔曼滤波器 - 更新部分</h2>
-<p>下面讲卡尔曼滤波器的第二部分。先看一下式(3)，发现观测值和真值之间只有一个转换矩阵，没有考虑观测时可能存在的噪声，为此我们引入观测噪声<span class="math inline">\(v_t\)</span>，修正式(3)</p>
-<p><span class="math display">\[
-z_t = H \boldsymbol{x}_t + v_t \tag{6}
-\]</span></p>
-<p>假定观测噪声<span class="math inline">\(v_t\)</span>也服从高斯分布，即<span class="math inline">\(v_t \in \mathcal N(0, R)\)</span>，其中<span class="math inline">\(R\)</span>为观测噪声的协方差矩阵。</p>
-<p>说到底，先验估计值和观测值都是存在误差的，卡尔曼滤波器实质上就是对先验估计值和观测值进行加权，从而得到一个最接近真值的最优估计值。那么这个加权值怎么来的，就是卡尔曼滤波器的重点。在卡尔曼滤波器的定义中，这个加权值称为<strong>卡尔曼增益</strong>，记为<span class="math inline">\(K_t\)</span>。先不管这个加权值怎么来的，假定我们已知卡尔曼增益<span class="math inline">\(K_t\)</span>，那么应当能够写出最优估计值的表达式</p>
-<p><span class="math display">\[
-\hat{\boldsymbol{x}}_t = \hat{\boldsymbol{x}}_t^- + K_t(z_t - H\hat{\boldsymbol{x}}_t^-) \tag{7}
-\]</span></p>
-<p>式(7)是容易理解的，其实就是对观测值和经过转换的先验估计值作差，然后乘上卡尔曼增益，再加到原来的先验估计值上去。观测值和经过转换的先验估计值之差，其实就是观测值和先验估计值之间的差值，经过卡尔曼增益缩放之后，体现为观测值对先验估计值的影响，本质上就是一种加权操作。卡尔曼增益越大，那么观测值所占的权重就越大，体现为我们更信任观测值；反之，观测值占的权重越小，体现为我们更信任先验估计。</p>
-<p>下面推导一下卡尔曼增益的表达式。在推导之前，先要说明卡尔曼增益的目标，是在经过卡尔曼增益的加权之后，使得真值与最优估计值之间的误差最小，即求<span class="math inline">\(argmin\{\boldsymbol{x}_t - \hat{\boldsymbol{x}}_t\}\)</span>。这里我们假定所谓的<span class="math inline">\(e_t = \boldsymbol{x}_t - \hat{\boldsymbol{x}}_t\)</span>满足<span class="math inline">\(e_t \in \mathcal N(0, P_t)\)</span>，那么为了使得误差最小，其实就是要求协方差矩阵<span class="math inline">\(P_t\)</span>的trace最小。下面进行推导。</p>
-<p><span class="math display">\[
-\begin{aligned}
-e_t &amp; = \boldsymbol{x}_t - \hat{\boldsymbol{x}}_t \\
-&amp;=\boldsymbol{x}_t - \hat{\boldsymbol{x}}_t^- - K_t(z_t - H\hat{\boldsymbol{x}}_t^-) \\
-&amp;= \boldsymbol{x}_t - \hat{\boldsymbol{x}}_t^--K_t(H\boldsymbol{x}_t +v_t - H\hat{\boldsymbol{x}}_t^-) \\
-&amp;= (I - K_tH)(\boldsymbol{x}_t - \hat{\boldsymbol{x}}_t^-) - K_t v_t \\
-\end{aligned}
-\]</span></p>
-<p>记<span class="math inline">\(\hat{e}_t=\boldsymbol{x}_t - \hat{\boldsymbol{x}}_t^-\)</span>，则可将上式简化为</p>
-<p><span class="math display">\[
-e_t = (I-K_tH)\hat{e}_t - K_t v_t \tag{8}
-\]</span></p>
-<p>这里先引入一下协方差的计算公式</p>
-<p><span class="math display">\[
-cov(X, Y) = E[XY] - E[X]E[Y]
-\]</span></p>
-<p>那么对于<span class="math inline">\(e_t\)</span>来说，<span class="math inline">\(P_t=cov(e_t, e_t) = E(e_te_t^T)-E(e_t)^2=E(e_te_t^T)\)</span>。下面对协方差矩阵<span class="math inline">\(P_t\)</span>进行推演</p>
-<p><span class="math display">\[
-\begin{aligned}
-P_t &amp;= E\{[(I - K_tH)\hat{e}_t-K_tv_t][\hat{e}_t^T(I-H^TK_t^T)-v_t^TK_t^T]\} \\
-&amp;= E\{(I-K_tH)\hat{e}_t\hat{e}_t^T(I-H^TK_t^T)-(I-K_tH)\hat{e}_tv_t^TK_t^T-K_tv_t\hat{e}_t^T(I-H^TK_t^T)+K_tv_tv_t^TK_t^T\} \\
-&amp;= E\{(I-K_tH)\hat{e}_t\hat{e}_t^T(I-H^TK_t^T) + K_tv_tv_t^TK_t^T\} \\
-&amp; - (I-K_tH)E\{\hat{e}_t\}E\{v_t^T\}K_t^T - K_tE\{v_t\}E\{\hat{e}^T_t\}(I-H^TK_t^T)
-\end{aligned}
-\]</span></p>
-<p>由于<span class="math inline">\(v_t \in \mathcal N (0, R)\)</span>，所以<span class="math inline">\(E\{v_t\}=0\)</span>，那么上式可以简化为</p>
-<p><span class="math display">\[
-\begin{aligned}
-P_t &amp;=(I-K_tH)E\{\hat{e}_t\hat{e}_t^T\}(I-H^TK_t^T)+K_tE\{v_t v_t^T\}K_t^T \\
-&amp;=(I - K_tH)E\{\hat{e}_t\hat{e}_t^T\}(I-H^TK_t^T)+K_tRK_t^T
-\end{aligned}
-\]</span></p>
-<p>记<span class="math inline">\(\hat{P}_t=E(\hat{e}_t\hat{e}_t^T)\)</span>，则有</p>
-<p><span class="math display">\[
-P_t = (I-K_tH)\hat{P}_t(I-H^TK_t^T)+K_tRK_t^T \tag{9}
-\]</span></p>
-<p>接下来，我们所要做的就是最小化<span class="math inline">\(P_t\)</span>，即取<span class="math inline">\(\displaystyle\frac{d\ tr(P_t)}{dK_t}=0\)</span>，求<span class="math inline">\(K_t\)</span>。在这之前，先引入矩阵求导的两条公式。</p>
-<p><span class="math display">\[
-\frac{d\ tr(AB)}{dA}=B^T \tag{10}
-\]</span></p>
-<p><span class="math display">\[
-\frac{d\ tr(ABA^T)}{dA} = 2AB \tag{11}
-\]</span></p>
-<p>利用式(10)和式(11)求<span class="math inline">\(\displaystyle\frac{d\ tr(P_t)}{dK_t}\)</span>，有下式</p>
-<p><span class="math display">\[
-\begin{aligned}
-\frac{d\ tr(P_t)}{dK_t} &amp;= \frac{d \ tr(\hat{P}_t-K_tH\hat{P}_t-\hat{P}_tH^TK_t^T+K_tH\hat{P}_tH^TK_t^T+K_tRK_t^T)}{dK_t} \\
-&amp;= -\hat{P}_t^TH^T-\hat{P}_t H^T+2K_tH\hat{P}_tH^T + 2K_tR \\
-&amp;= -2 \hat{P}_tH^T+2K_tH\hat{P}_tH^T + 2K_tR\\
-&amp;=0
-\end{aligned}
-\]</span></p>
-<p>移项后可得</p>
-<p><span class="math display">\[
-K_t = \frac{\hat{P}_tH^T}{H\hat{P}_tH^T+R}
-\]</span></p>
-<p>由于真值是确定值，其方差为0，因此<span class="math inline">\(\hat{P}_t=var(\boldsymbol{x}_t - \hat{\boldsymbol{x}}_t^-)=var(-\hat{\boldsymbol{x}}_t^-)=var(\hat{\boldsymbol{x}}_t^-)=Q\)</span>，所以上式可改写为</p>
-<p><span class="math display">\[
-K_t = \frac{QH^T}{HQH^T+R} \tag{12}
-\]</span></p>
-<p>卡尔曼增益的推导至此结束。</p>
-<p>很显然，<span class="math inline">\(Q\)</span>表征着先验估计的不确定性，<span class="math inline">\(R\)</span>表征着测量的不确定性。<span class="math inline">\(Q\)</span>越大，<span class="math inline">\(K_t\)</span>越大，观测值所占的比重越大，因为先验估计越不确定，就越相信观测值；相反，<span class="math inline">\(R\)</span>越大，<span class="math inline">\(K_t\)</span>越小，观测值所占的比重越小，因为观测值越不确定，就越不相信观测值。</p>
-<p>与估计部分相同的，我们需要给出最优估计值的协方差矩阵<span class="math inline">\(P_t\)</span>。请注意这里的<span class="math inline">\(P_t\)</span>并不是<span class="math inline">\(e_t\)</span>的协方差矩阵，而是<span class="math inline">\(\hat{\boldsymbol{x}}_t\)</span>的协方差矩阵。</p>
-<p><span class="math display">\[
-\begin{aligned}
-P_t &amp;= var(\hat{\boldsymbol{x}}_t)\\
-&amp;= var(\hat{\boldsymbol{x}}_t^- + K_t(z_t - H\hat{\boldsymbol{x}}_t^-)) \\
-&amp;= var(\hat{\boldsymbol{x}}_t^-+K_t(H\boldsymbol{x}_t+v_t - H\hat{\boldsymbol{x}}_t^-))\\
-&amp;= var((I-K_tH)\hat{\boldsymbol{x}}_t^- + K_tH\boldsymbol{x}_t+K_tv_t) \\
-&amp;= (I-K_tH)var(\hat{\boldsymbol{x}}_t^-)+var(K_tv_t) \\
-&amp;= (I-K_tH)P_t^-+K_tR
-\end{aligned}
-\]</span></p>
-<p>这里怎么推出来多了一项<span class="math inline">\(K_tR\)</span>呢？这有点搞，需要研究一下。</p>
-<h2 id="卡尔曼滤波器总结">卡尔曼滤波器总结</h2>
-<h3 id="估计部分两条式子">估计部分两条式子</h3>
-<p><span class="math display">\[
-\hat{\boldsymbol{x}}_t^- = F_t \hat{\boldsymbol{x}}_{t-1}+B_t u_{t-1}+w_{t-1} \tag{1}
-\]</span></p>
-<p><span class="math display">\[
-P_t^- = F_t P_{t-1} F_t^T + Q_t \tag{2}
-\]</span></p>
-<h3 id="更新部分三条式子">更新部分三条式子</h3>
-<p><span class="math display">\[
-K_t = \frac{P_t^-H^T}{HP_t^-H^T + R_t} \tag{3}
-\]</span></p>
-<p><span class="math display">\[
-\hat{\boldsymbol{x}}_t = \hat{\boldsymbol{x}}_t^- + K_t(z_t - H\hat{\boldsymbol{x}}_t^-) \tag{4}
-\]</span></p>
-<p><span class="math display">\[
-P_t = (I-K_tH)P_t^- \tag{5}
-\]</span></p>
-]]></content>
-      <categories>
-        <category>Control Engineering</category>
-      </categories>
-      <tags>
-        <tag>Filter</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数值分析笔记-第二章 线性方程组的直接解法</title>
     <url>/2022/11/02/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E7%9B%B4%E6%8E%A5%E8%A7%A3%E6%B3%95/</url>
     <content><![CDATA[<h2 id="本章概述">本章概述</h2>
@@ -1223,6 +1044,185 @@ R_4(x) = \frac{f^{(5)}(\xi)}{5!}(x-x_0)^2(x-x_1)^2(x-x_0)
       </categories>
       <tags>
         <tag>Numerical Analysis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>卡尔曼滤波器基础</title>
+    <url>/2022/11/02/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h2 id="引入">引入</h2>
+<p>卡尔曼滤波器是一种利用观测数据来修正先验数据的滤波器，适用于<em>线性高斯系统</em>。</p>
+<p>以直线运动的车辆为例。记<span class="math inline">\(t\)</span>时刻的车辆位置为<span class="math inline">\(p_t\)</span>，速度为<span class="math inline">\(v_t\)</span>，加速度为<span class="math inline">\(u_t\)</span>，那么在纵向应有车辆运动学模型</p>
+<p><span class="math display">\[
+\left \{ \begin{aligned}
+&amp; p_t = p_{t-1} + \Delta t \ v_{t-1} + \frac{(\Delta t)^2}{2} u_{t-1}  \\
+&amp; v_t = v_{t-1} + \Delta t \ u_{t-1}
+\end{aligned}
+\right.
+\]</span></p>
+<p>令</p>
+<p><span class="math display">\[
+\boldsymbol x_t = \begin{pmatrix} p_t \\ v_t \end{pmatrix}
+\]</span></p>
+<p>有</p>
+<p><span class="math display">\[
+\boldsymbol x_t = \begin{pmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{pmatrix}\boldsymbol x_{t-1} + \begin{pmatrix} \displaystyle \frac{(\Delta t)^2}{2} \\ \Delta t \end{pmatrix}u_{t-1} \tag{1}
+\]</span></p>
+<p>当然，这样的运动学模型是非常简单的。一方面，只考虑了纵向的运动，而且假设加速度的测量是noise-free的；另一方面，由于采样数据是离散的，在<span class="math inline">\(\Delta t\)</span>时间内的加速度变化我们不得而知。因此，利用这样的运动学模型对车辆的运动状态进行估计，误差必然会随着时间的推移而增大。</p>
+<span id="more"></span>
+<p>既然估计得到的运动状态并不是精确的，那么我们需要修正一下式(1)中的符号。用<span class="math inline">\(\hat{\boldsymbol{x}}_t^-\)</span>表示先验估计状态，用<span class="math inline">\(\hat{\boldsymbol{x}}_t\)</span>表示最优估计状态，没有^符号的视为真值。需要注意的是，在本例中我们将加速度输入视作真值。那么式(1)可以改写为</p>
+<p><span class="math display">\[
+\hat{\boldsymbol{x}}_t^- = \begin{pmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{pmatrix}\hat{\boldsymbol{x}}_{t-1} + \begin{pmatrix} \displaystyle \frac{(\Delta t)^2}{2} \\ \Delta t \end{pmatrix}u_{t-1} \tag{2}
+\]</span></p>
+<p>假设我们为这辆测试车安装了GNSS导航系统，可以利用RTK定位数据进行车辆位置的观测。不过GNSS只能观测车辆的位置，而不能观测车辆的速度，所以我们可以将观测到的状态量记为<span class="math inline">\(\boldsymbol{z}_t = \begin{pmatrix} z_p \\ z_v \end{pmatrix}\)</span>，将观测矩阵记为<span class="math inline">\(H=\begin{pmatrix} 1 &amp; 0 \end{pmatrix}\)</span>然后写出以下观测方程</p>
+<p><span class="math display">\[
+\boldsymbol{z}_t = H\boldsymbol{x}_t \tag{3}
+\]</span></p>
+<p>很显然，无论是先验估计得到的值还是观测得到的值都与真值有一定偏离，那么如何用观测到的状态量<span class="math inline">\(z_t\)</span>修正先验估计状态呢？下面就介绍一下卡尔曼滤波器。</p>
+<h2 id="卡尔曼滤波器---估计部分">卡尔曼滤波器 - 估计部分</h2>
+<p>卡尔曼滤波器总体上可以分为两个部分，估计部分与更新部分。先来讲估计部分。式(2)是卡尔曼滤波器估计部分的主体，不过我们需要考虑估计中可能存在的噪声，所以将式(2)修正为</p>
+<p><span class="math display">\[
+\hat{\boldsymbol{x}}_t^- = \begin{pmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{pmatrix}\hat{\boldsymbol{x}}_{t-1} + \begin{pmatrix} \displaystyle \frac{(\Delta t)^2}{2} \\ \Delta t \end{pmatrix}u_{t-1} + w_t
+\]</span></p>
+<p>在卡尔曼滤波器的假设中，过程噪声服从高斯分布，即<span class="math inline">\(w_t \in \mathcal N (0, Q)\)</span>，其中<span class="math inline">\(Q\)</span>为过程噪声的协方差矩阵。</p>
+<p>我们将<span class="math inline">\(\begin{pmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{pmatrix}\)</span>记作<span class="math inline">\(F_t\)</span>，将<span class="math inline">\(\begin{pmatrix} \displaystyle \frac{(\Delta t)^2}{2} \\ \Delta t \end{pmatrix}\)</span>记作<span class="math inline">\(B_t\)</span>，将上述公式一般化为</p>
+<p><span class="math display">\[
+\hat{\boldsymbol{x}}_t^- = F_t \hat{\boldsymbol{x}}_{t-1} + B_t u_{t-1} + w_t \tag{4}
+\]</span></p>
+<p>其中<span class="math inline">\(F_t\)</span>被称为状态转移矩阵，<span class="math inline">\(B_t\)</span>被称为控制矩阵，<span class="math inline">\(u_t\)</span>被称为控制输入量。</p>
+<p>估计部分的另一部分是先验估计状态的协方差矩阵<span class="math inline">\(P_t^-\)</span>，先给出公式</p>
+<p><span class="math display">\[
+P_t^- = FP_{t-1}F^T + Q \tag{5}
+\]</span></p>
+<p>其中，<span class="math inline">\(P_{t-1}\)</span>是最优估计状态<span class="math inline">\(\hat{\boldsymbol{x}}_{t-1}\)</span>的协方差矩阵。那么这个先验估计状态的协方差矩阵是怎么来的呢？首先，要引入一条公式</p>
+<p><span class="math display">\[
+cov(Ax, Ax) = Acov(x, x)A^T
+\]</span></p>
+<p>很显然，只需要将式(4)代入，即可得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+cov(\hat{\boldsymbol{x}}_t^-, \hat{\boldsymbol{x}}_t^-) &amp;= cov(F_t \hat{\boldsymbol{x}}_{t-1} + B_t u_{t-1} + w_t, F_t \hat{\boldsymbol{x}}_{t-1} + B_t u_{t-1} + w_t) \\
+&amp;= cov(F_t \hat{\boldsymbol{x}}_{t-1}+w_t, F_t \hat{\boldsymbol{x}}_{t-1}+w_t) \\
+&amp;= cov(F_t \hat{\boldsymbol{x}}_{t-1}, F_t \hat{\boldsymbol{x}}_{t-1}) + cov(w_t, w_t) \\
+&amp;= F_t cov(\hat{\boldsymbol{x}}_{t-1}) F_t^T + Q \\
+&amp;= F_t P_{t-1} F_t^T + Q
+\end{aligned}
+\]</span></p>
+<p>请注意，这里之所以能够将<span class="math inline">\(cov(F_t \hat{\boldsymbol{x}}_{t-1} + w_t, F_t \hat{\boldsymbol{x}}_{t-1} + w_t)\)</span>拆分为<span class="math inline">\(cov(F_t \hat{\boldsymbol{x}}_{t-1}, F_t \hat{\boldsymbol{x}}_{t-1}) + cov(w_t, w_t)\)</span>是因为卡尔曼滤波器作用的对象是线性高斯系统；另外，控制量视为真值，不考虑其协方差。</p>
+<p>总结一下，卡尔曼滤波器的估计部分，就是</p>
+<ol type="1">
+<li>t时刻先验估计状态 = 状态转移矩阵 X t-1时刻最优估计状态 + 控制矩阵 X 控制输入量 + 过程噪声</li>
+<li>t时刻先验估计状态的协方差矩阵 = 状态转移矩阵 X t-1时刻最优估计状态的协方差矩阵 X 状态转移矩阵的转置 + 过程噪声的协方差矩阵</li>
+</ol>
+<h2 id="卡尔曼滤波器---更新部分">卡尔曼滤波器 - 更新部分</h2>
+<p>下面讲卡尔曼滤波器的第二部分。先看一下式(3)，发现观测值和真值之间只有一个转换矩阵，没有考虑观测时可能存在的噪声，为此我们引入观测噪声<span class="math inline">\(v_t\)</span>，修正式(3)</p>
+<p><span class="math display">\[
+z_t = H \boldsymbol{x}_t + v_t \tag{6}
+\]</span></p>
+<p>假定观测噪声<span class="math inline">\(v_t\)</span>也服从高斯分布，即<span class="math inline">\(v_t \in \mathcal N(0, R)\)</span>，其中<span class="math inline">\(R\)</span>为观测噪声的协方差矩阵。</p>
+<p>说到底，先验估计值和观测值都是存在误差的，卡尔曼滤波器实质上就是对先验估计值和观测值进行加权，从而得到一个最接近真值的最优估计值。那么这个加权值怎么来的，就是卡尔曼滤波器的重点。在卡尔曼滤波器的定义中，这个加权值称为<strong>卡尔曼增益</strong>，记为<span class="math inline">\(K_t\)</span>。先不管这个加权值怎么来的，假定我们已知卡尔曼增益<span class="math inline">\(K_t\)</span>，那么应当能够写出最优估计值的表达式</p>
+<p><span class="math display">\[
+\hat{\boldsymbol{x}}_t = \hat{\boldsymbol{x}}_t^- + K_t(z_t - H\hat{\boldsymbol{x}}_t^-) \tag{7}
+\]</span></p>
+<p>式(7)是容易理解的，其实就是对观测值和经过转换的先验估计值作差，然后乘上卡尔曼增益，再加到原来的先验估计值上去。观测值和经过转换的先验估计值之差，其实就是观测值和先验估计值之间的差值，经过卡尔曼增益缩放之后，体现为观测值对先验估计值的影响，本质上就是一种加权操作。卡尔曼增益越大，那么观测值所占的权重就越大，体现为我们更信任观测值；反之，观测值占的权重越小，体现为我们更信任先验估计。</p>
+<p>下面推导一下卡尔曼增益的表达式。在推导之前，先要说明卡尔曼增益的目标，是在经过卡尔曼增益的加权之后，使得真值与最优估计值之间的误差最小，即求<span class="math inline">\(argmin\{\boldsymbol{x}_t - \hat{\boldsymbol{x}}_t\}\)</span>。这里我们假定所谓的<span class="math inline">\(e_t = \boldsymbol{x}_t - \hat{\boldsymbol{x}}_t\)</span>满足<span class="math inline">\(e_t \in \mathcal N(0, P_t)\)</span>，那么为了使得误差最小，其实就是要求协方差矩阵<span class="math inline">\(P_t\)</span>的trace最小。下面进行推导。</p>
+<p><span class="math display">\[
+\begin{aligned}
+e_t &amp; = \boldsymbol{x}_t - \hat{\boldsymbol{x}}_t \\
+&amp;=\boldsymbol{x}_t - \hat{\boldsymbol{x}}_t^- - K_t(z_t - H\hat{\boldsymbol{x}}_t^-) \\
+&amp;= \boldsymbol{x}_t - \hat{\boldsymbol{x}}_t^--K_t(H\boldsymbol{x}_t +v_t - H\hat{\boldsymbol{x}}_t^-) \\
+&amp;= (I - K_tH)(\boldsymbol{x}_t - \hat{\boldsymbol{x}}_t^-) - K_t v_t \\
+\end{aligned}
+\]</span></p>
+<p>记<span class="math inline">\(\hat{e}_t=\boldsymbol{x}_t - \hat{\boldsymbol{x}}_t^-\)</span>，则可将上式简化为</p>
+<p><span class="math display">\[
+e_t = (I-K_tH)\hat{e}_t - K_t v_t \tag{8}
+\]</span></p>
+<p>这里先引入一下协方差的计算公式</p>
+<p><span class="math display">\[
+cov(X, Y) = E[XY] - E[X]E[Y]
+\]</span></p>
+<p>那么对于<span class="math inline">\(e_t\)</span>来说，<span class="math inline">\(P_t=cov(e_t, e_t) = E(e_te_t^T)-E(e_t)^2=E(e_te_t^T)\)</span>。下面对协方差矩阵<span class="math inline">\(P_t\)</span>进行推演</p>
+<p><span class="math display">\[
+\begin{aligned}
+P_t &amp;= E\{[(I - K_tH)\hat{e}_t-K_tv_t][\hat{e}_t^T(I-H^TK_t^T)-v_t^TK_t^T]\} \\
+&amp;= E\{(I-K_tH)\hat{e}_t\hat{e}_t^T(I-H^TK_t^T)-(I-K_tH)\hat{e}_tv_t^TK_t^T-K_tv_t\hat{e}_t^T(I-H^TK_t^T)+K_tv_tv_t^TK_t^T\} \\
+&amp;= E\{(I-K_tH)\hat{e}_t\hat{e}_t^T(I-H^TK_t^T) + K_tv_tv_t^TK_t^T\} \\
+&amp; - (I-K_tH)E\{\hat{e}_t\}E\{v_t^T\}K_t^T - K_tE\{v_t\}E\{\hat{e}^T_t\}(I-H^TK_t^T)
+\end{aligned}
+\]</span></p>
+<p>由于<span class="math inline">\(v_t \in \mathcal N (0, R)\)</span>，所以<span class="math inline">\(E\{v_t\}=0\)</span>，那么上式可以简化为</p>
+<p><span class="math display">\[
+\begin{aligned}
+P_t &amp;=(I-K_tH)E\{\hat{e}_t\hat{e}_t^T\}(I-H^TK_t^T)+K_tE\{v_t v_t^T\}K_t^T \\
+&amp;=(I - K_tH)E\{\hat{e}_t\hat{e}_t^T\}(I-H^TK_t^T)+K_tRK_t^T
+\end{aligned}
+\]</span></p>
+<p>记<span class="math inline">\(\hat{P}_t=E(\hat{e}_t\hat{e}_t^T)\)</span>，则有</p>
+<p><span class="math display">\[
+P_t = (I-K_tH)\hat{P}_t(I-H^TK_t^T)+K_tRK_t^T \tag{9}
+\]</span></p>
+<p>接下来，我们所要做的就是最小化<span class="math inline">\(P_t\)</span>，即取<span class="math inline">\(\displaystyle\frac{d\ tr(P_t)}{dK_t}=0\)</span>，求<span class="math inline">\(K_t\)</span>。在这之前，先引入矩阵求导的两条公式。</p>
+<p><span class="math display">\[
+\frac{d\ tr(AB)}{dA}=B^T \tag{10}
+\]</span></p>
+<p><span class="math display">\[
+\frac{d\ tr(ABA^T)}{dA} = 2AB \tag{11}
+\]</span></p>
+<p>利用式(10)和式(11)求<span class="math inline">\(\displaystyle\frac{d\ tr(P_t)}{dK_t}\)</span>，有下式</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{d\ tr(P_t)}{dK_t} &amp;= \frac{d \ tr(\hat{P}_t-K_tH\hat{P}_t-\hat{P}_tH^TK_t^T+K_tH\hat{P}_tH^TK_t^T+K_tRK_t^T)}{dK_t} \\
+&amp;= -\hat{P}_t^TH^T-\hat{P}_t H^T+2K_tH\hat{P}_tH^T + 2K_tR \\
+&amp;= -2 \hat{P}_tH^T+2K_tH\hat{P}_tH^T + 2K_tR\\
+&amp;=0
+\end{aligned}
+\]</span></p>
+<p>移项后可得</p>
+<p><span class="math display">\[
+K_t = \frac{\hat{P}_tH^T}{H\hat{P}_tH^T+R}
+\]</span></p>
+<p>由于真值是确定值，其方差为0，因此<span class="math inline">\(\hat{P}_t=var(\boldsymbol{x}_t - \hat{\boldsymbol{x}}_t^-)=var(-\hat{\boldsymbol{x}}_t^-)=var(\hat{\boldsymbol{x}}_t^-)=Q\)</span>，所以上式可改写为</p>
+<p><span class="math display">\[
+K_t = \frac{QH^T}{HQH^T+R} \tag{12}
+\]</span></p>
+<p>卡尔曼增益的推导至此结束。</p>
+<p>很显然，<span class="math inline">\(Q\)</span>表征着先验估计的不确定性，<span class="math inline">\(R\)</span>表征着测量的不确定性。<span class="math inline">\(Q\)</span>越大，<span class="math inline">\(K_t\)</span>越大，观测值所占的比重越大，因为先验估计越不确定，就越相信观测值；相反，<span class="math inline">\(R\)</span>越大，<span class="math inline">\(K_t\)</span>越小，观测值所占的比重越小，因为观测值越不确定，就越不相信观测值。</p>
+<p>与估计部分相同的，我们需要给出最优估计值的协方差矩阵<span class="math inline">\(P_t\)</span>。请注意这里的<span class="math inline">\(P_t\)</span>并不是<span class="math inline">\(e_t\)</span>的协方差矩阵，而是<span class="math inline">\(\hat{\boldsymbol{x}}_t\)</span>的协方差矩阵。</p>
+<p><span class="math display">\[
+\begin{aligned}
+P_t &amp;= var(\hat{\boldsymbol{x}}_t)\\
+&amp;= var(\hat{\boldsymbol{x}}_t^- + K_t(z_t - H\hat{\boldsymbol{x}}_t^-)) \\
+&amp;= var(\hat{\boldsymbol{x}}_t^-+K_t(H\boldsymbol{x}_t+v_t - H\hat{\boldsymbol{x}}_t^-))\\
+&amp;= var((I-K_tH)\hat{\boldsymbol{x}}_t^- + K_tH\boldsymbol{x}_t+K_tv_t) \\
+&amp;= (I-K_tH)var(\hat{\boldsymbol{x}}_t^-)+var(K_tv_t) \\
+&amp;= (I-K_tH)P_t^-+K_tR
+\end{aligned}
+\]</span></p>
+<p>这里怎么推出来多了一项<span class="math inline">\(K_tR\)</span>呢？这有点搞，需要研究一下。</p>
+<h2 id="卡尔曼滤波器总结">卡尔曼滤波器总结</h2>
+<h3 id="估计部分两条式子">估计部分两条式子</h3>
+<p><span class="math display">\[
+\hat{\boldsymbol{x}}_t^- = F_t \hat{\boldsymbol{x}}_{t-1}+B_t u_{t-1}+w_{t-1} \tag{1}
+\]</span></p>
+<p><span class="math display">\[
+P_t^- = F_t P_{t-1} F_t^T + Q_t \tag{2}
+\]</span></p>
+<h3 id="更新部分三条式子">更新部分三条式子</h3>
+<p><span class="math display">\[
+K_t = \frac{P_t^-H^T}{HP_t^-H^T + R_t} \tag{3}
+\]</span></p>
+<p><span class="math display">\[
+\hat{\boldsymbol{x}}_t = \hat{\boldsymbol{x}}_t^- + K_t(z_t - H\hat{\boldsymbol{x}}_t^-) \tag{4}
+\]</span></p>
+<p><span class="math display">\[
+P_t = (I-K_tH)P_t^- \tag{5}
+\]</span></p>
+]]></content>
+      <categories>
+        <category>Control Engineering</category>
+      </categories>
+      <tags>
+        <tag>Filter</tag>
       </tags>
   </entry>
   <entry>
