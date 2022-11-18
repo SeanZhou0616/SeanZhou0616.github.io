@@ -71,6 +71,22 @@ F_L = -\rho \Gamma U
       </tags>
   </entry>
   <entry>
+    <title>hexo博文图片显示问题[SOLVED]</title>
+    <url>/2022/11/01/hexo%E5%8D%9A%E6%96%87%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98-SOLVED/</url>
+    <content><![CDATA[<p>在使用hexo进行博客搭建的过程，发现使用Markdown语法的文档，无法正常加载上传的图片，例如</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">Potential Flow Analysis</span>](<span class="link">./2022-11-1-Potential-Flow-Analysis-Magnus-Effect/potential-flow-analysis-velocity-field-plot.png</span>)</span><br></pre></td></tr></table></figure>
+<p>通过观察构建信息，发现图片总是指向一个以 <code>/.io/</code> 开头的文件夹。经过在hexo官网的搜索，在评论区发现（😓）这个问题似乎是 <code>hexo-asset-image</code> 包的一个bug，只需要修改 <code>node_modules/hexo-asset-image/index.js</code> 的第24行，将其改为</p>
+<figure class="highlight javascript"><figcaption><span>node_modules/hexo-asset-image/index.js</span></figcaption><table><tr><td class="code"><pre><span class="line"># <span class="title class_">JavaScript</span> </span><br><span class="line"><span class="keyword">var</span> endPos = link.<span class="property">length</span>;</span><br></pre></td></tr></table></figure>
+<p>即可。</p>
+]]></content>
+      <categories>
+        <category>Technical Issues</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Rust入门-结构体</title>
     <url>/2022/11/11/Rust%E5%85%A5%E9%97%A8-%E7%BB%93%E6%9E%84%E4%BD%93/</url>
     <content><![CDATA[<h2 id="什么是结构体">什么是结构体？</h2>
@@ -99,256 +115,6 @@ F_L = -\rho \Gamma U
       <tags>
         <tag>Programming Language</tag>
         <tag>Rust</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>hexo博文图片显示问题[SOLVED]</title>
-    <url>/2022/11/01/hexo%E5%8D%9A%E6%96%87%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98-SOLVED/</url>
-    <content><![CDATA[<p>在使用hexo进行博客搭建的过程，发现使用Markdown语法的文档，无法正常加载上传的图片，例如</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">Potential Flow Analysis</span>](<span class="link">./2022-11-1-Potential-Flow-Analysis-Magnus-Effect/potential-flow-analysis-velocity-field-plot.png</span>)</span><br></pre></td></tr></table></figure>
-<p>通过观察构建信息，发现图片总是指向一个以 <code>/.io/</code> 开头的文件夹。经过在hexo官网的搜索，在评论区发现（😓）这个问题似乎是 <code>hexo-asset-image</code> 包的一个bug，只需要修改 <code>node_modules/hexo-asset-image/index.js</code> 的第24行，将其改为</p>
-<figure class="highlight javascript"><figcaption><span>node_modules/hexo-asset-image/index.js</span></figcaption><table><tr><td class="code"><pre><span class="line"># <span class="title class_">JavaScript</span> </span><br><span class="line"><span class="keyword">var</span> endPos = link.<span class="property">length</span>;</span><br></pre></td></tr></table></figure>
-<p>即可。</p>
-]]></content>
-      <categories>
-        <category>Technical Issues</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数值分析作业-第五章</title>
-    <url>/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0/</url>
-    <content><![CDATA[<p>姓名：周晓</p>
-<p>学号：2231573</p>
-<h2 id="第一题">第一题</h2>
-<p>令 <span class="math inline">\(f(x) = 1, x, x^2, x^3\)</span>，代入求积公式可得</p>
-<p><span class="math display">\[
-\begin{equation}\left\{
-\begin{aligned}
-\omega_0+\omega_1+\omega_2+\omega_3&amp;=2\\
--\omega_0-\frac{1}{3}\omega_1+\frac{1}{3}\omega_2+\omega_3&amp;=0\\
-\omega_0+\frac{1}{9}\omega_1+\frac{1}{9}\omega_2+\omega_3&amp;=\frac{2}{3}\\
--\omega_0-\frac{1}{27}\omega_1+\frac{1}{27}\omega_2+\omega_3&amp;=0
-\end{aligned}\right.
-\end{equation}
-\]</span></p>
-<span id="more"></span>
-<p>解上述方程组，可以得到</p>
-<p><span class="math display">\[
-\begin{equation}
-\begin{bmatrix}
-\omega_0\\
-\omega_1\\
-\omega_2\\
-\omega_3
-\end{bmatrix}=
-\begin{bmatrix}
-\displaystyle \frac{1}{4}\\
-\displaystyle \frac{3}{4}\\
-\displaystyle \frac{3}{4}\\
-\displaystyle \frac{1}{4}
-\end{bmatrix}
-\end{equation}
-\]</span></p>
-<p>下面，令 <span class="math inline">\(f(x)=x^4\)</span>，计算得 <span class="math inline">\(\int_{-1}^1f(x)dx = \displaystyle \frac{2}{5}\)</span>，而</p>
-<p><span class="math display">\[
-\omega_0f(-1)+\omega_1f(-\frac{1}{3})+\omega_2f(\frac{1}{3})+\omega_3f(1)=\frac{14}{27}\neq\int_{-1}^1f(x)dx
-\]</span></p>
-<p>因此，该求积公式的代数精度为三次。</p>
-<h2 id="第二题">第二题</h2>
-<p>积分目标</p>
-<p><span class="math display">\[
-\int_0^{\pi} \frac{1+sin^4x}{1+x^2}dx
-\]</span></p>
-<h3 id="等分复合梯形积分">4等分复合梯形积分</h3>
-<p>首先，将目标区间 <span class="math inline">\([0, \pi]\)</span> 四等分为 <span class="math inline">\([0, \frac{\pi}{4}], [\frac{\pi}{4}, \frac{\pi}{2}], [\frac{\pi}{2}, \frac{3\pi}{4}], [\frac{3\pi}{4}, \pi]\)</span>；随后，在每个小区间上，进行梯形积分。那么，需要求出 <span class="math inline">\(f(0), f(\frac{\pi}{4}), f(\frac{\pi}{2}), f(\frac{3\pi}{4}), f(\pi)\)</span>，以进行梯形积分。</p>
-<p><span class="math display">\[
-\begin{aligned}
-f(0) &amp;= 1 \\
-f(\frac{\pi}{4}) &amp;= 0.77310807 \\
-f(\frac{\pi}{2}) &amp;= 0.57680088 \\
-f(\frac{3\pi}{4}) &amp;= 0.19079156 \\
-f(\pi) &amp; = 0.09199967
-\end{aligned}
-\]</span></p>
-<p>由上述数据，进行梯形积分如下</p>
-<p><span class="math display">\[
-\int_0^{\pi}\frac{1+sin^4x}{1+x^2}dx = \frac{1}{2} \times \frac{\pi}{4} \{f(0) + f(\pi) + 2[f(\frac{\pi}{4}) + f(\frac{\pi}{2}) + f(\frac{3\pi}{4})]\} = 1.63889062
-\]</span></p>
-<p>MATLAB代码如下</p>
-<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trapezoid_integral</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>(x).^<span class="number">4</span>) ./ (<span class="number">1</span> + x.^<span class="number">2</span>);</span><br><span class="line">    res = (<span class="built_in">pi</span> / <span class="number">8</span>) * (fun(<span class="number">0</span>) + fun(<span class="built_in">pi</span>) + <span class="number">2</span> * (fun(<span class="built_in">pi</span> / <span class="number">4</span>) + fun(<span class="built_in">pi</span> / <span class="number">2</span>) + fun(<span class="number">3</span> * <span class="built_in">pi</span> / <span class="number">4</span>)));</span><br><span class="line">    fprintf(<span class="string">&quot;Trapezoid integral result: %.8f\n&quot;</span>, res);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<h3 id="等分复合simpson积分">4等分复合Simpson积分</h3>
-<p>在梯形积分的基础上，Simpson积分还需要 <span class="math inline">\(x_{i+\frac{1}{2}}\)</span> 节点上的值，也就是 <span class="math inline">\(f(\frac{\pi}{8}), f(\frac{3\pi}{8}), f(\frac{5\pi}{8}), f(\frac{7\pi}{8})\)</span>，结果如下</p>
-<p><span class="math display">\[
-\begin{aligned}
-f(\frac{\pi}{8}) &amp;= 0.88497270 \\
-f(\frac{3\pi}{8}) &amp;= 0.72387616 \\
-f(\frac{5\pi}{8}) &amp;= 0.35601267 \\
-f(\frac{7\pi}{8}) &amp;= 0.11937786
-\end{aligned}
-\]</span></p>
-<p>由上述数据，进行数值积分如下</p>
-<p><span class="math display">\[
-\begin{aligned}
-\int_0^{\pi}\frac{1+sin^4x}{1+x^2}dx &amp;=\frac{1}{6} \times \frac{\pi}{4} \{f(0) + f(\pi) + 2[f(\frac{\pi}{4}) + f(\frac{\pi}{2}) + f(\frac{3\pi}{4})] + 4[f(\frac{\pi}{8}) + f(\frac{3\pi}{8}) + f(\frac{5\pi}{8}) + f(\frac{7\pi}{8})]\} \\
-&amp;= 1.63760207
-\end{aligned}
-\]</span></p>
-<p>MATLAB代码如下</p>
-<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">simpson_integral</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>(x).^<span class="number">4</span>) ./ (<span class="number">1</span> + x.^<span class="number">2</span>);</span><br><span class="line">    res = (<span class="built_in">pi</span> / <span class="number">24</span>) * (fun(<span class="number">0</span>) + fun(<span class="built_in">pi</span>) + <span class="number">2</span> * (fun(<span class="built_in">pi</span> / <span class="number">4</span>) + fun(<span class="built_in">pi</span> / <span class="number">2</span>) + fun(<span class="number">3</span> * <span class="built_in">pi</span> / <span class="number">4</span>)) + ...</span><br><span class="line">        <span class="number">4</span> * (fun(<span class="built_in">pi</span> / <span class="number">8</span>) + fun(<span class="number">3</span> * <span class="built_in">pi</span> / <span class="number">8</span>) + fun(<span class="number">5</span> * <span class="built_in">pi</span> / <span class="number">8</span>) + fun(<span class="number">7</span> * <span class="built_in">pi</span> / <span class="number">8</span>)));</span><br><span class="line">    fprintf(<span class="string">&quot;Simpson integral result: %.8f\n&quot;</span>, res);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<h3 id="复合2点高斯积分">复合2点高斯积分</h3>
-<p>该函数适合利用Gauss-Legendre公式进行计算，但需要进行区间上的线性变换。</p>
-<p>对于区间 <span class="math inline">\([0, \frac{\pi}{4}]\)</span>，令 <span class="math inline">\(t = \frac{8}{\pi}x-1\)</span>，有</p>
-<p><span class="math display">\[
-\begin{aligned}
-dx &amp;= \frac{\pi}{8}dt\\
-x &amp;= \frac{\pi}{8}(t+1)
-\end{aligned}
-\]</span></p>
-<p>那么，原函数可以改写为</p>
-<p><span class="math display">\[
-g_1(t) = \frac{1+sin^4[\frac{\pi}{8}(t+1)]}{1+[\frac{\pi}{8}(t+1)]^2}
-\]</span></p>
-<p>原积分式可以改写为</p>
-<p><span class="math display">\[
-\int_0^{\pi}\frac{1+sin^4x}{1+x^2}dx = \frac{\pi}{8}\int_{-1}^1 \frac{1+sin^4[\frac{\pi}{8}(t+1)]}{1+[\frac{\pi}{8}(t+1)]^2}dt
-\]</span></p>
-<p>由于</p>
-<p><span class="math display">\[
-\begin{aligned}
-g_1(-\frac{1}{\sqrt{3}})&amp;=0.97391616\\
-g_1(\frac{1}{\sqrt{3}}) &amp;= 0.80481227
-\end{aligned}
-\]</span></p>
-<p>所以</p>
-<p><span class="math display">\[
-\frac{\pi}{8}\int_{-1}^1 \frac{1+sin^4[\frac{\pi}{8}(t+1)]}{1+[\frac{\pi}{8}(t+1)]^2}dt = \frac{\pi}{8} [g(-\frac{1}{\sqrt{3}}) + g(\frac{1}{\sqrt{3}})]=0.69850502
-\]</span></p>
-<p>对于区间 <span class="math inline">\([\frac{\pi}{4}, \frac{\pi}{2}]\)</span>，令 <span class="math inline">\(t = \frac{8}{\pi}x-3\)</span>。观察发现与钱一个区间的变换计算相比较，<span class="math inline">\(t\)</span> 只是发生了一个线性偏移，因此对前面的函数稍加改动，即可进行后续计算</p>
-<p><span class="math display">\[
-g_2(t) = \frac{1+sin^4[\frac{\pi}{8}(t+3)]}{1+[\frac{\pi}{8}(t+3)]^2}
-\]</span></p>
-<p><span class="math display">\[
-\begin{aligned}
-g_2(-\frac{1}{\sqrt{3}})&amp;=0.75559610\\
-g_2(\frac{1}{\sqrt{3}}) &amp;= 0.65449392
-\end{aligned}
-\]</span></p>
-<p>同理，对于区间 <span class="math inline">\([\frac{\pi}{2}, \frac{3\pi}{4}]\)</span>，有</p>
-<p><span class="math display">\[
-g_3(t) = \frac{1+sin^4[\frac{\pi}{8}(t+5)]}{1+[\frac{\pi}{8}(t+5)]^2}
-\]</span></p>
-<p><span class="math display">\[
-\begin{aligned}
-g_3(-\frac{1}{\sqrt{3}})&amp;=0.48455531\\
-g_3(\frac{1}{\sqrt{3}}) &amp;= 0.24831413
-\end{aligned}
-\]</span></p>
-<p>对于区间 <span class="math inline">\([\frac{3\pi}{4}, \pi]\)</span>，有</p>
-<p><span class="math display">\[
-g_4(t) = \frac{1+sin^4[\frac{\pi}{8}(t+7)]}{1+[\frac{\pi}{8}(t+7)]^2}
-\]</span></p>
-<p><span class="math display">\[
-\begin{aligned}
-g_4(-\frac{1}{\sqrt{3}})&amp;=0.15127794\\
-g_4(\frac{1}{\sqrt{3}}) &amp;= 0.10155409
-\end{aligned}
-\]</span></p>
-<p>最后，将这四个区间的积分相加，可以得到</p>
-<p><span class="math display">\[
-\begin{aligned}
-    \int_0^{\pi}\frac{1+sin^4x}{1+x^2}dx=\frac{\pi}{8}[&amp;g_1(-\frac{1}{\sqrt{3}})+g_1(\frac{1}{\sqrt{3}})+g_2(-\frac{1}{\sqrt{3}})+g_2(\frac{1}{\sqrt{3}})+\\
-    &amp;g_3(-\frac{1}{\sqrt{3}})+g_3(\frac{1}{\sqrt{3}})+g_4(-\frac{1}{\sqrt{3}})+g_4(\frac{1}{\sqrt{3}})] = 1.63933014
-\end{aligned}
-\]</span></p>
-<p>MATLAB代码如下</p>
-<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gauss_integral</span><span class="params">()</span></span></span><br><span class="line">    fun1 = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">1</span>)) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + ((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">1</span>)) .^ <span class="number">2</span>);</span><br><span class="line">    gp11 = fun1(<span class="number">-1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line">    gp12 = fun1(<span class="number">1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">    fun2 = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">3</span>)) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + ((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">3</span>)) .^ <span class="number">2</span>);</span><br><span class="line">    gp21 = fun2(<span class="number">-1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line">    gp22 = fun2(<span class="number">1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">    fun3 = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">5</span>)) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + ((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">5</span>)) .^ <span class="number">2</span>);</span><br><span class="line">    gp31 = fun3(<span class="number">-1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line">    gp32 = fun3(<span class="number">1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">    fun4 = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">7</span>)) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + ((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">7</span>)) .^ <span class="number">2</span>);</span><br><span class="line">    gp41 = fun4(<span class="number">-1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line">    gp42 = fun4(<span class="number">1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line">    fprintf(<span class="string">&quot;%.8f\n&quot;</span>, (<span class="built_in">pi</span> / <span class="number">8</span>) * (gp11 + gp12 + gp21 + gp22 + gp31 + gp32 + gp41 + gp42));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<h2 id="第三题">第三题</h2>
-<h3 id="题目要求">题目要求</h3>
-<p>目标积分式为</p>
-<p><span class="math display">\[
-\int_0^1 \frac{x^4(1-x)^4}{1+x^2}dx
-\]</span></p>
-<p>节点数取 <span class="math inline">\(N=2^n+1, n=1, 2, 3,..., 20\)</span>。利用复合Simpson公式进行求解。</p>
-<h3 id="题目作答">题目作答</h3>
-<p>复合Simpson公式如下</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx \approx \frac{h}{6}[f(a) + f(b) + 2\sum_{i=1}^{n-1}f(x_i)+4\sum_{i=1}^{n-1}f(x_{i+\frac{1}{2}})]
-\]</span></p>
-<p>由题目要求，可知目标积分区间为 <span class="math inline">\([0, 1]\)</span>，并且要将积分区间均分为 <span class="math inline">\(2^n\)</span> 份，所以每个区间的长度均为 <span class="math inline">\(\displaystyle\frac{1}{2^n}\)</span>。此时，步长 <span class="math inline">\(h\)</span> 为</p>
-<p><span class="math display">\[
-h = \frac{b-a}{2^n}
-\]</span></p>
-<p>那么，不妨将 <span class="math inline">\(x_i\)</span> 表示为</p>
-<p><span class="math display">\[
-x_i = \displaystyle\frac{i}{2^n}
-\]</span></p>
-<p>将目标积分式代入复合Simpson公式，可以得到</p>
-<p><span class="math display">\[
-\int_0^1\frac{x^4(1-x)^4}{1+x^2}dx=\frac{h}{6}[f(0)+f(1)+2\sum_{i=1}^{2^n-1}f(\frac{i}{2^n}) + 4\sum_{i=0}^{2^n-1}f(\frac{1}{2^n}(i+\frac{1}{2}))]
-\]</span></p>
-<p>可以编写MATLAB代码如下</p>
-<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Assignment_Ch5_Prob3</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) (x .^ <span class="number">4</span> .* (<span class="number">1</span> - x) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + x .^ <span class="number">2</span>);</span><br><span class="line">    </span><br><span class="line">    integral_result = <span class="built_in">zeros</span>(<span class="number">20</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span> n = <span class="number">1</span>: <span class="number">20</span></span><br><span class="line">        N = <span class="number">2</span> .^ n + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">% 先计算 2sum_&#123;i=1&#125;^&#123;N-2&#125;f(x_i) + f(a) + f(b)</span></span><br><span class="line">        res1 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: N - <span class="number">2</span></span><br><span class="line">            res1 = res1 + fun(<span class="built_in">i</span> / (N - <span class="number">1</span>)); </span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">% 再计算 4sum_&#123;i=0&#125;^&#123;N-2&#125;f(x_&#123;i+\frac&#123;1&#125;&#123;2&#125;&#125;)</span></span><br><span class="line">        res2 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">0</span>: N - <span class="number">2</span></span><br><span class="line">            res2 = res2 + fun((<span class="built_in">i</span> + <span class="number">0.5</span>) / (N - <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        integral_result(n) = (fun(<span class="number">0</span>) + fun(<span class="number">1</span>) + res1 * <span class="number">2</span> + res2 * <span class="number">4</span>) / (<span class="number">6</span> * (N - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    MATLAB_integral_result = integral(fun, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    integral_diff = <span class="built_in">abs</span>(integral_result - MATLAB_integral_result);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">figure</span>();</span><br><span class="line">    set(gcf, <span class="string">&#x27;Position&#x27;</span>, [<span class="number">0</span>, <span class="number">0</span>, <span class="number">560</span>, <span class="number">420</span>]);</span><br><span class="line">    n = <span class="number">1</span>: <span class="number">20</span>;</span><br><span class="line">    N = <span class="number">2</span> .^ n + <span class="number">1</span>;</span><br><span class="line">    loglog(N, integral_diff);</span><br><span class="line">    title(<span class="string">&quot;Simpson复合求积时节点数与积分误差之间的关系&quot;</span>);</span><br><span class="line">    xlabel(<span class="string">&quot;节点数量logN&quot;</span>);</span><br><span class="line">    ylabel(<span class="string">&quot;积分误差&quot;</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>结果如下</p>
-<figure>
-<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//Assignment_Ch5_Prob3.svg" alt><figcaption>Simpson积分误差与节点数的关系</figcaption>
-</figure>
-<p>上述计算中将MATLAB中的 <code>integral()</code> 函数积分结果近似看作真值。Simpson公式的积分误差在节点数不非常多的时候，随着节点数的增长而下降，在对数尺度上呈现线性关系；当节点数多到一定程度的时候，积分误差不再随着节点数的增长而下降，而是稳定在一定水平，随节点数变化而略有起伏。</p>
-<h2 id="第四题">第四题</h2>
-<h3 id="题目要求-1">题目要求</h3>
-<p>目标积分式为</p>
-<p><span class="math display">\[
-\int_0^1\frac{x^4(1-x)^4}{1+x^2}dx
-\]</span></p>
-<p>要求分别使用Romberg积分和三点高斯积分进行计算。</p>
-<h3 id="使用romberg积分求解">使用Romberg积分求解</h3>
-<p>由第三题，可以观察到Simpson积分对目标积分式的积分误差极限基本在 <span class="math inline">\(10^{-17}\)</span> 水平，所以差不多可以将Romberg积分的积分误差条件定在 <span class="math inline">\(10^{-15}\)</span>。</p>
-<p>Romberg积分外推加速如下</p>
-<p><span class="math display">\[
-T_n^{(m)} = \frac{T_{2n}^{(m-1)}-2^{-2m}T_n^{(m-1)}}{1-2^{-2m}}
-\]</span></p>
-<p>MATLAB代码如下</p>
-<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">romberg_integral</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) (x .^ <span class="number">4</span> .* (<span class="number">1</span> - x) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + x .^ <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">% 将积分误差设定为 10^(-15)</span></span><br><span class="line">    <span class="built_in">eps</span> = <span class="number">10</span> ^ (<span class="number">-17</span>);</span><br><span class="line"></span><br><span class="line">    error = <span class="number">1</span>;</span><br><span class="line">    m = <span class="number">0</span>;</span><br><span class="line">    Tn = <span class="number">0.5</span> * (fun(<span class="number">0</span>) + fun(<span class="number">1</span>));</span><br><span class="line">    <span class="keyword">while</span> error &gt; <span class="built_in">eps</span></span><br><span class="line">        m = m + <span class="number">1</span>;</span><br><span class="line">        n = <span class="number">2</span> ^ m;</span><br><span class="line">        h = <span class="number">1</span> / n;</span><br><span class="line">        res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: n<span class="number">-1</span></span><br><span class="line">            res = res + fun(<span class="built_in">i</span> * h);</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        T2n = (res * <span class="number">2</span> + fun(<span class="number">0</span>) + fun(<span class="number">1</span>)) * (h * <span class="number">0.5</span>);</span><br><span class="line">        error = <span class="built_in">abs</span>(T2n - Tn) * <span class="number">3</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">% 利用外推加速技术计算新的Tn</span></span><br><span class="line">        Tn = (T2n - <span class="number">2</span> ^ (<span class="number">-2</span> * m) * Tn) / (<span class="number">1</span> - <span class="number">2</span> ^ (<span class="number">-2</span> * m));</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    fprintf(<span class="string">&quot;m = %d, error = %.20f\n&quot;</span>, m, error);</span><br><span class="line">    fprintf(<span class="string">&quot;Romberg integral result: %.20f\n&quot;</span>, Tn);</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB integral result:  %.20f\n&quot;</span>, integral(fun, <span class="number">0</span>, <span class="number">1</span>));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>计算结果如下</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">m = 11, error = 0.00000000000000000520</span><br><span class="line">Romberg integral result: 0.00126448926734961590</span><br><span class="line">MATLAB integral result:  0.00126448926734961872</span><br></pre></td></tr></table></figure>
-<h3 id="使用三点高斯公式求解">使用三点高斯公式求解</h3>
-<p>对于目标积分式，宜使用Gauss-Legendre公式进行积分。<span class="math inline">\(n=2\)</span> 时，Gauss-Legendre公式为</p>
-<p><span class="math display">\[
-\int_{-1}^1f(x)dx \approx \frac{5}{9}f(-\sqrt{\frac{3}{5}}) + \frac{8}{9}f(0) + \frac{5}{9}f(\sqrt{\frac{3}{5}})
-\]</span></p>
-<p>注意到原式积分区间为 <span class="math inline">\([0, 1]\)</span>，因此需要进行线性变换。令</p>
-<p><span class="math display">\[
-t = 2x-1
-\]</span></p>
-<p>可以将原函数改写为</p>
-<p><span class="math display">\[
-g(t) = \frac{[\frac{1}{2}(t+1)]^4[1-\frac{1}{2}(t+1)]^4}{1+[\frac{1}{2}(t+1)]^2} = \frac{(1+t)^4(1-t)^4}{256+64(1+t)^2}
-\]</span></p>
-<p>那么积分式改写为</p>
-<p><span class="math display">\[
-\int_0^1\frac{x^4(1-x)^4}{1+x^2}dx=\int_{-1}^1\frac{(1+t)^4(1-t)^4}{512 + 128(1+t)^2}dt
-\]</span></p>
-<p>根据Gauss-Legendre公式，有</p>
-<p><span class="math display">\[
-\int_{-1}^1\frac{(1+t)^4(1-t)^4}{512 + 128(1+t)^2}dt \approx \frac{5}{9}g(-\sqrt{\frac{3}{5}}) + \frac{8}{9}g(0) + \frac{5}{9}g(\sqrt{\frac{3}{5}})
-\]</span></p>
-<p>将高斯点代入，可以得到</p>
-<p><span class="math display">\[
-\int_{-1}^1\frac{(1+t)^4(1-t)^4}{512 + 128(1+t)^2}dt \approx 0.00143186003683241263
-\]</span></p>
-<p>MATLAB代码如下</p>
-<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gauss_legendre_integral</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) <span class="number">0.5</span> .* (((<span class="number">0.5</span> .* (<span class="number">1</span> + x)) .^ <span class="number">4</span>) .* ((<span class="number">1</span> - <span class="number">0.5</span> .* (<span class="number">1</span> + x)) .^ <span class="number">4</span>)) ./ (<span class="number">1</span> + (<span class="number">0.5</span> * (<span class="number">1</span> + x)) .^ <span class="number">2</span>);</span><br><span class="line">    original_fun = @(x) (x .^ <span class="number">4</span> .* (<span class="number">1</span> - x) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + x .^ <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    res = (<span class="number">5</span> / <span class="number">9</span>) * (fun(-<span class="built_in">sqrt</span>(<span class="number">3</span> / <span class="number">5</span>)) + fun(<span class="built_in">sqrt</span>(<span class="number">3</span> / <span class="number">5</span>))) + (<span class="number">8</span> / <span class="number">9</span>) * fun(<span class="number">0</span>);</span><br><span class="line">    fprintf(<span class="string">&quot;Gauss-Legendre integral result: %.20f\n&quot;</span>, res);</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB integral result: %.20f\n&quot;</span>, integral(original_fun, <span class="number">0</span>, <span class="number">1</span>));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>输出结果为</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Gauss-Legendre integral result: 0.00143186003683241263</span><br><span class="line">MATLAB integral result: 0.00126448926734961872</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>University</category>
-      </categories>
-      <tags>
-        <tag>Numerical Analysis</tag>
-        <tag>Mathematics</tag>
       </tags>
   </entry>
   <entry>
@@ -1798,6 +1564,494 @@ a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
       </tags>
   </entry>
   <entry>
+    <title>数值分析作业-第五章</title>
+    <url>/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0/</url>
+    <content><![CDATA[<p>姓名：周晓</p>
+<p>学号：2231573</p>
+<h2 id="第一题">第一题</h2>
+<p>令 <span class="math inline">\(f(x) = 1, x, x^2, x^3\)</span>，代入求积公式可得</p>
+<p><span class="math display">\[
+\begin{equation}\left\{
+\begin{aligned}
+\omega_0+\omega_1+\omega_2+\omega_3&amp;=2\\
+-\omega_0-\frac{1}{3}\omega_1+\frac{1}{3}\omega_2+\omega_3&amp;=0\\
+\omega_0+\frac{1}{9}\omega_1+\frac{1}{9}\omega_2+\omega_3&amp;=\frac{2}{3}\\
+-\omega_0-\frac{1}{27}\omega_1+\frac{1}{27}\omega_2+\omega_3&amp;=0
+\end{aligned}\right.
+\end{equation}
+\]</span></p>
+<span id="more"></span>
+<p>解上述方程组，可以得到</p>
+<p><span class="math display">\[
+\begin{equation}
+\begin{bmatrix}
+\omega_0\\
+\omega_1\\
+\omega_2\\
+\omega_3
+\end{bmatrix}=
+\begin{bmatrix}
+\displaystyle \frac{1}{4}\\
+\displaystyle \frac{3}{4}\\
+\displaystyle \frac{3}{4}\\
+\displaystyle \frac{1}{4}
+\end{bmatrix}
+\end{equation}
+\]</span></p>
+<p>下面，令 <span class="math inline">\(f(x)=x^4\)</span>，计算得 <span class="math inline">\(\int_{-1}^1f(x)dx = \displaystyle \frac{2}{5}\)</span>，而</p>
+<p><span class="math display">\[
+\omega_0f(-1)+\omega_1f(-\frac{1}{3})+\omega_2f(\frac{1}{3})+\omega_3f(1)=\frac{14}{27}\neq\int_{-1}^1f(x)dx
+\]</span></p>
+<p>因此，该求积公式的代数精度为三次。</p>
+<h2 id="第二题">第二题</h2>
+<p>积分目标</p>
+<p><span class="math display">\[
+\int_0^{\pi} \frac{1+sin^4x}{1+x^2}dx
+\]</span></p>
+<h3 id="等分复合梯形积分">4等分复合梯形积分</h3>
+<p>首先，将目标区间 <span class="math inline">\([0, \pi]\)</span> 四等分为 <span class="math inline">\([0, \frac{\pi}{4}], [\frac{\pi}{4}, \frac{\pi}{2}], [\frac{\pi}{2}, \frac{3\pi}{4}], [\frac{3\pi}{4}, \pi]\)</span>；随后，在每个小区间上，进行梯形积分。那么，需要求出 <span class="math inline">\(f(0), f(\frac{\pi}{4}), f(\frac{\pi}{2}), f(\frac{3\pi}{4}), f(\pi)\)</span>，以进行梯形积分。</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(0) &amp;= 1 \\
+f(\frac{\pi}{4}) &amp;= 0.77310807 \\
+f(\frac{\pi}{2}) &amp;= 0.57680088 \\
+f(\frac{3\pi}{4}) &amp;= 0.19079156 \\
+f(\pi) &amp; = 0.09199967
+\end{aligned}
+\]</span></p>
+<p>由上述数据，进行梯形积分如下</p>
+<p><span class="math display">\[
+\int_0^{\pi}\frac{1+sin^4x}{1+x^2}dx = \frac{1}{2} \times \frac{\pi}{4} \{f(0) + f(\pi) + 2[f(\frac{\pi}{4}) + f(\frac{\pi}{2}) + f(\frac{3\pi}{4})]\} = 1.63889062
+\]</span></p>
+<p>MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trapezoid_integral</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>(x).^<span class="number">4</span>) ./ (<span class="number">1</span> + x.^<span class="number">2</span>);</span><br><span class="line">    res = (<span class="built_in">pi</span> / <span class="number">8</span>) * (fun(<span class="number">0</span>) + fun(<span class="built_in">pi</span>) + <span class="number">2</span> * (fun(<span class="built_in">pi</span> / <span class="number">4</span>) + fun(<span class="built_in">pi</span> / <span class="number">2</span>) + fun(<span class="number">3</span> * <span class="built_in">pi</span> / <span class="number">4</span>)));</span><br><span class="line">    fprintf(<span class="string">&quot;Trapezoid integral result: %.8f\n&quot;</span>, res);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="等分复合simpson积分">4等分复合Simpson积分</h3>
+<p>在梯形积分的基础上，Simpson积分还需要 <span class="math inline">\(x_{i+\frac{1}{2}}\)</span> 节点上的值，也就是 <span class="math inline">\(f(\frac{\pi}{8}), f(\frac{3\pi}{8}), f(\frac{5\pi}{8}), f(\frac{7\pi}{8})\)</span>，结果如下</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(\frac{\pi}{8}) &amp;= 0.88497270 \\
+f(\frac{3\pi}{8}) &amp;= 0.72387616 \\
+f(\frac{5\pi}{8}) &amp;= 0.35601267 \\
+f(\frac{7\pi}{8}) &amp;= 0.11937786
+\end{aligned}
+\]</span></p>
+<p>由上述数据，进行数值积分如下</p>
+<p><span class="math display">\[
+\begin{aligned}
+\int_0^{\pi}\frac{1+sin^4x}{1+x^2}dx &amp;=\frac{1}{6} \times \frac{\pi}{4} \{f(0) + f(\pi) + 2[f(\frac{\pi}{4}) + f(\frac{\pi}{2}) + f(\frac{3\pi}{4})] + 4[f(\frac{\pi}{8}) + f(\frac{3\pi}{8}) + f(\frac{5\pi}{8}) + f(\frac{7\pi}{8})]\} \\
+&amp;= 1.63760207
+\end{aligned}
+\]</span></p>
+<p>MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">simpson_integral</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>(x).^<span class="number">4</span>) ./ (<span class="number">1</span> + x.^<span class="number">2</span>);</span><br><span class="line">    res = (<span class="built_in">pi</span> / <span class="number">24</span>) * (fun(<span class="number">0</span>) + fun(<span class="built_in">pi</span>) + <span class="number">2</span> * (fun(<span class="built_in">pi</span> / <span class="number">4</span>) + fun(<span class="built_in">pi</span> / <span class="number">2</span>) + fun(<span class="number">3</span> * <span class="built_in">pi</span> / <span class="number">4</span>)) + ...</span><br><span class="line">        <span class="number">4</span> * (fun(<span class="built_in">pi</span> / <span class="number">8</span>) + fun(<span class="number">3</span> * <span class="built_in">pi</span> / <span class="number">8</span>) + fun(<span class="number">5</span> * <span class="built_in">pi</span> / <span class="number">8</span>) + fun(<span class="number">7</span> * <span class="built_in">pi</span> / <span class="number">8</span>)));</span><br><span class="line">    fprintf(<span class="string">&quot;Simpson integral result: %.8f\n&quot;</span>, res);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="复合2点高斯积分">复合2点高斯积分</h3>
+<p>该函数适合利用Gauss-Legendre公式进行计算，但需要进行区间上的线性变换。</p>
+<p>对于区间 <span class="math inline">\([0, \frac{\pi}{4}]\)</span>，令 <span class="math inline">\(t = \frac{8}{\pi}x-1\)</span>，有</p>
+<p><span class="math display">\[
+\begin{aligned}
+dx &amp;= \frac{\pi}{8}dt\\
+x &amp;= \frac{\pi}{8}(t+1)
+\end{aligned}
+\]</span></p>
+<p>那么，原函数可以改写为</p>
+<p><span class="math display">\[
+g_1(t) = \frac{1+sin^4[\frac{\pi}{8}(t+1)]}{1+[\frac{\pi}{8}(t+1)]^2}
+\]</span></p>
+<p>原积分式可以改写为</p>
+<p><span class="math display">\[
+\int_0^{\pi}\frac{1+sin^4x}{1+x^2}dx = \frac{\pi}{8}\int_{-1}^1 \frac{1+sin^4[\frac{\pi}{8}(t+1)]}{1+[\frac{\pi}{8}(t+1)]^2}dt
+\]</span></p>
+<p>由于</p>
+<p><span class="math display">\[
+\begin{aligned}
+g_1(-\frac{1}{\sqrt{3}})&amp;=0.97391616\\
+g_1(\frac{1}{\sqrt{3}}) &amp;= 0.80481227
+\end{aligned}
+\]</span></p>
+<p>所以</p>
+<p><span class="math display">\[
+\frac{\pi}{8}\int_{-1}^1 \frac{1+sin^4[\frac{\pi}{8}(t+1)]}{1+[\frac{\pi}{8}(t+1)]^2}dt = \frac{\pi}{8} [g(-\frac{1}{\sqrt{3}}) + g(\frac{1}{\sqrt{3}})]=0.69850502
+\]</span></p>
+<p>对于区间 <span class="math inline">\([\frac{\pi}{4}, \frac{\pi}{2}]\)</span>，令 <span class="math inline">\(t = \frac{8}{\pi}x-3\)</span>。观察发现与钱一个区间的变换计算相比较，<span class="math inline">\(t\)</span> 只是发生了一个线性偏移，因此对前面的函数稍加改动，即可进行后续计算</p>
+<p><span class="math display">\[
+g_2(t) = \frac{1+sin^4[\frac{\pi}{8}(t+3)]}{1+[\frac{\pi}{8}(t+3)]^2}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+g_2(-\frac{1}{\sqrt{3}})&amp;=0.75559610\\
+g_2(\frac{1}{\sqrt{3}}) &amp;= 0.65449392
+\end{aligned}
+\]</span></p>
+<p>同理，对于区间 <span class="math inline">\([\frac{\pi}{2}, \frac{3\pi}{4}]\)</span>，有</p>
+<p><span class="math display">\[
+g_3(t) = \frac{1+sin^4[\frac{\pi}{8}(t+5)]}{1+[\frac{\pi}{8}(t+5)]^2}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+g_3(-\frac{1}{\sqrt{3}})&amp;=0.48455531\\
+g_3(\frac{1}{\sqrt{3}}) &amp;= 0.24831413
+\end{aligned}
+\]</span></p>
+<p>对于区间 <span class="math inline">\([\frac{3\pi}{4}, \pi]\)</span>，有</p>
+<p><span class="math display">\[
+g_4(t) = \frac{1+sin^4[\frac{\pi}{8}(t+7)]}{1+[\frac{\pi}{8}(t+7)]^2}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+g_4(-\frac{1}{\sqrt{3}})&amp;=0.15127794\\
+g_4(\frac{1}{\sqrt{3}}) &amp;= 0.10155409
+\end{aligned}
+\]</span></p>
+<p>最后，将这四个区间的积分相加，可以得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \int_0^{\pi}\frac{1+sin^4x}{1+x^2}dx=\frac{\pi}{8}[&amp;g_1(-\frac{1}{\sqrt{3}})+g_1(\frac{1}{\sqrt{3}})+g_2(-\frac{1}{\sqrt{3}})+g_2(\frac{1}{\sqrt{3}})+\\
+    &amp;g_3(-\frac{1}{\sqrt{3}})+g_3(\frac{1}{\sqrt{3}})+g_4(-\frac{1}{\sqrt{3}})+g_4(\frac{1}{\sqrt{3}})] = 1.63933014
+\end{aligned}
+\]</span></p>
+<p>MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gauss_integral</span><span class="params">()</span></span></span><br><span class="line">    fun1 = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">1</span>)) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + ((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">1</span>)) .^ <span class="number">2</span>);</span><br><span class="line">    gp11 = fun1(<span class="number">-1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line">    gp12 = fun1(<span class="number">1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">    fun2 = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">3</span>)) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + ((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">3</span>)) .^ <span class="number">2</span>);</span><br><span class="line">    gp21 = fun2(<span class="number">-1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line">    gp22 = fun2(<span class="number">1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">    fun3 = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">5</span>)) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + ((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">5</span>)) .^ <span class="number">2</span>);</span><br><span class="line">    gp31 = fun3(<span class="number">-1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line">    gp32 = fun3(<span class="number">1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">    fun4 = @(x) (<span class="number">1</span> + <span class="built_in">sin</span>((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">7</span>)) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + ((<span class="built_in">pi</span> / <span class="number">8</span>) * (x + <span class="number">7</span>)) .^ <span class="number">2</span>);</span><br><span class="line">    gp41 = fun4(<span class="number">-1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line">    gp42 = fun4(<span class="number">1</span> / <span class="built_in">sqrt</span>(<span class="number">3</span>));</span><br><span class="line">    fprintf(<span class="string">&quot;%.8f\n&quot;</span>, (<span class="built_in">pi</span> / <span class="number">8</span>) * (gp11 + gp12 + gp21 + gp22 + gp31 + gp32 + gp41 + gp42));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h2 id="第三题">第三题</h2>
+<h3 id="题目要求">题目要求</h3>
+<p>目标积分式为</p>
+<p><span class="math display">\[
+\int_0^1 \frac{x^4(1-x)^4}{1+x^2}dx
+\]</span></p>
+<p>节点数取 <span class="math inline">\(N=2^n+1, n=1, 2, 3,..., 20\)</span>。利用复合Simpson公式进行求解。</p>
+<h3 id="题目作答">题目作答</h3>
+<p>复合Simpson公式如下</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx \frac{h}{6}[f(a) + f(b) + 2\sum_{i=1}^{n-1}f(x_i)+4\sum_{i=1}^{n-1}f(x_{i+\frac{1}{2}})]
+\]</span></p>
+<p>由题目要求，可知目标积分区间为 <span class="math inline">\([0, 1]\)</span>，并且要将积分区间均分为 <span class="math inline">\(2^n\)</span> 份，所以每个区间的长度均为 <span class="math inline">\(\displaystyle\frac{1}{2^n}\)</span>。此时，步长 <span class="math inline">\(h\)</span> 为</p>
+<p><span class="math display">\[
+h = \frac{b-a}{2^n}
+\]</span></p>
+<p>那么，不妨将 <span class="math inline">\(x_i\)</span> 表示为</p>
+<p><span class="math display">\[
+x_i = \displaystyle\frac{i}{2^n}
+\]</span></p>
+<p>将目标积分式代入复合Simpson公式，可以得到</p>
+<p><span class="math display">\[
+\int_0^1\frac{x^4(1-x)^4}{1+x^2}dx=\frac{h}{6}[f(0)+f(1)+2\sum_{i=1}^{2^n-1}f(\frac{i}{2^n}) + 4\sum_{i=0}^{2^n-1}f(\frac{1}{2^n}(i+\frac{1}{2}))]
+\]</span></p>
+<p>可以编写MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Assignment_Ch5_Prob3</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) (x .^ <span class="number">4</span> .* (<span class="number">1</span> - x) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + x .^ <span class="number">2</span>);</span><br><span class="line">    </span><br><span class="line">    integral_result = <span class="built_in">zeros</span>(<span class="number">20</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span> n = <span class="number">1</span>: <span class="number">20</span></span><br><span class="line">        N = <span class="number">2</span> .^ n + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">% 先计算 2sum_&#123;i=1&#125;^&#123;N-2&#125;f(x_i) + f(a) + f(b)</span></span><br><span class="line">        res1 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: N - <span class="number">2</span></span><br><span class="line">            res1 = res1 + fun(<span class="built_in">i</span> / (N - <span class="number">1</span>)); </span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">% 再计算 4sum_&#123;i=0&#125;^&#123;N-2&#125;f(x_&#123;i+\frac&#123;1&#125;&#123;2&#125;&#125;)</span></span><br><span class="line">        res2 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">0</span>: N - <span class="number">2</span></span><br><span class="line">            res2 = res2 + fun((<span class="built_in">i</span> + <span class="number">0.5</span>) / (N - <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        integral_result(n) = (fun(<span class="number">0</span>) + fun(<span class="number">1</span>) + res1 * <span class="number">2</span> + res2 * <span class="number">4</span>) / (<span class="number">6</span> * (N - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    MATLAB_integral_result = integral(fun, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    integral_diff = <span class="built_in">abs</span>(integral_result - MATLAB_integral_result);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">figure</span>();</span><br><span class="line">    set(gcf, <span class="string">&#x27;Position&#x27;</span>, [<span class="number">0</span>, <span class="number">0</span>, <span class="number">560</span>, <span class="number">420</span>]);</span><br><span class="line">    n = <span class="number">1</span>: <span class="number">20</span>;</span><br><span class="line">    N = <span class="number">2</span> .^ n + <span class="number">1</span>;</span><br><span class="line">    loglog(N, integral_diff);</span><br><span class="line">    title(<span class="string">&quot;Simpson复合求积时节点数与积分误差之间的关系&quot;</span>);</span><br><span class="line">    xlabel(<span class="string">&quot;节点数量logN&quot;</span>);</span><br><span class="line">    ylabel(<span class="string">&quot;积分误差&quot;</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>结果如下</p>
+<figure>
+<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//Assignment_Ch5_Prob3.svg" alt><figcaption>Simpson积分误差与节点数的关系</figcaption>
+</figure>
+<p>上述计算中将MATLAB中的 <code>integral()</code> 函数积分结果近似看作真值。Simpson公式的积分误差在节点数不非常多的时候，随着节点数的增长而下降，在对数尺度上呈现线性关系；当节点数多到一定程度的时候，积分误差不再随着节点数的增长而下降，而是稳定在一定水平，随节点数变化而略有起伏。</p>
+<h2 id="第四题">第四题</h2>
+<h3 id="题目要求-1">题目要求</h3>
+<p>目标积分式为</p>
+<p><span class="math display">\[
+\int_0^1\frac{x^4(1-x)^4}{1+x^2}dx
+\]</span></p>
+<p>要求分别使用Romberg积分和三点高斯积分进行计算。</p>
+<h3 id="使用romberg积分求解">使用Romberg积分求解</h3>
+<p>由第三题，可以观察到Simpson积分对目标积分式的积分误差极限基本在 <span class="math inline">\(10^{-17}\)</span> 水平，所以差不多可以将Romberg积分的积分误差条件定在 <span class="math inline">\(10^{-15}\)</span>。</p>
+<p>Romberg积分外推加速如下</p>
+<p><span class="math display">\[
+T_n^{(m)} = \frac{T_{2n}^{(m-1)}-2^{-2m}T_n^{(m-1)}}{1-2^{-2m}}
+\]</span></p>
+<p>MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">romberg_integral</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) (x .^ <span class="number">4</span> .* (<span class="number">1</span> - x) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + x .^ <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">% 将积分误差设定为 10^(-15)</span></span><br><span class="line">    <span class="built_in">eps</span> = <span class="number">10</span> ^ (<span class="number">-17</span>);</span><br><span class="line"></span><br><span class="line">    error = <span class="number">1</span>;</span><br><span class="line">    m = <span class="number">0</span>;</span><br><span class="line">    Tn = <span class="number">0.5</span> * (fun(<span class="number">0</span>) + fun(<span class="number">1</span>));</span><br><span class="line">    <span class="keyword">while</span> error &gt; <span class="built_in">eps</span></span><br><span class="line">        m = m + <span class="number">1</span>;</span><br><span class="line">        n = <span class="number">2</span> ^ m;</span><br><span class="line">        h = <span class="number">1</span> / n;</span><br><span class="line">        res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: n<span class="number">-1</span></span><br><span class="line">            res = res + fun(<span class="built_in">i</span> * h);</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        T2n = (res * <span class="number">2</span> + fun(<span class="number">0</span>) + fun(<span class="number">1</span>)) * (h * <span class="number">0.5</span>);</span><br><span class="line">        error = <span class="built_in">abs</span>(T2n - Tn) * <span class="number">3</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">% 利用外推加速技术计算新的Tn</span></span><br><span class="line">        Tn = (T2n - <span class="number">2</span> ^ (<span class="number">-2</span> * m) * Tn) / (<span class="number">1</span> - <span class="number">2</span> ^ (<span class="number">-2</span> * m));</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    fprintf(<span class="string">&quot;m = %d, error = %.20f\n&quot;</span>, m, error);</span><br><span class="line">    fprintf(<span class="string">&quot;Romberg integral result: %.20f\n&quot;</span>, Tn);</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB integral result:  %.20f\n&quot;</span>, integral(fun, <span class="number">0</span>, <span class="number">1</span>));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>计算结果如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">m = 11, error = 0.00000000000000000520</span><br><span class="line">Romberg integral result: 0.00126448926734961590</span><br><span class="line">MATLAB integral result:  0.00126448926734961872</span><br></pre></td></tr></table></figure>
+<h3 id="使用三点高斯公式求解">使用三点高斯公式求解</h3>
+<p>对于目标积分式，宜使用Gauss-Legendre公式进行积分。<span class="math inline">\(n=2\)</span> 时，Gauss-Legendre公式为</p>
+<p><span class="math display">\[
+\int_{-1}^1f(x)dx \approx \frac{5}{9}f(-\sqrt{\frac{3}{5}}) + \frac{8}{9}f(0) + \frac{5}{9}f(\sqrt{\frac{3}{5}})
+\]</span></p>
+<p>注意到原式积分区间为 <span class="math inline">\([0, 1]\)</span>，因此需要进行线性变换。令</p>
+<p><span class="math display">\[
+t = 2x-1
+\]</span></p>
+<p>可以将原函数改写为</p>
+<p><span class="math display">\[
+g(t) = \frac{[\frac{1}{2}(t+1)]^4[1-\frac{1}{2}(t+1)]^4}{1+[\frac{1}{2}(t+1)]^2} = \frac{(1+t)^4(1-t)^4}{256+64(1+t)^2}
+\]</span></p>
+<p>那么积分式改写为</p>
+<p><span class="math display">\[
+\int_0^1\frac{x^4(1-x)^4}{1+x^2}dx=\int_{-1}^1\frac{(1+t)^4(1-t)^4}{512 + 128(1+t)^2}dt
+\]</span></p>
+<p>根据Gauss-Legendre公式，有</p>
+<p><span class="math display">\[
+\int_{-1}^1\frac{(1+t)^4(1-t)^4}{512 + 128(1+t)^2}dt \approx \frac{5}{9}g(-\sqrt{\frac{3}{5}}) + \frac{8}{9}g(0) + \frac{5}{9}g(\sqrt{\frac{3}{5}})
+\]</span></p>
+<p>将高斯点代入，可以得到</p>
+<p><span class="math display">\[
+\int_{-1}^1\frac{(1+t)^4(1-t)^4}{512 + 128(1+t)^2}dt \approx 0.00143186003683241263
+\]</span></p>
+<p>MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gauss_legendre_integral</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) <span class="number">0.5</span> .* (((<span class="number">0.5</span> .* (<span class="number">1</span> + x)) .^ <span class="number">4</span>) .* ((<span class="number">1</span> - <span class="number">0.5</span> .* (<span class="number">1</span> + x)) .^ <span class="number">4</span>)) ./ (<span class="number">1</span> + (<span class="number">0.5</span> * (<span class="number">1</span> + x)) .^ <span class="number">2</span>);</span><br><span class="line">    original_fun = @(x) (x .^ <span class="number">4</span> .* (<span class="number">1</span> - x) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + x .^ <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    res = (<span class="number">5</span> / <span class="number">9</span>) * (fun(-<span class="built_in">sqrt</span>(<span class="number">3</span> / <span class="number">5</span>)) + fun(<span class="built_in">sqrt</span>(<span class="number">3</span> / <span class="number">5</span>))) + (<span class="number">8</span> / <span class="number">9</span>) * fun(<span class="number">0</span>);</span><br><span class="line">    fprintf(<span class="string">&quot;Gauss-Legendre integral result: %.20f\n&quot;</span>, res);</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB integral result: %.20f\n&quot;</span>, integral(original_fun, <span class="number">0</span>, <span class="number">1</span>));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Gauss-Legendre integral result: 0.00143186003683241263</span><br><span class="line">MATLAB integral result: 0.00126448926734961872</span><br></pre></td></tr></table></figure>
+<h2 id="第五题">第五题</h2>
+<h3 id="monte-carlo方法求解">Monte-Carlo方法求解</h3>
+<p>首先，由于目标积分式为三重积分，所以考虑尝试利用Monte-Carlo方法进行求解，MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Ch5_Prob5</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x, y, z) (<span class="built_in">sin</span>(x) .* <span class="built_in">sin</span>(y) .* <span class="built_in">sin</span>(z)) ./ (<span class="number">1</span> + x.^<span class="number">2</span> + y.^<span class="number">2</span> + z.^<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    MATLAB_integral_result = integral3(fun, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB result: %.20f\n&quot;</span>, MATLAB_integral_result);</span><br><span class="line"></span><br><span class="line">    fprintf(<span class="string">&quot;Monte-Carlo result\n&quot;</span>)</span><br><span class="line">    N = [<span class="number">10</span> <span class="number">10</span>^<span class="number">2</span> <span class="number">10</span>^<span class="number">3</span> <span class="number">10</span>^<span class="number">4</span> <span class="number">10</span>^<span class="number">5</span> <span class="number">10</span>^<span class="number">6</span> <span class="number">10</span>^<span class="number">7</span> <span class="number">10</span>^<span class="number">8</span>];</span><br><span class="line">    monte_carlo_error = <span class="built_in">zeros</span>(<span class="built_in">length</span>(N), <span class="number">1</span>);</span><br><span class="line">    monte_carlo_relative_error = <span class="built_in">zeros</span>(<span class="built_in">length</span>(N), <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: <span class="built_in">length</span>(N)</span><br><span class="line">        tic;</span><br><span class="line">        res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span>: N(<span class="built_in">i</span>)</span><br><span class="line">            res = res + fun(<span class="built_in">rand</span>(), <span class="built_in">rand</span>(), <span class="built_in">rand</span>());</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        res = res / N(<span class="built_in">i</span>);</span><br><span class="line">        error = <span class="built_in">abs</span>(res - MATLAB_integral_result);</span><br><span class="line">        relative_error = error / MATLAB_integral_result;</span><br><span class="line">        fprintf(<span class="string">&quot;N: 10^%d, result: %.20f, error: %.20f, relative error: %.4f%%\n&quot;</span>, <span class="built_in">log10</span>(N(<span class="built_in">i</span>)), res, error, relative_error * <span class="number">100</span>);</span><br><span class="line">        monte_carlo_error(<span class="built_in">i</span>) = error;</span><br><span class="line">        monte_carlo_relative_error(<span class="built_in">i</span>) = relative_error;</span><br><span class="line">        toc;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">figure</span>();</span><br><span class="line">    loglog(N, monte_carlo_error);</span><br><span class="line">    title(<span class="string">&quot;Monte-Carlo算法积分误差与节点规模之间的关系&quot;</span>);</span><br><span class="line">    xlabel(<span class="string">&quot;N&quot;</span>);</span><br><span class="line">    ylabel(<span class="string">&quot;积分误差&quot;</span>);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>输出结果如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MATLAB result: 0.04136669609096685352</span><br><span class="line">Monte-Carlo result</span><br><span class="line">N: 10^1, result: 0.03467372868187562629, error: 0.00669296740909122723, relative error: 16.1796%</span><br><span class="line">Elapsed time is 0.001335 seconds.</span><br><span class="line">N: 10^2, result: 0.05036971185335869378, error: 0.00900301576239184026, relative error: 21.7639%</span><br><span class="line">Elapsed time is 0.000289 seconds.</span><br><span class="line">N: 10^3, result: 0.04185950979840031422, error: 0.00049281370743346070, relative error: 1.1913%</span><br><span class="line">Elapsed time is 0.000692 seconds.</span><br><span class="line">N: 10^4, result: 0.04124614901521712895, error: 0.00012054707574972456, relative error: 0.2914%</span><br><span class="line">Elapsed time is 0.003250 seconds.</span><br><span class="line">N: 10^5, result: 0.04129323625366838890, error: 0.00007345983729846461, relative error: 0.1776%</span><br><span class="line">Elapsed time is 0.020172 seconds.</span><br><span class="line">N: 10^6, result: 0.04134011764463717958, error: 0.00002657844632967393, relative error: 0.0643%</span><br><span class="line">Elapsed time is 0.127226 seconds.</span><br><span class="line">N: 10^7, result: 0.04136027708887315274, error: 0.00000641900209370078, relative error: 0.0155%</span><br><span class="line">Elapsed time is 1.323732 seconds.</span><br><span class="line">N: 10^8, result: 0.04136824943853992242, error: 0.00000155334757306891, relative error: 0.0038%</span><br><span class="line">Elapsed time is 13.240245 seconds.</span><br></pre></td></tr></table></figure>
+<p>积分误差与节点数量的关系如图所示，每次运算的误差略有不同，但总体趋势一致。</p>
+<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//Ch5_Prob5.png" alt="积分误差与节点规模之间的关系" align="center" width="80%"></p>
+<p>输出结果中展示了Monte-Carlo方法在节点规模不同时所消耗的时间（计算平台：Intel i7-9750H，MATLAB默认使用单核心进行计算）。</p>
+<h3 id="复合simpson公式求解">复合Simpson公式求解</h3>
+<p>下面尝试使用复合Simpson公式进行求解。MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">simpson</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x, y, z) (<span class="built_in">sin</span>(x) .* <span class="built_in">sin</span>(y) .* <span class="built_in">sin</span>(z)) ./ (<span class="number">1</span> + x.^<span class="number">2</span> + y.^<span class="number">2</span> + z.^<span class="number">2</span>);</span><br><span class="line">    tic;</span><br><span class="line">    MATLAB_integral_result = integral3(fun, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    toc;</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB result: %.20f\n&quot;</span>, MATLAB_integral_result);</span><br><span class="line"></span><br><span class="line">    n = [<span class="number">10</span> <span class="number">10</span>^<span class="number">2</span> <span class="number">10</span>^<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">for</span> cnt = <span class="number">1</span>: <span class="built_in">length</span>(n)</span><br><span class="line">        tic;</span><br><span class="line">        res = <span class="number">0</span>;</span><br><span class="line">        h = <span class="number">1</span> / n(cnt);</span><br><span class="line">        x = <span class="number">0</span>: h: <span class="number">1</span>;</span><br><span class="line">        y = <span class="number">0</span>: h: <span class="number">1</span>;</span><br><span class="line">        z = <span class="number">0</span>: h: <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: n(cnt)<span class="number">-1</span></span><br><span class="line">            <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span>: n(cnt)<span class="number">-1</span></span><br><span class="line">                <span class="keyword">for</span> k = <span class="number">1</span>: n(cnt)<span class="number">-1</span></span><br><span class="line">                    vec_x = [x(<span class="built_in">i</span>) x(<span class="built_in">i</span>)+<span class="number">0.5</span>*h x(<span class="built_in">i</span>+<span class="number">1</span>)];</span><br><span class="line">                    vec_y = [y(<span class="built_in">j</span>) y(<span class="built_in">j</span>)+<span class="number">0.5</span>*h y(<span class="built_in">j</span>+<span class="number">1</span>)];</span><br><span class="line">                    vec_z = [z(k) z(k)+<span class="number">0.5</span>*h z(k+<span class="number">1</span>)];</span><br><span class="line">                    weight = [<span class="number">1</span> <span class="number">4</span> <span class="number">1</span>];</span><br><span class="line">                    local_sum = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span> idx_x = <span class="number">1</span>: <span class="number">3</span></span><br><span class="line">                        <span class="keyword">for</span> idx_y = <span class="number">1</span>: <span class="number">3</span></span><br><span class="line">                            <span class="keyword">for</span> idx_z = <span class="number">1</span>: <span class="number">3</span></span><br><span class="line">                                local_weight = weight(idx_x) * weight(idx_y) * weight(idx_z);</span><br><span class="line">                                local_sum = local_sum + local_weight * fun(vec_x(idx_x), vec_y(idx_y), vec_z(idx_z));</span><br><span class="line">                            <span class="keyword">end</span></span><br><span class="line">                        <span class="keyword">end</span></span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    res = res + local_sum / <span class="number">6</span>^<span class="number">3</span>;</span><br><span class="line">                <span class="keyword">end</span></span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        res = res / (n(cnt)^<span class="number">3</span>);</span><br><span class="line">        error = <span class="built_in">abs</span>(res - MATLAB_integral_result);</span><br><span class="line">        relative_error = error / MATLAB_integral_result;</span><br><span class="line">        fprintf(<span class="string">&quot;n: %d, Mid result: %.20f, error: %.20f, relative error: %.4f%%\n&quot;</span>, n(cnt), res, error, relative_error * <span class="number">100</span>);</span><br><span class="line">        toc;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>上面对三重积分的复合Simpson公式进行了拙劣的实现，发现计算效率极低，输出结果如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Elapsed time is 0.015971 seconds.</span><br><span class="line">MATLAB result: 0.04136669609096685352</span><br><span class="line">n: 10, Mid result: 0.02570352453510416774, error: 0.01566317155586268578, relative error: 37.8642%</span><br><span class="line">Elapsed time is 0.008422 seconds.</span><br><span class="line">n: 100, Mid result: 0.03956360837727929125, error: 0.00180308771368756227, relative error: 4.3588%</span><br><span class="line">Elapsed time is 2.130584 seconds.</span><br><span class="line">n: 1000, Mid result: 0.04118390812835896059, error: 0.00018278796260789293, relative error: 0.4419%</span><br><span class="line">Elapsed time is 2168.109162 seconds.</span><br></pre></td></tr></table></figure>
+<p>相较而言，使用Monte-Carlo方法进行数值求解似乎要高效很多。</p>
+<h3 id="gauss-legendre方法求解">Gauss-Legendre方法求解</h3>
+<p>出于好奇，下面尝试使用6点Gauss-Legendre公式进行目标积分式的求解。MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gauss_legendre</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x, y, z) <span class="number">0.125</span> * (<span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+x) .* <span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+y)) .* <span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+z)))) ./ (<span class="number">1</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+x)).^<span class="number">2</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+y)).^<span class="number">2</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+z)).^<span class="number">2</span>);</span><br><span class="line">    tic;</span><br><span class="line">    MATLAB_integral_result = integral3(fun, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    toc;</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB result: %.20f\n&quot;</span>, MATLAB_integral_result);</span><br><span class="line"></span><br><span class="line">    gauss_point = [<span class="number">-0.93246951</span> <span class="number">0.93246951</span> <span class="number">-0.66120939</span> <span class="number">0.66120939</span> <span class="number">-0.23861919</span> <span class="number">0.23861919</span>];</span><br><span class="line">    gauss_coeff = [<span class="number">0.17132439</span> <span class="number">0.17132439</span> <span class="number">0.36076157</span> <span class="number">0.36076157</span> <span class="number">0.46791393</span> <span class="number">0.46791393</span>];</span><br><span class="line"></span><br><span class="line">    tic;</span><br><span class="line">    res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">            <span class="keyword">for</span> k = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">                coeff = gauss_coeff(<span class="built_in">i</span>) * gauss_coeff(<span class="built_in">j</span>) * gauss_coeff(k);</span><br><span class="line">                res = res + coeff * fun(gauss_point(<span class="built_in">i</span>), gauss_point(<span class="built_in">j</span>), gauss_point(k));</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    toc;</span><br><span class="line">    error = <span class="built_in">abs</span>(res - MATLAB_integral_result);</span><br><span class="line">    relative_error = error / MATLAB_integral_result;</span><br><span class="line">    fprintf(<span class="string">&quot;6-point Gauss-Legendre result: %.20f, error: %.20f, relative error: %.4f%%\n&quot;</span>, res, error, relative_error);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>输出数据如下</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Elapsed time is 0.019378 seconds.</span><br><span class="line">MATLAB result: 0.01484292560031314802</span><br><span class="line">Elapsed time is 0.002133 seconds.</span><br><span class="line">6-point Gauss-Legendre result: 0.04425284863858611195, error: 0.02940992303827296567, relative error: 1.9814%</span><br></pre></td></tr></table></figure>
+<p>可以看到，Gauss-Legendre公式的计算效率极高，在6点的情况下已经达到了2%的计算精度。这个结果让我想再探索一下更高点数Gauss-Legendre公式对目标积分式的计算精度。</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gauss_legendre</span><span class="params">(n)</span></span></span><br><span class="line">    fun = @(x, y, z) <span class="number">0.125</span> * (<span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+x) .* <span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+y)) .* <span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+z)))) ./ (<span class="number">1</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+x)).^<span class="number">2</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+y)).^<span class="number">2</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+z)).^<span class="number">2</span>);</span><br><span class="line">    tic;</span><br><span class="line">    MATLAB_integral_result = integral3(fun, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    toc;</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB result: %.20f\n&quot;</span>, MATLAB_integral_result);</span><br><span class="line"></span><br><span class="line">    [gauss_point, gauss_coeff] = gauss_lege(n);</span><br><span class="line"></span><br><span class="line">    tic;</span><br><span class="line">    res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">            <span class="keyword">for</span> k = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">                coeff = gauss_coeff(<span class="built_in">i</span>) * gauss_coeff(<span class="built_in">j</span>) * gauss_coeff(k);</span><br><span class="line">                res = res + coeff * fun(gauss_point(<span class="built_in">i</span>), gauss_point(<span class="built_in">j</span>), gauss_point(k));</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    toc;</span><br><span class="line">    error = <span class="built_in">abs</span>(res - MATLAB_integral_result);</span><br><span class="line">    relative_error = error / MATLAB_integral_result;</span><br><span class="line">    fprintf(<span class="string">&quot;%d-point Gauss-Legendre result: %.20f, error: %.20f, relative error: %.4f%%\n&quot;</span>, n, res, error, relative_error);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>上述代码中，<code>gauss_lege()</code> 是可以生成任意点数的Gauss-Legendre高斯点以及高斯系数的函数。输入 <code>gauss_legendre(100)</code> 发现</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Elapsed time is 0.016078 seconds.</span><br><span class="line">MATLAB result: 0.01484292560031314802</span><br><span class="line">Elapsed time is 0.081467 seconds.</span><br><span class="line">100-point Gauss-Legendre result: 0.04425285995567417030, error: 0.02940993435536102402, relative error: 1.9814%</span><br></pre></td></tr></table></figure>
+<p>相比于6点Gauss-Legendre公式，计算精度没有任何变化。</p>
+<h3 id="结论">结论</h3>
+<p>综上，Monte-Carlo是计算精度最高的数值积分方法。</p>
+<h2 id="第六题">第六题</h2>
+<p>首先需要说明一点，对于一条左右端点位于同一高度的悬链线，若令y轴经过悬链线最低点，那么可以将悬链线表示为</p>
+<p><span class="math display">\[
+y = acosh\frac{x}{a}
+\]</span></p>
+<p>上面的表达式是悬链线的标准形式。另外，上述标准悬链线从最低点开始，到第一象限任意一点 <span class="math inline">\((x, y)\)</span> 之间的悬链线长度可以通过下式得到</p>
+<p><span class="math display">\[
+s = asinh\frac{x}{a}
+\]</span></p>
+<p>若 <span class="math inline">\(x&lt;0\)</span>，则上述公式需要取负。</p>
+<p>对于一条两端点不等高的悬链线，在仍然令y轴经过悬链线最低点建立坐标系的前提下，记两端点之间的水平距离为 <span class="math inline">\(H\)</span>，垂直距离为 <span class="math inline">\(h\)</span>，两点之间悬链线长度为 <span class="math inline">\(s\)</span>，左右两端点坐标分别为 <span class="math inline">\((x_1, y_1), (x_2, y_2)\)</span>，可以得到以下关系</p>
+<p><span class="math display">\[
+\begin{aligned}
+    v = acosh\frac{x_2}{a} - acosh\frac{x_1}{a}\\
+    s = asinh\frac{x_2}{a} - asinh\frac{x_1}{a}
+\end{aligned}
+\]</span></p>
+<p>上述两条式子求平方差恰好可以得到</p>
+<p><span class="math display">\[
+s^2 - v^2 = 4a^2sinh^2\frac{x_2 - x_1}{2a}
+\]</span></p>
+<p>那么可以得到</p>
+<p><span class="math display">\[
+\sqrt{s^2 - v^2} = 2asinh\frac{H}{2a}
+\]</span></p>
+<p>等式两边同除以 <span class="math inline">\(H\)</span>，可以得到</p>
+<p><span class="math display">\[
+\frac{\sqrt{s^2 - v^2}}{H} = \frac{2a}{H}sinh\frac{H}{2a}
+\]</span></p>
+<p>令 <span class="math inline">\(x=\frac{H}{2a}\)</span>，可以得到</p>
+<p><span class="math display">\[
+\frac{\sqrt{s^2 - v^2}}{H} = \frac{sinhx}{x}
+\]</span></p>
+<p>将题设参数代入，可以得到</p>
+<p><span class="math display">\[
+\frac{sinhx}{x} = \frac{\sqrt{100-16}}{4} = \frac{\sqrt{21}}{2}
+\]</span></p>
+<p>简单计算可以发现 <span class="math inline">\(\displaystyle\frac{sinh3}{3} \approx 3.3393, \displaystyle\frac{sinh2}{2} \approx 1.8134, \frac{\sqrt{21}}{2} \approx 2.2913\)</span>，那么在 <span class="math inline">\([2, 3]\)</span> 之间通过二分法可以查找得到上述方程的近似解。MATLAB代码如下，绝对误差设定为 <span class="math inline">\(10^{-15}\)</span></p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">find_a</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) <span class="built_in">sinh</span>(x) ./ x;</span><br><span class="line"></span><br><span class="line">    target = <span class="built_in">sqrt</span>(<span class="number">10</span>^<span class="number">2</span> - <span class="number">4</span>^<span class="number">2</span>) / <span class="number">4</span>;</span><br><span class="line">    <span class="built_in">eps</span> = <span class="number">10</span>^(<span class="number">-15</span>);</span><br><span class="line"></span><br><span class="line">    x1 = <span class="number">2</span>;</span><br><span class="line">    x2 = <span class="number">3</span>;</span><br><span class="line">    error = <span class="built_in">abs</span>(fun(x1) - target);</span><br><span class="line">    <span class="keyword">while</span> error &gt; <span class="built_in">eps</span></span><br><span class="line">        mid_x = <span class="number">0.5</span> * (x1 + x2);</span><br><span class="line">        <span class="keyword">if</span> fun(mid_x) &gt; target</span><br><span class="line">            x2 = mid_x;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            x1 = mid_x;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        error = <span class="built_in">abs</span>(fun(mid_x) - target);</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    fprintf(<span class="string">&quot;Solution: %.16f, error: %.16f\n&quot;</span>, mid_x, error);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>可以得到结果为</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Solution: 2.4099791561716124, error: 0.0000000000000009</span><br></pre></td></tr></table></figure>
+<p>所以可以得到 <span class="math inline">\(x = 2.409979156171612\)</span>，那么可以得到</p>
+<p><span class="math display">\[
+a = \frac{H}{2x} = 0.8298826962375527
+\]</span></p>
+<p>通过上述方法，得到了悬链线方程的特征参数 <span class="math inline">\(a\)</span>，但是上述坐标系y轴经过悬链线的最低点，与题设坐标系之间存在平移关系。为了求出 <span class="math inline">\((x^*, y^*)\)</span>，将悬链线方程改写为</p>
+<p><span class="math display">\[
+y = acosh\frac{x - x^*}{a} + y^*
+\]</span></p>
+<p>将 <span class="math inline">\((x_1, y_1), (x_2, y_2)\)</span> 代入上述方程，可以得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+    y_1 = acosh\frac{x_1 - x^*}{a} + y^*\\
+    y_2 = acosh\frac{x_2 - x^*}{a} + y^*
+\end{aligned}
+\]</span></p>
+<p>两式相减，可以得到</p>
+<p><span class="math display">\[
+\frac{y_2 - y_1}{a} = cosh\frac{x_2 - x^*}{a}-cosh\frac{x_1 - x^*}{a}
+\]</span></p>
+<p>由于 <span class="math inline">\(x_2 - x_1 = H\)</span>，所以可以将 <span class="math inline">\(x_2\)</span> 用 <span class="math inline">\(x_1 + H\)</span> 替代，得到</p>
+<p><span class="math display">\[
+\frac{v}{a} = cosh\frac{x_1 + H - x^*}{a} - cosh\frac{x_1 - x^*}{a}
+\]</span></p>
+<p>令</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;d = \frac{v}{a}\\
+    &amp;t = \frac{x_1-x^*}{a}\\
+    &amp;c = \frac{H}{a}
+\end{aligned}
+\]</span></p>
+<p>上述公式可以改写为</p>
+<p><span class="math display">\[
+d = cosh(t+c) - cosh(t)
+\]</span></p>
+<p>由于 <span class="math inline">\(coshx = \frac{1}{2}(e^x + e^{-x})\)</span>，所以上述等式可以进一步化为</p>
+<p><span class="math display">\[
+2d = e^{t+c} + e^{-t-c} - e^t - e^{-t}
+\]</span></p>
+<p>令 <span class="math inline">\(\tau = e^t\)</span>，有</p>
+<p><span class="math display">\[
+2d = e^c\tau +e^{-c}\tau^{-1} - \tau - \tau^{-1}
+\]</span></p>
+<p>等式两边同乘以 <span class="math inline">\(\tau\)</span>，可以得到</p>
+<p><span class="math display">\[
+2d\tau = (e^c -1)\tau^2+(e^{-c}-1)
+\]</span></p>
+<p>移项得到</p>
+<p><span class="math display">\[
+(e^c - 1)\tau^2 - 2d\tau + (e^{-c}-1)=0
+\]</span></p>
+<p>由一元二次方程的求根公式，可以得到</p>
+<p><span class="math display">\[
+\tau = \frac{-b\pm\sqrt{b^2 -4ac}}{2a}=\frac{d\pm\sqrt{d^2-(e^c-1)(e^{-c}-1)}}{e^c -1}
+\]</span></p>
+<p>由于 <span class="math inline">\(\tau = e^t\)</span>，所以</p>
+<p><span class="math display">\[
+t = ln\frac{d\pm\sqrt{d^2 - (e^c - 1)(e^{-c}-1)}}{e^c -1}
+\]</span></p>
+<p>由于 <span class="math inline">\(t = \frac{x_1 - x^*}{a}\)</span>，所以</p>
+<p><span class="math display">\[
+x^* = x_1 - at = x_1 - aln\frac{d\pm\sqrt{d^2 - (e^c - 1)(e^{-c}-1)}}{e^c -1}
+\]</span></p>
+<p>代入本题中的参数，可以解得</p>
+<p><span class="math display">\[
+x^* = 1.648421083552779
+\]</span></p>
+<p>根据</p>
+<p><span class="math display">\[
+y^* = y_1 - acosh\frac{x_1 - x^*}{a}
+\]</span></p>
+<p>很容易能求出</p>
+<p><span class="math display">\[
+y^* = -3.081327311778100
+\]</span></p>
+<p>所以题设悬链线最低点坐标为 <span class="math inline">\((x^*, y^*) = (1.648421083552779, -3.081327311778100)\)</span>。可以绘制得到悬链线图形如下</p>
+<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//catenary_initial.png" alt="题设初始悬链线" align="center" width="80%"></p>
+<p>此时，x轴以下的悬链线长度很显然是左端点 <span class="math inline">\((x_1, y_1)\)</span> 与最低点 <span class="math inline">\((x^*, y^*)\)</span> 之间悬链线长度的两倍，可以由下式得到</p>
+<p><span class="math display">\[
+s = 2asinh\frac{x^* - x_1}{a} = 5.934938150577525
+\]</span></p>
+<p>如果将悬链线最低点 <span class="math inline">\((x^*, y^*)\)</span> 固定到 <span class="math inline">\((x^*, x^*)\)</span> 上，那么将会形成两段悬链线。左侧悬链线的长度为</p>
+<p><span class="math display">\[
+s_l = asinh\frac{x^* - x_1}{a} = 2.967469075288763
+\]</span></p>
+<p>右侧悬链线的长度则为</p>
+<p><span class="math display">\[
+s_r = s - s_l = 7.032530924711237
+\]</span></p>
+<p>另外，左侧悬链线的其他两个几何参数分别为</p>
+<p><span class="math display">\[
+\begin{aligned}
+    H_l = x^* - x_1 = 1.648421083552779\\
+    v_l = x^* - y_1 = 1.648421083552779
+\end{aligned}
+\]</span></p>
+<p>右侧悬链线的其他两个几何参数分别为</p>
+<p><span class="math display">\[
+\begin{aligned}
+    H_r = x_2 - x^* = 2.351578916447221\\
+    v_r = y_2 - x^* = 2.351578916447221
+\end{aligned}
+\]</span></p>
+<p>下面先求解左侧悬链线的参数 <span class="math inline">\(a_l\)</span>，由</p>
+<p><span class="math display">\[
+\frac{\sqrt{s_l^2 - v_l^2}}{H_l} = \frac{sinh\frac{H_l}{2a_l}}{\frac{H_l}{2a_l}}
+\]</span></p>
+<p>使用同样的二分数值求解方法，在区间 <span class="math inline">\([1, 2]\)</span> 内进行解的搜索，可以得到</p>
+<p><span class="math display">\[
+\frac{H_l}{2a_l} = 1.617660172926119
+\]</span></p>
+<p>那么</p>
+<p><span class="math display">\[
+a_l = 0.509507840750946
+\]</span></p>
+<p>同理，可以得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;\frac{H_r}{2a_r} = 2.742262212210288\\
+    &amp;a_r = 0.428766240145910
+\end{aligned}
+\]</span></p>
+<p>同样，为了解出这两条悬链线在题设坐标系中的表达式，由</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;d_l = \frac{v_l}{a_l}\\
+    &amp;t_l = \frac{x_1-x^*_l}{a_l}\\
+    &amp;c_l = \frac{H_l}{a_l}\\
+    &amp;x^*_l = x_1 - a_lt_l = x_1 - a_lln\frac{d_l\pm\sqrt{d_l^2 - (e^{c_l} - 1)(e^{-c_l}-1)}}{e^{c_l} -1}
+\end{aligned}
+\]</span></p>
+<p>可以解出</p>
+<p><span class="math display">\[
+x^*_l = 0.505107188587596
+\]</span></p>
+<p>根据</p>
+<p><span class="math display">\[
+y^*_l = y_1 - a_lcosh\frac{x_1 - x^*_l}{a_l} = -0.78106929181407
+\]</span></p>
+<p>对于左侧的悬链线，y轴以下的长度可以通过 <span class="math inline">\((x_1, y_1)\)</span> 到 <span class="math inline">\((x_l^*, y^*_l)\)</span> 之间的悬链线2倍长度得到</p>
+<p><span class="math display">\[
+s_{tl} = 2a_lsinh\frac{x^*_l - x_1}{a_l} = 1.184011822285978
+\]</span></p>
+<p>下面解出右侧悬链线在题设坐标系下的方程</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;d_r = \frac{v_r}{a_r}\\
+    &amp;t_r = \frac{x^*-x^*_r}{a_r}\\
+    &amp;c_r = \frac{H_r}{a_r}\\
+    &amp;x^*_r = x^* - a_rt_r = x^* - a_rln\frac{d_r\pm\sqrt{d_r^2 - (e^{c_r} - 1)(e^{-c_r}-1)}}{e^{c_r} -1}
+\end{aligned}
+\]</span></p>
+<p>可以解出</p>
+<p><span class="math display">\[
+x_r^* = 2.675103585900648
+\]</span></p>
+<p>另外也很容易解出</p>
+<p><span class="math display">\[
+y^*_r = x^* - a_rcosh\frac{x^* - x^*_r}{a_r} = -0.721365152257195
+\]</span></p>
+<p>可以绘制图像如下</p>
+<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//catenary_after.png" alt="将原悬链线最低点固定后的悬链线图形" width="80%" align="center"></p>
+<p>接下来，需要解出右侧悬链线与x轴相交点的横坐标。记</p>
+<p><span class="math display">\[
+f(x) = a_r cosh\frac{x - x^*_r}{a_r} + y^*_r
+\]</span></p>
+<p>那么实际上题目可以转换为求以下方程的解</p>
+<p><span class="math display">\[
+f(x) = 0
+\]</span></p>
+<p>由于悬链线具有对称性，因此只需要求出悬链线与x轴交点中的一个，就可以解出x轴以下部分的长度。同样，可以通过二分法进行数值求解，得到</p>
+<p><span class="math display">\[
+x_{sol} = 2.199026644146695
+\]</span></p>
+<p>那么，右侧悬链线x轴以下的长度可以表示为</p>
+<p><span class="math display">\[
+s_{tr} = 2a_rsinh\frac{x^*_r - x_{sol}}{a_r} = 1.160219279622929
+\]</span></p>
+<p>所以经过调整后的悬链线位于x轴以下的总长度为</p>
+<p><span class="math display">\[
+s_t = s_{tl} + s_{tr} = 1.184011822285978 + 1.160219279622929 = 2.344231101908907
+\]</span></p>
+<p>变化量为</p>
+<p><span class="math display">\[
+\Delta s = s - s_t = 5.934938150577525 - 2.344231101908907 = 3.590707048668619
+\]</span></p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数值分析笔记-数值积分</title>
     <url>/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86/</url>
     <content><![CDATA[<h2 id="数值积分引入">数值积分引入</h2>
@@ -2126,6 +2380,86 @@ x_i = cos\frac{2i+1}{2(n+1)}\pi, i = 0, 1, ..., n
 </figure>
 <h4 id="高斯公式使用注意事项">高斯公式使用注意事项</h4>
 <p>应用高斯公式时，首先要观察权函数 <span class="math inline">\(\rho(x)\)</span>，其次要观察积分区间。一般来说，根据权函数就可以确定一个积分问题需要用什么积分公式，积分区间和权函数往往是挂钩的。</p>
+<h2 id="多重数值积分">多重数值积分</h2>
+<p>对于重积分来说，前面提到的数值积分方法可以解决一些比较简单的重积分问题，比如使用复合Simpson求积可以解决重数比较低的多重数值积分问题。下面以二重积分为例，简单地说明一下多重数值积分问题。</p>
+<h3 id="以二重积分为例描述多重数值积分问题">以二重积分为例描述多重数值积分问题</h3>
+<p>对于一个二重积分问题，可以将目标积分式写为</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y) dxdy
+\]</span></p>
+<p>其中，<span class="math inline">\(\Omega\)</span> 表示二维积分区间，可以表示为</p>
+<p><span class="math display">\[
+\Omega = \{a \leq x \leq b, \varphi_1(x) \leq y \leq \varphi_2(x)\}
+\]</span></p>
+<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//二重积分求积区域.png" alt="二重积分求积区域" width="40%" align="center"></p>
+<p>上面的二重积分可以拆解为对 <span class="math inline">\(x\)</span> 和对 <span class="math inline">\(y\)</span> 的两个积分</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y) dxdy = \int_a^b dx \int_{\varphi_1(x)}^{\varphi_2(x)}f(x, y)dy
+\]</span></p>
+<p>令 <span class="math inline">\(F(x) = \displaystyle\int_{\varphi_1(x)}^{\varphi_2(x)}f(x, y)dy\)</span>，有</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y)dxdy = \int_a^bF(x) dx
+\]</span></p>
+<p>由数值积分公式，可以得到</p>
+<p><span class="math display">\[
+\int_a^bF(x)dx \approx \sum_{i=0}^n \omega_i^{(1)} F(x_i)
+\]</span></p>
+<p><span class="math inline">\(F(x_i)\)</span> 应也能写成</p>
+<p><span class="math display">\[
+F(x_i) = \int_{\varphi_1(x_i)}^{\varphi_2(x_i)}f(x_i, y)dy \approx \sum_{j=0}^m\omega_j^{(2)}f(x_i, y_j)
+\]</span></p>
+<p>整合上述两条式子，可以得到双重积分的数值积分公式</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y)dxdy \approx \sum_{i=0}^n \omega_i^{(1)} \sum_{j=0}^m \omega_j^{(2)} f(x_i, y_j)
+\]</span></p>
+<p>记 <span class="math inline">\(\omega_{ij}=\omega_i^{(1)} \omega_j^{(2)}\)</span>，可以有</p>
+<p><span class="math display">\[
+\iint_{\Omega}f(x, y)dxdy\approx \sum_{i=0}^n \sum_{j=0}^m \omega_{ij}f(x_i, y_j)
+\]</span></p>
+<p>所以双重积分的数值积分本质上就是一个双重求积问题。我们可以使用Newton-Cotes公式对这个求积问题进行求解，但事实上使用Newton-Cotes方式进行重积分的数值求解精度不高。教材中展示了使用复合Simpson公式进行二重积分求积的案例，其过程非常复杂，也不实用，因此在笔记中略去。下面直接介绍对于多重积分数值求解来说比较实用的Monte-Carlo方法。</p>
+<h3 id="使用monte-carlo方法求解多重积分">使用Monte-Carlo方法求解多重积分</h3>
+<p>Monte-Carlo方法是一种随机模拟思想，并不是一种具体的方法实现。下面以Monte-Carlo方法在一维数值积分中的应用为例，来简单地描述一下Monte-Carlo方法如何应用于数值积分。</p>
+<h4 id="monte-carlo方法求解一维数值积分">Monte-Carlo方法求解一维数值积分</h4>
+<p>假定随机变量 <span class="math inline">\(X\)</span> 在区间 <span class="math inline">\([0, 1]\)</span> 上服从均匀分布（均匀分布即概率密度函数 <span class="math inline">\(f(x) = \frac{1}{b-a}\)</span>，其中 <span class="math inline">\(b-a\)</span> 为区间长度），函数 <span class="math inline">\(f(x)\)</span> 为任意可积函数，那么 <span class="math inline">\(f(X)\)</span> 的数学期望为</p>
+<p><span class="math display">\[
+E[f(X)] = \int_0^1 f(x) dx
+\]</span></p>
+<blockquote>
+<p>回顾一下统计学的知识：数学期望指的是随机变量所有可能的取值与其出现概率之积求和。</p>
+</blockquote>
+<p>也就是说，服从均匀分布的随机变量 <span class="math inline">\(X\)</span> 对应函数值的数学期望 <span class="math inline">\(E[f(X)]\)</span> 恰好是函数 <span class="math inline">\(f(x)\)</span> 在对应区间上的积分值。那么如果有办法求出随机变量对应函数值的数学期望 <span class="math inline">\(E[f(X)]\)</span>，那么就可以得到函数 <span class="math inline">\(f(x)\)</span> 的区间上的积分，而不是直接做数值积分运算。</p>
+<p>假如在区间 <span class="math inline">\([0, 1]\)</span> 上共有 <span class="math inline">\(N\)</span> 个相互独立的、服从均匀分布的随机变量 <span class="math inline">\(X_i\)</span>，记</p>
+<p><span class="math display">\[
+I_N[f] = \frac{1}{N}\sum_{i=1}^N f(X_i)
+\]</span></p>
+<p>显然，<span class="math inline">\(I_N[f]\)</span> 也是一个随机变量，这个随机变量的数学期望 <span class="math inline">\(E[I_N[f]]\)</span> 在形式上恰好与区间上的数值积分公式类似</p>
+<p><span class="math display">\[
+E[I_N[f]] = E[\frac{1}{N}\sum_{i=1}^N f(X_i)] = \frac{1}{N}\sum_{i=1}^NE[f(X_i)]=\frac{1}{N}\sum_{i=1}^N\int_0^1f(x)dx = I[f]
+\]</span></p>
+<p>从这个角度来说，可以把 <span class="math inline">\(I_N[f]\)</span> 视为 <span class="math inline">\(I[f]\)</span> 的无偏估计。由大数定律，知 <span class="math inline">\(N \rightarrow \infty\)</span> 时，<span class="math inline">\(I_N[f] \rightarrow I[f]\)</span>。</p>
+<p>说白了，Monte-Carlo方法就是在区间内随机取点求函数值，然后加起来求平均。</p>
+<h4 id="monte-carlo方法的一维数值积分误差">Monte-Carlo方法的一维数值积分误差</h4>
+<p>积分误差 <span class="math inline">\(R_N[f]\)</span> 可以表示为</p>
+<p><span class="math display">\[
+R_N[f] = I_N[f] - I[f]
+\]</span></p>
+<p>由于 <span class="math inline">\(I_N[f]\)</span> 是一个随机变量，因此 <span class="math inline">\(R_N[f]\)</span> 也是一个随机变量。为此需要使用 <span class="math inline">\(R_N[f]\)</span> 的方差衡量Monte-Carlo方法的一维数值积分误差。</p>
+<p><span class="math display">\[
+var(R_N[f])= E\{[I_N[f] - I[f]]^2\} = \frac{1}{N^2}E\{\sum_{i=1}^N(f(X_i) - I[f])\sum_{j=1}^N(f(X_j) - I[f])\}
+\]</span></p>
+<p>当 <span class="math inline">\(i\neq j\)</span> 时，由于 <span class="math inline">\(X_i, X_j\)</span> 是相互独立的随机变量，因此</p>
+<p><span class="math display">\[
+E\{[f(X_i) - I[f]][f(X_j) - I[f]]\} = E[f(X_i) - I[f]]E[f(X_j) - I[f]] = 0
+\]</span></p>
+<p>那么，只有在 <span class="math inline">\(i=j\)</span> 的情况下，数学期望是非零的，所以上面的数学期望可以简化为</p>
+<p><span class="math display">\[
+var(R_N[f]) = \frac{1}{N^2} E\{\sum_{i=1}^N[f(X_i)-I[f]]^2\}
+\]</span></p>
+<p>而 <span class="math inline">\(\displaystyle\frac{1}{N}E\{\sum_{i=1}^N[f(X_i) - I[f]]^2\}\)</span> 实际上就是 <span class="math inline">\(var(f)\)</span>，即 <span class="math inline">\(f(X)\)</span> 的方差。这个值在随机变量的分布和函数结构确定以后，便是一个常数。工程上来说，这个方差可以通过抽样的方法进行估计，例如区间上随机取 <span class="math inline">\(N\)</span> 个点求函数值，取其均值作为数学期望的估计，然后用这些函数值和估计期望求出估计的方差。</p>
+<p>总之Monte-Carlo方法求一维数值积分的误差 <span class="math inline">\(var(R_N[f]) = \displaystyle\frac{1}{N}var(f)\)</span> 是与 <span class="math inline">\(N\)</span> 成反比例关系的。事实上，只要 <span class="math inline">\(f(x)\)</span> 是平方可积函数，<span class="math inline">\(var(f)\)</span> 就必然是有限值，那么Monte-Carlo方法求数值积分一定是稳定的，并且精度随着 <span class="math inline">\(N\)</span> 的增大而提高。</p>
+<h4 id="monte-carlo方法的多重数值积分误差">Monte-Carlo方法的多重数值积分误差</h4>
+<p>Monte-Carlo方法求多重数值积分的误差仍然是 <span class="math inline">\(\displaystyle\frac{1}{N}var(f)\)</span>，与维度无关。这个特性太屌了，所以工程上求多重数值积分基本上都是用Monte-Carlo方法进行求解的。</p>
+<p>当然，计算机并不能生成真正的随机数，只能生成伪随机数，所以在实际计算的时候，Monte-Carlo方法的数值积分精度可能略低于理论精度，但与理论相差不会太大。</p>
 ]]></content>
       <categories>
         <category>University</category>

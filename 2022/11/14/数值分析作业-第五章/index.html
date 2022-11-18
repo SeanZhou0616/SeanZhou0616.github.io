@@ -30,8 +30,11 @@
 <meta property="og:description" content="姓名：周晓 学号：2231573 第一题 令 \(f(x) &#x3D; 1, x, x^2, x^3\)，代入求积公式可得 \[ \begin{equation}\left\{ \begin{aligned} \omega_0+\omega_1+\omega_2+\omega_3&amp;&#x3D;2\\ -\omega_0-\frac{1}{3}\omega_1+\frac{1}{3}\omega_2+\ome">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://seanzhou0616.github.io/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//Assignment_Ch5_Prob3.svg">
+<meta property="og:image" content="http://seanzhou0616.github.io/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//Ch5_Prob5.png">
+<meta property="og:image" content="http://seanzhou0616.github.io/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//catenary_initial.png">
+<meta property="og:image" content="http://seanzhou0616.github.io/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//catenary_after.png">
 <meta property="article:published_time" content="2022-11-14T13:58:01.000Z">
-<meta property="article:modified_time" content="2022-11-16T15:01:03.113Z">
+<meta property="article:modified_time" content="2022-11-18T02:44:57.100Z">
 <meta property="article:author" content="Sean Zhou">
 <meta property="article:tag" content="Numerical Analysis">
 <meta property="article:tag" content="Mathematics">
@@ -150,7 +153,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">第一题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">第二题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%89%E5%88%86%E5%A4%8D%E5%90%88%E6%A2%AF%E5%BD%A2%E7%A7%AF%E5%88%86"><span class="nav-number">2.1.</span> <span class="nav-text">4等分复合梯形积分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%89%E5%88%86%E5%A4%8D%E5%90%88simpson%E7%A7%AF%E5%88%86"><span class="nav-number">2.2.</span> <span class="nav-text">4等分复合Simpson积分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%90%882%E7%82%B9%E9%AB%98%E6%96%AF%E7%A7%AF%E5%88%86"><span class="nav-number">2.3.</span> <span class="nav-text">复合2点高斯积分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">第三题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E8%A6%81%E6%B1%82"><span class="nav-number">3.1.</span> <span class="nav-text">题目要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BD%9C%E7%AD%94"><span class="nav-number">3.2.</span> <span class="nav-text">题目作答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">第四题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E8%A6%81%E6%B1%82-1"><span class="nav-number">4.1.</span> <span class="nav-text">题目要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8romberg%E7%A7%AF%E5%88%86%E6%B1%82%E8%A7%A3"><span class="nav-number">4.2.</span> <span class="nav-text">使用Romberg积分求解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%B8%89%E7%82%B9%E9%AB%98%E6%96%AF%E5%85%AC%E5%BC%8F%E6%B1%82%E8%A7%A3"><span class="nav-number">4.3.</span> <span class="nav-text">使用三点高斯公式求解</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">第一题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">第二题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%89%E5%88%86%E5%A4%8D%E5%90%88%E6%A2%AF%E5%BD%A2%E7%A7%AF%E5%88%86"><span class="nav-number">2.1.</span> <span class="nav-text">4等分复合梯形积分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AD%89%E5%88%86%E5%A4%8D%E5%90%88simpson%E7%A7%AF%E5%88%86"><span class="nav-number">2.2.</span> <span class="nav-text">4等分复合Simpson积分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%90%882%E7%82%B9%E9%AB%98%E6%96%AF%E7%A7%AF%E5%88%86"><span class="nav-number">2.3.</span> <span class="nav-text">复合2点高斯积分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">第三题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E8%A6%81%E6%B1%82"><span class="nav-number">3.1.</span> <span class="nav-text">题目要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E4%BD%9C%E7%AD%94"><span class="nav-number">3.2.</span> <span class="nav-text">题目作答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">第四题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E8%A6%81%E6%B1%82-1"><span class="nav-number">4.1.</span> <span class="nav-text">题目要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8romberg%E7%A7%AF%E5%88%86%E6%B1%82%E8%A7%A3"><span class="nav-number">4.2.</span> <span class="nav-text">使用Romberg积分求解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%B8%89%E7%82%B9%E9%AB%98%E6%96%AF%E5%85%AC%E5%BC%8F%E6%B1%82%E8%A7%A3"><span class="nav-number">4.3.</span> <span class="nav-text">使用三点高斯公式求解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">第五题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#monte-carlo%E6%96%B9%E6%B3%95%E6%B1%82%E8%A7%A3"><span class="nav-number">5.1.</span> <span class="nav-text">Monte-Carlo方法求解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%90%88simpson%E5%85%AC%E5%BC%8F%E6%B1%82%E8%A7%A3"><span class="nav-number">5.2.</span> <span class="nav-text">复合Simpson公式求解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gauss-legendre%E6%96%B9%E6%B3%95%E6%B1%82%E8%A7%A3"><span class="nav-number">5.3.</span> <span class="nav-text">Gauss-Legendre方法求解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">5.4.</span> <span class="nav-text">结论</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E9%A2%98"><span class="nav-number">6.</span> <span class="nav-text">第六题</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -260,7 +263,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-16 23:01:03" itemprop="dateModified" datetime="2022-11-16T23:01:03+08:00">2022-11-16</time>
+      <time title="修改时间：2022-11-18 10:44:57" itemprop="dateModified" datetime="2022-11-18T10:44:57+08:00">2022-11-18</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -504,6 +507,260 @@ g(t) = \frac{[\frac{1}{2}(t+1)]^4[1-\frac{1}{2}(t+1)]^4}{1+[\frac{1}{2}(t+1)]^2}
 <figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gauss_legendre_integral</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) <span class="number">0.5</span> .* (((<span class="number">0.5</span> .* (<span class="number">1</span> + x)) .^ <span class="number">4</span>) .* ((<span class="number">1</span> - <span class="number">0.5</span> .* (<span class="number">1</span> + x)) .^ <span class="number">4</span>)) ./ (<span class="number">1</span> + (<span class="number">0.5</span> * (<span class="number">1</span> + x)) .^ <span class="number">2</span>);</span><br><span class="line">    original_fun = @(x) (x .^ <span class="number">4</span> .* (<span class="number">1</span> - x) .^ <span class="number">4</span>) ./ (<span class="number">1</span> + x .^ <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    res = (<span class="number">5</span> / <span class="number">9</span>) * (fun(-<span class="built_in">sqrt</span>(<span class="number">3</span> / <span class="number">5</span>)) + fun(<span class="built_in">sqrt</span>(<span class="number">3</span> / <span class="number">5</span>))) + (<span class="number">8</span> / <span class="number">9</span>) * fun(<span class="number">0</span>);</span><br><span class="line">    fprintf(<span class="string">&quot;Gauss-Legendre integral result: %.20f\n&quot;</span>, res);</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB integral result: %.20f\n&quot;</span>, integral(original_fun, <span class="number">0</span>, <span class="number">1</span>));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <p>输出结果为</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Gauss-Legendre integral result: 0.00143186003683241263</span><br><span class="line">MATLAB integral result: 0.00126448926734961872</span><br></pre></td></tr></table></figure>
+<h2 id="第五题">第五题</h2>
+<h3 id="monte-carlo方法求解">Monte-Carlo方法求解</h3>
+<p>首先，由于目标积分式为三重积分，所以考虑尝试利用Monte-Carlo方法进行求解，MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Ch5_Prob5</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x, y, z) (<span class="built_in">sin</span>(x) .* <span class="built_in">sin</span>(y) .* <span class="built_in">sin</span>(z)) ./ (<span class="number">1</span> + x.^<span class="number">2</span> + y.^<span class="number">2</span> + z.^<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    MATLAB_integral_result = integral3(fun, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB result: %.20f\n&quot;</span>, MATLAB_integral_result);</span><br><span class="line"></span><br><span class="line">    fprintf(<span class="string">&quot;Monte-Carlo result\n&quot;</span>)</span><br><span class="line">    N = [<span class="number">10</span> <span class="number">10</span>^<span class="number">2</span> <span class="number">10</span>^<span class="number">3</span> <span class="number">10</span>^<span class="number">4</span> <span class="number">10</span>^<span class="number">5</span> <span class="number">10</span>^<span class="number">6</span> <span class="number">10</span>^<span class="number">7</span> <span class="number">10</span>^<span class="number">8</span>];</span><br><span class="line">    monte_carlo_error = <span class="built_in">zeros</span>(<span class="built_in">length</span>(N), <span class="number">1</span>);</span><br><span class="line">    monte_carlo_relative_error = <span class="built_in">zeros</span>(<span class="built_in">length</span>(N), <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: <span class="built_in">length</span>(N)</span><br><span class="line">        tic;</span><br><span class="line">        res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span>: N(<span class="built_in">i</span>)</span><br><span class="line">            res = res + fun(<span class="built_in">rand</span>(), <span class="built_in">rand</span>(), <span class="built_in">rand</span>());</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        res = res / N(<span class="built_in">i</span>);</span><br><span class="line">        error = <span class="built_in">abs</span>(res - MATLAB_integral_result);</span><br><span class="line">        relative_error = error / MATLAB_integral_result;</span><br><span class="line">        fprintf(<span class="string">&quot;N: 10^%d, result: %.20f, error: %.20f, relative error: %.4f%%\n&quot;</span>, <span class="built_in">log10</span>(N(<span class="built_in">i</span>)), res, error, relative_error * <span class="number">100</span>);</span><br><span class="line">        monte_carlo_error(<span class="built_in">i</span>) = error;</span><br><span class="line">        monte_carlo_relative_error(<span class="built_in">i</span>) = relative_error;</span><br><span class="line">        toc;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">figure</span>();</span><br><span class="line">    loglog(N, monte_carlo_error);</span><br><span class="line">    title(<span class="string">&quot;Monte-Carlo算法积分误差与节点规模之间的关系&quot;</span>);</span><br><span class="line">    xlabel(<span class="string">&quot;N&quot;</span>);</span><br><span class="line">    ylabel(<span class="string">&quot;积分误差&quot;</span>);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>输出结果如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">MATLAB result: 0.04136669609096685352</span><br><span class="line">Monte-Carlo result</span><br><span class="line">N: 10^1, result: 0.03467372868187562629, error: 0.00669296740909122723, relative error: 16.1796%</span><br><span class="line">Elapsed time is 0.001335 seconds.</span><br><span class="line">N: 10^2, result: 0.05036971185335869378, error: 0.00900301576239184026, relative error: 21.7639%</span><br><span class="line">Elapsed time is 0.000289 seconds.</span><br><span class="line">N: 10^3, result: 0.04185950979840031422, error: 0.00049281370743346070, relative error: 1.1913%</span><br><span class="line">Elapsed time is 0.000692 seconds.</span><br><span class="line">N: 10^4, result: 0.04124614901521712895, error: 0.00012054707574972456, relative error: 0.2914%</span><br><span class="line">Elapsed time is 0.003250 seconds.</span><br><span class="line">N: 10^5, result: 0.04129323625366838890, error: 0.00007345983729846461, relative error: 0.1776%</span><br><span class="line">Elapsed time is 0.020172 seconds.</span><br><span class="line">N: 10^6, result: 0.04134011764463717958, error: 0.00002657844632967393, relative error: 0.0643%</span><br><span class="line">Elapsed time is 0.127226 seconds.</span><br><span class="line">N: 10^7, result: 0.04136027708887315274, error: 0.00000641900209370078, relative error: 0.0155%</span><br><span class="line">Elapsed time is 1.323732 seconds.</span><br><span class="line">N: 10^8, result: 0.04136824943853992242, error: 0.00000155334757306891, relative error: 0.0038%</span><br><span class="line">Elapsed time is 13.240245 seconds.</span><br></pre></td></tr></table></figure>
+<p>积分误差与节点数量的关系如图所示，每次运算的误差略有不同，但总体趋势一致。</p>
+<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//Ch5_Prob5.png" alt="积分误差与节点规模之间的关系" align="center" width="80%"></p>
+<p>输出结果中展示了Monte-Carlo方法在节点规模不同时所消耗的时间（计算平台：Intel i7-9750H，MATLAB默认使用单核心进行计算）。</p>
+<h3 id="复合simpson公式求解">复合Simpson公式求解</h3>
+<p>下面尝试使用复合Simpson公式进行求解。MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">simpson</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x, y, z) (<span class="built_in">sin</span>(x) .* <span class="built_in">sin</span>(y) .* <span class="built_in">sin</span>(z)) ./ (<span class="number">1</span> + x.^<span class="number">2</span> + y.^<span class="number">2</span> + z.^<span class="number">2</span>);</span><br><span class="line">    tic;</span><br><span class="line">    MATLAB_integral_result = integral3(fun, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    toc;</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB result: %.20f\n&quot;</span>, MATLAB_integral_result);</span><br><span class="line"></span><br><span class="line">    n = [<span class="number">10</span> <span class="number">10</span>^<span class="number">2</span> <span class="number">10</span>^<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">for</span> cnt = <span class="number">1</span>: <span class="built_in">length</span>(n)</span><br><span class="line">        tic;</span><br><span class="line">        res = <span class="number">0</span>;</span><br><span class="line">        h = <span class="number">1</span> / n(cnt);</span><br><span class="line">        x = <span class="number">0</span>: h: <span class="number">1</span>;</span><br><span class="line">        y = <span class="number">0</span>: h: <span class="number">1</span>;</span><br><span class="line">        z = <span class="number">0</span>: h: <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: n(cnt)<span class="number">-1</span></span><br><span class="line">            <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span>: n(cnt)<span class="number">-1</span></span><br><span class="line">                <span class="keyword">for</span> k = <span class="number">1</span>: n(cnt)<span class="number">-1</span></span><br><span class="line">                    vec_x = [x(<span class="built_in">i</span>) x(<span class="built_in">i</span>)+<span class="number">0.5</span>*h x(<span class="built_in">i</span>+<span class="number">1</span>)];</span><br><span class="line">                    vec_y = [y(<span class="built_in">j</span>) y(<span class="built_in">j</span>)+<span class="number">0.5</span>*h y(<span class="built_in">j</span>+<span class="number">1</span>)];</span><br><span class="line">                    vec_z = [z(k) z(k)+<span class="number">0.5</span>*h z(k+<span class="number">1</span>)];</span><br><span class="line">                    weight = [<span class="number">1</span> <span class="number">4</span> <span class="number">1</span>];</span><br><span class="line">                    local_sum = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">for</span> idx_x = <span class="number">1</span>: <span class="number">3</span></span><br><span class="line">                        <span class="keyword">for</span> idx_y = <span class="number">1</span>: <span class="number">3</span></span><br><span class="line">                            <span class="keyword">for</span> idx_z = <span class="number">1</span>: <span class="number">3</span></span><br><span class="line">                                local_weight = weight(idx_x) * weight(idx_y) * weight(idx_z);</span><br><span class="line">                                local_sum = local_sum + local_weight * fun(vec_x(idx_x), vec_y(idx_y), vec_z(idx_z));</span><br><span class="line">                            <span class="keyword">end</span></span><br><span class="line">                        <span class="keyword">end</span></span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                    res = res + local_sum / <span class="number">6</span>^<span class="number">3</span>;</span><br><span class="line">                <span class="keyword">end</span></span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        res = res / (n(cnt)^<span class="number">3</span>);</span><br><span class="line">        error = <span class="built_in">abs</span>(res - MATLAB_integral_result);</span><br><span class="line">        relative_error = error / MATLAB_integral_result;</span><br><span class="line">        fprintf(<span class="string">&quot;n: %d, Mid result: %.20f, error: %.20f, relative error: %.4f%%\n&quot;</span>, n(cnt), res, error, relative_error * <span class="number">100</span>);</span><br><span class="line">        toc;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>上面对三重积分的复合Simpson公式进行了拙劣的实现，发现计算效率极低，输出结果如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Elapsed time is 0.015971 seconds.</span><br><span class="line">MATLAB result: 0.04136669609096685352</span><br><span class="line">n: 10, Mid result: 0.02570352453510416774, error: 0.01566317155586268578, relative error: 37.8642%</span><br><span class="line">Elapsed time is 0.008422 seconds.</span><br><span class="line">n: 100, Mid result: 0.03956360837727929125, error: 0.00180308771368756227, relative error: 4.3588%</span><br><span class="line">Elapsed time is 2.130584 seconds.</span><br><span class="line">n: 1000, Mid result: 0.04118390812835896059, error: 0.00018278796260789293, relative error: 0.4419%</span><br><span class="line">Elapsed time is 2168.109162 seconds.</span><br></pre></td></tr></table></figure>
+<p>相较而言，使用Monte-Carlo方法进行数值求解似乎要高效很多。</p>
+<h3 id="gauss-legendre方法求解">Gauss-Legendre方法求解</h3>
+<p>出于好奇，下面尝试使用6点Gauss-Legendre公式进行目标积分式的求解。MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gauss_legendre</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x, y, z) <span class="number">0.125</span> * (<span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+x) .* <span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+y)) .* <span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+z)))) ./ (<span class="number">1</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+x)).^<span class="number">2</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+y)).^<span class="number">2</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+z)).^<span class="number">2</span>);</span><br><span class="line">    tic;</span><br><span class="line">    MATLAB_integral_result = integral3(fun, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    toc;</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB result: %.20f\n&quot;</span>, MATLAB_integral_result);</span><br><span class="line"></span><br><span class="line">    gauss_point = [<span class="number">-0.93246951</span> <span class="number">0.93246951</span> <span class="number">-0.66120939</span> <span class="number">0.66120939</span> <span class="number">-0.23861919</span> <span class="number">0.23861919</span>];</span><br><span class="line">    gauss_coeff = [<span class="number">0.17132439</span> <span class="number">0.17132439</span> <span class="number">0.36076157</span> <span class="number">0.36076157</span> <span class="number">0.46791393</span> <span class="number">0.46791393</span>];</span><br><span class="line"></span><br><span class="line">    tic;</span><br><span class="line">    res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">            <span class="keyword">for</span> k = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">                coeff = gauss_coeff(<span class="built_in">i</span>) * gauss_coeff(<span class="built_in">j</span>) * gauss_coeff(k);</span><br><span class="line">                res = res + coeff * fun(gauss_point(<span class="built_in">i</span>), gauss_point(<span class="built_in">j</span>), gauss_point(k));</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    toc;</span><br><span class="line">    error = <span class="built_in">abs</span>(res - MATLAB_integral_result);</span><br><span class="line">    relative_error = error / MATLAB_integral_result;</span><br><span class="line">    fprintf(<span class="string">&quot;6-point Gauss-Legendre result: %.20f, error: %.20f, relative error: %.4f%%\n&quot;</span>, res, error, relative_error);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>输出数据如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Elapsed time is 0.019378 seconds.</span><br><span class="line">MATLAB result: 0.01484292560031314802</span><br><span class="line">Elapsed time is 0.002133 seconds.</span><br><span class="line">6-point Gauss-Legendre result: 0.04425284863858611195, error: 0.02940992303827296567, relative error: 1.9814%</span><br></pre></td></tr></table></figure>
+<p>可以看到，Gauss-Legendre公式的计算效率极高，在6点的情况下已经达到了2%的计算精度。这个结果让我想再探索一下更高点数Gauss-Legendre公式对目标积分式的计算精度。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gauss_legendre</span><span class="params">(n)</span></span></span><br><span class="line">    fun = @(x, y, z) <span class="number">0.125</span> * (<span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+x) .* <span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+y)) .* <span class="built_in">sin</span>(<span class="number">0.5</span>*(<span class="number">1</span>+z)))) ./ (<span class="number">1</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+x)).^<span class="number">2</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+y)).^<span class="number">2</span> + (<span class="number">0.5</span>*(<span class="number">1</span>+z)).^<span class="number">2</span>);</span><br><span class="line">    tic;</span><br><span class="line">    MATLAB_integral_result = integral3(fun, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    toc;</span><br><span class="line">    fprintf(<span class="string">&quot;MATLAB result: %.20f\n&quot;</span>, MATLAB_integral_result);</span><br><span class="line"></span><br><span class="line">    [gauss_point, gauss_coeff] = gauss_lege(n);</span><br><span class="line"></span><br><span class="line">    tic;</span><br><span class="line">    res = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">j</span> = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">            <span class="keyword">for</span> k = <span class="number">1</span>: <span class="built_in">length</span>(gauss_point)</span><br><span class="line">                coeff = gauss_coeff(<span class="built_in">i</span>) * gauss_coeff(<span class="built_in">j</span>) * gauss_coeff(k);</span><br><span class="line">                res = res + coeff * fun(gauss_point(<span class="built_in">i</span>), gauss_point(<span class="built_in">j</span>), gauss_point(k));</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    toc;</span><br><span class="line">    error = <span class="built_in">abs</span>(res - MATLAB_integral_result);</span><br><span class="line">    relative_error = error / MATLAB_integral_result;</span><br><span class="line">    fprintf(<span class="string">&quot;%d-point Gauss-Legendre result: %.20f, error: %.20f, relative error: %.4f%%\n&quot;</span>, n, res, error, relative_error);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>上述代码中，<code>gauss_lege()</code> 是可以生成任意点数的Gauss-Legendre高斯点以及高斯系数的函数。输入 <code>gauss_legendre(100)</code> 发现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Elapsed time is 0.016078 seconds.</span><br><span class="line">MATLAB result: 0.01484292560031314802</span><br><span class="line">Elapsed time is 0.081467 seconds.</span><br><span class="line">100-point Gauss-Legendre result: 0.04425285995567417030, error: 0.02940993435536102402, relative error: 1.9814%</span><br></pre></td></tr></table></figure>
+<p>相比于6点Gauss-Legendre公式，计算精度没有任何变化。</p>
+<h3 id="结论">结论</h3>
+<p>综上，Monte-Carlo是计算精度最高的数值积分方法。</p>
+<h2 id="第六题">第六题</h2>
+<p>首先需要说明一点，对于一条左右端点位于同一高度的悬链线，若令y轴经过悬链线最低点，那么可以将悬链线表示为</p>
+<p><span class="math display">\[
+y = acosh\frac{x}{a}
+\]</span></p>
+<p>上面的表达式是悬链线的标准形式。另外，上述标准悬链线从最低点开始，到第一象限任意一点 <span class="math inline">\((x, y)\)</span> 之间的悬链线长度可以通过下式得到</p>
+<p><span class="math display">\[
+s = asinh\frac{x}{a}
+\]</span></p>
+<p>若 <span class="math inline">\(x&lt;0\)</span>，则上述公式需要取负。</p>
+<p>对于一条两端点不等高的悬链线，在仍然令y轴经过悬链线最低点建立坐标系的前提下，记两端点之间的水平距离为 <span class="math inline">\(H\)</span>，垂直距离为 <span class="math inline">\(h\)</span>，两点之间悬链线长度为 <span class="math inline">\(s\)</span>，左右两端点坐标分别为 <span class="math inline">\((x_1, y_1), (x_2, y_2)\)</span>，可以得到以下关系</p>
+<p><span class="math display">\[
+\begin{aligned}
+    v = acosh\frac{x_2}{a} - acosh\frac{x_1}{a}\\
+    s = asinh\frac{x_2}{a} - asinh\frac{x_1}{a}
+\end{aligned}
+\]</span></p>
+<p>上述两条式子求平方差恰好可以得到</p>
+<p><span class="math display">\[
+s^2 - v^2 = 4a^2sinh^2\frac{x_2 - x_1}{2a}
+\]</span></p>
+<p>那么可以得到</p>
+<p><span class="math display">\[
+\sqrt{s^2 - v^2} = 2asinh\frac{H}{2a}
+\]</span></p>
+<p>等式两边同除以 <span class="math inline">\(H\)</span>，可以得到</p>
+<p><span class="math display">\[
+\frac{\sqrt{s^2 - v^2}}{H} = \frac{2a}{H}sinh\frac{H}{2a}
+\]</span></p>
+<p>令 <span class="math inline">\(x=\frac{H}{2a}\)</span>，可以得到</p>
+<p><span class="math display">\[
+\frac{\sqrt{s^2 - v^2}}{H} = \frac{sinhx}{x}
+\]</span></p>
+<p>将题设参数代入，可以得到</p>
+<p><span class="math display">\[
+\frac{sinhx}{x} = \frac{\sqrt{100-16}}{4} = \frac{\sqrt{21}}{2}
+\]</span></p>
+<p>简单计算可以发现 <span class="math inline">\(\displaystyle\frac{sinh3}{3} \approx 3.3393, \displaystyle\frac{sinh2}{2} \approx 1.8134, \frac{\sqrt{21}}{2} \approx 2.2913\)</span>，那么在 <span class="math inline">\([2, 3]\)</span> 之间通过二分法可以查找得到上述方程的近似解。MATLAB代码如下，绝对误差设定为 <span class="math inline">\(10^{-15}\)</span></p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">find_a</span><span class="params">()</span></span></span><br><span class="line">    fun = @(x) <span class="built_in">sinh</span>(x) ./ x;</span><br><span class="line"></span><br><span class="line">    target = <span class="built_in">sqrt</span>(<span class="number">10</span>^<span class="number">2</span> - <span class="number">4</span>^<span class="number">2</span>) / <span class="number">4</span>;</span><br><span class="line">    <span class="built_in">eps</span> = <span class="number">10</span>^(<span class="number">-15</span>);</span><br><span class="line"></span><br><span class="line">    x1 = <span class="number">2</span>;</span><br><span class="line">    x2 = <span class="number">3</span>;</span><br><span class="line">    error = <span class="built_in">abs</span>(fun(x1) - target);</span><br><span class="line">    <span class="keyword">while</span> error &gt; <span class="built_in">eps</span></span><br><span class="line">        mid_x = <span class="number">0.5</span> * (x1 + x2);</span><br><span class="line">        <span class="keyword">if</span> fun(mid_x) &gt; target</span><br><span class="line">            x2 = mid_x;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            x1 = mid_x;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        error = <span class="built_in">abs</span>(fun(mid_x) - target);</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    fprintf(<span class="string">&quot;Solution: %.16f, error: %.16f\n&quot;</span>, mid_x, error);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>可以得到结果为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Solution: 2.4099791561716124, error: 0.0000000000000009</span><br></pre></td></tr></table></figure>
+<p>所以可以得到 <span class="math inline">\(x = 2.409979156171612\)</span>，那么可以得到</p>
+<p><span class="math display">\[
+a = \frac{H}{2x} = 0.8298826962375527
+\]</span></p>
+<p>通过上述方法，得到了悬链线方程的特征参数 <span class="math inline">\(a\)</span>，但是上述坐标系y轴经过悬链线的最低点，与题设坐标系之间存在平移关系。为了求出 <span class="math inline">\((x^*, y^*)\)</span>，将悬链线方程改写为</p>
+<p><span class="math display">\[
+y = acosh\frac{x - x^*}{a} + y^*
+\]</span></p>
+<p>将 <span class="math inline">\((x_1, y_1), (x_2, y_2)\)</span> 代入上述方程，可以得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+    y_1 = acosh\frac{x_1 - x^*}{a} + y^*\\
+    y_2 = acosh\frac{x_2 - x^*}{a} + y^*
+\end{aligned}
+\]</span></p>
+<p>两式相减，可以得到</p>
+<p><span class="math display">\[
+\frac{y_2 - y_1}{a} = cosh\frac{x_2 - x^*}{a}-cosh\frac{x_1 - x^*}{a}
+\]</span></p>
+<p>由于 <span class="math inline">\(x_2 - x_1 = H\)</span>，所以可以将 <span class="math inline">\(x_2\)</span> 用 <span class="math inline">\(x_1 + H\)</span> 替代，得到</p>
+<p><span class="math display">\[
+\frac{v}{a} = cosh\frac{x_1 + H - x^*}{a} - cosh\frac{x_1 - x^*}{a}
+\]</span></p>
+<p>令</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;d = \frac{v}{a}\\
+    &amp;t = \frac{x_1-x^*}{a}\\
+    &amp;c = \frac{H}{a}
+\end{aligned}
+\]</span></p>
+<p>上述公式可以改写为</p>
+<p><span class="math display">\[
+d = cosh(t+c) - cosh(t)
+\]</span></p>
+<p>由于 <span class="math inline">\(coshx = \frac{1}{2}(e^x + e^{-x})\)</span>，所以上述等式可以进一步化为</p>
+<p><span class="math display">\[
+2d = e^{t+c} + e^{-t-c} - e^t - e^{-t}
+\]</span></p>
+<p>令 <span class="math inline">\(\tau = e^t\)</span>，有</p>
+<p><span class="math display">\[
+2d = e^c\tau +e^{-c}\tau^{-1} - \tau - \tau^{-1}
+\]</span></p>
+<p>等式两边同乘以 <span class="math inline">\(\tau\)</span>，可以得到</p>
+<p><span class="math display">\[
+2d\tau = (e^c -1)\tau^2+(e^{-c}-1)
+\]</span></p>
+<p>移项得到</p>
+<p><span class="math display">\[
+(e^c - 1)\tau^2 - 2d\tau + (e^{-c}-1)=0
+\]</span></p>
+<p>由一元二次方程的求根公式，可以得到</p>
+<p><span class="math display">\[
+\tau = \frac{-b\pm\sqrt{b^2 -4ac}}{2a}=\frac{d\pm\sqrt{d^2-(e^c-1)(e^{-c}-1)}}{e^c -1}
+\]</span></p>
+<p>由于 <span class="math inline">\(\tau = e^t\)</span>，所以</p>
+<p><span class="math display">\[
+t = ln\frac{d\pm\sqrt{d^2 - (e^c - 1)(e^{-c}-1)}}{e^c -1}
+\]</span></p>
+<p>由于 <span class="math inline">\(t = \frac{x_1 - x^*}{a}\)</span>，所以</p>
+<p><span class="math display">\[
+x^* = x_1 - at = x_1 - aln\frac{d\pm\sqrt{d^2 - (e^c - 1)(e^{-c}-1)}}{e^c -1}
+\]</span></p>
+<p>代入本题中的参数，可以解得</p>
+<p><span class="math display">\[
+x^* = 1.648421083552779
+\]</span></p>
+<p>根据</p>
+<p><span class="math display">\[
+y^* = y_1 - acosh\frac{x_1 - x^*}{a}
+\]</span></p>
+<p>很容易能求出</p>
+<p><span class="math display">\[
+y^* = -3.081327311778100
+\]</span></p>
+<p>所以题设悬链线最低点坐标为 <span class="math inline">\((x^*, y^*) = (1.648421083552779, -3.081327311778100)\)</span>。可以绘制得到悬链线图形如下</p>
+<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//catenary_initial.png" alt="题设初始悬链线" align="center" width="80%"></p>
+<p>此时，x轴以下的悬链线长度很显然是左端点 <span class="math inline">\((x_1, y_1)\)</span> 与最低点 <span class="math inline">\((x^*, y^*)\)</span> 之间悬链线长度的两倍，可以由下式得到</p>
+<p><span class="math display">\[
+s = 2asinh\frac{x^* - x_1}{a} = 5.934938150577525
+\]</span></p>
+<p>如果将悬链线最低点 <span class="math inline">\((x^*, y^*)\)</span> 固定到 <span class="math inline">\((x^*, x^*)\)</span> 上，那么将会形成两段悬链线。左侧悬链线的长度为</p>
+<p><span class="math display">\[
+s_l = asinh\frac{x^* - x_1}{a} = 2.967469075288763
+\]</span></p>
+<p>右侧悬链线的长度则为</p>
+<p><span class="math display">\[
+s_r = s - s_l = 7.032530924711237
+\]</span></p>
+<p>另外，左侧悬链线的其他两个几何参数分别为</p>
+<p><span class="math display">\[
+\begin{aligned}
+    H_l = x^* - x_1 = 1.648421083552779\\
+    v_l = x^* - y_1 = 1.648421083552779
+\end{aligned}
+\]</span></p>
+<p>右侧悬链线的其他两个几何参数分别为</p>
+<p><span class="math display">\[
+\begin{aligned}
+    H_r = x_2 - x^* = 2.351578916447221\\
+    v_r = y_2 - x^* = 2.351578916447221
+\end{aligned}
+\]</span></p>
+<p>下面先求解左侧悬链线的参数 <span class="math inline">\(a_l\)</span>，由</p>
+<p><span class="math display">\[
+\frac{\sqrt{s_l^2 - v_l^2}}{H_l} = \frac{sinh\frac{H_l}{2a_l}}{\frac{H_l}{2a_l}}
+\]</span></p>
+<p>使用同样的二分数值求解方法，在区间 <span class="math inline">\([1, 2]\)</span> 内进行解的搜索，可以得到</p>
+<p><span class="math display">\[
+\frac{H_l}{2a_l} = 1.617660172926119
+\]</span></p>
+<p>那么</p>
+<p><span class="math display">\[
+a_l = 0.509507840750946
+\]</span></p>
+<p>同理，可以得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;\frac{H_r}{2a_r} = 2.742262212210288\\
+    &amp;a_r = 0.428766240145910
+\end{aligned}
+\]</span></p>
+<p>同样，为了解出这两条悬链线在题设坐标系中的表达式，由</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;d_l = \frac{v_l}{a_l}\\
+    &amp;t_l = \frac{x_1-x^*_l}{a_l}\\
+    &amp;c_l = \frac{H_l}{a_l}\\
+    &amp;x^*_l = x_1 - a_lt_l = x_1 - a_lln\frac{d_l\pm\sqrt{d_l^2 - (e^{c_l} - 1)(e^{-c_l}-1)}}{e^{c_l} -1}
+\end{aligned}
+\]</span></p>
+<p>可以解出</p>
+<p><span class="math display">\[
+x^*_l = 0.505107188587596
+\]</span></p>
+<p>根据</p>
+<p><span class="math display">\[
+y^*_l = y_1 - a_lcosh\frac{x_1 - x^*_l}{a_l} = -0.78106929181407
+\]</span></p>
+<p>对于左侧的悬链线，y轴以下的长度可以通过 <span class="math inline">\((x_1, y_1)\)</span> 到 <span class="math inline">\((x_l^*, y^*_l)\)</span> 之间的悬链线2倍长度得到</p>
+<p><span class="math display">\[
+s_{tl} = 2a_lsinh\frac{x^*_l - x_1}{a_l} = 1.184011822285978
+\]</span></p>
+<p>下面解出右侧悬链线在题设坐标系下的方程</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;d_r = \frac{v_r}{a_r}\\
+    &amp;t_r = \frac{x^*-x^*_r}{a_r}\\
+    &amp;c_r = \frac{H_r}{a_r}\\
+    &amp;x^*_r = x^* - a_rt_r = x^* - a_rln\frac{d_r\pm\sqrt{d_r^2 - (e^{c_r} - 1)(e^{-c_r}-1)}}{e^{c_r} -1}
+\end{aligned}
+\]</span></p>
+<p>可以解出</p>
+<p><span class="math display">\[
+x_r^* = 2.675103585900648
+\]</span></p>
+<p>另外也很容易解出</p>
+<p><span class="math display">\[
+y^*_r = x^* - a_rcosh\frac{x^* - x^*_r}{a_r} = -0.721365152257195
+\]</span></p>
+<p>可以绘制图像如下</p>
+<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0//catenary_after.png" alt="将原悬链线最低点固定后的悬链线图形" width="80%" align="center"></p>
+<p>接下来，需要解出右侧悬链线与x轴相交点的横坐标。记</p>
+<p><span class="math display">\[
+f(x) = a_r cosh\frac{x - x^*_r}{a_r} + y^*_r
+\]</span></p>
+<p>那么实际上题目可以转换为求以下方程的解</p>
+<p><span class="math display">\[
+f(x) = 0
+\]</span></p>
+<p>由于悬链线具有对称性，因此只需要求出悬链线与x轴交点中的一个，就可以解出x轴以下部分的长度。同样，可以通过二分法进行数值求解，得到</p>
+<p><span class="math display">\[
+x_{sol} = 2.199026644146695
+\]</span></p>
+<p>那么，右侧悬链线x轴以下的长度可以表示为</p>
+<p><span class="math display">\[
+s_{tr} = 2a_rsinh\frac{x^*_r - x_{sol}}{a_r} = 1.160219279622929
+\]</span></p>
+<p>所以经过调整后的悬链线位于x轴以下的总长度为</p>
+<p><span class="math display">\[
+s_t = s_{tl} + s_{tr} = 1.184011822285978 + 1.160219279622929 = 2.344231101908907
+\]</span></p>
+<p>变化量为</p>
+<p><span class="math display">\[
+\Delta s = s - s_t = 5.934938150577525 - 2.344231101908907 = 3.590707048668619
+\]</span></p>
 
     </div>
 
