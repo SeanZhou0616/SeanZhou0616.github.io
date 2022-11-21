@@ -22,30 +22,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="先安装编译所需的依赖 12sudo apt update sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev">
+    <meta name="description" content="什么是Mode 引入 在听音乐的时候，我们能够通过耳朵快速地辨识出不同音色的声音，并且会判断这种音色是由什么乐器发出的。这种信号处理功能被称为 Source Seperation，因为扬声器在播放音乐时，播放的是已经经过混音的声波，而人耳能够通过各种神奇而复杂的滤波器，将不同特征的音色从中分离。这种将不同的信号分量从一个叠加的信号中分离出来的功能非常有意义。 本征模函数 Intrinsic Mod">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ubuntu&#x2F;Debian从源码安装Python记录">
-<meta property="og:url" content="http://seanzhou0616.github.io/2022/11/02/Ubuntu-Debian%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85Python%E8%AE%B0%E5%BD%95/">
+<meta property="og:title" content="VMD算法笔记">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/11/21/VMD%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/">
 <meta property="og:site_name" content="Elysium">
-<meta property="og:description" content="先安装编译所需的依赖 12sudo apt update sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev">
+<meta property="og:description" content="什么是Mode 引入 在听音乐的时候，我们能够通过耳朵快速地辨识出不同音色的声音，并且会判断这种音色是由什么乐器发出的。这种信号处理功能被称为 Source Seperation，因为扬声器在播放音乐时，播放的是已经经过混音的声波，而人耳能够通过各种神奇而复杂的滤波器，将不同特征的音色从中分离。这种将不同的信号分量从一个叠加的信号中分离出来的功能非常有意义。 本征模函数 Intrinsic Mod">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-11-02T09:50:36.000Z">
-<meta property="article:modified_time" content="2022-11-02T09:51:52.922Z">
+<meta property="article:published_time" content="2022-11-21T02:33:07.000Z">
+<meta property="article:modified_time" content="2022-11-21T03:37:24.843Z">
 <meta property="article:author" content="Sean Zhou">
-<meta property="article:tag" content="Ubuntu">
-<meta property="article:tag" content="Debian">
-<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Signal Processing">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://seanzhou0616.github.io/2022/11/02/Ubuntu-Debian%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85Python%E8%AE%B0%E5%BD%95/">
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/11/21/VMD%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/11/02/Ubuntu-Debian%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85Python%E8%AE%B0%E5%BD%95/","path":"2022/11/02/Ubuntu-Debian从源码安装Python记录/","title":"Ubuntu/Debian从源码安装Python记录"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/11/21/VMD%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/","path":"2022/11/21/VMD算法笔记/","title":"VMD算法笔记"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Ubuntu/Debian从源码安装Python记录 | Elysium</title>
+<title>VMD算法笔记 | Elysium</title>
   
 
 
@@ -136,7 +134,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -149,6 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFmode"><span class="nav-number">1.</span> <span class="nav-text">什么是Mode</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">1.1.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%BE%81%E6%A8%A1%E5%87%BD%E6%95%B0-intrinsic-mode-function-imf"><span class="nav-number">1.2.</span> <span class="nav-text">本征模函数 Intrinsic Mode Function (IMF)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFvmd"><span class="nav-number">2.</span> <span class="nav-text">什么是VMD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mathematics-of-vmd"><span class="nav-number">3.</span> <span class="nav-text">Mathematics of VMD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#filtering"><span class="nav-number">3.1.</span> <span class="nav-text">Filtering</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#constrained-optimization"><span class="nav-number">3.2.</span> <span class="nav-text">Constrained Optimization</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vmdpy%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">VMDPY的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vmd%E7%AE%97%E6%B3%95%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">VMD算法的局限性</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -222,7 +221,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/02/Ubuntu-Debian%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85Python%E8%AE%B0%E5%BD%95/">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/21/VMD%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/Yeah.jpg">
@@ -235,12 +234,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Ubuntu/Debian从源码安装Python记录 | Elysium">
+      <meta itemprop="name" content="VMD算法笔记 | Elysium">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Ubuntu/Debian从源码安装Python记录
+          VMD算法笔记
         </h1>
 
         <div class="post-meta-container">
@@ -252,7 +251,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-11-02 17:50:36 / 修改时间：17:51:52" itemprop="dateCreated datePublished" datetime="2022-11-02T17:50:36+08:00">2022-11-02</time>
+      <time title="创建时间：2022-11-21 10:33:07 / 修改时间：11:37:24" itemprop="dateCreated datePublished" datetime="2022-11-21T10:33:07+08:00">2022-11-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -260,7 +259,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Technical-Issues/" itemprop="url" rel="index"><span itemprop="name">Technical Issues</span></a>
+          <a href="/categories/Engineering/" itemprop="url" rel="index"><span itemprop="name">Engineering</span></a>
         </span>
     </span>
 
@@ -274,23 +273,58 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>先安装编译所需的依赖</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev</span><br></pre></td></tr></table></figure>
-<span id="more"></span>
-<p>从官网下载源码包，例如 <code>Python-3.10.7.tgz</code>，随便放到哪个目录下，解压</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf Python-3.10.7.tgz</span><br></pre></td></tr></table></figure>
-<p>进入解压所得的文件夹，先生成Makefile</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --enable-optimizations</span><br></pre></td></tr></table></figure>
-<p>经过一段时间的刷屏后，进行编译</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j $(<span class="built_in">nproc</span>)</span><br></pre></td></tr></table></figure>
-<p><code>$(nproc)</code> 表示自动从环境中获取当前处理器的最大核心数。</p>
-<p>完成编译后</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make altinstall</span><br></pre></td></tr></table></figure>
-<p>这样会将Python自动安装到 <code>/usr/local/bin</code> 和 <code>/usr/local/lib</code>。这时输入</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3.10</span><br></pre></td></tr></table></figure>
-<p>应该能够呼出Python Interactive Shell了，最后建立软链接</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">ln</span> -s /usr/local/bin/python3.10 /usr/bin/python3</span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/local/bin/python3.10 /usr/bin/python</span><br></pre></td></tr></table></figure>
-<p>这样就可以通过 <code>python3</code> 或者 <code>python</code> 来调用Python3.10了。</p>
+        <h2 id="什么是mode">什么是Mode</h2>
+<h3 id="引入">引入</h3>
+<p>在听音乐的时候，我们能够通过耳朵快速地辨识出不同音色的声音，并且会判断这种音色是由什么乐器发出的。这种信号处理功能被称为 <strong>Source Seperation</strong>，因为扬声器在播放音乐时，播放的是已经经过混音的声波，而人耳能够通过各种神奇而复杂的滤波器，将不同特征的音色从中分离。这种将不同的信号分量从一个叠加的信号中分离出来的功能非常有意义。</p>
+<h3 id="本征模函数-intrinsic-mode-function-imf">本征模函数 Intrinsic Mode Function (IMF)</h3>
+<p>上面所提到的不同特征的音色，可以用本征模函数IMF来表示。一个IMF的表达式如下</p>
+<p><span class="math display">\[
+u_k(t) = A_k(t)cos(\phi_k(t))
+\]</span></p>
+<p>其中，<span class="math inline">\(\phi_k(t)\)</span> 表示信号的相位，<span class="math inline">\(A_k(t)\)</span> 表示IMF的非负包络。IMF的特征是，包络 <span class="math inline">\(A_k(t)\)</span> 和瞬时频率总是比相位变化得慢得多。简单理解，一个IMF就相当于是复合信号中某一频率的分量，和FFT非常类似。例如，我们生成了3个不同频率的余弦波 <span class="math inline">\(f_1, f_2, f_3\)</span>，然后我们将这几个波叠加在一起，得到 <span class="math inline">\(f\)</span>，那么<em>Mode Decomposition</em>的过程，其实就是从 <span class="math inline">\(f\)</span> 中反向解析出 <span class="math inline">\(f_1, f_2, f_3\)</span> 的过程。</p>
+<h2 id="什么是vmd">什么是VMD</h2>
+<p>VMD是<em>Variational Mode Decomposition</em>的首字母缩写。这是一种Mode Decomposition算法，可以实现前面所提到的，从一个复合信号中提取IMF的功能。这是一种Fourier Tranform的替代算法，因为Fourier Transform其实对时域的信号是比较敏感的，特别是高频噪声。</p>
+<h2 id="mathematics-of-vmd">Mathematics of VMD</h2>
+<p>VMD算法主要由以下三部分组成</p>
+<ol type="1">
+<li>Filtering</li>
+<li>Constrained Optimization</li>
+</ol>
+<h3 id="filtering">Filtering</h3>
+<p>VMD算法中应用了Wiener filter技术。Wiener filter是一种可以从模糊的图像中还原原始图像的算法。本质上，这是一种低窄带滤波器，所谓的窄带指的是信号在中心频率附近的抖动非常小，例如一个完美的1Hz正弦信号，在频谱上应该呈现为一个狄拉克脉冲。</p>
+<h3 id="constrained-optimization">Constrained Optimization</h3>
+<p>带约束的优化问题其实非常常见，例如DRT算法就是一个非负优化问题，那么这个非负就是一个约束。VMD的优化目标如下</p>
+<p><span class="math display">\[
+min_{m_n(t), \omega_n} \sum^n ||\frac{\partial}{\partial t} \{[(\delta(t)+\frac{j}{\pi t})*m_n(t)]e^{-j\omega_n t}\}||^2_2
+\]</span></p>
+<p>约束如下</p>
+<p><span class="math display">\[
+\sum^n m_n(t) = f(t)
+\]</span></p>
+<p>优化目标函数看起来有点复杂，其实本质上就是在最小化到每个IMF中心频率的带宽；约束就是所有的IMF之和恰好为输入信号。</p>
+<p>优化目标函数中的</p>
+<p><span class="math display">\[
+(\delta(t) + \frac{j}{\pi t}) * m_n(t)
+\]</span></p>
+<p>就是利用一个冲激函数的Hilbert变换结果与IMF做卷积，在频域上体现为冲激函数的Hilbert变换结果与IMF相乘。</p>
+<p>优化目标函数中的偏微分符号，主要是为了使得当前频率IMF的带宽足够小。这相当于在Constrained Optimization中引入了Wiener filter。<span class="math inline">\(e^{j\omega_n t}\)</span> 是频域上的偏移，因为前面的那一大堆表达式是围绕 <span class="math inline">\(omega=0\)</span> 求最小带宽的，需要通过平移将频率移到感兴趣的 <span class="math inline">\(\omega_n\)</span> 上。</p>
+<p>接下来，可以将上面这个带约束的优化问题通过Lagrangian function将约束条件写入表达式，得到</p>
+<p><span class="math display">\[
+L(m_n, \omega_n, \lambda) = \alpha \sum^n ||\frac{\partial}{\partial t}\{[(\delta(t) + \frac{j}{\pi t})*m_n(t)]e^{-j\psi_n t}\}||^2_2 + ||f - \sum^n m_n(t)||_2^2 + &lt;x, f - \sum^n m_n&gt;
+\]</span></p>
+<p>上述问题可以通过Alternating Direction Method of Multipliers(ADMM)算法求解。完成上述优化问题求解以后，就可以得到IMF <span class="math inline">\(m_n(t)\)</span> 以及对应的频率 <span class="math inline">\(\omega_n\)</span>。</p>
+<h2 id="vmdpy的使用">VMDPY的使用</h2>
+<p><code>vmdpy</code> 是Python中的一个VMD算法实现。最简单的用法是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">u, u_hat, omega = VMD(v, alpha, tau, K, DC, init, tol)</span><br></pre></td></tr></table></figure>
+<p>其中，输出的 <code>u</code> 表示IMF，数据类型为numpy array，规模为 <span class="math inline">\(k\times N\)</span>，其中 <span class="math inline">\(k\)</span> 为IMF的数量，<span class="math inline">\(N\)</span> 为原始信号的长度；<code>u_hat</code> 和 <code>omega</code> 是VMD算法的过程量，<code>omega</code> 的最后一项为最终收敛的IMF频率，长度同样为 <span class="math inline">\(k\)</span>。</p>
+<p>输入的 <code>v</code> 表示待分解的原始信号；<code>alpha</code> 即上述Lagrangian function <span class="math inline">\(\alpha\)</span> 项，表示Lagrangian multiplier；<code>tau</code> 表示noise tolerance，调整这个参数可以调整对于噪声的容忍程度；<code>K</code> 表示IMF的数量；<code>DC</code> 表示原始信号中直流信号的数量；<code>init</code> 表示优化初始频率 <span class="math inline">\(\omega_n\)</span> 的选取；<code>tol</code> 即数值精度设定。</p>
+<p>基本上，VMD用起来只需要给定 <code>K</code> 和 <code>DC</code> 即可，其他的参数保持默认配置就行。</p>
+<h2 id="vmd算法的局限性">VMD算法的局限性</h2>
+<ol type="1">
+<li>VMD算法需要指明IMF的数量，但是在应用中我们往往不会预先知道一个复合信号中存在多少IMF</li>
+<li>当两个IMF的频率相近的时候，VMD可能无法分辨出这两个不同的IMF</li>
+<li>VMD算法是一种优化算法，因此相对来说比较耗时</li>
+</ol>
 
     </div>
 
@@ -300,23 +334,18 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Ubuntu/" rel="tag"># Ubuntu</a>
-              <a href="/tags/Debian/" rel="tag"># Debian</a>
-              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/Signal-Processing/" rel="tag"># Signal Processing</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2022/11/02/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%AF%BC%E8%AE%BA-%E6%A6%82%E8%AE%BA/" rel="prev" title="人工智能导论-概论">
-                  <i class="fa fa-chevron-left"></i> 人工智能导论-概论
+                <a href="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0/" rel="prev" title="数值分析作业-第五章">
+                  <i class="fa fa-chevron-left"></i> 数值分析作业-第五章
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2022/11/02/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%9F%BA%E7%A1%80/" rel="next" title="卡尔曼滤波器基础">
-                  卡尔曼滤波器基础 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
