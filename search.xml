@@ -118,6 +118,32 @@ F_L = -\rho \Gamma U
       </tags>
   </entry>
   <entry>
+    <title>C语言标准</title>
+    <url>/2022/11/02/C%E8%AF%AD%E8%A8%80%E6%A0%87%E5%87%86/</url>
+    <content><![CDATA[<h2 id="classic-c">Classic C</h2>
+<p>最早的C语言标准是 Kernighan &amp; Ritchie 的 <em>The C Programming Language</em> ，也被称为 <em>K&amp;R C</em> 或 <em>Classic C</em> 。</p>
+<h2 id="c89">C89</h2>
+<p>最早的C语言国际标准则是 1989 年通过的 ANSI C 标准，这个版本的C语言被简称为 <em>C89</em> ；一年以后， ISO 也通过了本质上与 C89 相同的标准，即 1990 年的 ISO C ，又称为 <em>C90</em> 。<strong>所以 C89 和 C90 是同一个版本的C语言。</strong> 由于这个标准实际上是 ANSI 制定的，人们更习惯以 ANSI C 或 C89 来表示这个版本的C语言。</p>
+<h2 id="c99">C99</h2>
+<p>为了实现以下三个目标：</p>
+<ul>
+<li>Internationalization</li>
+<li>Correction of deficiencies</li>
+<li>Improvement of computational usefulness</li>
+</ul>
+<p>ANSI/ISO 标准委员会对 C89 进行了一定的更新。</p>
+<h2 id="c11">C11</h2>
+<p>C语言标准委员会经过观察，发现 C99 标准的执行存在一定的问题。某些 C99 标准对许多应用场景是无用的，另外C语言需要进一步适应当前多核处理的趋势，为此 C11 标准被推出。</p>
+]]></content>
+      <categories>
+        <category>Computer Science</category>
+      </categories>
+      <tags>
+        <tag>Programming Language</tag>
+        <tag>C</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ubuntu/Debian从源码安装Python记录</title>
     <url>/2022/11/02/Ubuntu-Debian%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85Python%E8%AE%B0%E5%BD%95/</url>
     <content><![CDATA[<p>先安装编译所需的依赖</p>
@@ -145,32 +171,6 @@ F_L = -\rho \Gamma U
         <tag>Ubuntu</tag>
         <tag>Debian</tag>
         <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>C语言标准</title>
-    <url>/2022/11/02/C%E8%AF%AD%E8%A8%80%E6%A0%87%E5%87%86/</url>
-    <content><![CDATA[<h2 id="classic-c">Classic C</h2>
-<p>最早的C语言标准是 Kernighan &amp; Ritchie 的 <em>The C Programming Language</em> ，也被称为 <em>K&amp;R C</em> 或 <em>Classic C</em> 。</p>
-<h2 id="c89">C89</h2>
-<p>最早的C语言国际标准则是 1989 年通过的 ANSI C 标准，这个版本的C语言被简称为 <em>C89</em> ；一年以后， ISO 也通过了本质上与 C89 相同的标准，即 1990 年的 ISO C ，又称为 <em>C90</em> 。<strong>所以 C89 和 C90 是同一个版本的C语言。</strong> 由于这个标准实际上是 ANSI 制定的，人们更习惯以 ANSI C 或 C89 来表示这个版本的C语言。</p>
-<h2 id="c99">C99</h2>
-<p>为了实现以下三个目标：</p>
-<ul>
-<li>Internationalization</li>
-<li>Correction of deficiencies</li>
-<li>Improvement of computational usefulness</li>
-</ul>
-<p>ANSI/ISO 标准委员会对 C89 进行了一定的更新。</p>
-<h2 id="c11">C11</h2>
-<p>C语言标准委员会经过观察，发现 C99 标准的执行存在一定的问题。某些 C99 标准对许多应用场景是无用的，另外C语言需要进一步适应当前多核处理的趋势，为此 C11 标准被推出。</p>
-]]></content>
-      <categories>
-        <category>Computer Science</category>
-      </categories>
-      <tags>
-        <tag>Programming Language</tag>
-        <tag>C</tag>
       </tags>
   </entry>
   <entry>
@@ -1164,6 +1164,7 @@ e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \i
     <content><![CDATA[<h2 id="什么是mode">什么是Mode</h2>
 <h3 id="引入">引入</h3>
 <p>在听音乐的时候，我们能够通过耳朵快速地辨识出不同音色的声音，并且会判断这种音色是由什么乐器发出的。这种信号处理功能被称为 <strong>Source Seperation</strong>，因为扬声器在播放音乐时，播放的是已经经过混音的声波，而人耳能够通过各种神奇而复杂的滤波器，将不同特征的音色从中分离。这种将不同的信号分量从一个叠加的信号中分离出来的功能非常有意义。</p>
+<span id="more"></span>
 <h3 id="本征模函数-intrinsic-mode-function-imf">本征模函数 Intrinsic Mode Function (IMF)</h3>
 <p>上面所提到的不同特征的音色，可以用本征模函数IMF来表示。一个IMF的表达式如下</p>
 <p><span class="math display">\[
