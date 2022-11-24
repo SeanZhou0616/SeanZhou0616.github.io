@@ -1223,6 +1223,19 @@ L(m_n, \omega_n, \lambda) = \alpha \sum^n ||\frac{\partial}{\partial t}\{[(\delt
       </tags>
   </entry>
   <entry>
+    <title>通过USB备份与恢复微信聊天记录</title>
+    <url>/2022/11/24/%E9%80%9A%E8%BF%87USB%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<p>在电脑上备份和恢复微信聊天记录必须通过局域网，又占局域网带宽，速度也不是很快。实际上，可以通过开启手机热点中的<strong>通过USB共享网络</strong>，通过USB数据线模拟局域网连接，进行电脑与手机之间的通信。</p>
+<p>不过需要注意，通过USB连接到手机热点之后，需要关闭电脑上的WLAN连接，否则微信可能不会走USB这一路局域网。经过实测，微信备份和恢复聊天记录的速度最高可以达到30MB/s。</p>
+]]></content>
+      <categories>
+        <category>technical issues</category>
+      </categories>
+      <tags>
+        <tag>tricks</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Rust新建Cargo项目</title>
     <url>/2022/11/03/Rust%E6%96%B0%E5%BB%BACargo%E9%A1%B9%E7%9B%AE/</url>
     <content><![CDATA[<h2 id="新建项目">新建项目</h2>
@@ -1366,6 +1379,97 @@ L(m_n, \omega_n, \lambda) = \alpha \sum^n ||\frac{\partial}{\partial t}\{[(\delt
       <tags>
         <tag>Programming Language</tag>
         <tag>Rust</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数值分析笔记-最小二乘法</title>
+    <url>/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="由函数表估计函数关系的常见方法">由函数表估计函数关系的常见方法</h2>
+<ol type="1">
+<li>多项式插值</li>
+<li>样条曲线拟合</li>
+</ol>
+<p>多项式插值是一种很简单的函数拟合方法，对于关系比较简单的函数表来说效果还可以，但是如果函数表中的点复杂一些，就会有很大的误差，而且很容易出现Runge现象；样条曲线拟合是一种很好的函数拟合方式，每两个函数点之间都进行一次三次样条插值，且在插值点上能够实现一阶或两阶导数相等，但是计算量非常大。</p>
+<p>上面提到的两种方法都有各自的优势和弊端。下面介绍另外一种函数拟合的方式——最小二乘法。最小二乘法可以克服数值振荡的问题，同时计算量也能够得到控制。</p>
+<span id="more"></span>
+<h2 id="什么是最小二乘法">什么是最小二乘法？</h2>
+<p>最小二乘法是这样一系列操作：在函数空间 <span class="math inline">\(\Phi\)</span> 中，求一个最优的函数 <span class="math inline">\(s^*(x)\)</span>，使得</p>
+<p><span class="math display">\[
+\sum_{i=0}^m\omega_i [s^*(x_i) - f(x_i)]^2=min_{s(x)\in \Phi} \sum_{i=0}^m \omega_i [s(x_i) - f(x_i)]^2
+\]</span></p>
+<p>其中 <span class="math inline">\(\omega_i\)</span> 表示 <span class="math inline">\(x=x_i\)</span> 处的权。最小二乘法本质上是函数逼近。</p>
+<h2 id="最小二乘法的具体做法">最小二乘法的具体做法</h2>
+<p>求上面所述的 <span class="math inline">\(s^*(x)\)</span> 可以等价为求一系列 <span class="math inline">\(\{a_n\}\)</span> 使得</p>
+<p><span class="math display">\[
+\sum_{i=0}^m [a_i\varphi_i(x_i)-f(x_i)]^2
+\]</span></p>
+<p>取得极小值。为此可以写出在第 <span class="math inline">\(k\)</span> 个基函数 <span class="math inline">\(\varphi_k(x)\)</span> 上的法方程</p>
+<p><span class="math display">\[
+\sum_{j=0}^m (\varphi_j, \varphi_k)a_j = (f, \varphi_k), k = 0, 1, 2, ..., n
+\]</span></p>
+<p>其中，<span class="math inline">\((f, g)\)</span> 表示函数 <span class="math inline">\(f\)</span> 和 <span class="math inline">\(g\)</span> 在所有插值点上的函数值之积求和。法方程可以总结为被逼近函数 <span class="math inline">\(f(x)\)</span> 与基函数 <span class="math inline">\(\varphi_k(x)\)</span> 在插值点上的积之总和等于基函数 <span class="math inline">\(\varphi_k(x)\)</span> 与其他所有线性无关基函数 <span class="math inline">\(\varphi_j(x)\)</span> 在插值点上的积之总和的加权和，其中加权系数为 <span class="math inline">\(a_j\)</span>。</p>
+<p>法方程展开可以得到以下等式</p>
+<p><span class="math display">\[
+\sum_{j=0}^m a_j\sum_{i=0}^n \omega_i(x_i) \varphi_j(x_i) \varphi_k(x_i) = \sum_{i=0}^n \omega_i(x_i) \varphi_k(x_i) f(x_i), k=0, 1, 2, ..., n
+\]</span></p>
+<p><em>由法方程可以推导出 <span class="math inline">\(s^*(x)\)</span> 的唯一性</em> 由于 <span class="math inline">\({\varphi(x)}\)</span> 是一组线性无关的基函数，因此上述方程组是非奇异的，那么必然能够解出唯一的一组 <span class="math inline">\(\{a_j\}\)</span>，所以 <span class="math inline">\(s^*(x)\)</span> 存在且唯一。</p>
+<h2 id="最小二乘逼近的技巧">最小二乘逼近的技巧</h2>
+<p>提高最小二乘法拟合精度的技巧主要在于选择合适的函数空间 <span class="math inline">\(\Phi\)</span>。所谓选择合适的函数空间，其实就是选择合适的拟合模型，这一点对于做ECM拟合的人来说应该是非常熟悉的事情了。一种常用的模型是多项式模型 <span class="math inline">\(\{x^n\}\)</span>，但用这个模型进行最小二乘法拟合的效果比多项式插值可能还要差，因为多项式的次数太高了，很容易出现病态问题——即函数表的数据稍有变化，拟合函数的参数 <span class="math inline">\(a_j\)</span> 就出现剧烈的变化。所以多项式模型做最小二乘逼近是很少使用的。</p>
+<p>一种比较好的方法是，采用<strong>正交多项式族</strong>作为基函数。所谓的正交多项式族，是指一些形如 <span class="math inline">\(ax^3 + bx^2 + cx\)</span> 以及 <span class="math inline">\(ax^2 + bx + c\)</span> 的函数组成的一组基函数，这些多项式函数两两正交。</p>
+<h3 id="正交多项式族">正交多项式族</h3>
+<p>正交多项式族可以用以下公式求得</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;p_0(x) = 1\\
+&amp;p_{k+1}(x) = (x -\alpha_k)p_k(x) - \beta_{k-1} p_{k-1}(x)\\
+\end{aligned}
+\]</span></p>
+<p>其中 <span class="math display">\[
+\begin{aligned}
+&amp; \alpha_k = \frac{(xp_k, p_k)}{(p_k, p_k)}\\
+&amp; \beta_{k-1} = \frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\\
+\end{aligned}
+\]</span></p>
+<p>同样，<span class="math inline">\((p_k, p_k)\)</span> 表示函数 <span class="math inline">\(p_k(x)\)</span> 和自己在所有插值点上的函数值之积求和。</p>
+<p>由于正交多项式族是通过给定的插值点构造出来的，因此最易于计算的一组正交多项式族应当满足在插值点上正交，即在插值点上与其他所有基函数的函数值之积求和恰好为0，那么法方程就可以简化为</p>
+<p><span class="math display">\[
+a_k(\varphi_k, \varphi_k) = (f, \varphi_k), k= 0, 1, 2, ..., n
+\]</span></p>
+<p>所以，加权系数 <span class="math inline">\({a_k}\)</span> 的表达式就变得非常简单</p>
+<p><span class="math display">\[
+a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
+\]</span></p>
+<h3 id="利用正交多项式族进行最小二乘逼近">利用正交多项式族进行最小二乘逼近</h3>
+<ol type="1">
+<li>写出第 <span class="math inline">\(k\)</span> 项正交多项式 <span class="math inline">\(p_k(x) = (x - \alpha_{k-1})p_{k-1}(x) - \beta_{k-2}p_{k-2}(x)\)</span></li>
+<li>由 <span class="math inline">\(p_k(x)\)</span> 可以计算得到 <span class="math inline">\(a_k=\displaystyle\frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}\)</span></li>
+<li>第 <span class="math inline">\(k\)</span> 项正交多项式基函数 <span class="math inline">\(g_k(x)=a_kp_k(x)+g_{k-1}(x)\)</span></li>
+<li>为了求出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span>，必须求出 <span class="math inline">\(\alpha_k\)</span> 和 <span class="math inline">\(\beta_{k-1}\)</span>，<span class="math inline">\(\alpha_k=\displaystyle\frac{(xp_k, p_k)}{(p_k, p_k)}\)</span>, <span class="math inline">\(\beta_{k-1} = \displaystyle\frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\)</span></li>
+<li>写出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span></li>
+</ol>
+<h2 id="周期函数逼近">周期函数逼近</h2>
+<p>如果被逼近函数是一个周期函数，那么可以在函数空间 <span class="math inline">\(\Phi = \{1, sinx, cosx, sin2x, cos2x, ..., sinnx, cosnx\}\)</span> 上求最佳平方逼近函数 <span class="math inline">\(s_n(x) = \displaystyle\frac{a_0}{2} + \sum_{j=1}^n(a_jcosjx + b_jsinjx)\)</span>，其中</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) cosjxdx, \ j = 0, 1, ...,n\\
+&amp;b_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) sinjxdx, \ j = 1, 2, ..., n
+\end{aligned}
+\]</span></p>
+<p>其实实际应用中不可能进行连续积分，一般只能给出离散的采样点 <span class="math inline">\((x_i, y_i)\)</span>，那么可以将上面的连续积分离散化，得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_j = \frac{2}{N}\sum_{i=0}^{N-1}y_icoskx_i, \  k=0, 1, ..., n\\
+&amp;b_j = \frac{2}{N}\sum_{i=0}^{N-1}y_isinkx_i, \ k = 1, 2, ..., n
+\end{aligned}
+\]</span></p>
+<p>不过需要注意，上面的 <span class="math inline">\(x\)</span> 应线性变换至 <span class="math inline">\((0, 2\pi)\)</span>。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
       </tags>
   </entry>
   <entry>
@@ -1534,97 +1638,6 @@ L(m_n, \omega_n, \lambda) = \alpha \sum^n ||\frac{\partial}{\partial t}\{[(\delt
       <tags>
         <tag>Programming Language</tag>
         <tag>Rust</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数值分析笔记-最小二乘法</title>
-    <url>/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="由函数表估计函数关系的常见方法">由函数表估计函数关系的常见方法</h2>
-<ol type="1">
-<li>多项式插值</li>
-<li>样条曲线拟合</li>
-</ol>
-<p>多项式插值是一种很简单的函数拟合方法，对于关系比较简单的函数表来说效果还可以，但是如果函数表中的点复杂一些，就会有很大的误差，而且很容易出现Runge现象；样条曲线拟合是一种很好的函数拟合方式，每两个函数点之间都进行一次三次样条插值，且在插值点上能够实现一阶或两阶导数相等，但是计算量非常大。</p>
-<p>上面提到的两种方法都有各自的优势和弊端。下面介绍另外一种函数拟合的方式——最小二乘法。最小二乘法可以克服数值振荡的问题，同时计算量也能够得到控制。</p>
-<span id="more"></span>
-<h2 id="什么是最小二乘法">什么是最小二乘法？</h2>
-<p>最小二乘法是这样一系列操作：在函数空间 <span class="math inline">\(\Phi\)</span> 中，求一个最优的函数 <span class="math inline">\(s^*(x)\)</span>，使得</p>
-<p><span class="math display">\[
-\sum_{i=0}^m\omega_i [s^*(x_i) - f(x_i)]^2=min_{s(x)\in \Phi} \sum_{i=0}^m \omega_i [s(x_i) - f(x_i)]^2
-\]</span></p>
-<p>其中 <span class="math inline">\(\omega_i\)</span> 表示 <span class="math inline">\(x=x_i\)</span> 处的权。最小二乘法本质上是函数逼近。</p>
-<h2 id="最小二乘法的具体做法">最小二乘法的具体做法</h2>
-<p>求上面所述的 <span class="math inline">\(s^*(x)\)</span> 可以等价为求一系列 <span class="math inline">\(\{a_n\}\)</span> 使得</p>
-<p><span class="math display">\[
-\sum_{i=0}^m [a_i\varphi_i(x_i)-f(x_i)]^2
-\]</span></p>
-<p>取得极小值。为此可以写出在第 <span class="math inline">\(k\)</span> 个基函数 <span class="math inline">\(\varphi_k(x)\)</span> 上的法方程</p>
-<p><span class="math display">\[
-\sum_{j=0}^m (\varphi_j, \varphi_k)a_j = (f, \varphi_k), k = 0, 1, 2, ..., n
-\]</span></p>
-<p>其中，<span class="math inline">\((f, g)\)</span> 表示函数 <span class="math inline">\(f\)</span> 和 <span class="math inline">\(g\)</span> 在所有插值点上的函数值之积求和。法方程可以总结为被逼近函数 <span class="math inline">\(f(x)\)</span> 与基函数 <span class="math inline">\(\varphi_k(x)\)</span> 在插值点上的积之总和等于基函数 <span class="math inline">\(\varphi_k(x)\)</span> 与其他所有线性无关基函数 <span class="math inline">\(\varphi_j(x)\)</span> 在插值点上的积之总和的加权和，其中加权系数为 <span class="math inline">\(a_j\)</span>。</p>
-<p>法方程展开可以得到以下等式</p>
-<p><span class="math display">\[
-\sum_{j=0}^m a_j\sum_{i=0}^n \omega_i(x_i) \varphi_j(x_i) \varphi_k(x_i) = \sum_{i=0}^n \omega_i(x_i) \varphi_k(x_i) f(x_i), k=0, 1, 2, ..., n
-\]</span></p>
-<p><em>由法方程可以推导出 <span class="math inline">\(s^*(x)\)</span> 的唯一性</em> 由于 <span class="math inline">\({\varphi(x)}\)</span> 是一组线性无关的基函数，因此上述方程组是非奇异的，那么必然能够解出唯一的一组 <span class="math inline">\(\{a_j\}\)</span>，所以 <span class="math inline">\(s^*(x)\)</span> 存在且唯一。</p>
-<h2 id="最小二乘逼近的技巧">最小二乘逼近的技巧</h2>
-<p>提高最小二乘法拟合精度的技巧主要在于选择合适的函数空间 <span class="math inline">\(\Phi\)</span>。所谓选择合适的函数空间，其实就是选择合适的拟合模型，这一点对于做ECM拟合的人来说应该是非常熟悉的事情了。一种常用的模型是多项式模型 <span class="math inline">\(\{x^n\}\)</span>，但用这个模型进行最小二乘法拟合的效果比多项式插值可能还要差，因为多项式的次数太高了，很容易出现病态问题——即函数表的数据稍有变化，拟合函数的参数 <span class="math inline">\(a_j\)</span> 就出现剧烈的变化。所以多项式模型做最小二乘逼近是很少使用的。</p>
-<p>一种比较好的方法是，采用<strong>正交多项式族</strong>作为基函数。所谓的正交多项式族，是指一些形如 <span class="math inline">\(ax^3 + bx^2 + cx\)</span> 以及 <span class="math inline">\(ax^2 + bx + c\)</span> 的函数组成的一组基函数，这些多项式函数两两正交。</p>
-<h3 id="正交多项式族">正交多项式族</h3>
-<p>正交多项式族可以用以下公式求得</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp;p_0(x) = 1\\
-&amp;p_{k+1}(x) = (x -\alpha_k)p_k(x) - \beta_{k-1} p_{k-1}(x)\\
-\end{aligned}
-\]</span></p>
-<p>其中 <span class="math display">\[
-\begin{aligned}
-&amp; \alpha_k = \frac{(xp_k, p_k)}{(p_k, p_k)}\\
-&amp; \beta_{k-1} = \frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\\
-\end{aligned}
-\]</span></p>
-<p>同样，<span class="math inline">\((p_k, p_k)\)</span> 表示函数 <span class="math inline">\(p_k(x)\)</span> 和自己在所有插值点上的函数值之积求和。</p>
-<p>由于正交多项式族是通过给定的插值点构造出来的，因此最易于计算的一组正交多项式族应当满足在插值点上正交，即在插值点上与其他所有基函数的函数值之积求和恰好为0，那么法方程就可以简化为</p>
-<p><span class="math display">\[
-a_k(\varphi_k, \varphi_k) = (f, \varphi_k), k= 0, 1, 2, ..., n
-\]</span></p>
-<p>所以，加权系数 <span class="math inline">\({a_k}\)</span> 的表达式就变得非常简单</p>
-<p><span class="math display">\[
-a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
-\]</span></p>
-<h3 id="利用正交多项式族进行最小二乘逼近">利用正交多项式族进行最小二乘逼近</h3>
-<ol type="1">
-<li>写出第 <span class="math inline">\(k\)</span> 项正交多项式 <span class="math inline">\(p_k(x) = (x - \alpha_{k-1})p_{k-1}(x) - \beta_{k-2}p_{k-2}(x)\)</span></li>
-<li>由 <span class="math inline">\(p_k(x)\)</span> 可以计算得到 <span class="math inline">\(a_k=\displaystyle\frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}\)</span></li>
-<li>第 <span class="math inline">\(k\)</span> 项正交多项式基函数 <span class="math inline">\(g_k(x)=a_kp_k(x)+g_{k-1}(x)\)</span></li>
-<li>为了求出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span>，必须求出 <span class="math inline">\(\alpha_k\)</span> 和 <span class="math inline">\(\beta_{k-1}\)</span>，<span class="math inline">\(\alpha_k=\displaystyle\frac{(xp_k, p_k)}{(p_k, p_k)}\)</span>, <span class="math inline">\(\beta_{k-1} = \displaystyle\frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\)</span></li>
-<li>写出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span></li>
-</ol>
-<h2 id="周期函数逼近">周期函数逼近</h2>
-<p>如果被逼近函数是一个周期函数，那么可以在函数空间 <span class="math inline">\(\Phi = \{1, sinx, cosx, sin2x, cos2x, ..., sinnx, cosnx\}\)</span> 上求最佳平方逼近函数 <span class="math inline">\(s_n(x) = \displaystyle\frac{a_0}{2} + \sum_{j=1}^n(a_jcosjx + b_jsinjx)\)</span>，其中</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp;a_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) cosjxdx, \ j = 0, 1, ...,n\\
-&amp;b_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) sinjxdx, \ j = 1, 2, ..., n
-\end{aligned}
-\]</span></p>
-<p>其实实际应用中不可能进行连续积分，一般只能给出离散的采样点 <span class="math inline">\((x_i, y_i)\)</span>，那么可以将上面的连续积分离散化，得到</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp;a_j = \frac{2}{N}\sum_{i=0}^{N-1}y_icoskx_i, \  k=0, 1, ..., n\\
-&amp;b_j = \frac{2}{N}\sum_{i=0}^{N-1}y_isinkx_i, \ k = 1, 2, ..., n
-\end{aligned}
-\]</span></p>
-<p>不过需要注意，上面的 <span class="math inline">\(x\)</span> 应线性变换至 <span class="math inline">\((0, 2\pi)\)</span>。</p>
-]]></content>
-      <categories>
-        <category>University</category>
-      </categories>
-      <tags>
-        <tag>Numerical Analysis</tag>
-        <tag>Mathematics</tag>
       </tags>
   </entry>
   <entry>
@@ -2531,6 +2544,294 @@ var(R_N[f]) = \frac{1}{N^2} E\{\sum_{i=1}^N[f(X_i)-I[f]]^2\}
       <tags>
         <tag>Numerical Analysis</tag>
         <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>矩阵分析笔记-矩阵基础回顾</title>
+    <url>/2022/11/22/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E5%9F%BA%E7%A1%80%E5%9B%9E%E9%A1%BE/</url>
+    <content><![CDATA[<h2 id="矩阵基础知识回顾">矩阵基础知识回顾</h2>
+<p>矩阵本质上是一个二维数表，数据以行和列的形式存在于矩阵中。例如一个m行n列的矩阵 <span class="math inline">\(A_{m\times n}\)</span>，可以表示为</p>
+<p><span class="math display">\[
+A_{m\times n}=
+\begin{bmatrix}
+    a_{11} &amp; a_{12} &amp; a_{13} &amp; \cdots &amp; a_{1n} \\
+    a_{21} &amp; a_{22} &amp; a_{23} &amp; \cdots &amp; a_{2n} \\
+    \vdots  &amp; &amp; &amp; \ddots &amp; \\
+    a_{m1} &amp; a_{m2} &amp; a_{m3} &amp; \cdots &amp; a_{mn}
+\end{bmatrix}
+\]</span></p>
+<p>矩阵中的 <span class="math inline">\(a_{ij}\)</span> 项，称为矩阵<strong>元素</strong>。</p>
+<span id="more"></span>
+<h3 id="矩阵的简单分类">矩阵的简单分类</h3>
+<h4 id="零矩阵">零矩阵</h4>
+<p>如果矩阵中的所有元素 <span class="math inline">\(a_{ij}\)</span> 均满足 <span class="math inline">\(a_{ij} = 0\)</span>，则称该矩阵为零矩阵，用符号 <span class="math inline">\(\bold 0\)</span> 来表示。</p>
+<h4 id="行列矩阵">行/列矩阵</h4>
+<p>如果一个矩阵只有一行，那么常称为行矩阵，或行向量。同样的，如果一个矩阵只有一列，那么称为列矩阵，或列向量。</p>
+<h4 id="方阵">方阵</h4>
+<p>如果一个矩阵的维度 <span class="math inline">\(m, n\)</span> 满足 <span class="math inline">\(m=n&gt;0\)</span>，那么这个矩阵可以称为方阵，因为行列的长度相同，就像一个正方形。在本课程中所描述的大部分矩阵都是方阵。</p>
+<h3 id="方阵基本概念">方阵基本概念</h3>
+<h4 id="对角线">对角线</h4>
+<p>对于一个n阶方阵，从左上元素 <span class="math inline">\(a_{11}\)</span> 到右下元素 <span class="math inline">\(a_{nn}\)</span> 所形成的这条对角线，称为方阵的<strong>主对角线</strong>，或简称为对角线；从右上元素 <span class="math inline">\(a_{1n}\)</span> 到左下元素 <span class="math inline">\(a_{n1}\)</span> 形成的对角线，称为方阵的<strong>副对角线</strong>。副对角线不常用。</p>
+<h4 id="对角矩阵">对角矩阵</h4>
+<p>如果一个n阶方阵除了主对角线元素以外，其他元素均为0，那么可以称这个方阵为<strong>对角矩阵</strong>，可以记作 <span class="math inline">\(diag(a_{11}, a_{22}, \cdots, a_{nn})\)</span>。</p>
+<h4 id="单位矩阵">单位矩阵</h4>
+<p>如果一个n阶对角矩阵的对角线元素均为1，那么称这个对角矩阵为n阶单位矩阵，用符号 <span class="math inline">\(E_n\)</span> 表示，在已知这个矩阵阶数的情况下也可简写为 <span class="math inline">\(E\)</span>。</p>
+<h4 id="三角矩阵">三角矩阵</h4>
+<p>如果一个方阵的对角线以下元素均为0，那么可以称这个方阵为<strong>上三角矩阵</strong>；同理，如果这个方阵的对角线以上元素均为0，那么可以称这个方阵为<strong>下三角矩阵</strong>。</p>
+<p>特别的，单位矩阵同时符合上述两个概念的定义，因此单位矩阵既是上三角矩阵，也是下三角矩阵。</p>
+<p>如果一个三角矩阵的<strong>对角线元素</strong>恰好均为1，那么称这个三角矩阵为单位上（下）三角矩阵。</p>
+<h3 id="矩阵运算">矩阵运算</h3>
+<h4 id="矩阵加法">矩阵加法</h4>
+<p>仅同型矩阵允许相加，相加的方式是对应行列位置的元素做实数或复数的加法，过于简单，不再赘述。</p>
+<h4 id="矩阵数乘">矩阵数乘</h4>
+<p>一个矩阵可以与任意一个实数或复数相乘，数乘的方式是矩阵中的所有元素都与这个数做实数或复数的乘法，也很简单，不再赘述。</p>
+<h4 id="矩阵乘法">矩阵乘法</h4>
+<p>矩阵乘法比较特殊，对于两个相乘的矩阵行列规模有严格要求，并且对矩阵相乘的左右顺序也有要求。若乘号左侧的矩阵有j列，那么乘号右侧矩阵的行数必须同样为j，否则无法进行矩阵乘法，因为矩阵乘法的操作是<strong>取乘号左侧矩阵的第i行，与乘号右侧矩阵的第j列，对应元素相乘后求和，得到结果矩阵的第i行第j个元素。</strong></p>
+<p>矩阵乘法的本质是两个线性变换的叠加。相关性质比较熟悉，不再过多叙述。</p>
+<p>特别的，对于方阵而言，由于两个n阶方阵相乘后的结果仍然是n阶方阵，因此方阵允许进行求幂操作。</p>
+<h4 id="矩阵转置">矩阵转置</h4>
+<p>对于一个m行n列的矩阵 <span class="math inline">\(A_{m\times n}\)</span>，若令矩阵的第i行成为结果矩阵的第i列，实现矩阵行列的互换，就可以完成一次矩阵转置操作，得到一个n行m列的矩阵，其中原矩阵第i行第j列的元素 <span class="math inline">\(a_{ij}\)</span> 会位于结果矩阵的第j行第i列，成为 <span class="math inline">\(b_{ji}\)</span>。转置后得到的矩阵记为 <span class="math inline">\(A^T\)</span>，上标 <span class="math inline">\(^T\)</span> 表示<em>Transpose</em>。</p>
+<p>矩阵转置对于矩阵乘法来说比较特别，因为矩阵乘法对于矩阵行列规模是敏感的，因此对于一个矩阵乘法做转置时，原本左乘的矩阵在转置后会变为右乘，如下</p>
+<p><span class="math display">\[
+(AB)^T = B^TA^T
+\]</span></p>
+<p>另外，如果一个矩阵满足 <span class="math inline">\(A^T=A\)</span>，那么称这个矩阵为<strong>对称矩阵</strong>；如果一个矩阵满足 <span class="math inline">\(A^T=-A\)</span>，那么称这个矩阵为<strong>反对称矩阵</strong>。</p>
+<h3 id="行列式">行列式</h3>
+<p>矩阵行列式的计算规律在数学上描述起来很复杂，但是用自然语言描述相对简单：</p>
+<ol type="1">
+<li>从矩阵每一行中取出一个元素相乘，要求这些元素不允许出现在同一列</li>
+<li>元素的列数逆序数对-1求幂，然后乘到上面的积上</li>
+<li>将所有的乘积相加，就可以得到矩阵的行列式</li>
+</ol>
+<p>矩阵行列式的自然起源是n维平行体的体积计算。一个n阶方阵的行列式，表示这个n阶方阵所有列元素对应的n个列向量在n维空间所形成的平行2n面体的<strong>有向体积</strong>。</p>
+<h4 id="维平面的例子">2维平面的例子</h4>
+<p>假如在一个2维直角坐标系上，有两个向量 <span class="math inline">\(\boldsymbol x_1 = (a, b), \boldsymbol x_2 = (c, d)\)</span>，其中点 <span class="math inline">\((a, b)\)</span> 在点 <span class="math inline">\((c, d)\)</span> 的右下侧，那么这两个向量所形成的<strong>有向面积</strong>可以表示为</p>
+<p><span class="math display">\[
+S = ad - bc
+\]</span></p>
+<p>下面的图示更加直观</p>
+<p><img src="/2022/11/22/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E5%9F%BA%E7%A1%80%E5%9B%9E%E9%A1%BE//Parallelogramme.jpg" alt="两个向量形成的平行四边形有向面积" align="center"></p>
+<p>注意，这里提到了有向面积。以逆时针方向为正，如果向量 <span class="math inline">\(\boldsymbol x_1\)</span> 与x轴的夹角小于向量 <span class="math inline">\(\boldsymbol x_2\)</span> 与x轴的夹角，那么向量 <span class="math inline">\(\boldsymbol x_1\)</span> 与向量 <span class="math inline">\(\boldsymbol x_2\)</span> 的有向面积为正；否则为负。</p>
+<p>很显然，在2维直角坐标系上，两个向量的有向面积表达式与2阶方阵的行列式完全相同。假如两个向量共线，那么这两个向量的有向面积很显然为0。</p>
+<h4 id="维空间的例子">3维空间的例子</h4>
+<p>以3阶方阵为例，若将一个3阶方阵 <span class="math inline">\(A_{3\times 3}\)</span> 表示为</p>
+<p><span class="math display">\[
+A_{3\times 3} = \begin{bmatrix}
+    \boldsymbol c_1 &amp; \boldsymbol c_2 &amp; \boldsymbol c_3
+\end{bmatrix}
+\]</span></p>
+<p>每一个列向量都可以看成是三维空间中的一个向量。这个3阶方阵的行列式恰为这三个向量所形成的平行体有向体积。假如其中有两个向量共线或三个向量共平面，那么这个平行体的有向体积为0，在空间中退化为一个平面，甚至退化为一条直线。</p>
+<h4 id="到高维空间的推广">到高维空间的推广</h4>
+<p>上面的引例可以推广到高维空间。一个n阶方阵的行列式在n维空间上恰为这个n阶方阵中列向量所形成的平行2n面体的有向体积，假如其中有两个列向量出现了线性相关的情况，那么这个有向体积就会坍缩为0。实际上一个非满秩方阵行列式为0的几何意义，就是方阵中至少存在一对线性相关的列向量，导致这n个列向量所形成的平行体在n维空间发生了降维，坍缩为n-1维超平面，甚至更低的超直线等。</p>
+<h4 id="行列式的运算性质">行列式的运算性质</h4>
+<p>行列式的英文为<em>Determinant</em>，常用 <span class="math inline">\(detA\)</span> 表示矩阵 <span class="math inline">\(A\)</span> 的行列式。</p>
+<ol type="1">
+<li>矩阵转置不影响行列式大小</li>
+<li>若方阵 <span class="math inline">\(A\)</span> 为n阶方阵，<span class="math inline">\(k\)</span>为一常数，那么有 <span class="math inline">\(detkA=k^ndetA\)</span> （相当于所有列向量的长度均为k倍，那么很明显平行2n面体的体积将会是 <span class="math inline">\(k^n\)</span> 倍）</li>
+<li><span class="math inline">\(detAB=detAdetB\)</span></li>
+<li>三角矩阵的行列式恰为对角线元素之积</li>
+</ol>
+<p>如果要求一个矩阵的行列式，可以通过按行列展开的方式进行求解。将矩阵元素 <span class="math inline">\(a_{ij}\)</span> 所在行列从矩阵中去除后，可以得到一个 <span class="math inline">\(n-1\)</span> 阶方阵，这个方阵的行列式称为元素 <span class="math inline">\(a_{ij}\)</span> 的余子式，常记作 <span class="math inline">\(M_{ij}\)</span>；<span class="math inline">\(a_{ij}\)</span> 在矩阵中的位置决定了这个余子式的符号，由 <span class="math inline">\((-1)^{i+j}\)</span> 确定，实际上就是前面所称的逆序数概念，那么 <span class="math inline">\(A_{ij} = (-1)^{i+j}M_{ij}\)</span> 被称为元素 <span class="math inline">\(a_{ij}\)</span> 的代数余子式。矩阵的行列式可以写作</p>
+<p><span class="math display">\[
+det A_n = \sum_{k=1}^n a_{ik}A_{ik}, i \in [1, n]
+\]</span></p>
+<p>一个矩阵可以从任意一行进行展开，同样，也可以从任意一列进行展开</p>
+<p><span class="math display">\[
+det A_n = \sum_{k=1}^n a_{ki}A_{ki}, i \in [1, n]
+\]</span></p>
+<p>相对来说，使用矩阵按行或按列展开来求解行列式还是很繁琐的，一般会通过将矩阵通过<strong>初等变换</strong>转换为一个三角矩阵后，用三角矩阵对角线元素之积来计算矩阵的行列式。</p>
+<h3 id="伴随矩阵">伴随矩阵</h3>
+<p>前面提到了矩阵元素的代数余子式概念。事实上，每一个矩阵 <span class="math inline">\(A\)</span> 都有一个伴随矩阵 <span class="math inline">\(A^*\)</span>，这个伴随矩阵可以写作</p>
+<p><span class="math display">\[
+A^* = \begin{bmatrix}
+    A_{11} &amp; A_{21} &amp; \cdots &amp; A_{n1}\\
+    A_{12} &amp; A_{22} &amp; \cdots &amp; A_{n2}\\
+    \vdots &amp; &amp; \ddots &amp;\\
+    A_{1n} &amp; A_{2n} &amp; \cdots &amp; A_{nn}
+\end{bmatrix}
+\]</span></p>
+<p>也就是所有元素都由其代数余子式取代后做转置。这个伴随矩阵和原矩阵的关系如下</p>
+<p><span class="math display">\[
+AA^* = A^*A = (detA)E
+\]</span></p>
+<p>事实上，上面这条式子定义了一个矩阵的逆矩阵</p>
+<p><span class="math display">\[
+A^{-1} = \frac{A^*}{detA}
+\]</span></p>
+<p>显然，一个矩阵存在逆矩阵的充分必要条件是，这个矩阵的行列式不为0。</p>
+<h3 id="逆矩阵">逆矩阵</h3>
+<p>在上个小节，逆矩阵的定义式已经给出。矩阵的可逆性又可以称为非奇异性，可逆矩阵就是非奇异矩阵，不可逆矩阵就是奇异矩阵。另外，逆矩阵还有以下性质</p>
+<ol type="1">
+<li>一个矩阵如果是可逆的，其逆矩阵必然也是可逆的，而且逆矩阵的逆就是原矩阵，即 <span class="math inline">\((A^{-1})^{-1}=A\)</span></li>
+<li>若一个矩阵是可逆的，那么有 <span class="math inline">\((kA)^{-1} = k^{-1}A^{-1}\)</span></li>
+<li>若 <span class="math inline">\(AB\)</span> 可逆，那么有 <span class="math inline">\((AB)^{-1} = B^{-1}A^{-1}\)</span></li>
+<li>若 <span class="math inline">\(A^T\)</span> 可逆，那么有 <span class="math inline">\((A^T)^{-1} = (A^{-1})^T\)</span>，即矩阵转置的逆等于逆矩阵的转置</li>
+<li>逆矩阵的行列式等于原矩阵行列式的倒数，即 <span class="math inline">\(detA^{-1} = (detA)^{-1}\)</span></li>
+</ol>
+<h3 id="矩阵的迹">矩阵的迹</h3>
+<p>矩阵的迹就是其对角线元素之和。由于迹的英文是Trace，因此用 <span class="math inline">\(tr A\)</span> 来标记矩阵 <span class="math inline">\(A\)</span> 的迹。</p>
+<p>迹在证明矩阵的一些性质时有一些作用，但平时使用比较少。</p>
+<h3 id="共轭矩阵">共轭矩阵</h3>
+<p>假如矩阵 <span class="math inline">\(A\)</span> 是一个复数矩阵，那么对其所有元素 <span class="math inline">\(a_{ij}\)</span> 均取共轭，得到 <span class="math inline">\(\bar A\)</span>，那么这个 <span class="math inline">\(\bar A\)</span> 就称为矩阵 <span class="math inline">\(A\)</span> 的共轭矩阵。复数矩阵的共轭和转置常同时进行，因此 <span class="math inline">\(\bar A^T\)</span> 常用 <span class="math inline">\(A^H\)</span> 表示。</p>
+<p>若矩阵 <span class="math inline">\(A\)</span> 满足</p>
+<p><span class="math display">\[
+A = A^H
+\]</span></p>
+<p>则称矩阵 <span class="math inline">\(A\)</span> 为Hermite矩阵。</p>
+<p>若矩阵 <span class="math inline">\(A\)</span> 满足</p>
+<p><span class="math display">\[
+A = -A^H
+\]</span></p>
+<p>则称矩阵 <span class="math inline">\(A\)</span> 为反Hermite矩阵。</p>
+<h3 id="分块矩阵">分块矩阵</h3>
+<p>对于高阶矩阵来说，将矩阵分割为若干小矩阵，将其看作若干矩阵元素，对于矩阵分析来说是很有帮助的。分块矩阵有许多基本的性质，这里不做记录，下面记录一些可能比较tricky的性质</p>
+<ol type="1">
+<li>若 <span class="math inline">\(A = diag(A_1, A_2, \cdots, A_n)\)</span>，那么 <span class="math inline">\(A^{-1} = diag(A_1^{-1}, A_2^{-1}, \cdots, A_n^{-1})\)</span></li>
+<li>若矩阵 <span class="math inline">\(A\)</span> 是三角分块矩阵，其中 <span class="math inline">\(A_1, A_2, \cdots, A_n\)</span> 为穿过对角线的矩阵块，那么 <span class="math inline">\(detA = detA_1detA_2\cdots detA_n\)</span></li>
+</ol>
+<h2 id="线性方程组">线性方程组</h2>
+<h3 id="线性方程组和矩阵表示的关系">线性方程组和矩阵表示的关系</h3>
+<p>对于一个 <span class="math inline">\(m\times n\)</span> 规模的线性方程组</p>
+<p><span class="math display">\[
+\begin{cases}
+    a_{11}x_1 + a_{12}x_2 + &amp;\cdots &amp;+ a_{1n} x_n = b_1\\
+    a_{21}x_1 + a_{22}x_2 + &amp;\cdots &amp;+ a_{2n} x_n = b_2\\
+    &amp; \cdots &amp; \\
+    a_{m1}x_1 + a_{m2}x_2 + &amp;\cdots &amp;+ a_{mn} x_n = b_m
+\end{cases}
+\]</span></p>
+<p>可以通过矩阵和向量的方式表示上面这个线性方程组，即令</p>
+<p><span class="math display">\[
+A = \begin{bmatrix}
+    a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n}\\
+    a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n}\\
+    \vdots &amp; &amp; \ddots \\
+    a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn}
+\end{bmatrix}, \
+\boldsymbol x = \begin{bmatrix}
+    x_1\\x_2\\\vdots \\x_n
+\end{bmatrix} ,\
+\boldsymbol b = \begin{bmatrix}
+    b_1\\b_2\\\vdots \\ b_m
+\end{bmatrix}
+\]</span></p>
+<p>上述线性方程组可以简单地表示为</p>
+<p><span class="math display">\[
+A\boldsymbol x=\boldsymbol b
+\]</span></p>
+<h3 id="线性方程组研究的问题">线性方程组研究的问题</h3>
+<p>对于一个线性方程组，我们主要研究以下三方面问题</p>
+<ol type="1">
+<li>线性方程组是否有解？</li>
+<li>线性方程组有多少解？</li>
+<li>线性方程组如何求解？</li>
+</ol>
+<p>上述矩阵 <span class="math inline">\(A\)</span> 称为系数矩阵，<span class="math inline">\(\boldsymbol{x}\)</span> 称为未知数矩阵，或未知数向量，<span class="math inline">\(\boldsymbol{b}\)</span> 称为常数项矩阵，或常数项向量。</p>
+<p>观察到系数矩阵和常数项矩阵具有相同的行数，常将这两个矩阵合在一起，称为<strong>增广矩阵</strong>，如下</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    A &amp; \boldsymbol{b}
+\end{pmatrix}
+=\begin{bmatrix}
+    a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} &amp; b_1 \\
+    a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} &amp; b_2 \\
+    \vdots &amp; &amp; \ddots &amp; &amp;\vdots\\
+    a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} &amp; b_m
+\end{bmatrix}
+\]</span></p>
+<p>假如线性方程组的系数矩阵 <span class="math inline">\(A\)</span> 是一个方阵，那么根据<strong>Cramer法则</strong>，这个线性方程组存在唯一解的充要条件是系数方阵可逆。</p>
+<h3 id="矩阵的初等变换">矩阵的初等变换</h3>
+<h4 id="矩阵初等变换分类">矩阵初等变换分类</h4>
+<p>矩阵的初等变换包括以下三种</p>
+<ol type="1">
+<li>第一类初等变换——矩阵的某两行或某两列元素交换位置</li>
+<li>第二类初等变换——矩阵的某一行或某一列元素乘上一个常数</li>
+<li>第三类初等变换——矩阵的某一行（列）元素乘上一个常数，然后加到另一行（列）上</li>
+</ol>
+<p>从解线性方程组的角度来看，第二类与第三类初等变换是解线性方程组中最常见的操作：对某一条方程两边同乘以某一个常数；某一条方程乘以某一个常数以后，加到另一个方程上，以实现消元等目的。</p>
+<h4 id="初等变换矩阵">初等变换矩阵</h4>
+<p>矩阵的初等变换可以抽象为一个矩阵，例如第一类初等变换可以抽象为</p>
+<p><span class="math display">\[
+\begin{aligned}
+    E(i, j) = E - (\boldsymbol{e}_i - \boldsymbol{e}_j)(\boldsymbol{e}_i - \boldsymbol{e}_j)^T &amp;= E - \begin{bmatrix}
+    0  &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 \\
+    \vdots &amp;  \ddots \\
+    0  &amp; \cdots &amp; 1 &amp;\cdots&amp; -1 &amp; \cdots &amp; 0\\
+    \vdots &amp; &amp;  &amp; \ddots \\
+    0 &amp; \cdots &amp; -1 &amp; \cdots &amp; 1 &amp; \cdots &amp; 0\\
+    \vdots &amp; &amp; &amp; &amp; &amp;  \ddots &amp;\\
+    0  &amp;\cdots&amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp;0
+\end{bmatrix} \\
+&amp;=
+\begin{bmatrix}
+    1  &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 \\
+    \vdots &amp;  \ddots \\
+    0  &amp; \cdots &amp; 0 &amp;\cdots&amp; 1 &amp; \cdots &amp; 0\\
+    \vdots &amp; &amp;  &amp; \ddots \\
+    0 &amp; \cdots &amp; 1 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0\\
+    \vdots &amp; &amp; &amp; &amp; &amp;  \ddots &amp;\\
+    0  &amp;\cdots&amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp;1
+\end{bmatrix}
+\end{aligned}
+\]</span></p>
+<p>其中 <span class="math inline">\(\boldsymbol{e}_i\)</span> 表示单位矩阵 <span class="math inline">\(E\)</span> 的第 <span class="math inline">\(i\)</span> 列列向量。那么，如果要对矩阵 <span class="math inline">\(A\)</span> 进行第一类初等列变换，只需要将第一类初等变换矩阵 <span class="math inline">\(E(i, j)\)</span> 左乘到矩阵 <span class="math inline">\(A\)</span> 上，即 <span class="math inline">\(E(i, j)A\)</span>；同理，如果要进行第一类初等行变换，只需要将第一类初等变换矩阵 <span class="math inline">\(E(i, j)\)</span> 右乘到矩阵 <span class="math inline">\(A\)</span> 上，即 <span class="math inline">\(AE(i, j)\)</span>。</p>
+<p>其他两类初等变换也是类似的，都可以以一个初等变换矩阵来抽象对目标矩阵进行初等变换操作。</p>
+<p>矩阵经过初等变换之后，行列式会发生以下变化</p>
+<ol type="1">
+<li>经过第一类初等变换后，行列式变符号</li>
+<li>经过第二类初等变换后，行列式变为原来的 <span class="math inline">\(k\)</span> 倍，<span class="math inline">\(k\)</span> 为第二类初等变换时的倍数</li>
+<li>经过第三类初等变换后，行列式不发生任何变化</li>
+</ol>
+<p>很明显，初等变换是可逆的，初等变换的逆变换是相同类型的初等变换；相应的，初等矩阵也都是可逆的，初等矩阵的逆矩阵也是相同类型的初等矩阵。</p>
+<h4 id="矩阵的等价关系">矩阵的等价关系</h4>
+<p>如果矩阵 <span class="math inline">\(A\)</span> 经过有限次初等变换变为了矩阵 <span class="math inline">\(B\)</span>，那么称矩阵 <span class="math inline">\(A\)</span> 和矩阵 <span class="math inline">\(B\)</span> 等价，记作 <span class="math inline">\(A\sim B\)</span>。这和三角形的相似或全等性质非常类似，在数学上这些关系都称为<strong>等价关系</strong>。</p>
+<p>可以将等价矩阵的转换关系写作</p>
+<p><span class="math display">\[
+PAQ = B
+\]</span></p>
+<p>上面的 <span class="math inline">\(P\)</span> 可以看作由矩阵 <span class="math inline">\(A\)</span> 转换到矩阵 <span class="math inline">\(B\)</span> 所必须进行的初等列变换矩阵之积，<span class="math inline">\(Q\)</span> 则是相应的初等行变换矩阵之积。</p>
+<p>另外，矩阵与对应的逆矩阵之间本质上也是等价关系，同样可以通过若干个初等矩阵之积进行转换。在应用中，往往不会使用伴随矩阵求逆矩阵，而是利用初等变换进行逆矩阵的求解，以减少计算量。</p>
+<h3 id="阶梯形矩阵与行最简形矩阵">阶梯形矩阵与行最简形矩阵</h3>
+<p>通过矩阵进行线性方程组的求解过程，其实就是对系数矩阵进行初等变换的过程。在这个过程中，矩阵将会出现两种简化形式</p>
+<ol type="1">
+<li>阶梯形</li>
+<li>行最简形</li>
+</ol>
+<h4 id="阶梯形矩阵">阶梯形矩阵</h4>
+<p>阶梯形矩阵指的是，矩阵的非零行全部在矩阵的最下方；另外，矩阵越靠下的行，其行首非0元素越靠右，例如</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+    2 &amp; 2 &amp; 3 &amp; 4\\
+    0 &amp; 0&amp; 3 &amp; 2\\
+    0 &amp; 0&amp;0 &amp; 1
+\end{bmatrix}
+\]</span></p>
+<p>就是一个阶梯形矩阵。如果将所有的0元素遮起来，那么这个矩阵将会变成</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+    1 &amp; 2&amp; 3&amp;4\\
+    &amp;&amp;1&amp;2\\
+    &amp;&amp;&amp;1
+\end{bmatrix}
+\]</span></p>
+<p>这个矩阵的形状就很像是一个阶梯，由此得名。</p>
+<h4 id="行最简形矩阵">行最简形矩阵</h4>
+<p>在阶梯形矩阵的基础上，先通过第二类初等变换令所有行的首元素变为1，再令首元素所在列的其他元素均通过初等变换化为0，得到行最简形矩阵，例如</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+    1 &amp; 2 &amp; 0 &amp; 0\\
+    0 &amp; 0 &amp; 1 &amp; 0\\
+    0 &amp; 0 &amp; 0 &amp; 1
+\end{bmatrix}
+\]</span></p>
+<p>可以看到，行最简形矩阵其实就是阶梯形矩阵再通过第三类初等变换得到的。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Mathematics</tag>
+        <tag>Matrix Analysis</tag>
       </tags>
   </entry>
   <entry>

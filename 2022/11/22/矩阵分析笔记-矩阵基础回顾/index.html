@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="矩阵基础知识回顾 矩阵本质上是一个二维数表，数据以行和列的形式存在于矩阵中。例如一个m行n列的矩阵 \(A_{m\times n}\)，可以表示为 \[ A_{m\times n}&#x3D; \begin{bmatrix}     a_{11} &amp; a_{12} &amp; a_{13} &amp; \cdots &amp; a_{1n} \\     a_{21} &amp; a_{22} &amp;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="矩阵分析笔记-矩阵基础回顾">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/11/22/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E5%9F%BA%E7%A1%80%E5%9B%9E%E9%A1%BE/">
+<meta property="og:site_name" content="Elysium">
+<meta property="og:description" content="矩阵基础知识回顾 矩阵本质上是一个二维数表，数据以行和列的形式存在于矩阵中。例如一个m行n列的矩阵 \(A_{m\times n}\)，可以表示为 \[ A_{m\times n}&#x3D; \begin{bmatrix}     a_{11} &amp; a_{12} &amp; a_{13} &amp; \cdots &amp; a_{1n} \\     a_{21} &amp; a_{22} &amp;a">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://seanzhou0616.github.io/2022/11/22/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E5%9F%BA%E7%A1%80%E5%9B%9E%E9%A1%BE//Parallelogramme.jpg">
+<meta property="article:published_time" content="2022-11-22T12:33:56.000Z">
+<meta property="article:modified_time" content="2022-11-24T06:14:43.430Z">
+<meta property="article:author" content="Sean Zhou">
+<meta property="article:tag" content="Mathematics">
+<meta property="article:tag" content="Matrix Analysis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://seanzhou0616.github.io/2022/11/22/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E5%9F%BA%E7%A1%80%E5%9B%9E%E9%A1%BE//Parallelogramme.jpg">
+
+
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/11/22/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E5%9F%BA%E7%A1%80%E5%9B%9E%E9%A1%BE/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/11/22/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E5%9F%BA%E7%A1%80%E5%9B%9E%E9%A1%BE/","path":"2022/11/22/矩阵分析笔记-矩阵基础回顾/","title":"矩阵分析笔记-矩阵基础回顾"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>矩阵分析笔记-矩阵基础回顾 | Elysium</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Elysium</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Tech, Race, Game</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.</span> <span class="nav-text">矩阵基础知识回顾</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%9A%84%E7%AE%80%E5%8D%95%E5%88%86%E7%B1%BB"><span class="nav-number">1.1.</span> <span class="nav-text">矩阵的简单分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%B6%E7%9F%A9%E9%98%B5"><span class="nav-number">1.1.1.</span> <span class="nav-text">零矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%8C%E5%88%97%E7%9F%A9%E9%98%B5"><span class="nav-number">1.1.2.</span> <span class="nav-text">行&#x2F;列矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E9%98%B5"><span class="nav-number">1.1.3.</span> <span class="nav-text">方阵</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E9%98%B5%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.2.</span> <span class="nav-text">方阵基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E8%A7%92%E7%BA%BF"><span class="nav-number">1.2.1.</span> <span class="nav-text">对角线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E8%A7%92%E7%9F%A9%E9%98%B5"><span class="nav-number">1.2.2.</span> <span class="nav-text">对角矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E4%BD%8D%E7%9F%A9%E9%98%B5"><span class="nav-number">1.2.3.</span> <span class="nav-text">单位矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%89%E8%A7%92%E7%9F%A9%E9%98%B5"><span class="nav-number">1.2.4.</span> <span class="nav-text">三角矩阵</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%BF%90%E7%AE%97"><span class="nav-number">1.3.</span> <span class="nav-text">矩阵运算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%8A%A0%E6%B3%95"><span class="nav-number">1.3.1.</span> <span class="nav-text">矩阵加法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E6%95%B0%E4%B9%98"><span class="nav-number">1.3.2.</span> <span class="nav-text">矩阵数乘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E4%B9%98%E6%B3%95"><span class="nav-number">1.3.3.</span> <span class="nav-text">矩阵乘法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%BD%AC%E7%BD%AE"><span class="nav-number">1.3.4.</span> <span class="nav-text">矩阵转置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E5%88%97%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text">行列式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%B4%E5%B9%B3%E9%9D%A2%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">1.4.1.</span> <span class="nav-text">2维平面的例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%B4%E7%A9%BA%E9%97%B4%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">1.4.2.</span> <span class="nav-text">3维空间的例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%B0%E9%AB%98%E7%BB%B4%E7%A9%BA%E9%97%B4%E7%9A%84%E6%8E%A8%E5%B9%BF"><span class="nav-number">1.4.3.</span> <span class="nav-text">到高维空间的推广</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%8C%E5%88%97%E5%BC%8F%E7%9A%84%E8%BF%90%E7%AE%97%E6%80%A7%E8%B4%A8"><span class="nav-number">1.4.4.</span> <span class="nav-text">行列式的运算性质</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%B4%E9%9A%8F%E7%9F%A9%E9%98%B5"><span class="nav-number">1.5.</span> <span class="nav-text">伴随矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%86%E7%9F%A9%E9%98%B5"><span class="nav-number">1.6.</span> <span class="nav-text">逆矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%9A%84%E8%BF%B9"><span class="nav-number">1.7.</span> <span class="nav-text">矩阵的迹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E8%BD%AD%E7%9F%A9%E9%98%B5"><span class="nav-number">1.8.</span> <span class="nav-text">共轭矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%9D%97%E7%9F%A9%E9%98%B5"><span class="nav-number">1.9.</span> <span class="nav-text">分块矩阵</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84"><span class="nav-number">2.</span> <span class="nav-text">线性方程组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E5%92%8C%E7%9F%A9%E9%98%B5%E8%A1%A8%E7%A4%BA%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.1.</span> <span class="nav-text">线性方程组和矩阵表示的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%A0%94%E7%A9%B6%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">2.2.</span> <span class="nav-text">线性方程组研究的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%9A%84%E5%88%9D%E7%AD%89%E5%8F%98%E6%8D%A2"><span class="nav-number">2.3.</span> <span class="nav-text">矩阵的初等变换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%88%9D%E7%AD%89%E5%8F%98%E6%8D%A2%E5%88%86%E7%B1%BB"><span class="nav-number">2.3.1.</span> <span class="nav-text">矩阵初等变换分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E7%AD%89%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5"><span class="nav-number">2.3.2.</span> <span class="nav-text">初等变换矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%9A%84%E7%AD%89%E4%BB%B7%E5%85%B3%E7%B3%BB"><span class="nav-number">2.3.3.</span> <span class="nav-text">矩阵的等价关系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%A2%AF%E5%BD%A2%E7%9F%A9%E9%98%B5%E4%B8%8E%E8%A1%8C%E6%9C%80%E7%AE%80%E5%BD%A2%E7%9F%A9%E9%98%B5"><span class="nav-number">2.4.</span> <span class="nav-text">阶梯形矩阵与行最简形矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E6%A2%AF%E5%BD%A2%E7%9F%A9%E9%98%B5"><span class="nav-number">2.4.1.</span> <span class="nav-text">阶梯形矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%8C%E6%9C%80%E7%AE%80%E5%BD%A2%E7%9F%A9%E9%98%B5"><span class="nav-number">2.4.2.</span> <span class="nav-text">行最简形矩阵</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sean Zhou"
+      src="/images/Yeah.jpg">
+  <p class="site-author-name" itemprop="name">Sean Zhou</p>
+  <div class="site-description" itemprop="description">Sean Zhou's personal blog.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/SeanZhou0616" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SeanZhou0616" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:seanzhou616@gmail.com" title="E-Mail → mailto:seanzhou616@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/22/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E5%9F%BA%E7%A1%80%E5%9B%9E%E9%A1%BE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="矩阵分析笔记-矩阵基础回顾 | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          矩阵分析笔记-矩阵基础回顾
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-11-22 20:33:56" itemprop="dateCreated datePublished" datetime="2022-11-22T20:33:56+08:00">2022-11-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-24 14:14:43" itemprop="dateModified" datetime="2022-11-24T14:14:43+08:00">2022-11-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/University/" itemprop="url" rel="index"><span itemprop="name">University</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="矩阵基础知识回顾">矩阵基础知识回顾</h2>
+<p>矩阵本质上是一个二维数表，数据以行和列的形式存在于矩阵中。例如一个m行n列的矩阵 <span class="math inline">\(A_{m\times n}\)</span>，可以表示为</p>
+<p><span class="math display">\[
+A_{m\times n}=
+\begin{bmatrix}
+    a_{11} &amp; a_{12} &amp; a_{13} &amp; \cdots &amp; a_{1n} \\
+    a_{21} &amp; a_{22} &amp; a_{23} &amp; \cdots &amp; a_{2n} \\
+    \vdots  &amp; &amp; &amp; \ddots &amp; \\
+    a_{m1} &amp; a_{m2} &amp; a_{m3} &amp; \cdots &amp; a_{mn}
+\end{bmatrix}
+\]</span></p>
+<p>矩阵中的 <span class="math inline">\(a_{ij}\)</span> 项，称为矩阵<strong>元素</strong>。</p>
+<span id="more"></span>
+<h3 id="矩阵的简单分类">矩阵的简单分类</h3>
+<h4 id="零矩阵">零矩阵</h4>
+<p>如果矩阵中的所有元素 <span class="math inline">\(a_{ij}\)</span> 均满足 <span class="math inline">\(a_{ij} = 0\)</span>，则称该矩阵为零矩阵，用符号 <span class="math inline">\(\bold 0\)</span> 来表示。</p>
+<h4 id="行列矩阵">行/列矩阵</h4>
+<p>如果一个矩阵只有一行，那么常称为行矩阵，或行向量。同样的，如果一个矩阵只有一列，那么称为列矩阵，或列向量。</p>
+<h4 id="方阵">方阵</h4>
+<p>如果一个矩阵的维度 <span class="math inline">\(m, n\)</span> 满足 <span class="math inline">\(m=n&gt;0\)</span>，那么这个矩阵可以称为方阵，因为行列的长度相同，就像一个正方形。在本课程中所描述的大部分矩阵都是方阵。</p>
+<h3 id="方阵基本概念">方阵基本概念</h3>
+<h4 id="对角线">对角线</h4>
+<p>对于一个n阶方阵，从左上元素 <span class="math inline">\(a_{11}\)</span> 到右下元素 <span class="math inline">\(a_{nn}\)</span> 所形成的这条对角线，称为方阵的<strong>主对角线</strong>，或简称为对角线；从右上元素 <span class="math inline">\(a_{1n}\)</span> 到左下元素 <span class="math inline">\(a_{n1}\)</span> 形成的对角线，称为方阵的<strong>副对角线</strong>。副对角线不常用。</p>
+<h4 id="对角矩阵">对角矩阵</h4>
+<p>如果一个n阶方阵除了主对角线元素以外，其他元素均为0，那么可以称这个方阵为<strong>对角矩阵</strong>，可以记作 <span class="math inline">\(diag(a_{11}, a_{22}, \cdots, a_{nn})\)</span>。</p>
+<h4 id="单位矩阵">单位矩阵</h4>
+<p>如果一个n阶对角矩阵的对角线元素均为1，那么称这个对角矩阵为n阶单位矩阵，用符号 <span class="math inline">\(E_n\)</span> 表示，在已知这个矩阵阶数的情况下也可简写为 <span class="math inline">\(E\)</span>。</p>
+<h4 id="三角矩阵">三角矩阵</h4>
+<p>如果一个方阵的对角线以下元素均为0，那么可以称这个方阵为<strong>上三角矩阵</strong>；同理，如果这个方阵的对角线以上元素均为0，那么可以称这个方阵为<strong>下三角矩阵</strong>。</p>
+<p>特别的，单位矩阵同时符合上述两个概念的定义，因此单位矩阵既是上三角矩阵，也是下三角矩阵。</p>
+<p>如果一个三角矩阵的<strong>对角线元素</strong>恰好均为1，那么称这个三角矩阵为单位上（下）三角矩阵。</p>
+<h3 id="矩阵运算">矩阵运算</h3>
+<h4 id="矩阵加法">矩阵加法</h4>
+<p>仅同型矩阵允许相加，相加的方式是对应行列位置的元素做实数或复数的加法，过于简单，不再赘述。</p>
+<h4 id="矩阵数乘">矩阵数乘</h4>
+<p>一个矩阵可以与任意一个实数或复数相乘，数乘的方式是矩阵中的所有元素都与这个数做实数或复数的乘法，也很简单，不再赘述。</p>
+<h4 id="矩阵乘法">矩阵乘法</h4>
+<p>矩阵乘法比较特殊，对于两个相乘的矩阵行列规模有严格要求，并且对矩阵相乘的左右顺序也有要求。若乘号左侧的矩阵有j列，那么乘号右侧矩阵的行数必须同样为j，否则无法进行矩阵乘法，因为矩阵乘法的操作是<strong>取乘号左侧矩阵的第i行，与乘号右侧矩阵的第j列，对应元素相乘后求和，得到结果矩阵的第i行第j个元素。</strong></p>
+<p>矩阵乘法的本质是两个线性变换的叠加。相关性质比较熟悉，不再过多叙述。</p>
+<p>特别的，对于方阵而言，由于两个n阶方阵相乘后的结果仍然是n阶方阵，因此方阵允许进行求幂操作。</p>
+<h4 id="矩阵转置">矩阵转置</h4>
+<p>对于一个m行n列的矩阵 <span class="math inline">\(A_{m\times n}\)</span>，若令矩阵的第i行成为结果矩阵的第i列，实现矩阵行列的互换，就可以完成一次矩阵转置操作，得到一个n行m列的矩阵，其中原矩阵第i行第j列的元素 <span class="math inline">\(a_{ij}\)</span> 会位于结果矩阵的第j行第i列，成为 <span class="math inline">\(b_{ji}\)</span>。转置后得到的矩阵记为 <span class="math inline">\(A^T\)</span>，上标 <span class="math inline">\(^T\)</span> 表示<em>Transpose</em>。</p>
+<p>矩阵转置对于矩阵乘法来说比较特别，因为矩阵乘法对于矩阵行列规模是敏感的，因此对于一个矩阵乘法做转置时，原本左乘的矩阵在转置后会变为右乘，如下</p>
+<p><span class="math display">\[
+(AB)^T = B^TA^T
+\]</span></p>
+<p>另外，如果一个矩阵满足 <span class="math inline">\(A^T=A\)</span>，那么称这个矩阵为<strong>对称矩阵</strong>；如果一个矩阵满足 <span class="math inline">\(A^T=-A\)</span>，那么称这个矩阵为<strong>反对称矩阵</strong>。</p>
+<h3 id="行列式">行列式</h3>
+<p>矩阵行列式的计算规律在数学上描述起来很复杂，但是用自然语言描述相对简单：</p>
+<ol type="1">
+<li>从矩阵每一行中取出一个元素相乘，要求这些元素不允许出现在同一列</li>
+<li>元素的列数逆序数对-1求幂，然后乘到上面的积上</li>
+<li>将所有的乘积相加，就可以得到矩阵的行列式</li>
+</ol>
+<p>矩阵行列式的自然起源是n维平行体的体积计算。一个n阶方阵的行列式，表示这个n阶方阵所有列元素对应的n个列向量在n维空间所形成的平行2n面体的<strong>有向体积</strong>。</p>
+<h4 id="维平面的例子">2维平面的例子</h4>
+<p>假如在一个2维直角坐标系上，有两个向量 <span class="math inline">\(\boldsymbol x_1 = (a, b), \boldsymbol x_2 = (c, d)\)</span>，其中点 <span class="math inline">\((a, b)\)</span> 在点 <span class="math inline">\((c, d)\)</span> 的右下侧，那么这两个向量所形成的<strong>有向面积</strong>可以表示为</p>
+<p><span class="math display">\[
+S = ad - bc
+\]</span></p>
+<p>下面的图示更加直观</p>
+<p><img src="/2022/11/22/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E5%9F%BA%E7%A1%80%E5%9B%9E%E9%A1%BE//Parallelogramme.jpg" alt="两个向量形成的平行四边形有向面积" align="center"></p>
+<p>注意，这里提到了有向面积。以逆时针方向为正，如果向量 <span class="math inline">\(\boldsymbol x_1\)</span> 与x轴的夹角小于向量 <span class="math inline">\(\boldsymbol x_2\)</span> 与x轴的夹角，那么向量 <span class="math inline">\(\boldsymbol x_1\)</span> 与向量 <span class="math inline">\(\boldsymbol x_2\)</span> 的有向面积为正；否则为负。</p>
+<p>很显然，在2维直角坐标系上，两个向量的有向面积表达式与2阶方阵的行列式完全相同。假如两个向量共线，那么这两个向量的有向面积很显然为0。</p>
+<h4 id="维空间的例子">3维空间的例子</h4>
+<p>以3阶方阵为例，若将一个3阶方阵 <span class="math inline">\(A_{3\times 3}\)</span> 表示为</p>
+<p><span class="math display">\[
+A_{3\times 3} = \begin{bmatrix}
+    \boldsymbol c_1 &amp; \boldsymbol c_2 &amp; \boldsymbol c_3
+\end{bmatrix}
+\]</span></p>
+<p>每一个列向量都可以看成是三维空间中的一个向量。这个3阶方阵的行列式恰为这三个向量所形成的平行体有向体积。假如其中有两个向量共线或三个向量共平面，那么这个平行体的有向体积为0，在空间中退化为一个平面，甚至退化为一条直线。</p>
+<h4 id="到高维空间的推广">到高维空间的推广</h4>
+<p>上面的引例可以推广到高维空间。一个n阶方阵的行列式在n维空间上恰为这个n阶方阵中列向量所形成的平行2n面体的有向体积，假如其中有两个列向量出现了线性相关的情况，那么这个有向体积就会坍缩为0。实际上一个非满秩方阵行列式为0的几何意义，就是方阵中至少存在一对线性相关的列向量，导致这n个列向量所形成的平行体在n维空间发生了降维，坍缩为n-1维超平面，甚至更低的超直线等。</p>
+<h4 id="行列式的运算性质">行列式的运算性质</h4>
+<p>行列式的英文为<em>Determinant</em>，常用 <span class="math inline">\(detA\)</span> 表示矩阵 <span class="math inline">\(A\)</span> 的行列式。</p>
+<ol type="1">
+<li>矩阵转置不影响行列式大小</li>
+<li>若方阵 <span class="math inline">\(A\)</span> 为n阶方阵，<span class="math inline">\(k\)</span>为一常数，那么有 <span class="math inline">\(detkA=k^ndetA\)</span> （相当于所有列向量的长度均为k倍，那么很明显平行2n面体的体积将会是 <span class="math inline">\(k^n\)</span> 倍）</li>
+<li><span class="math inline">\(detAB=detAdetB\)</span></li>
+<li>三角矩阵的行列式恰为对角线元素之积</li>
+</ol>
+<p>如果要求一个矩阵的行列式，可以通过按行列展开的方式进行求解。将矩阵元素 <span class="math inline">\(a_{ij}\)</span> 所在行列从矩阵中去除后，可以得到一个 <span class="math inline">\(n-1\)</span> 阶方阵，这个方阵的行列式称为元素 <span class="math inline">\(a_{ij}\)</span> 的余子式，常记作 <span class="math inline">\(M_{ij}\)</span>；<span class="math inline">\(a_{ij}\)</span> 在矩阵中的位置决定了这个余子式的符号，由 <span class="math inline">\((-1)^{i+j}\)</span> 确定，实际上就是前面所称的逆序数概念，那么 <span class="math inline">\(A_{ij} = (-1)^{i+j}M_{ij}\)</span> 被称为元素 <span class="math inline">\(a_{ij}\)</span> 的代数余子式。矩阵的行列式可以写作</p>
+<p><span class="math display">\[
+det A_n = \sum_{k=1}^n a_{ik}A_{ik}, i \in [1, n]
+\]</span></p>
+<p>一个矩阵可以从任意一行进行展开，同样，也可以从任意一列进行展开</p>
+<p><span class="math display">\[
+det A_n = \sum_{k=1}^n a_{ki}A_{ki}, i \in [1, n]
+\]</span></p>
+<p>相对来说，使用矩阵按行或按列展开来求解行列式还是很繁琐的，一般会通过将矩阵通过<strong>初等变换</strong>转换为一个三角矩阵后，用三角矩阵对角线元素之积来计算矩阵的行列式。</p>
+<h3 id="伴随矩阵">伴随矩阵</h3>
+<p>前面提到了矩阵元素的代数余子式概念。事实上，每一个矩阵 <span class="math inline">\(A\)</span> 都有一个伴随矩阵 <span class="math inline">\(A^*\)</span>，这个伴随矩阵可以写作</p>
+<p><span class="math display">\[
+A^* = \begin{bmatrix}
+    A_{11} &amp; A_{21} &amp; \cdots &amp; A_{n1}\\
+    A_{12} &amp; A_{22} &amp; \cdots &amp; A_{n2}\\
+    \vdots &amp; &amp; \ddots &amp;\\
+    A_{1n} &amp; A_{2n} &amp; \cdots &amp; A_{nn}
+\end{bmatrix}
+\]</span></p>
+<p>也就是所有元素都由其代数余子式取代后做转置。这个伴随矩阵和原矩阵的关系如下</p>
+<p><span class="math display">\[
+AA^* = A^*A = (detA)E
+\]</span></p>
+<p>事实上，上面这条式子定义了一个矩阵的逆矩阵</p>
+<p><span class="math display">\[
+A^{-1} = \frac{A^*}{detA}
+\]</span></p>
+<p>显然，一个矩阵存在逆矩阵的充分必要条件是，这个矩阵的行列式不为0。</p>
+<h3 id="逆矩阵">逆矩阵</h3>
+<p>在上个小节，逆矩阵的定义式已经给出。矩阵的可逆性又可以称为非奇异性，可逆矩阵就是非奇异矩阵，不可逆矩阵就是奇异矩阵。另外，逆矩阵还有以下性质</p>
+<ol type="1">
+<li>一个矩阵如果是可逆的，其逆矩阵必然也是可逆的，而且逆矩阵的逆就是原矩阵，即 <span class="math inline">\((A^{-1})^{-1}=A\)</span></li>
+<li>若一个矩阵是可逆的，那么有 <span class="math inline">\((kA)^{-1} = k^{-1}A^{-1}\)</span></li>
+<li>若 <span class="math inline">\(AB\)</span> 可逆，那么有 <span class="math inline">\((AB)^{-1} = B^{-1}A^{-1}\)</span></li>
+<li>若 <span class="math inline">\(A^T\)</span> 可逆，那么有 <span class="math inline">\((A^T)^{-1} = (A^{-1})^T\)</span>，即矩阵转置的逆等于逆矩阵的转置</li>
+<li>逆矩阵的行列式等于原矩阵行列式的倒数，即 <span class="math inline">\(detA^{-1} = (detA)^{-1}\)</span></li>
+</ol>
+<h3 id="矩阵的迹">矩阵的迹</h3>
+<p>矩阵的迹就是其对角线元素之和。由于迹的英文是Trace，因此用 <span class="math inline">\(tr A\)</span> 来标记矩阵 <span class="math inline">\(A\)</span> 的迹。</p>
+<p>迹在证明矩阵的一些性质时有一些作用，但平时使用比较少。</p>
+<h3 id="共轭矩阵">共轭矩阵</h3>
+<p>假如矩阵 <span class="math inline">\(A\)</span> 是一个复数矩阵，那么对其所有元素 <span class="math inline">\(a_{ij}\)</span> 均取共轭，得到 <span class="math inline">\(\bar A\)</span>，那么这个 <span class="math inline">\(\bar A\)</span> 就称为矩阵 <span class="math inline">\(A\)</span> 的共轭矩阵。复数矩阵的共轭和转置常同时进行，因此 <span class="math inline">\(\bar A^T\)</span> 常用 <span class="math inline">\(A^H\)</span> 表示。</p>
+<p>若矩阵 <span class="math inline">\(A\)</span> 满足</p>
+<p><span class="math display">\[
+A = A^H
+\]</span></p>
+<p>则称矩阵 <span class="math inline">\(A\)</span> 为Hermite矩阵。</p>
+<p>若矩阵 <span class="math inline">\(A\)</span> 满足</p>
+<p><span class="math display">\[
+A = -A^H
+\]</span></p>
+<p>则称矩阵 <span class="math inline">\(A\)</span> 为反Hermite矩阵。</p>
+<h3 id="分块矩阵">分块矩阵</h3>
+<p>对于高阶矩阵来说，将矩阵分割为若干小矩阵，将其看作若干矩阵元素，对于矩阵分析来说是很有帮助的。分块矩阵有许多基本的性质，这里不做记录，下面记录一些可能比较tricky的性质</p>
+<ol type="1">
+<li>若 <span class="math inline">\(A = diag(A_1, A_2, \cdots, A_n)\)</span>，那么 <span class="math inline">\(A^{-1} = diag(A_1^{-1}, A_2^{-1}, \cdots, A_n^{-1})\)</span></li>
+<li>若矩阵 <span class="math inline">\(A\)</span> 是三角分块矩阵，其中 <span class="math inline">\(A_1, A_2, \cdots, A_n\)</span> 为穿过对角线的矩阵块，那么 <span class="math inline">\(detA = detA_1detA_2\cdots detA_n\)</span></li>
+</ol>
+<h2 id="线性方程组">线性方程组</h2>
+<h3 id="线性方程组和矩阵表示的关系">线性方程组和矩阵表示的关系</h3>
+<p>对于一个 <span class="math inline">\(m\times n\)</span> 规模的线性方程组</p>
+<p><span class="math display">\[
+\begin{cases}
+    a_{11}x_1 + a_{12}x_2 + &amp;\cdots &amp;+ a_{1n} x_n = b_1\\
+    a_{21}x_1 + a_{22}x_2 + &amp;\cdots &amp;+ a_{2n} x_n = b_2\\
+    &amp; \cdots &amp; \\
+    a_{m1}x_1 + a_{m2}x_2 + &amp;\cdots &amp;+ a_{mn} x_n = b_m
+\end{cases}
+\]</span></p>
+<p>可以通过矩阵和向量的方式表示上面这个线性方程组，即令</p>
+<p><span class="math display">\[
+A = \begin{bmatrix}
+    a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n}\\
+    a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n}\\
+    \vdots &amp; &amp; \ddots \\
+    a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn}
+\end{bmatrix}, \
+\boldsymbol x = \begin{bmatrix}
+    x_1\\x_2\\\vdots \\x_n
+\end{bmatrix} ,\
+\boldsymbol b = \begin{bmatrix}
+    b_1\\b_2\\\vdots \\ b_m
+\end{bmatrix}
+\]</span></p>
+<p>上述线性方程组可以简单地表示为</p>
+<p><span class="math display">\[
+A\boldsymbol x=\boldsymbol b
+\]</span></p>
+<h3 id="线性方程组研究的问题">线性方程组研究的问题</h3>
+<p>对于一个线性方程组，我们主要研究以下三方面问题</p>
+<ol type="1">
+<li>线性方程组是否有解？</li>
+<li>线性方程组有多少解？</li>
+<li>线性方程组如何求解？</li>
+</ol>
+<p>上述矩阵 <span class="math inline">\(A\)</span> 称为系数矩阵，<span class="math inline">\(\boldsymbol{x}\)</span> 称为未知数矩阵，或未知数向量，<span class="math inline">\(\boldsymbol{b}\)</span> 称为常数项矩阵，或常数项向量。</p>
+<p>观察到系数矩阵和常数项矩阵具有相同的行数，常将这两个矩阵合在一起，称为<strong>增广矩阵</strong>，如下</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    A &amp; \boldsymbol{b}
+\end{pmatrix}
+=\begin{bmatrix}
+    a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} &amp; b_1 \\
+    a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} &amp; b_2 \\
+    \vdots &amp; &amp; \ddots &amp; &amp;\vdots\\
+    a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn} &amp; b_m
+\end{bmatrix}
+\]</span></p>
+<p>假如线性方程组的系数矩阵 <span class="math inline">\(A\)</span> 是一个方阵，那么根据<strong>Cramer法则</strong>，这个线性方程组存在唯一解的充要条件是系数方阵可逆。</p>
+<h3 id="矩阵的初等变换">矩阵的初等变换</h3>
+<h4 id="矩阵初等变换分类">矩阵初等变换分类</h4>
+<p>矩阵的初等变换包括以下三种</p>
+<ol type="1">
+<li>第一类初等变换——矩阵的某两行或某两列元素交换位置</li>
+<li>第二类初等变换——矩阵的某一行或某一列元素乘上一个常数</li>
+<li>第三类初等变换——矩阵的某一行（列）元素乘上一个常数，然后加到另一行（列）上</li>
+</ol>
+<p>从解线性方程组的角度来看，第二类与第三类初等变换是解线性方程组中最常见的操作：对某一条方程两边同乘以某一个常数；某一条方程乘以某一个常数以后，加到另一个方程上，以实现消元等目的。</p>
+<h4 id="初等变换矩阵">初等变换矩阵</h4>
+<p>矩阵的初等变换可以抽象为一个矩阵，例如第一类初等变换可以抽象为</p>
+<p><span class="math display">\[
+\begin{aligned}
+    E(i, j) = E - (\boldsymbol{e}_i - \boldsymbol{e}_j)(\boldsymbol{e}_i - \boldsymbol{e}_j)^T &amp;= E - \begin{bmatrix}
+    0  &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 \\
+    \vdots &amp;  \ddots \\
+    0  &amp; \cdots &amp; 1 &amp;\cdots&amp; -1 &amp; \cdots &amp; 0\\
+    \vdots &amp; &amp;  &amp; \ddots \\
+    0 &amp; \cdots &amp; -1 &amp; \cdots &amp; 1 &amp; \cdots &amp; 0\\
+    \vdots &amp; &amp; &amp; &amp; &amp;  \ddots &amp;\\
+    0  &amp;\cdots&amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp;0
+\end{bmatrix} \\
+&amp;=
+\begin{bmatrix}
+    1  &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 \\
+    \vdots &amp;  \ddots \\
+    0  &amp; \cdots &amp; 0 &amp;\cdots&amp; 1 &amp; \cdots &amp; 0\\
+    \vdots &amp; &amp;  &amp; \ddots \\
+    0 &amp; \cdots &amp; 1 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0\\
+    \vdots &amp; &amp; &amp; &amp; &amp;  \ddots &amp;\\
+    0  &amp;\cdots&amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp;1
+\end{bmatrix}
+\end{aligned}
+\]</span></p>
+<p>其中 <span class="math inline">\(\boldsymbol{e}_i\)</span> 表示单位矩阵 <span class="math inline">\(E\)</span> 的第 <span class="math inline">\(i\)</span> 列列向量。那么，如果要对矩阵 <span class="math inline">\(A\)</span> 进行第一类初等列变换，只需要将第一类初等变换矩阵 <span class="math inline">\(E(i, j)\)</span> 左乘到矩阵 <span class="math inline">\(A\)</span> 上，即 <span class="math inline">\(E(i, j)A\)</span>；同理，如果要进行第一类初等行变换，只需要将第一类初等变换矩阵 <span class="math inline">\(E(i, j)\)</span> 右乘到矩阵 <span class="math inline">\(A\)</span> 上，即 <span class="math inline">\(AE(i, j)\)</span>。</p>
+<p>其他两类初等变换也是类似的，都可以以一个初等变换矩阵来抽象对目标矩阵进行初等变换操作。</p>
+<p>矩阵经过初等变换之后，行列式会发生以下变化</p>
+<ol type="1">
+<li>经过第一类初等变换后，行列式变符号</li>
+<li>经过第二类初等变换后，行列式变为原来的 <span class="math inline">\(k\)</span> 倍，<span class="math inline">\(k\)</span> 为第二类初等变换时的倍数</li>
+<li>经过第三类初等变换后，行列式不发生任何变化</li>
+</ol>
+<p>很明显，初等变换是可逆的，初等变换的逆变换是相同类型的初等变换；相应的，初等矩阵也都是可逆的，初等矩阵的逆矩阵也是相同类型的初等矩阵。</p>
+<h4 id="矩阵的等价关系">矩阵的等价关系</h4>
+<p>如果矩阵 <span class="math inline">\(A\)</span> 经过有限次初等变换变为了矩阵 <span class="math inline">\(B\)</span>，那么称矩阵 <span class="math inline">\(A\)</span> 和矩阵 <span class="math inline">\(B\)</span> 等价，记作 <span class="math inline">\(A\sim B\)</span>。这和三角形的相似或全等性质非常类似，在数学上这些关系都称为<strong>等价关系</strong>。</p>
+<p>可以将等价矩阵的转换关系写作</p>
+<p><span class="math display">\[
+PAQ = B
+\]</span></p>
+<p>上面的 <span class="math inline">\(P\)</span> 可以看作由矩阵 <span class="math inline">\(A\)</span> 转换到矩阵 <span class="math inline">\(B\)</span> 所必须进行的初等列变换矩阵之积，<span class="math inline">\(Q\)</span> 则是相应的初等行变换矩阵之积。</p>
+<p>另外，矩阵与对应的逆矩阵之间本质上也是等价关系，同样可以通过若干个初等矩阵之积进行转换。在应用中，往往不会使用伴随矩阵求逆矩阵，而是利用初等变换进行逆矩阵的求解，以减少计算量。</p>
+<h3 id="阶梯形矩阵与行最简形矩阵">阶梯形矩阵与行最简形矩阵</h3>
+<p>通过矩阵进行线性方程组的求解过程，其实就是对系数矩阵进行初等变换的过程。在这个过程中，矩阵将会出现两种简化形式</p>
+<ol type="1">
+<li>阶梯形</li>
+<li>行最简形</li>
+</ol>
+<h4 id="阶梯形矩阵">阶梯形矩阵</h4>
+<p>阶梯形矩阵指的是，矩阵的非零行全部在矩阵的最下方；另外，矩阵越靠下的行，其行首非0元素越靠右，例如</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+    2 &amp; 2 &amp; 3 &amp; 4\\
+    0 &amp; 0&amp; 3 &amp; 2\\
+    0 &amp; 0&amp;0 &amp; 1
+\end{bmatrix}
+\]</span></p>
+<p>就是一个阶梯形矩阵。如果将所有的0元素遮起来，那么这个矩阵将会变成</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+    1 &amp; 2&amp; 3&amp;4\\
+    &amp;&amp;1&amp;2\\
+    &amp;&amp;&amp;1
+\end{bmatrix}
+\]</span></p>
+<p>这个矩阵的形状就很像是一个阶梯，由此得名。</p>
+<h4 id="行最简形矩阵">行最简形矩阵</h4>
+<p>在阶梯形矩阵的基础上，先通过第二类初等变换令所有行的首元素变为1，再令首元素所在列的其他元素均通过初等变换化为0，得到行最简形矩阵，例如</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+    1 &amp; 2 &amp; 0 &amp; 0\\
+    0 &amp; 0 &amp; 1 &amp; 0\\
+    0 &amp; 0 &amp; 0 &amp; 1
+\end{bmatrix}
+\]</span></p>
+<p>可以看到，行最简形矩阵其实就是阶梯形矩阵再通过第三类初等变换得到的。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Mathematics/" rel="tag"># Mathematics</a>
+              <a href="/tags/Matrix-Analysis/" rel="tag"># Matrix Analysis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/21/VMD%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/" rel="prev" title="VMD算法笔记">
+                  <i class="fa fa-chevron-left"></i> VMD算法笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/11/24/%E9%80%9A%E8%BF%87USB%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95/" rel="next" title="通过USB备份与恢复微信聊天记录">
+                  通过USB备份与恢复微信聊天记录 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sean Zhou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
