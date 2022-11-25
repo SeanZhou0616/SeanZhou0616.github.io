@@ -159,7 +159,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -170,7 +170,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -208,6 +208,140 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/25/%E5%A4%A7%E8%AF%9D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%BB%AA%E8%AE%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/11/25/%E5%A4%A7%E8%AF%9D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%BB%AA%E8%AE%BA/" class="post-title-link" itemprop="url">大话数据结构笔记-数据结构绪论</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-25 15:07:07 / 修改时间：17:06:46" itemprop="dateCreated datePublished" datetime="2022-11-25T15:07:07+08:00">2022-11-25</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="什么是数据结构">什么是数据结构？</h2>
+<p>让我们来考虑这样一组数据：一个班级中所有同学的姓名、性别、学号形成的一张表格。</p>
+<p>这样的一组数据可以划分为以下几个层次</p>
+<ul>
+<li>数据集
+<ul>
+<li>人（同学）
+<ul>
+<li>姓名</li>
+<li>性别</li>
+<li>学号</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>数据集层次是最大的一个层次，这指向一个完整的数据表，或是一个数据文件；人的层次是数据在数据集中最粗的一个分层，或者说是最大的一个单位；姓名、性别和学号等信息则是人这一层次数据的子项，隶属于某一个特定的人。</p>
+<p>在上面这个分层中，我们会发现这组数据的结构可以这样描述：</p>
+<ul>
+<li>数据结构
+<ul>
+<li>数据对象
+<ul>
+<li>数据项</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>数据对象可以理解成把描述一件事情或者一个物体的所有数据封装起来，这个数据对象下面就是一些相应的数据项。数据对象一般理解为一个实例，我们往往通过一个模板来实例化一个数据对象，这个数据模板可以理解为是一个数据类。</p>
+<p>数据结构，则描述了数据对象之间的关系。在上面这个学生信息的例子中，学生的信息之间属于平行关系，可以抽象为一个集合。</p>
+<p>借用Python的概念来解释上面的几个概念，就会变得非常简明易懂。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    name: <span class="built_in">str</span></span><br><span class="line">    gender: <span class="built_in">bool</span></span><br><span class="line">    identifier: <span class="built_in">int</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name: <span class="built_in">str</span>, gender: <span class="built_in">bool</span>, identifier: <span class="built_in">int</span></span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.gender = gender</span><br><span class="line">        self.identifier = identifier</span><br><span class="line"></span><br><span class="line">xiao_ming = Student(<span class="string">&quot;Xiao Ming&quot;</span>, <span class="literal">True</span>, <span class="number">123456</span>)</span><br><span class="line">xiao_hong = Student(<span class="string">&quot;Xiao Hong&quot;</span>, <span class="literal">True</span>, <span class="number">234556</span>)</span><br><span class="line"></span><br><span class="line">student_list = [xiao_ming, xiao_hong]</span><br></pre></td></tr></table></figure>
+<p>按理来说，其实是先有数据结构的概念，才产生编程语言的；但很多时候如果我们先对抽象的概念有一个直观的感受，那么其实更有利于理解抽象的概念。</p>
+<blockquote>
+<p>这里的术语与大话数据结构中的术语可能并不一致，但对数据结构的描述是一致的。</p>
+</blockquote>
+<h2 id="数据结构的分类">数据结构的分类</h2>
+<h3 id="逻辑结构">逻辑结构</h3>
+<p>当我们从数学逻辑的角度来考虑数据之间的关系的时候，这个数据结构就属于逻辑结构。常见的逻辑结构有</p>
+<ul>
+<li>集合结构：数据对象之间是平行的，没有对应关系</li>
+<li>线性结构：数据对象之间有顺序关系</li>
+<li>树：数据对象之间有继承关系，一般一个数据对象只能有一个父结点，但允许有多个子结点</li>
+<li>图：数据对象之间相互连结，形成网络状关系</li>
+</ul>
+<p>在逻辑结构中，一个数据对象常被称为一个结点。注意不要与<em>节点</em>混淆，节点一般指一个实物，例如一个ECU。</p>
+<h3 id="物理结构">物理结构</h3>
+<p>上面的数据结构是比较抽象的存在，我们需要考虑这些数据如何存储到计算机中去。一般来说，我们考虑数据结构的存储时，往往指的是数据对象在内存中的存储，那么在内存中，数据结构分为以下两种</p>
+<ul>
+<li>顺序存储结构：在内存中开辟一片连续的空间，不同的数据对象紧挨着存入内存</li>
+<li>链式存储结构：数据可以连续，但往往是不连续地存储在内存中；每个数据对象都带有一个指向与之相连结点的指针，从而实现非线性逻辑结构中结点之间的相互关联</li>
+</ul>
+<p>典型的顺序存储结构是数组，几乎所有编程语言都提供这一特性；典型的链式存储结构是链表，在学习C语言的时候对这种数据结构进行过简单的介绍。</p>
+<h2 id="抽象数据类型adt">抽象数据类型ADT</h2>
+<h3 id="什么是数据类型">什么是数据类型？</h3>
+<p>数据类型指的是一个逻辑上的数据在计算机中存储的形式，例如一个整数可以以整型类型存储、一个小数可以以浮点型类型存储、一句文本可以以字符串类型。我们需要为不同的逻辑数据提供一种人与计算机之间的协议，使得逻辑数据能够以二进制的形式存储在计算机内，但在我们访问时又可以从二进制还原为原来的逻辑数据。</p>
+<p>一般来说，数据类型可以分成以下两类</p>
+<ul>
+<li>基本类型</li>
+<li>复合类型</li>
+</ul>
+<p>在不同的编程语言中，上面两种数据类型可能以不同的命名或术语存在，例如Rust中称基本类型为标量；但从逻辑上讲，总是能将数据类型划分成上面这两类。基本类型包括整型、浮点型、字符型等最基本的数据类型，而复合类型则提供了一些封装方式，可以将基本类型的数据按照一定的结构组装起来，例如C语言提供了数组、Python提供了列表和元组。</p>
+<p>一般来说，数据类型不仅仅提供了一种逻辑数据的存储方法，还定义了这些数据之间能够进行的一些运算，例如一种编程语言至少应该对整型和浮点型数据提供四则运算的定义，否则只能存数据而不能用这些数据来运算，那么计算机也就不能称其为计算机了。</p>
+<h3 id="什么是抽象数据类型adt">什么是抽象数据类型ADT？</h3>
+<p>所谓的抽象数据类型，就是对某一种数据的抽象描述。或者说，数据类型其实是某一种抽象数据类型的具体实现，例如数学上的整数是一种抽象数据类型，而C语言中定义的整型则是对整数的一种具体实现。实际上不同编程语言在不同的计算机平台上，对于整型的实现可能各不相同，但是整数这个抽象概念是不变的，而且我们在逻辑上进行算法设计或者程序设计的时候，总是用抽象数据类型进行逻辑演绎，而不会纠结于某一种编程语言对于这种抽象数据类型的具体实现。</p>
+<p>另外，抽象数据类型还可以是一些自定义的数据，例如编程语言往往不会原生提供形如三维点 <span class="math inline">\((x, y, z)\)</span> 这样的数据类型，但是我们在设计算法的时候，可能就需要抽象出这样的数据类型，方便我们的构思。在具体实现的时候，编程语言一般也会提供一些支持，让我们可以通过基本类型来实现形如三维点这样的自定义抽象数据类型，例如在Java中定义一个三维点类来实现。</p>
+<p>同样，抽象数据类型也不仅仅定义如何存储数据，也可以定义数据之间的运算关系。注意，这里所指的运算就不局限于四则运算了，可以是各种复杂的运算，例如一些逻辑判断、信号处理上的卷积操作等等。</p>
+<p>其实抽象数据类型对于熟悉面向对象编程的人来说太熟悉了，完全就是类定义嘛！类的字段用于定义对象的数据，类的方法用于定义对象的运算操作。本质上讲，类和抽象数据类型，确实就是相同的概念。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -333,7 +467,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-24 18:02:45" itemprop="dateModified" datetime="2022-11-24T18:02:45+08:00">2022-11-24</time>
+      <time title="修改时间：2022-11-25 12:15:57" itemprop="dateModified" datetime="2022-11-25T12:15:57+08:00">2022-11-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1033,93 +1167,6 @@ A_{m\times n}=
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/04/Rust%E5%85%A5%E9%97%A8-%E7%8C%9C%E6%95%B0%E5%AD%97%E6%B8%B8%E6%88%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/Yeah.jpg">
-      <meta itemprop="name" content="Sean Zhou">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Elysium">
-      <meta itemprop="description" content="Sean Zhou's personal blog.">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Elysium">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/11/04/Rust%E5%85%A5%E9%97%A8-%E7%8C%9C%E6%95%B0%E5%AD%97%E6%B8%B8%E6%88%8F/" class="post-title-link" itemprop="url">Rust入门-猜数字游戏</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2022-11-04 14:50:33 / 修改时间：17:47:57" itemprop="dateCreated datePublished" datetime="2022-11-04T14:50:33+08:00">2022-11-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Computer-Science/" itemprop="url" rel="index"><span itemprop="name">Computer Science</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="引入">引入</h2>
-<p>Rust是一门很有意思的语言。《Rust程序设计语言》中，在Rust入门章节介绍了一个猜数字小游戏的编程，对于Rust的入门非常有帮助，因此简单记录一下。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/11/04/Rust%E5%85%A5%E9%97%A8-%E7%8C%9C%E6%95%B0%E5%AD%97%E6%B8%B8%E6%88%8F/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
