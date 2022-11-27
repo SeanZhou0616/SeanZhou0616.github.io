@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本章节介绍多项式的一些基础知识，为后续章节中的矩阵分析做基础知识铺垫。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="矩阵分析笔记-多项式">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/11/26/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E5%A4%9A%E9%A1%B9%E5%BC%8F/">
+<meta property="og:site_name" content="Elysium">
+<meta property="og:description" content="本章节介绍多项式的一些基础知识，为后续章节中的矩阵分析做基础知识铺垫。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-26T12:42:26.000Z">
+<meta property="article:modified_time" content="2022-11-27T03:45:06.393Z">
+<meta property="article:author" content="Sean Zhou">
+<meta property="article:tag" content="Matrix Analysis">
+<meta property="article:tag" content="Mathematics">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/11/26/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E5%A4%9A%E9%A1%B9%E5%BC%8F/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/11/26/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E5%A4%9A%E9%A1%B9%E5%BC%8F/","path":"2022/11/26/矩阵分析笔记-多项式/","title":"矩阵分析笔记-多项式"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>矩阵分析笔记-多项式 | Elysium</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Elysium</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Tech, Race, Game</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%9F%9F"><span class="nav-number">1.</span> <span class="nav-text">数域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%9F%9F%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">数域的概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%BF%E4%B9%89%E5%9B%9B%E5%88%99%E8%BF%90%E7%AE%97"><span class="nav-number">1.2.</span> <span class="nav-text">广义四则运算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E5%A4%9A%E9%A1%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">一元多项式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E5%A4%9A%E9%A1%B9%E5%BC%8F%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">一元多项式的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E5%A4%9A%E9%A1%B9%E5%BC%8F%E7%9A%84%E8%BF%90%E7%AE%97"><span class="nav-number">2.2.</span> <span class="nav-text">一元多项式的运算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E5%A4%9A%E9%A1%B9%E5%BC%8F%E7%9B%B8%E7%AD%89"><span class="nav-number">2.2.1.</span> <span class="nav-text">一元多项式相等</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E5%A4%9A%E9%A1%B9%E5%BC%8F%E5%8A%A0%E6%B3%95"><span class="nav-number">2.2.2.</span> <span class="nav-text">一元多项式加法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E5%A4%9A%E9%A1%B9%E5%BC%8F%E4%B9%98%E6%B3%95"><span class="nav-number">2.2.3.</span> <span class="nav-text">一元多项式乘法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E5%A4%9A%E9%A1%B9%E5%BC%8F%E5%B8%A6%E4%BD%99%E9%99%A4%E6%B3%95"><span class="nav-number">2.2.4.</span> <span class="nav-text">一元多项式带余除法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E5%85%83%E5%A4%9A%E9%A1%B9%E5%BC%8F%E6%95%B4%E9%99%A4"><span class="nav-number">2.2.5.</span> <span class="nav-text">一元多项式整除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%99%E5%BC%8F%E5%AE%9A%E7%90%86"><span class="nav-number">2.2.6.</span> <span class="nav-text">余式定理</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sean Zhou"
+      src="/images/Yeah.jpg">
+  <p class="site-author-name" itemprop="name">Sean Zhou</p>
+  <div class="site-description" itemprop="description">Sean Zhou's personal blog.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/SeanZhou0616" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SeanZhou0616" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:seanzhou616@gmail.com" title="E-Mail → mailto:seanzhou616@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/26/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E5%A4%9A%E9%A1%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="矩阵分析笔记-多项式 | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          矩阵分析笔记-多项式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-11-26 20:42:26" itemprop="dateCreated datePublished" datetime="2022-11-26T20:42:26+08:00">2022-11-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-27 11:45:06" itemprop="dateModified" datetime="2022-11-27T11:45:06+08:00">2022-11-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/University/" itemprop="url" rel="index"><span itemprop="name">University</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本章节介绍多项式的一些基础知识，为后续章节中的矩阵分析做基础知识铺垫。</p>
+<span id="more"></span>
+<h2 id="数域">数域</h2>
+<h3 id="数域的概念">数域的概念</h3>
+<p>数域是对四则运算封闭的数集。所谓对四则运算封闭，指的是从数集中随意取出两个数，进行任意<strong>合法</strong>的四则运算以后，得到的结果仍然属于这个数集。注意，这里强调了合法的四则运算，形如除以0这种未定义的运算不计入在内，所以不能以某些数集中存在0元素，而通过不能除以0来判断这个数集不是数域。</p>
+<p>常见的数域有实数集、复数集，但整数集就不是一个数域，因为两个整数做除法可能会得到小数，而小数不属于整数集。</p>
+<h3 id="广义四则运算">广义四则运算</h3>
+<p>前面提到的四则运算仍然是普通的加减乘除，但实际上一个数集如果对广义的四则运算封闭，那么仍然可以称其为数域。</p>
+<p>所谓广义的四则运算，指的是我们可以在一个数集上自定义加法和乘法，只要自定义的加法和乘法满足交换律、结合律、分配律即可，随后只要定义新的加法和乘法的逆运算，即可视为自定义的减法和除法。例如对于素数集，可以定义在加法和乘法后取余数，作为新的加法和乘法，并且这个新的加法和乘法都是存在逆运算的，因此素数集也可以认为是一种数域。</p>
+<p>广义四则运算以及相应的数域属于扩展内容，和主线关系不大。本教材中所提的数域，主要就是有理数、实数和复数域。下面用 <span class="math inline">\(F\)</span> 来表示有理数、实数和复数域，表示下面所提到的内容对这三个数域都成立。</p>
+<h2 id="一元多项式">一元多项式</h2>
+<h3 id="一元多项式的定义">一元多项式的定义</h3>
+<p>若有整数 <span class="math inline">\(n&gt;0\)</span>，<span class="math inline">\(a_0, a_1, \cdots, a_n \in F\)</span> 且 <span class="math inline">\(a_n \neq 0\)</span>，<span class="math inline">\(x\)</span> 是一个<em>文字符号</em>，那么称</p>
+<p><span class="math display">\[
+f(x) = \sum_{k=0}^n a_k x^k
+\]</span></p>
+<p>为数域 <span class="math inline">\(F\)</span> 上的一个一元多项式，<span class="math inline">\(n\)</span> 称为这个一元多项式的次数，也记作 <span class="math inline">\(deg f(x)\)</span>。<span class="math inline">\(a_kx^k\)</span> 称为一元多项式的 <span class="math inline">\(k\)</span> 次项，<span class="math inline">\(a_k\)</span> 称为这个一元多项式的 <span class="math inline">\(k\)</span> 次项系数，<span class="math inline">\(a_0\)</span> 称为0次项或常数项。</p>
+<p><span class="math inline">\(f(x)=0\)</span> 也是一个一元多项式，不过比较特殊，一般称其为<strong>零多项式</strong>，其次数定义为 <span class="math inline">\(-\infty\)</span>。这个定义在后续的应用中会带来很大的方便。</p>
+<p>数域 <span class="math inline">\(F\)</span> 上的一元多项式全体，用 <span class="math inline">\(F[x]\)</span> 表示。</p>
+<h3 id="一元多项式的运算">一元多项式的运算</h3>
+<h4 id="一元多项式相等">一元多项式相等</h4>
+<p>若两个一元多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 除了系数为0的项以外，其他同次项系数全部相等，则称这两个一元多项式相等。</p>
+<h4 id="一元多项式加法">一元多项式加法</h4>
+<p>一元多项式的加法很简单，假定有一个 <span class="math inline">\(n\)</span> 次的一元多项式 <span class="math inline">\(f(x)\)</span> 和一个 <span class="math inline">\(m\)</span> 次的一元多项式 <span class="math inline">\(g(x)\)</span>，并且 <span class="math inline">\(n\geq m\)</span>，可以将这两个一元多项式分别表示为</p>
+<p><span class="math display">\[
+\begin{aligned}
+    f(x) &amp;= \sum_{k=0}^n a_k x^k \\
+    g(x) &amp;= \sum_{k=0}^n b_k x^k, \ b_i = 0 \ (n &gt; i &gt; m)
+\end{aligned}
+\]</span></p>
+<p>那么，两个一元多项式的加法就可以定义为</p>
+<p><span class="math display">\[
+f(x) + g(x) = \sum_{k=0}^n (a_k + b_k)x^k
+\]</span></p>
+<p>显然，一元多项式的减法就是一元多项式加法的逆运算</p>
+<p><span class="math display">\[
+f(x) - g(x) = \sum_{k=0}^n (a_k - b_k)x^k
+\]</span></p>
+<p>一元多项式的加减法对多项式次数的影响是</p>
+<p><span class="math display">\[
+deg[f(x) \pm g(x)] \leq max(m, n)
+\]</span></p>
+<h4 id="一元多项式乘法">一元多项式乘法</h4>
+<p>一元多项式的乘法也很简单，无非就是两个一元多项式的很多个项相乘后合并同类项，然后再相加，可以表示为</p>
+<p><span class="math display">\[
+\begin{aligned}
+    f(x)g(x) &amp;= \sum_{k=0}^{n+m} c_k x^k\\
+    c_k &amp;= \sum_{j=0}^k a_jb_{k-j}
+\end{aligned}
+\]</span></p>
+<p>一元多项式乘法对多项式次数的影响是</p>
+<p><span class="math display">\[
+deg[f(x)g(x)] = m+n
+\]</span></p>
+<p>从这里可以发现，将零多项式的次数定义为 <span class="math inline">\(-\infty\)</span> 很有好处，当 <span class="math inline">\(f(x)=0\)</span> 或 <span class="math inline">\(g(x)=0\)</span> 时，上面的这个多项式次数影响公式仍然成立，而不需要为零多项式进行额外说明。</p>
+<h4 id="一元多项式带余除法">一元多项式带余除法</h4>
+<p>一元多项式不能直接定义乘法的逆运算，但是可以像整数一样定义带余除法，定义如下：对于一元多项式 <span class="math inline">\(f(x), g(x) \in F[x]\)</span>，存在唯一的一组 <span class="math inline">\(q(x), r(x) \in F[x]\)</span>，使得 <span class="math inline">\(f(x) = q(x)g(x) + r(x)\)</span> 成立。<span class="math inline">\(q(x), r(x)\)</span> 分别称为 <span class="math inline">\(f(x)\)</span> 除以 <span class="math inline">\(g(x)\)</span> 所得的商式(quotient)和余式(remainder)。</p>
+<p>其中，必然存在 <span class="math inline">\(deg\ r(x) &lt; deg\ g(x)\)</span>。</p>
+<p>一元多项式的带余除法和整数的带余除法计算基本一致。在计算时，先找被除式的最高次项与除式最高次项的次数差，并对相应的系数做除法，得到商式的最高次项及其系数，然后用这个最高次项乘以除式，并用被除式减去这个乘法结果；随后，再将上述一元多项式减法结果作为新的被除式，重复上述步骤，直到被除式的次数小于除式的次数，那么最后剩下的减法结果就是余式，商式的项也就不再继续更新。本质上，这就是一元多项式的长除法，由于写长除法的LaTeX公式非常麻烦，因此意会即可，反正我也就是用自己的话描述一遍以加深记忆，不会真有人回来看这一段描述文字复习长除法吧！</p>
+<p>需要注意，一元多项式的系数必须属于某一数域，否则多项式带余除法可能会不成立。</p>
+<h4 id="一元多项式整除">一元多项式整除</h4>
+<p>在一元多项式的带余除法中，可能出现余式恰好为0的情况。这种情况称为一元多项式整除，此时被除式称为除式的<strong>倍式</strong>，除式称为被除式的<strong>因式</strong>，和整数整除的倍数、因数概念是一致的。假如 <span class="math inline">\(f(x)\)</span> 可以被 <span class="math inline">\(g(x)\)</span> 整除，那么可以写作 <span class="math inline">\(g(x) | f(x)\)</span>。</p>
+<p>对于任一一元多项式 <span class="math inline">\(f(x)\)</span>，可以发现这个多项式的任意非零倍数以及常数多项式总是能够整除它本身，因此称常数多项式和 <span class="math inline">\(cf(x)\)</span> 为 <span class="math inline">\(f(x)\)</span> 的<strong>平凡因式</strong>；反过来，<span class="math inline">\(f(x)\)</span> 总是能够整除 <span class="math inline">\(cf(x)\)</span> 以及零多项式，因此零多项式和 <span class="math inline">\(cf(x)\)</span> 是 <span class="math inline">\(f(x)\)</span> 的<strong>平凡倍式</strong>。可以看出，<span class="math inline">\(cf(x)\)</span> 既是 <span class="math inline">\(f(x)\)</span> 的平凡因式，又是 <span class="math inline">\(f(x)\)</span> 的平凡倍式。</p>
+<p>关于整除，有以下比较tricky的性质，可以稍微记一下</p>
+<ol type="1">
+<li>如果 <span class="math inline">\(f(x)|g(x)\)</span> 且 <span class="math inline">\(g(x)|f(x)\)</span>，那么 <span class="math inline">\(f(x) = cg(x)\)</span>，<span class="math inline">\(c\)</span> 为非零常数</li>
+<li>整除带有传递性，若 <span class="math inline">\(f(x)|g(x), g(x)|h(x)\)</span>，那么必有 <span class="math inline">\(f(x)|h(x)\)</span></li>
+<li>若 <span class="math inline">\(f(x)|g_j(x), u_j(x) \in F[x], j=1, 2\)</span>，则 <span class="math inline">\(f(x) | u_1(x)g_1(x) + u_2(x) g_2(x)\)</span></li>
+</ol>
+<h4 id="余式定理">余式定理</h4>
+<p>如果除式为一次一元多项式，例如 <span class="math inline">\(g(x)=x-c\)</span>，那么用 <span class="math inline">\(g(x)\)</span> 去除 <span class="math inline">\(f(x)\)</span> 时，余式满足 <span class="math inline">\(r(x)=f(c)\)</span>，证明如下:</p>
+<p>由于 <span class="math inline">\(g(x)\)</span> 除 <span class="math inline">\(f(x)\)</span> 可以表示为 <span class="math inline">\(f(x)=q(x)g(x) + r(x)\)</span>，那么将 <span class="math inline">\(g(x) = x-c\)</span> 代入，可以得到</p>
+<p><span class="math display">\[
+f(x) = (x-c)q(x) + r(x)
+\]</span></p>
+<p>令 <span class="math inline">\(x=c\)</span>，有</p>
+<p><span class="math display">\[
+f(c) = r(c)
+\]</span></p>
+<p>由于除式 <span class="math inline">\(g(x)=x-c\)</span>，次数为一次，那么商式的次数肯定是被除式的次数减一次，这意味着余式 <span class="math inline">\(r(x)\)</span> 是常数多项式，所以余式就是一个常数，压根和 <span class="math inline">\(x\)</span> 没关系，所以 <span class="math inline">\(r(x)=r(c)\)</span>，那么很自然有 <span class="math inline">\(r(x)=f(c)\)</span> 成立。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Matrix-Analysis/" rel="tag"># Matrix Analysis</a>
+              <a href="/tags/Mathematics/" rel="tag"># Mathematics</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/25/%E5%A4%A7%E8%AF%9D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%BB%AA%E8%AE%BA/" rel="prev" title="大话数据结构笔记-数据结构绪论">
+                  <i class="fa fa-chevron-left"></i> 大话数据结构笔记-数据结构绪论
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sean Zhou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
