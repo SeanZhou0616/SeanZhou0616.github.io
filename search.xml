@@ -807,27 +807,6 @@ x_i = y_i - u_ix_{i+1}
       </tags>
   </entry>
   <entry>
-    <title>服务器最大TCP连接数问题</title>
-    <url>/2022/11/02/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9C%80%E5%A4%A7TCP%E8%BF%9E%E6%8E%A5%E6%95%B0%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p>在不考虑硬件资源的情况下，一个服务器（对应公网的一个 ip 地址）最大能够建立多少个TCP连接？</p>
-<p>需要明确的一点是，一个TCP连接有四要素：</p>
-<ol type="1">
-<li>服务器 ip 地址</li>
-<li>服务器端口</li>
-<li>客户端 ip 地址</li>
-<li>客户端端口</li>
-</ol>
-<p>所以TCP最大连接数其实就是求一个组合问题。在 ipv4 的情况下，同一网络中最多能够存在 <span class="math inline">\(2^{32}\)</span> 个 ip 地址；服务器往往只监听一个特殊的端口，所以服务器这边的 ip 地址和端口是唯一确定的；TCP 中端口是用一个16位无符号整型数来表示的，再考虑到1000以内的端口一般是保留的，所以粗略估计一下，一个服务器最多能够建立起 <span class="math inline">\((2^{32}-1) \times (2^{16}-1000)\)</span> 个TCP连接。</p>
-]]></content>
-      <categories>
-        <category>Computer Science</category>
-      </categories>
-      <tags>
-        <tag>Computer Networking</tag>
-        <tag>TCP</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数值分析笔记-第三章 多项式插值</title>
     <url>/2022/11/02/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0-%E5%A4%9A%E9%A1%B9%E5%BC%8F%E6%8F%92%E5%80%BC/</url>
     <content><![CDATA[<h2 id="本章概述">本章概述</h2>
@@ -999,6 +978,27 @@ R_4(x) = \frac{f^{(5)}(\xi)}{5!}(x-x_0)^2(x-x_1)^2(x-x_0)
       </categories>
       <tags>
         <tag>Numerical Analysis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>服务器最大TCP连接数问题</title>
+    <url>/2022/11/02/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9C%80%E5%A4%A7TCP%E8%BF%9E%E6%8E%A5%E6%95%B0%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>在不考虑硬件资源的情况下，一个服务器（对应公网的一个 ip 地址）最大能够建立多少个TCP连接？</p>
+<p>需要明确的一点是，一个TCP连接有四要素：</p>
+<ol type="1">
+<li>服务器 ip 地址</li>
+<li>服务器端口</li>
+<li>客户端 ip 地址</li>
+<li>客户端端口</li>
+</ol>
+<p>所以TCP最大连接数其实就是求一个组合问题。在 ipv4 的情况下，同一网络中最多能够存在 <span class="math inline">\(2^{32}\)</span> 个 ip 地址；服务器往往只监听一个特殊的端口，所以服务器这边的 ip 地址和端口是唯一确定的；TCP 中端口是用一个16位无符号整型数来表示的，再考虑到1000以内的端口一般是保留的，所以粗略估计一下，一个服务器最多能够建立起 <span class="math inline">\((2^{32}-1) \times (2^{16}-1000)\)</span> 个TCP连接。</p>
+]]></content>
+      <categories>
+        <category>Computer Science</category>
+      </categories>
+      <tags>
+        <tag>Computer Networking</tag>
+        <tag>TCP</tag>
       </tags>
   </entry>
   <entry>
@@ -1393,12 +1393,504 @@ f(x) = (x-c)q(x) + r(x)
 f(c) = r(c)
 \]</span></p>
 <p>由于除式 <span class="math inline">\(g(x)=x-c\)</span>，次数为一次，那么商式的次数肯定是被除式的次数减一次，这意味着余式 <span class="math inline">\(r(x)\)</span> 是常数多项式，所以余式就是一个常数，压根和 <span class="math inline">\(x\)</span> 没关系，所以 <span class="math inline">\(r(x)=r(c)\)</span>，那么很自然有 <span class="math inline">\(r(x)=f(c)\)</span> 成立。</p>
+<p>从余式定理还可推出，如果 <span class="math inline">\((x-c)|f(x)\)</span> 成立，那么显然，<span class="math inline">\(f(c)=0\)</span>，即 <span class="math inline">\(x = c\)</span> 是多项式 <span class="math inline">\(f(x)\)</span> 的零点。</p>
 ]]></content>
       <categories>
         <category>University</category>
       </categories>
       <tags>
         <tag>Matrix Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数值分析笔记-线性方程组的迭代解法</title>
+    <url>/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="范数和条件数">范数和条件数</h2>
+<p>由于线性方程组的解是一个列向量，那么线性方程组的精确解和近似解之间的误差也会是一个列向量。所以，要衡量线性方程组解的精度，必须对误差向量的大小进行评判。为此，需要引入范数的概念。</p>
+<h3 id="什么是范数">什么是范数？</h3>
+<p>范数定义了如何确定一个矩阵或向量的大小，一个矩阵或向量的范数是一个非负实数。事实上，我们平时常用的对一个二维向量 <span class="math inline">\(\boldsymbol{x} = (a, b)\)</span> 求模的计算公式 <span class="math inline">\(|\boldsymbol{x}|=\sqrt{a^2 + b^2}\)</span> 结果就是 <span class="math inline">\(\boldsymbol{x}\)</span> 的二阶范数。</p>
+<h3 id="向量范数">向量范数</h3>
+<p>向量范数的定义如下：</p>
+<ol type="1">
+<li>对于任一 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，其范数的符号表示为 <span class="math inline">\(||\boldsymbol{x}||\)</span></li>
+<li><span class="math inline">\(||\boldsymbol{x}|| \geq 0\)</span>，当且仅当 <span class="math inline">\(\boldsymbol{x}\)</span> 为零向量时，<span class="math inline">\(||\boldsymbol{x}|| = 0\)</span></li>
+<li>对任意实数 <span class="math inline">\(\alpha\)</span>，有 <span class="math inline">\(||\alpha \boldsymbol{x}|| = ||\alpha||\cdot ||\boldsymbol{x}||\)</span></li>
+<li>对任意向量 <span class="math inline">\(\boldsymbol{x}, \boldsymbol{y}\)</span>，有 <span class="math inline">\(||\boldsymbol{x}+\boldsymbol{y}||\leq ||\boldsymbol{x}|| + ||\boldsymbol{y}||\)</span></li>
+</ol>
+<h4 id="阶向量范数">1阶向量范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}||_1 = \sum_{i=1}^n |x_i|
+\]</span></p>
+<h4 id="阶向量范数-1">2阶向量范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}||_2 = \sqrt{\sum_{i=1}^n x_i^2}
+\]</span></p>
+<h4 id="无穷向量范数">无穷向量范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}||_{\infty} = max_{1\leq i\leq n} |x_i|
+\]</span></p>
+<p>以上三种范数比较常用。</p>
+<h3 id="矩阵范数">矩阵范数</h3>
+<p>矩阵范数和向量范数的定义基本一致，但是对两个矩阵相乘结果的范数也做了定义，应有 <span class="math inline">\(||AB|| \leq ||A|| \cdot ||B||\)</span>。下面列出几种常用的矩阵范数。</p>
+<h4 id="阶矩阵范数">1阶矩阵范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
+<p><span class="math display">\[
+||A||_1 = max_{1\leq j \leq n} \sum_{i=1}^n |a_{ij}|
+\]</span></p>
+<p>即方阵 <span class="math inline">\(A\)</span> 的1阶矩阵范数等于方阵 <span class="math inline">\(A\)</span> 中所有列向量1阶向量范数的最大值。</p>
+<h4 id="f矩阵范数">F矩阵范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
+<p><span class="math display">\[
+||A||_F = \sqrt{\sum_{i=1}^n \sum_{j=1}^n a_{ij}^2}
+\]</span></p>
+<p>很明显，F矩阵范数是2阶向量范数在矩阵上的推广。</p>
+<h4 id="阶矩阵范数-1">2阶矩阵范数</h4>
+<p>首先，要引入方阵的谱半径概念。对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若记其第 <span class="math inline">\(i\)</span> 个特征值为 <span class="math inline">\(\lambda_i\)</span>，那么这个方阵的谱半径就记为 <span class="math inline">\(\rho(A) = max_{1\leq i \leq n}|\lambda_i|\)</span>。方阵 <span class="math inline">\(A\)</span> 的2阶矩阵范数，实际上就是 <span class="math inline">\(A^TA\)</span> 的谱半径开方，即</p>
+<p><span class="math display">\[
+||A||_2 = \sqrt{\rho(A^TA)}
+\]</span></p>
+<p>所以，2阶矩阵范数也称为谱范数。</p>
+<h4 id="无穷矩阵范数">无穷矩阵范数</h4>
+<p>无穷矩阵范数，和1阶矩阵范数有些类似。对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
+<p><span class="math display">\[
+||A||_{\infty} = max_{1\leq i \leq n}\sum_{j=1}^n |a_{ij}|
+\]</span></p>
+<p>可以看出，无穷矩阵范数其实就是方阵 <span class="math inline">\(A\)</span> 中所有行向量1阶范数的最大值。</p>
+<h3 id="矩阵范数和向量范数的相容性">矩阵范数和向量范数的相容性</h3>
+<p>如果矩阵 <span class="math inline">\(A\)</span> 和向量 <span class="math inline">\(\boldsymbol{x}\)</span> 满足</p>
+<p><span class="math display">\[
+||A\boldsymbol{x}|| \leq ||A|| \cdot ||\boldsymbol{x}||
+\]</span></p>
+<p>则称矩阵 <span class="math inline">\(A\)</span> 和向量 <span class="math inline">\(\boldsymbol{x}\)</span> 满足矩阵范数和向量范数的相容性。</p>
+<h2 id="扰动分析和条件数">扰动分析和条件数</h2>
+<p>线性方程组 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的解是由系数矩阵 <span class="math inline">\(A\)</span> 和常数项向量 <span class="math inline">\(\boldsymbol{b}\)</span> 决定的。在实际应用中，这两项数据可能由测量误差、计算机的舍入误差等因素，导致计算时所使用的数据与真实数据之间存在一定的误差，或称其为<strong>扰动</strong>。对于某些特殊的线性方程组，即便扰动非常微小，但是对解的影响可能非常大。</p>
+<p>下面分别对系数矩阵上的扰动以及常数项向量上的扰动对解向量产生的干扰进行分析。</p>
+<h3 id="常数项向量扰动分析">常数项向量扰动分析</h3>
+<p>假定常数项向量上引入了一个扰动 <span class="math inline">\(\delta \boldsymbol{b}\)</span>，对线性方程组解向量造成了扰动 <span class="math inline">\(\delta \boldsymbol{x}\)</span>，那么线性方程组可以改写为</p>
+<p><span class="math display">\[
+A(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b} + \delta \boldsymbol{b}
+\]</span></p>
+<p>经过一系列变换，可以得到以下不等式</p>
+<p><span class="math display">\[
+\frac{||\delta \boldsymbol{x}||}{||\boldsymbol{x}||} \leq ||A|| \cdot ||A^{-1}||\cdot \frac{||\delta \boldsymbol{b}||}{||\boldsymbol{b}||}
+\]</span></p>
+<h3 id="系数矩阵扰动分析">系数矩阵扰动分析</h3>
+<p>假定系数矩阵上引入了一个扰动 <span class="math inline">\(\delta A\)</span>，对线性方程组的解向量造成了扰动 <span class="math inline">\(\delta \boldsymbol{x}\)</span>，那么线性方程组可以改写为</p>
+<p><span class="math display">\[
+(A+\delta A)(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b}
+\]</span></p>
+<p>经过一系列变换，可以得到以下不等式</p>
+<p><span class="math display">\[
+\frac{||\delta \boldsymbol{x}||}{||x + \delta \boldsymbol{x}||} \leq ||A|| \cdot ||A^{-1}|| \cdot \frac{||\delta A||}{||A||}
+\]</span></p>
+<h3 id="条件数">条件数</h3>
+<p>从上面的扰动分析中，可以看出，解的相对扰动与系数矩阵或常数项向量的相对扰动之间，都存在一个放大倍数 <span class="math inline">\(||A||\cdot ||A^{-1}||\)</span>。这个放大倍数称为线性方程组 <span class="math inline">\(A\boldsymbol{x}=\boldsymbol{b}\)</span> 的<strong>条件数</strong>，或矩阵 <span class="math inline">\(A\)</span> 的条件数，用 <span class="math inline">\(cond(A)\)</span> 表示。</p>
+<p>可以看到，矩阵的条件数与矩阵范数是挂钩的。常用的条件数是无穷矩阵范数对应的条件数 <span class="math inline">\(cond_{\infty}(A) = ||A||_{\infty}||A^{-1}||_{\infty}\)</span> 以及2阶矩阵范数对应的条件数 <span class="math inline">\(cons_2(A) = ||A||_2 ||A^{-1}||_2\)</span>。</p>
+<h4 id="条件数的性质">条件数的性质</h4>
+<ol type="1">
+<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond(A) \geq 1\)</span></li>
+<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span> 和非零常数 <span class="math inline">\(c\)</span>，有 <span class="math inline">\(cond(cA) = cond(A)\)</span></li>
+<li>对于任意正交矩阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond_2(A) = 1\)</span></li>
+<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span> 和正交矩阵 <span class="math inline">\(P\)</span>，有 <span class="math inline">\(cond_2(PA) = cond_2(AP) = cond_2(A)\)</span></li>
+</ol>
+<h4 id="良态矩阵和病态矩阵">良态矩阵和病态矩阵</h4>
+<p>对于一个确定的系数矩阵 <span class="math inline">\(A\)</span>，如果其条件数相对小，那么系数矩阵的扰动不会造成解的太大扰动；如果其条件数相对大，那么系数矩阵的扰动会导致解的大幅度扰动。条件数小的矩阵，称为<strong>良态矩阵</strong>；条件数大的矩阵，称为<strong>病态矩阵</strong>。</p>
+<p>一个最常见的病态矩阵就是Hilbert矩阵，即</p>
+<p><span class="math display">\[
+H_n = \begin{pmatrix}
+   1 &amp; \frac{1}{2} &amp; \cdots &amp; \frac{1}{n} \\
+   \frac{1}{2} &amp; \frac{1}{3} &amp; \cdots&amp; \frac{1}{n+1}\\
+   \vdots &amp; &amp; \ddots \\
+   \frac{1}{n} &amp; \frac{1}{n+1} &amp; \cdots &amp; \frac{1}{2n-1}
+\end{pmatrix}
+\]</span></p>
+<p>其条件数为 <span class="math inline">\(cond_2(H_n) \approx e^{3.5n}\)</span>，随着矩阵规模的增大，条件数迅速上升。因此，Hilbert矩阵的阶数越高，其条件数越大，也就越病态。</p>
+<h2 id="基本迭代法">基本迭代法</h2>
+<p>下面介绍如何使用迭代法进行线性方程组的求解。首先，对于线性方程组</p>
+<p><span class="math display">\[
+A\boldsymbol{x} = \boldsymbol{b}
+\]</span></p>
+<p>如果能够将系数矩阵拆解为两个矩阵的差，如 <span class="math inline">\(A = M - N\)</span>，那么上述线性方程组可以转换为</p>
+<p><span class="math display">\[
+M\boldsymbol{x} = N\boldsymbol{x} + \boldsymbol{b}
+\]</span></p>
+<p>假如矩阵 <span class="math inline">\(M\)</span> 可逆，那么</p>
+<p><span class="math display">\[
+\boldsymbol{x} = M^{-1}N\boldsymbol{x} + M^{-1}\boldsymbol{b}
+\]</span></p>
+<p>令 <span class="math inline">\(B = M^{-1}N, \ \boldsymbol{g} = M^{-1} \boldsymbol{b}\)</span>，那么可以建立线性方程组解的迭代公式</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = B\boldsymbol{x}^{(k)}+\boldsymbol{g}
+\]</span></p>
+<p>对于解向量，实际上在迭代的过程中，会形成一个解向量序列 <span class="math inline">\(\{\boldsymbol{x}^{(k)}\}\)</span>，并且最后会收敛至一个解 <span class="math inline">\(\boldsymbol{x}^*\)</span>，满足</p>
+<p><span class="math display">\[
+M\boldsymbol{x}^* = N\boldsymbol{x}^* + \boldsymbol{g}
+\]</span></p>
+<p>即</p>
+<p><span class="math display">\[
+A\boldsymbol{x}^* = \boldsymbol{b}
+\]</span></p>
+<p>如果按 <span class="math inline">\(\boldsymbol{x}^{(k+1)} = B\boldsymbol{x}^{(k)} + \boldsymbol{g}\)</span> 的方式，每次迭代都需要求出 <span class="math inline">\(M^{-1}\)</span>，计算量非常大；所以，实际上的迭代过程都是使用 <span class="math inline">\(M\boldsymbol{x}^{(k+1)} = N\boldsymbol{x}^{(k)}+\boldsymbol{b}\)</span>。每次迭代过程中，等式右侧的部分都是可计算的，那么每次迭代过程就相当于要求解一个以矩阵 <span class="math inline">\(M\)</span> 为系数矩阵，以 <span class="math inline">\(N \boldsymbol{x}^{(k)}+\boldsymbol{g}\)</span> 为常数项向量的非齐次线性方程组。</p>
+<p>为了减少计算量，我们总是希望这个矩阵 <span class="math inline">\(M\)</span> 具有一些易于计算的特征的，例如是对角矩阵或者上三角矩阵等。</p>
+<h2 id="定常迭代法">定常迭代法</h2>
+<p>下面记录三种基本的定常迭代解法：</p>
+<ol type="1">
+<li>Jacobi迭代解法</li>
+<li>Gauss-Seidel迭代解法</li>
+<li>SOR迭代解法</li>
+</ol>
+<h3 id="jacobi迭代解法">Jacobi迭代解法</h3>
+<p>对于线性方程组的迭代求解表达式 <span class="math inline">\(M\boldsymbol{x} = N\boldsymbol{x} + \boldsymbol{b}\)</span>，令</p>
+<p><span class="math display">\[
+M = D,\ N = L + U
+\]</span></p>
+<p>则可以得到Jacobi迭代解法，即</p>
+<p><span class="math display">\[
+D\boldsymbol{x}^{(k+1)} = (L+U)\boldsymbol{x}^{(k)}+\boldsymbol{b}
+\]</span></p>
+<p>迭代收敛条件一般以</p>
+<p><span class="math display">\[
+\frac{||\boldsymbol{b} - A\boldsymbol{x^*}||}{||\boldsymbol{b}||}
+\]</span></p>
+<p>为指标，若该相对误差小于某一阈值则认为迭代收敛。</p>
+<h3 id="gauss-seidel迭代解法">Gauss-Seidel迭代解法</h3>
+<p>Guass-Seidel迭代解法与Jacobi迭代解法非常相似，如下</p>
+<p><span class="math display">\[
+D\boldsymbol{x}^{(k+1)} = L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{b}
+\]</span></p>
+<p>或者也可以简化为</p>
+<p><span class="math display">\[
+(D-L)\boldsymbol{x}^{(k+1)}=U\boldsymbol{x}^{(k)}+\boldsymbol{b}
+\]</span></p>
+<p>虽然形式上很相似，但是GS迭代解法与Jacobi迭代解法有本质上的区别。Jacobi迭代解法中，一次迭代过程中 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 完全由 <span class="math inline">\(\boldsymbol{x}^{(k)}\)</span> 求出；而GS迭代解法中，解 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 的第 <span class="math inline">\(i\)</span> 个分量的求解会使用解 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 的前 <span class="math inline">\(i-1\)</span> 个分量以及 <span class="math inline">\(\boldsymbol{x}^{(k)}\)</span> 的后 <span class="math inline">\(n-i-1\)</span> 个分量作为已知参数。相当于GS迭代解法中，解的更新是分量级别的，而Jacobi迭代解法中，解的更新是解向量级别的，那么相当于GS迭代解法的迭代颗粒度在行级别，而Jacobi迭代解法的迭代颗粒度是矩阵级别。</p>
+<p>第一种写法强调了GS迭代解法中解分量迭代的特性。第二种写法将 <span class="math inline">\(L\boldsymbol{x}^{(k+1)}\)</span> 项移到等式左侧，是因为在计算上这两种写法是等价的，但是容易引起误解，令人认为GS迭代解法和Jacobi迭代解法没有什么区别。</p>
+<blockquote>
+<p>请勿混淆线性方程组迭代解法中对于系数矩阵 <span class="math inline">\(A\)</span> 的分解与 <span class="math inline">\(LDU\)</span> 分解，迭代解法中的系数矩阵分解是线性分解 <span class="math inline">\(A = D - L - U\)</span>，而 <span class="math inline">\(LDU\)</span> 分解指的是矩阵乘法分解 <span class="math inline">\(A = LDU\)</span>。</p>
+</blockquote>
+<h3 id="sor迭代解法">SOR迭代解法</h3>
+<p>SOR迭代解法即Successive Over Relaxation迭代解法，是GS迭代解法的一种衍生版本。对于GS迭代解法，可以将其原始表达式改写为</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)}=D^{-1}(L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{b})
+\]</span></p>
+<p>从修正解的角度考虑，可以将上述进一步改写为</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x}^{(k)}+\boldsymbol{b})
+\]</span></p>
+<p>也就是说 <span class="math inline">\(D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x^{k}}+\boldsymbol{b})\)</span> 可以看作是对当前解的修正值。SOR迭代解法，就是在GS迭代解法的基础上，用一个松弛因子 <span class="math inline">\(\omega\)</span> 来调整这个修正值的大小，从而加速迭代。SOR迭代解法的表达式如下</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \omega D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x}^{(k)}+\boldsymbol{b})
+\]</span></p>
+<p>可以对这条式子进行合并同类项等操作，最后得到</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = (D-\omega L)^{-1}[(1-\omega)D+\omega U]\boldsymbol{x}^{(k)}+\omega(D-\omega L)^{-1} \boldsymbol{b}
+\]</span></p>
+<p>和GS迭代解法的两种表达形式一样，上述写法只是在计算上等价，对于编程来说更加方便，但是迭代求解本质还是第一条表达式反映得更好。另外，从上面的推导中可以看出，SOR迭代解法在 <span class="math inline">\(\omega=1\)</span> 时就是GS迭代解法。</p>
+<h3 id="上述三种定常迭代法的收敛性分析和误差估计">上述三种定常迭代法的收敛性分析和误差估计</h3>
+<p>教材中的一个小例子说明了GS迭代的收敛速度一般优于Jacobi迭代，而SOR的迭代收敛速度与松弛因子是有关系的，如果松弛因子取得好，SOR迭代的收敛速度一般由于GS迭代。但是，这三种定常迭代法不能保证迭代收敛。下面分析一下这三种迭代方法的收敛性以及计算误差。在此之前，先引入几个相关概念。</p>
+<h4 id="置换矩阵">置换矩阵</h4>
+<p>置换矩阵可以认为是单位矩阵经过有限次第一类初等变换所形成的矩阵，其特征是矩阵的每一行中有且仅有一个元素1，每一列中也是有且仅有一个元素1，例如</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    0 &amp; 0 &amp; 1 &amp; 0\\
+    1 &amp; 0 &amp; 0 &amp; 0\\
+    0 &amp; 1 &amp; 0 &amp; 0\\
+    0 &amp; 0 &amp; 0 &amp; 1
+\end{pmatrix}
+\]</span></p>
+<p>就是一个置换矩阵。</p>
+<h4 id="可约矩阵">可约矩阵</h4>
+<p>对于 <span class="math inline">\(n (n\geq 2)\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若存在 <span class="math inline">\(n\)</span> 阶置换矩阵 <span class="math inline">\(P\)</span>，使得</p>
+<p><span class="math display">\[
+P^TAP=\begin{pmatrix}
+    A_{11} &amp; A_{12} \\
+    0 &amp; A_{22}
+\end{pmatrix}
+\]</span></p>
+<p>其中 <span class="math inline">\(A_{11}, A_{22}\)</span> 分别为 <span class="math inline">\(r, n-r\)</span> 阶方阵。若满足上述条件的置换矩阵存在，则称方阵 <span class="math inline">\(A\)</span> 为<strong>可约矩阵</strong>，否则称为<strong>不可约矩阵</strong>。</p>
+<p>可约矩阵的意义在于，可以通过分块矩阵将原来的线性方程组拆分为次数较低的两个线性方程组，从而提升求解速度。在实际计算中，这样的加速效果非常显著。</p>
+<h4 id="对角占优">对角占优</h4>
+<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若满足</p>
+<p><span class="math display">\[
+|a_{ii}| \geq \sum_{j=1, j\neq i}^n |a_{ij}|, i \in \mathcal Z[1, n]
+\]</span></p>
+<p>称矩阵 <span class="math inline">\(A\)</span> <strong>对角占优</strong>。若存在至少一个 <span class="math inline">\(i \in \mathcal Z[1, n]\)</span>$ 使上述不等式取等号，称矩阵 <span class="math inline">\(A\)</span> 为<strong>弱对角占优</strong>；反之，则称矩阵 <span class="math inline">\(A\)</span> 为<strong>严格对角占优</strong>。</p>
+<p>对角占优有一个性质：<em>严格对角占优和不可约弱对角占优矩阵必为非奇异矩阵</em>。</p>
+<h4 id="谱半径相关定理">谱半径相关定理</h4>
+<p>在迭代解法的收敛性分析和误差分析中，矩阵的谱半径是一个重要的概念。下面记录两条相关定理，为后续的收敛性分析和误差分析铺垫。</p>
+<ol type="1">
+<li>对于 <span class="math inline">\(n\)</span> 阶矩阵 <span class="math inline">\(A\)</span>，<span class="math inline">\(A^k \rightarrow 0\)</span> 的充要条件是 <span class="math inline">\(\rho(A) &lt; 1\)</span></li>
+<li>对于 <span class="math inline">\(n\)</span> 阶矩阵 <span class="math inline">\(A\)</span>，<span class="math inline">\(\rho(A) \leq ||A||\)</span>，其中 <span class="math inline">\(||A||\)</span> 表示 <span class="math inline">\(A\)</span> 的任意范数</li>
+</ol>
+<h4 id="基本迭代法收敛性条件">基本迭代法收敛性条件</h4>
+<p>对于线性方程组的基本迭代方程</p>
+<p><span class="math display">\[
+\boldsymbol{x} = B \boldsymbol{x} + \boldsymbol{g}
+\]</span></p>
+<p>若迭代矩阵 <span class="math inline">\(B\)</span> 满足 <span class="math inline">\(\rho(B)&lt;1\)</span>，则从上述基本迭代方程衍生的迭代方法均收敛。另外，若 <span class="math inline">\(||B||&lt;1\)</span>（根据谱半径与范数的关系，基本迭代方法必然收敛），有误差估计</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)} - \boldsymbol{x}^*|| \leq \frac{||B||^k}{1-||B||}(\boldsymbol{x}^{(1)} - \boldsymbol{x}^{(0)})
+\]</span></p>
+<p>或者</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*|| \leq \frac{||B||}{1-||B||}(\boldsymbol{x}^{(k)} - \boldsymbol{x}^{(k-1)})
+\]</span></p>
+<h4 id="jacobi迭代与gs迭代的收敛条件">Jacobi迭代与GS迭代的收敛条件</h4>
+<p>对于Jacobi迭代解法和GS迭代解法，有以下收敛条件</p>
+<ol type="1">
+<li>若系数矩阵 <span class="math inline">\(A\)</span> 为严格对角占优矩阵或不可约弱对角占优矩阵，那么Jacobi和GS迭代均收敛</li>
+<li>若矩阵 <span class="math inline">\(A\)</span> 正定，则Jacobi收敛的充要条件为 <span class="math inline">\(2D-A\)</span> 也正定</li>
+</ol>
+<h4 id="sor迭代的收敛条件">SOR迭代的收敛条件</h4>
+<p>对于SOR迭代解法，有以下收敛条件</p>
+<ol type="1">
+<li>松弛系数 <span class="math inline">\(\omega\)</span> 满足 <span class="math inline">\(0&lt; \omega &lt; 2\)</span> 是收敛的必要条件</li>
+<li>若系数矩阵 <span class="math inline">\(A\)</span> 正定，那么上述条件加强为收敛的充要条件</li>
+</ol>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数值分析作业-第六章</title>
+    <url>/2022/11/28/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E5%85%AD%E7%AB%A0/</url>
+    <content><![CDATA[<h2 id="第一题">第一题</h2>
+<h3 id="jacobi迭代求解">Jacobi迭代求解</h3>
+<p>由</p>
+<p><span class="math display">\[
+D \boldsymbol{x}^{(k+1)} = (L+U)\boldsymbol{x}^{k} + \boldsymbol{b}
+\]</span></p>
+<p>有MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[x, iter]</span> = <span class="title">jacobi</span><span class="params">(A, b, x0, tol)</span></span></span><br><span class="line">    D = <span class="built_in">diag</span>(<span class="built_in">diag</span>(A));</span><br><span class="line">    L = D - <span class="built_in">tril</span>(A);</span><br><span class="line">    U = D - <span class="built_in">triu</span>(A);</span><br><span class="line"></span><br><span class="line">    iter = <span class="number">0</span>;</span><br><span class="line">    x = x0;</span><br><span class="line">    <span class="keyword">while</span> iter &lt; <span class="number">5000</span></span><br><span class="line">        iter = iter + <span class="number">1</span>;</span><br><span class="line">        x = D \ ((L + U) * x + b);</span><br><span class="line">        <span class="keyword">if</span> norm(b - A*x) / norm(b) &lt; tol</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">A = [<span class="number">25</span> <span class="number">2</span> <span class="number">13</span>; <span class="number">4</span> <span class="number">28</span> <span class="number">8</span>; <span class="number">2</span> <span class="number">-13</span> <span class="number">25</span>];</span><br><span class="line">b = [<span class="number">40</span>; <span class="number">40</span>; <span class="number">14</span>];</span><br><span class="line">x0 = [<span class="number">0</span>; <span class="number">0</span>; <span class="number">0</span>];</span><br><span class="line">tol = <span class="number">1e-5</span>;</span><br><span class="line"></span><br><span class="line">[x, iter] = jacobi(A, b, x0, tol)</span><br></pre></td></tr></table></figure>
+<p>运行得到</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">x =</span><br><span class="line"></span><br><span class="line">    1.0000</span><br><span class="line">    1.0000</span><br><span class="line">    1.0000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">iter =</span><br><span class="line"></span><br><span class="line">    13</span><br></pre></td></tr></table></figure>
+<h3 id="gs迭代求解">GS迭代求解</h3>
+<p>由</p>
+<p><span class="math display">\[
+(D-L)\boldsymbol{x}^{(k+1)} = U\boldsymbol{x}^{(k)} + \boldsymbol{b}
+\]</span></p>
+<p>可以编写MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[x, iter]</span> = <span class="title">gauss_seidel</span><span class="params">(A, b, x0, tol)</span></span></span><br><span class="line">    D = <span class="built_in">diag</span>(<span class="built_in">diag</span>(A));</span><br><span class="line">    L = D - <span class="built_in">tril</span>(A);</span><br><span class="line">    U = D - <span class="built_in">triu</span>(A);</span><br><span class="line"></span><br><span class="line">    iter = <span class="number">0</span>;</span><br><span class="line">    x = x0;</span><br><span class="line">    <span class="keyword">while</span> iter &lt; <span class="number">5000</span></span><br><span class="line">        iter = iter + <span class="number">1</span>;</span><br><span class="line">        x = (D - L) \ (U * x + b);</span><br><span class="line">        <span class="keyword">if</span> norm(b - A*x) / norm(b) &lt; tol</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>随后，在命令行输入</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">A = [<span class="number">25</span> <span class="number">2</span> <span class="number">13</span>; <span class="number">4</span> <span class="number">28</span> <span class="number">8</span>; <span class="number">2</span> <span class="number">-13</span> <span class="number">25</span>];</span><br><span class="line">b = [<span class="number">40</span>; <span class="number">40</span>; <span class="number">14</span>];</span><br><span class="line">x0 = [<span class="number">0</span>; <span class="number">0</span>; <span class="number">0</span>];</span><br><span class="line">tol = <span class="number">1e-5</span>;</span><br><span class="line"></span><br><span class="line">[x, iter] = gauss_seidel(A, b, x0, tol)</span><br></pre></td></tr></table></figure>
+<p>运行得到</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">x =</span><br><span class="line"></span><br><span class="line">    1.0000</span><br><span class="line">    1.0000</span><br><span class="line">    1.0000</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">iter =</span><br><span class="line"></span><br><span class="line">     4</span><br></pre></td></tr></table></figure>
+<h2 id="第二题">第二题</h2>
+<p>Jacobi迭代的迭代矩阵 <span class="math inline">\(B_J\)</span> 表达式如下</p>
+<p><span class="math display">\[
+B_J = D^{-1}(L+U) = D^{-1}(D-A) = I - D^{-1}A
+\]</span></p>
+<p>GS迭代的迭代矩阵 <span class="math inline">\(B_{GS}\)</span> 表达式如下</p>
+<p><span class="math display">\[
+B_{GS} = (D-L)^{-1}U = (D-L)^{-1}(D-L-A) = I - (D-L)^{-1}A
+\]</span></p>
+<p>考虑使用随机搜索的方式找到满足题设条件的三阶系数矩阵，利用Jacobi迭代矩阵和GS迭代矩阵的谱半径作为判断条件。</p>
+<ol type="1">
+<li>Jacobi和GS迭代均不收敛 - Jacobi迭代矩阵和GS迭代矩阵的谱半径均大于1</li>
+<li>仅Jacobi迭代收敛 - Jacobi迭代矩阵谱半径小于1，GS迭代矩阵谱半径大于1</li>
+<li>仅GS迭代收敛 - Jacobi迭代矩阵谱半径大于1，GS迭代矩阵谱半径小于1</li>
+<li>Jacobi迭代比GS迭代收敛更快 - Jacobi迭代矩阵和GS迭代矩阵的谱半径均小于1，但是Jacobi迭代矩阵的谱半径小于GS迭代矩阵的谱半径</li>
+</ol>
+<p>编写MATLAB脚本如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[rho_B_J, rho_B_GS]</span> = <span class="title">compute_rho</span><span class="params">(A)</span></span></span><br><span class="line">    D = <span class="built_in">diag</span>(<span class="built_in">diag</span>(A));</span><br><span class="line">    B_J = <span class="built_in">eye</span>(<span class="number">3</span>) - D \ A;</span><br><span class="line">    B_GS = <span class="built_in">eye</span>(<span class="number">3</span>) - <span class="built_in">tril</span>(A) \ A;</span><br><span class="line"></span><br><span class="line">    rho_B_J = <span class="built_in">max</span>(<span class="built_in">abs</span>(eig(B_J)));</span><br><span class="line">    rho_B_GS = <span class="built_in">max</span>(<span class="built_in">abs</span>(eig(B_GS)));</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[mat, rho_B_J, rho_B_GS]</span> = <span class="title">matrix_gen_1</span><span class="params">()</span></span></span><br><span class="line">    maximum_iter = <span class="number">50000</span>;</span><br><span class="line">    iter = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> iter &lt; maximum_iter</span><br><span class="line">        iter = iter + <span class="number">1</span>;</span><br><span class="line">        mat = <span class="number">-10</span> + randi(<span class="number">20</span>, <span class="number">3</span>);</span><br><span class="line">        [rho_B_J, rho_B_GS] = compute_rho(mat);</span><br><span class="line">        <span class="keyword">if</span> rho_B_J &gt; <span class="number">1</span> &amp;&amp; rho_B_GS &gt; <span class="number">1</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[mat, rho_B_J, rho_B_GS]</span> = <span class="title">matrix_gen_2</span><span class="params">()</span></span></span><br><span class="line">    maximum_iter = <span class="number">50000</span>;</span><br><span class="line">    iter = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> iter &lt; maximum_iter</span><br><span class="line">        iter = iter + <span class="number">1</span>;</span><br><span class="line">        mat = <span class="number">-10</span> + randi(<span class="number">20</span>, <span class="number">3</span>);</span><br><span class="line">        [rho_B_J, rho_B_GS] = compute_rho(mat);</span><br><span class="line">        <span class="keyword">if</span> rho_B_J &lt; <span class="number">1</span> &amp;&amp; rho_B_GS &gt; <span class="number">1</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[mat, rho_B_J, rho_B_GS]</span> = <span class="title">matrix_gen_3</span><span class="params">()</span></span></span><br><span class="line">    maximum_iter = <span class="number">50000</span>;</span><br><span class="line">    iter = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> iter &lt; maximum_iter</span><br><span class="line">        iter = iter + <span class="number">1</span>;</span><br><span class="line">        mat = <span class="number">-10</span> + randi(<span class="number">20</span>, <span class="number">3</span>);</span><br><span class="line">        [rho_B_J, rho_B_GS] = compute_rho(mat);</span><br><span class="line">        <span class="keyword">if</span> rho_B_J &gt; <span class="number">1</span> &amp;&amp; rho_B_GS &lt; <span class="number">1</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[mat, rho_B_J, rho_B_GS]</span> = <span class="title">matrix_gen_4</span><span class="params">()</span></span></span><br><span class="line">    maximum_iter = <span class="number">50000</span>;</span><br><span class="line">    iter = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> iter &lt; maximum_iter</span><br><span class="line">        iter = iter + <span class="number">1</span>;</span><br><span class="line">        mat = <span class="number">-10</span> + randi(<span class="number">20</span>, <span class="number">3</span>);</span><br><span class="line">        [rho_B_J, rho_B_GS] = compute_rho(mat);</span><br><span class="line">        <span class="keyword">if</span> rho_B_J &lt; <span class="number">1</span> &amp;&amp; rho_B_GS &lt; <span class="number">1</span> &amp;&amp; rho_B_J &lt; rho_B_GS</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>上述4个不同的 <code>matrix_gen</code> 脚本分别对应本题四小问的条件。分别运行脚本，可以得到以下结果</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[mat, rho_B_J, rho_B_GS] = matrix_gen_1()</span><br><span class="line">mat =</span><br><span class="line">     7    -3     3</span><br><span class="line">    -5    -6     0</span><br><span class="line">     9    -4    -2</span><br><span class="line">rho_B_J = 1.5415</span><br><span class="line">rho_B_GS = 3</span><br><span class="line"></span><br><span class="line">[mat, rho_B_J, rho_B_GS] = matrix_gen_2()</span><br><span class="line">mat =</span><br><span class="line">     5     9     5</span><br><span class="line">     7    -7     5</span><br><span class="line">    -6     5    -7</span><br><span class="line">rho_B_J = 0.8494</span><br><span class="line">rho_B_GS = 1.7697</span><br><span class="line"></span><br><span class="line">[mat, rho_B_J, rho_B_GS] = matrix_gen_3()</span><br><span class="line">mat =</span><br><span class="line">    -7    -5    -1</span><br><span class="line">    -2     3    -5</span><br><span class="line">    -4     1     8</span><br><span class="line">rho_B_J = 1.0292</span><br><span class="line">rho_B_GS = 0.7715</span><br><span class="line"></span><br><span class="line">[mat, rho_B_J, rho_B_GS] = matrix_gen_4()</span><br><span class="line">mat =</span><br><span class="line">    -6    -5     9</span><br><span class="line">    -9     8    10</span><br><span class="line">    -1     1     2</span><br><span class="line">rho_B_J = 0.8938</span><br><span class="line">rho_B_GS = 0.9529</span><br></pre></td></tr></table></figure>
+<p>下面利用第一题中编写的MATLAB脚本进行简单的验证。下面均取常系数向量为</p>
+<p><span class="math display">\[
+\boldsymbol{b} = \begin{pmatrix}
+    1\\2\\3
+\end{pmatrix}
+\]</span></p>
+<p>先验证第一小问，在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">A = [<span class="number">7</span> <span class="number">-3</span> <span class="number">3</span>; <span class="number">-5</span> <span class="number">-6</span> <span class="number">0</span>; <span class="number">9</span> <span class="number">-4</span> <span class="number">-2</span>];</span><br><span class="line">b = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>];</span><br><span class="line">x0 = [<span class="number">0</span>; <span class="number">0</span>; <span class="number">0</span>];</span><br><span class="line">tol = <span class="number">1e-5</span>;</span><br><span class="line">[x, iter] = jacobi(A, b, x0, tol)</span><br><span class="line">[x, iter] = gauss_seidel(A, b, x0, tol)</span><br></pre></td></tr></table></figure>
+<p>发现迭代上限设定为5000次时，Jacobi迭代和GS迭代在迭代次数达到上限以后，得到的解为 <code>[NaN; NaN; NaN]</code>，可以认为对于这个线性方程组，Jacobi迭代和GS迭代均不收敛。</p>
+<p>然后验证第二小问，在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">A = [<span class="number">5</span> <span class="number">9</span> <span class="number">5</span>; <span class="number">7</span> <span class="number">-7</span> <span class="number">5</span>; <span class="number">-6</span> <span class="number">5</span> <span class="number">-7</span>];</span><br><span class="line">[x, iter] = jacobi(A, b, x0, tol)</span><br><span class="line">[x, iter] = gauss_seidel(A, b, x0, tol)</span><br></pre></td></tr></table></figure>
+<p>发现迭代上限设定为5000次时，Jacobi迭代解法经过74次迭代后收敛，GS迭代在迭代次数达到上限以后，得到的解为 <code>[NaN; NaN; NaN]</code>，那么说明对于这个线性方程组，Jacobi迭代收敛，GS迭代不收敛。</p>
+<p>验证第三小问，在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">A = [<span class="number">-7</span> <span class="number">-5</span> <span class="number">-1</span>; <span class="number">-2</span> <span class="number">3</span> <span class="number">-5</span>; <span class="number">-4</span> <span class="number">1</span> <span class="number">8</span>];</span><br><span class="line">[x, iter] = jacobi(A, b, x0, tol)</span><br><span class="line">[x, iter] = gauss_seidel(A, b, x0, tol)</span><br></pre></td></tr></table></figure>
+<p>发现迭代上限设定为5000次时，Jacobi迭代解法在迭代次数达到上限以后，得到的解在 <span class="math inline">\(10^{62}\)</span> 数量级，明显已经发散；GS迭代解法经过43次迭代后收敛，那么说明对于这个线性方程组，Jacobi迭代不收敛，GS迭代收敛。</p>
+<p>验证第四小问，在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">A = [<span class="number">-6</span> <span class="number">-5</span> <span class="number">9</span>; <span class="number">-9</span> <span class="number">8</span> <span class="number">10</span>; <span class="number">-1</span> <span class="number">1</span> <span class="number">2</span>];</span><br><span class="line">[x, iter] = jacobi(A, b, x0, tol)</span><br><span class="line">[x, iter] = gauss_seidel(A, b, x0, tol)</span><br></pre></td></tr></table></figure>
+<p>发现Jacobi迭代解法经过117次迭代收敛，GS迭代解法经过225次迭代收敛，那么说明对于这个线性方程组，Jacobi迭代比GS迭代收敛更快。</p>
+<p>整理一下，可以得到对应于各小问要求的线性方程组，如下。</p>
+<h3 id="第一小问">第一小问</h3>
+<p><span class="math display">\[
+\begin{pmatrix}
+    7  &amp;  -3  &amp;   3\\
+    -5   &amp; -6   &amp;  0\\
+     9   &amp; -4  &amp;  -2\\
+\end{pmatrix}
+\boldsymbol{x} = \begin{pmatrix}
+    1\\2\\3
+\end{pmatrix}
+\]</span></p>
+<h3 id="第二小问">第二小问</h3>
+<p><span class="math display">\[
+\begin{pmatrix}
+    5    &amp; 9   &amp;  5\\
+     7   &amp; -7  &amp;   5\\
+    -6   &amp;  5  &amp;  -7\\
+\end{pmatrix}\boldsymbol{x} = \begin{pmatrix}
+    1\\2\\3
+\end{pmatrix}
+\]</span></p>
+<h3 id="第三小问">第三小问</h3>
+<p><span class="math display">\[
+\begin{pmatrix}
+    -7  &amp;  -5  &amp;  -1\\
+    -2   &amp;  3  &amp;  -5\\
+    -4  &amp;  1    &amp; 8\\
+\end{pmatrix}\boldsymbol{x} = \begin{pmatrix}
+    1\\2\\3
+\end{pmatrix}
+\]</span></p>
+<h3 id="第四小问">第四小问</h3>
+<p><span class="math display">\[
+\begin{pmatrix}
+    -6  &amp;  -5  &amp;   9\\
+    -9  &amp;   8  &amp;  10\\
+    -1   &amp;  1    &amp; 2
+\end{pmatrix}\boldsymbol{x} = \begin{pmatrix}
+    1\\2\\3
+\end{pmatrix}
+\]</span></p>
+<h2 id="第三题">第三题</h2>
+<p>SOR的计算方程如下</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = (D-\omega L)^{-1}[(1-\omega)D+\omega U]\boldsymbol{x}^{(k)}+\omega(D-\omega L)^{-1} \boldsymbol{b}
+\]</span></p>
+<p>根据上述方程，可以编写MATLAB脚本如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[x, iter]</span> = <span class="title">sor</span><span class="params">(A, b, x0, tol, omega)</span></span></span><br><span class="line">    D = <span class="built_in">diag</span>(<span class="built_in">diag</span>(A));</span><br><span class="line">    L = D - <span class="built_in">tril</span>(A);</span><br><span class="line">    U = D - <span class="built_in">triu</span>(A);</span><br><span class="line"></span><br><span class="line">    iter = <span class="number">0</span>;</span><br><span class="line">    xk = x0;</span><br><span class="line">    error = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> error &gt; tol</span><br><span class="line">        iter = iter + <span class="number">1</span>;</span><br><span class="line">        coeff_mat_1 = D - omega * L;</span><br><span class="line">        coeff_mat_2 = (<span class="number">1</span> - omega) * D + omega * U;</span><br><span class="line">        xkk = coeff_mat_1 \ (coeff_mat_2 * xk) + omega * (coeff_mat_1 \ b);</span><br><span class="line">        error = norm(xkk - xk);</span><br><span class="line">        xk = xkk;</span><br><span class="line">        <span class="keyword">if</span> iter &gt; <span class="number">10000</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    x = xkk;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">prob3</span><span class="params">()</span></span></span><br><span class="line">    A = [<span class="number">-55</span> <span class="number">-5</span> <span class="number">12</span>; <span class="number">21</span> <span class="number">36</span> <span class="number">-13</span>; <span class="number">24</span> <span class="number">7</span> <span class="number">47</span>];</span><br><span class="line">    b = [<span class="number">41</span>; <span class="number">52</span>; <span class="number">12</span>];</span><br><span class="line">    x0 = [<span class="number">0</span>; <span class="number">0</span>; <span class="number">0</span>];</span><br><span class="line">    tol = <span class="number">1e-4</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">disp</span>(<span class="string">&#x27;                                              The iteration times of &quot;SOR&quot;&#x27;</span>);</span><br><span class="line">    <span class="built_in">disp</span>(<span class="string">&quot;          0        10        20        30        40        50        60        70        80        90        100&quot;</span>);</span><br><span class="line">    <span class="built_in">disp</span>(<span class="string">&quot;OMEGA     ---------#---------#---------#---------#---------#---------#---------#---------#---------#---------#&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> t = <span class="number">1</span>: <span class="number">1</span>: <span class="number">19</span></span><br><span class="line">        omega = <span class="number">0.1</span> * t;</span><br><span class="line">        fprintf(<span class="string">&quot;%.2f      &quot;</span>, omega);</span><br><span class="line">        [x, iter] = sor(A, b, x0, tol, omega);</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">numel</span>(x(<span class="built_in">isnan</span>(x))) &gt; <span class="number">0</span></span><br><span class="line">            fprintf(<span class="string">&quot;发散&quot;</span>);</span><br><span class="line">        <span class="keyword">elseif</span> iter &gt; <span class="number">100</span></span><br><span class="line">            fprintf(<span class="string">&quot;%d&quot;</span>, iter);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            cnt = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> cnt &lt; iter</span><br><span class="line">                cnt = cnt + <span class="number">1</span>;</span><br><span class="line">                fprintf(<span class="string">&quot;*&quot;</span>);</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        fprintf(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>运行 <code>prob3()</code>，可以得到如下结果</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">                                              The iteration times of &quot;SOR&quot;</span><br><span class="line">          0        10        20        30        40        50        60        70        80        90        100</span><br><span class="line">OMEGA     ---------#---------#---------#---------#---------#---------#---------#---------#---------#---------#</span><br><span class="line">0.10      *********************************************************************************************</span><br><span class="line">0.20      *************************************************</span><br><span class="line">0.30      *********************************</span><br><span class="line">0.40      ************************</span><br><span class="line">0.50      *******************</span><br><span class="line">0.60      ***************</span><br><span class="line">0.70      ************</span><br><span class="line">0.80      **********</span><br><span class="line">0.90      ********</span><br><span class="line">1.00      ******</span><br><span class="line">1.10      ******</span><br><span class="line">1.20      ***********</span><br><span class="line">1.30      ********************</span><br><span class="line">1.40      ********************************************</span><br><span class="line">1.50      556</span><br><span class="line">1.60      发散</span><br><span class="line">1.70      发散</span><br><span class="line">1.80      发散</span><br><span class="line">1.90      发散</span><br></pre></td></tr></table></figure>
+<p>从上述结果可以看出，<span class="math inline">\(\omega=1\)</span> 和 <span class="math inline">\(\omega=1.1\)</span> 时收敛最快，仅经过6次迭代就达到了目标精度。当 <span class="math inline">\(\omega = 1.5\)</span> 时，SOR迭代解法几乎要发散了，但是经过数百次迭代还是勉强收敛；当 <span class="math inline">\(\omega \geq 1.6\)</span> 时，SOR迭代解法发散。</p>
+<h2 id="第四题">第四题</h2>
+<p>系数矩阵为</p>
+<p><span class="math display">\[
+A = \begin{pmatrix}
+    \alpha &amp; -4 &amp; 4\\
+    4 &amp; \alpha &amp; 3\\
+    -4 &amp; 3 &amp; \alpha
+\end{pmatrix}
+\]</span></p>
+<p>那么相应的Jacobi迭代矩阵为</p>
+<p><span class="math display">\[
+B_J = D^{-1}(D-A)=\alpha^{-1}\begin{pmatrix}
+    0 &amp; 4 &amp; -4 \\
+    -4 &amp; 0 &amp; -3\\
+    4 &amp; -3 &amp; 0
+\end{pmatrix}
+\]</span></p>
+<p>由于矩阵的数乘不影响特征值，所以记</p>
+<p><span class="math display">\[
+C = \begin{pmatrix}
+    0 &amp; 4 &amp; -4 \\
+    -4 &amp; 0 &amp; -3\\
+    4 &amp; -3 &amp; 0
+\end{pmatrix}
+\]</span></p>
+<p>那么 <span class="math inline">\(\lambda I - C\)</span> 的行列式为</p>
+<p><span class="math display">\[
+|\lambda I - C| = \lambda^3 + 23\lambda +96 = (\lambda + 3)(\lambda^2 - 3\lambda +32)
+\]</span></p>
+<p>解得，矩阵 <span class="math inline">\(C\)</span> 的特征值为</p>
+<p><span class="math display">\[
+\begin{cases}
+    \lambda_1 = -3\\
+    \lambda_2 = \frac{1}{2}(3+i\sqrt{119})\\
+    \lambda_3 = \frac{1}{2}(3-i\sqrt{119})
+\end{cases}
+\]</span></p>
+<p>那么 <span class="math inline">\(\rho(B_J) = |\alpha^{-1}|max_{1\leq i \leq 3}|\lambda_i|=4\sqrt{2} \ |\alpha^{-1}|\)</span>。要使Jacobi迭代收敛，那么 <span class="math inline">\(\rho(B_J)&lt;1\)</span>，所以</p>
+<p><span class="math display">\[
+|\alpha| &gt; 4\sqrt{2}
+\]</span></p>
+<p>是该线性方程组用Jacobi迭代收敛的充要条件。</p>
+<h2 id="第五题">第五题</h2>
+<p>对于 <span class="math inline">\(n\)</span> 阶矩阵的求逆问题，事实上可以将其分解为 <span class="math inline">\(n\)</span> 个线性方程组求解的问题。对于 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span>，有</p>
+<p><span class="math display">\[
+AA^{-1} = E
+\]</span></p>
+<p>若令 <span class="math inline">\(\boldsymbol{x}\)</span> 表示 <span class="math inline">\(A^{-1}\)</span> 的第一列列向量，则有</p>
+<p><span class="math display">\[
+A\boldsymbol{x} = \boldsymbol{e}_1^T = \begin{pmatrix}
+    1 &amp; 0 &amp; \cdots &amp; 0
+\end{pmatrix}
+\]</span></p>
+<p>对于题设所要求的逆矩阵首行首列元素，其实就是上述线性方程组解向量 <span class="math inline">\(\boldsymbol{x}\)</span> 的列首元素。</p>
+<p>根据题设，系数矩阵 <span class="math inline">\(A\)</span> 的对角元素恰为素数序列；另外注意到系数矩阵是一个对称矩阵，因此考虑将系数矩阵 <span class="math inline">\(A\)</span> 分解为</p>
+<p><span class="math display">\[
+A = D - L - U
+\]</span></p>
+<p>考虑采用GS迭代解法，对上述线性方程组进行求解。可以写出迭代方程</p>
+<p><span class="math display">\[
+D\boldsymbol{x}^{(k+1)} = L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{e}_1
+\]</span></p>
+<p>方便起见，将素数序列表示为 <span class="math inline">\(\boldsymbol{p}\)</span>，用 <span class="math inline">\(\boldsymbol{p}_i\)</span> 表示素数序列中的第 <span class="math inline">\(i\)</span> 个元素，用 <span class="math inline">\(\boldsymbol{x}_i\)</span> 表示解向量的第 <span class="math inline">\(i\)</span> 个分量。由题设，可以发现矩阵 <span class="math inline">\(A\)</span> 第 <span class="math inline">\(i\)</span> 行的元素服从以下规律：</p>
+<ol type="1">
+<li>若该元素为对角元素，则该元素为 <span class="math inline">\(\boldsymbol{p}_i\)</span></li>
+<li>若该元素非对角元素，
+<ol type="1">
+<li>若 <span class="math inline">\(|i-j|\)</span> 为2的幂次，则该元素取1</li>
+<li>若 <span class="math inline">\(|i-j|\)</span> 不为2的幂次，则该元素取0</li>
+</ol></li>
+</ol>
+<p>那么，系数矩阵 <span class="math inline">\(A\)</span> 的第 <span class="math inline">\(i\)</span> 行实际上可以分解为以对角元素为起点，左右延展的两个序列。在这个序列中，元素索引为2的幂次时，元素取1，否则取0。</p>
+<p>观察到左右序列实际上均为二值序列，为了节省内存，不如将其改为值为1的索引序列。由于一行有 <span class="math inline">\(n\)</span> 个元素，第 <span class="math inline">\(i\)</span> 个元素左侧有 <span class="math inline">\(i-1\)</span> 个元素，右侧有 <span class="math inline">\(n-i\)</span> 个元素。假定 <span class="math inline">\(log_2(i-1)\)</span> 向下取整为 <span class="math inline">\(m\)</span>，<span class="math inline">\(log_2(n-i)\)</span> 向下取整为 <span class="math inline">\(n\)</span>，将左序列用符号 <span class="math inline">\(s_l\)</span> 表示，将右序列用 <span class="math inline">\(s_r\)</span> 表示，分别可以表示为</p>
+<p><span class="math display">\[
+\begin{cases}
+    s_l = \begin{bmatrix}
+        i- 2^{m} &amp; i- 2^{m-1} &amp; \cdots &amp; i-2^{0}
+    \end{bmatrix} \\
+    s_r = \begin{bmatrix}
+        i+2^0 &amp; i+2^1 &amp; \cdots &amp; i+ 2^n
+    \end{bmatrix}
+\end{cases}
+\]</span></p>
+<p>根据上面这一段对矩阵 <span class="math inline">\(A\)</span> 性质的剖析，可以对上述迭代方程按行展开。由于常数项向量的第一行元素为1，其余行元素为0，因此可以将按行展开分为三种情况。对于首行，有</p>
+<p><span class="math display">\[
+\boldsymbol{p}_1\boldsymbol{x}_1^{(k+1)} = \sum_{j \in s_r}\boldsymbol{x}^{(k)}_j + 1
+\]</span></p>
+<p>从第 <span class="math inline">\(2\)</span> 行开始，至 <span class="math inline">\(n-1\)</span> 行，有</p>
+<p><span class="math display">\[
+\boldsymbol{p}_i \boldsymbol{x}_i^{(k+1)} = \sum_{j \in s_l} \boldsymbol{x}^{(k+1)}_j + \sum_{j\in s_r} \boldsymbol{x}^{(k)}_j
+\]</span></p>
+<p>对于末行，有</p>
+<p><span class="math display">\[
+\boldsymbol{p}_n \boldsymbol{x}_n^{(k+1)} = \sum_{j \in s_l} \boldsymbol{x}^{(k+1)}_j
+\]</span></p>
+<p>根据题设，收敛条件为 <span class="math inline">\(||\boldsymbol{x}_1^{(k+1)}-\boldsymbol{x}_1^{(k)}||\leq 10^{-10}\)</span>。根据上面的分析，进行MATLAB编程，如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ent</span> = <span class="title">prob5</span><span class="params">(N)</span></span></span><br><span class="line">    tic;</span><br><span class="line"></span><br><span class="line">    <span class="comment">% 生成素数序列</span></span><br><span class="line">    p = <span class="built_in">primes</span>(nthprime(N));</span><br><span class="line"></span><br><span class="line">    <span class="comment">% 初始化解向量</span></span><br><span class="line">    x = <span class="built_in">zeros</span>(N, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">% 初始化误差变量与收敛条件</span></span><br><span class="line">    <span class="built_in">eps</span> = <span class="number">1e-10</span>;</span><br><span class="line">    error = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">% GS迭代法</span></span><br><span class="line">    <span class="keyword">while</span> error &gt; <span class="built_in">eps</span></span><br><span class="line">        xk1 = x(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">% i = 1 的情况</span></span><br><span class="line">        n = <span class="built_in">floor</span>(<span class="built_in">log2</span>(N - <span class="number">1</span>));</span><br><span class="line">        local_sum = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> idx = <span class="number">0</span>: n</span><br><span class="line">            local_sum = local_sum - x(<span class="number">1</span> + <span class="number">2</span>^idx);</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        x(<span class="number">1</span>) = local_sum / p(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">% i in [2, N-1] 的情况</span></span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">i</span> = <span class="number">2</span>: N - <span class="number">1</span></span><br><span class="line">            m = <span class="built_in">floor</span>(<span class="built_in">log2</span>(<span class="built_in">i</span> - <span class="number">1</span>));</span><br><span class="line">            n = <span class="built_in">floor</span>(<span class="built_in">log2</span>(N - <span class="built_in">i</span>));</span><br><span class="line">            local_sum = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> idx = <span class="number">0</span>: m</span><br><span class="line">                local_sum = local_sum - x(<span class="built_in">i</span> - <span class="number">2</span>^idx);</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            <span class="keyword">for</span> idx = <span class="number">0</span>: n</span><br><span class="line">                local_sum = local_sum - x(<span class="built_in">i</span> + <span class="number">2</span>^idx);</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">            x(<span class="built_in">i</span>) = local_sum / p(<span class="built_in">i</span>);</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">% i = N 的情况</span></span><br><span class="line">        m = <span class="built_in">floor</span>(<span class="built_in">log2</span>(N - <span class="number">1</span>));</span><br><span class="line">        local_sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> idx = <span class="number">0</span>: m</span><br><span class="line">            local_sum = local_sum - x(N - <span class="number">2</span>^idx);</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">        x(N) = local_sum / p(N);</span><br><span class="line">        error = norm(x(<span class="number">1</span>) - xk1);</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    ent = x(<span class="number">1</span>);</span><br><span class="line">    toc;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>下面令 <span class="math inline">\(N=20000\)</span>，计算矩阵的逆的首行首列元素，在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">fprintf(<span class="string">&quot;%.10f\n&quot;</span>, prob5(<span class="number">20000</span>));</span><br></pre></td></tr></table></figure>
+<p>得到结果</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Elapsed time is 1.154008 seconds.</span><br><span class="line">0.7250783463</span><br></pre></td></tr></table></figure>
+<p>令 <span class="math inline">\(N=200000\)</span>，在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">fprintf(<span class="string">&quot;%.10f\n&quot;</span>, prob5(<span class="number">200000</span>));</span><br></pre></td></tr></table></figure>
+<p>得到结果</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Elapsed time is 15.417185 seconds.</span><br><span class="line">0.7250809785</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
         <tag>Mathematics</tag>
       </tags>
   </entry>

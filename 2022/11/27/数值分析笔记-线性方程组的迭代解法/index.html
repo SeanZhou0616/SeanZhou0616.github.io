@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="范数和条件数 由于线性方程组的解是一个列向量，那么线性方程组的精确解和近似解之间的误差也会是一个列向量。所以，要衡量线性方程组解的精度，必须对误差向量的大小进行评判。为此，需要引入范数的概念。 什么是范数？ 范数定义了如何确定一个矩阵或向量的大小，一个矩阵或向量的范数是一个非负实数。事实上，我们平时常用的对一个二维向量 \(\boldsymbol{x} &#x3D; (a, b)\) 求模的计算公式 \(|">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数值分析笔记-线性方程组的迭代解法">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/">
+<meta property="og:site_name" content="Elysium">
+<meta property="og:description" content="范数和条件数 由于线性方程组的解是一个列向量，那么线性方程组的精确解和近似解之间的误差也会是一个列向量。所以，要衡量线性方程组解的精度，必须对误差向量的大小进行评判。为此，需要引入范数的概念。 什么是范数？ 范数定义了如何确定一个矩阵或向量的大小，一个矩阵或向量的范数是一个非负实数。事实上，我们平时常用的对一个二维向量 \(\boldsymbol{x} &#x3D; (a, b)\) 求模的计算公式 \(|">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-27T12:36:31.000Z">
+<meta property="article:modified_time" content="2022-11-29T03:08:59.681Z">
+<meta property="article:author" content="Sean Zhou">
+<meta property="article:tag" content="Numerical Analysis">
+<meta property="article:tag" content="Mathematics">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/","path":"2022/11/27/数值分析笔记-线性方程组的迭代解法/","title":"数值分析笔记-线性方程组的迭代解法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数值分析笔记-线性方程组的迭代解法 | Elysium</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Elysium</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Tech, Race, Game</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8C%83%E6%95%B0%E5%92%8C%E6%9D%A1%E4%BB%B6%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">范数和条件数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%8C%83%E6%95%B0"><span class="nav-number">1.1.</span> <span class="nav-text">什么是范数？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">向量范数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">1阶向量范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">2阶向量范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E7%A9%B7%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0"><span class="nav-number">1.2.3.</span> <span class="nav-text">无穷向量范数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">矩阵范数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.1.</span> <span class="nav-text">1阶矩阵范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#f%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">F矩阵范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0-1"><span class="nav-number">1.3.3.</span> <span class="nav-text">2阶矩阵范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E7%A9%B7%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.4.</span> <span class="nav-text">无穷矩阵范数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0%E5%92%8C%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0%E7%9A%84%E7%9B%B8%E5%AE%B9%E6%80%A7"><span class="nav-number">1.4.</span> <span class="nav-text">矩阵范数和向量范数的相容性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%B0%E5%8A%A8%E5%88%86%E6%9E%90%E5%92%8C%E6%9D%A1%E4%BB%B6%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">扰动分析和条件数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E6%95%B0%E9%A1%B9%E5%90%91%E9%87%8F%E6%89%B0%E5%8A%A8%E5%88%86%E6%9E%90"><span class="nav-number">2.1.</span> <span class="nav-text">常数项向量扰动分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E6%95%B0%E7%9F%A9%E9%98%B5%E6%89%B0%E5%8A%A8%E5%88%86%E6%9E%90"><span class="nav-number">2.2.</span> <span class="nav-text">系数矩阵扰动分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">条件数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%95%B0%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">2.3.1.</span> <span class="nav-text">条件数的性质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%89%AF%E6%80%81%E7%9F%A9%E9%98%B5%E5%92%8C%E7%97%85%E6%80%81%E7%9F%A9%E9%98%B5"><span class="nav-number">2.3.2.</span> <span class="nav-text">良态矩阵和病态矩阵</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%BF%AD%E4%BB%A3%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">基本迭代法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E5%B8%B8%E8%BF%AD%E4%BB%A3%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">定常迭代法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jacobi%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">Jacobi迭代解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gauss-seidel%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">Gauss-Seidel迭代解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sor%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95"><span class="nav-number">4.3.</span> <span class="nav-text">SOR迭代解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E8%BF%B0%E4%B8%89%E7%A7%8D%E5%AE%9A%E5%B8%B8%E8%BF%AD%E4%BB%A3%E6%B3%95%E7%9A%84%E6%94%B6%E6%95%9B%E6%80%A7%E5%88%86%E6%9E%90%E5%92%8C%E8%AF%AF%E5%B7%AE%E4%BC%B0%E8%AE%A1"><span class="nav-number">4.4.</span> <span class="nav-text">上述三种定常迭代法的收敛性分析和误差估计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%AE%E6%8D%A2%E7%9F%A9%E9%98%B5"><span class="nav-number">4.4.1.</span> <span class="nav-text">置换矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E7%BA%A6%E7%9F%A9%E9%98%B5"><span class="nav-number">4.4.2.</span> <span class="nav-text">可约矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E8%A7%92%E5%8D%A0%E4%BC%98"><span class="nav-number">4.4.3.</span> <span class="nav-text">对角占优</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%B1%E5%8D%8A%E5%BE%84%E7%9B%B8%E5%85%B3%E5%AE%9A%E7%90%86"><span class="nav-number">4.4.4.</span> <span class="nav-text">谱半径相关定理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%BF%AD%E4%BB%A3%E6%B3%95%E6%94%B6%E6%95%9B%E6%80%A7%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.4.5.</span> <span class="nav-text">基本迭代法收敛性条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jacobi%E8%BF%AD%E4%BB%A3%E4%B8%8Egs%E8%BF%AD%E4%BB%A3%E7%9A%84%E6%94%B6%E6%95%9B%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.4.6.</span> <span class="nav-text">Jacobi迭代与GS迭代的收敛条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sor%E8%BF%AD%E4%BB%A3%E7%9A%84%E6%94%B6%E6%95%9B%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.4.7.</span> <span class="nav-text">SOR迭代的收敛条件</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sean Zhou"
+      src="/images/Yeah.jpg">
+  <p class="site-author-name" itemprop="name">Sean Zhou</p>
+  <div class="site-description" itemprop="description">Sean Zhou's personal blog.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/SeanZhou0616" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SeanZhou0616" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:seanzhou616@gmail.com" title="E-Mail → mailto:seanzhou616@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数值分析笔记-线性方程组的迭代解法 | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数值分析笔记-线性方程组的迭代解法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-11-27 20:36:31" itemprop="dateCreated datePublished" datetime="2022-11-27T20:36:31+08:00">2022-11-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-29 11:08:59" itemprop="dateModified" datetime="2022-11-29T11:08:59+08:00">2022-11-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/University/" itemprop="url" rel="index"><span itemprop="name">University</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="范数和条件数">范数和条件数</h2>
+<p>由于线性方程组的解是一个列向量，那么线性方程组的精确解和近似解之间的误差也会是一个列向量。所以，要衡量线性方程组解的精度，必须对误差向量的大小进行评判。为此，需要引入范数的概念。</p>
+<h3 id="什么是范数">什么是范数？</h3>
+<p>范数定义了如何确定一个矩阵或向量的大小，一个矩阵或向量的范数是一个非负实数。事实上，我们平时常用的对一个二维向量 <span class="math inline">\(\boldsymbol{x} = (a, b)\)</span> 求模的计算公式 <span class="math inline">\(|\boldsymbol{x}|=\sqrt{a^2 + b^2}\)</span> 结果就是 <span class="math inline">\(\boldsymbol{x}\)</span> 的二阶范数。</p>
+<h3 id="向量范数">向量范数</h3>
+<p>向量范数的定义如下：</p>
+<ol type="1">
+<li>对于任一 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，其范数的符号表示为 <span class="math inline">\(||\boldsymbol{x}||\)</span></li>
+<li><span class="math inline">\(||\boldsymbol{x}|| \geq 0\)</span>，当且仅当 <span class="math inline">\(\boldsymbol{x}\)</span> 为零向量时，<span class="math inline">\(||\boldsymbol{x}|| = 0\)</span></li>
+<li>对任意实数 <span class="math inline">\(\alpha\)</span>，有 <span class="math inline">\(||\alpha \boldsymbol{x}|| = ||\alpha||\cdot ||\boldsymbol{x}||\)</span></li>
+<li>对任意向量 <span class="math inline">\(\boldsymbol{x}, \boldsymbol{y}\)</span>，有 <span class="math inline">\(||\boldsymbol{x}+\boldsymbol{y}||\leq ||\boldsymbol{x}|| + ||\boldsymbol{y}||\)</span></li>
+</ol>
+<h4 id="阶向量范数">1阶向量范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}||_1 = \sum_{i=1}^n |x_i|
+\]</span></p>
+<h4 id="阶向量范数-1">2阶向量范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}||_2 = \sqrt{\sum_{i=1}^n x_i^2}
+\]</span></p>
+<h4 id="无穷向量范数">无穷向量范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}||_{\infty} = max_{1\leq i\leq n} |x_i|
+\]</span></p>
+<p>以上三种范数比较常用。</p>
+<h3 id="矩阵范数">矩阵范数</h3>
+<p>矩阵范数和向量范数的定义基本一致，但是对两个矩阵相乘结果的范数也做了定义，应有 <span class="math inline">\(||AB|| \leq ||A|| \cdot ||B||\)</span>。下面列出几种常用的矩阵范数。</p>
+<h4 id="阶矩阵范数">1阶矩阵范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
+<p><span class="math display">\[
+||A||_1 = max_{1\leq j \leq n} \sum_{i=1}^n |a_{ij}|
+\]</span></p>
+<p>即方阵 <span class="math inline">\(A\)</span> 的1阶矩阵范数等于方阵 <span class="math inline">\(A\)</span> 中所有列向量1阶向量范数的最大值。</p>
+<h4 id="f矩阵范数">F矩阵范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
+<p><span class="math display">\[
+||A||_F = \sqrt{\sum_{i=1}^n \sum_{j=1}^n a_{ij}^2}
+\]</span></p>
+<p>很明显，F矩阵范数是2阶向量范数在矩阵上的推广。</p>
+<h4 id="阶矩阵范数-1">2阶矩阵范数</h4>
+<p>首先，要引入方阵的谱半径概念。对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若记其第 <span class="math inline">\(i\)</span> 个特征值为 <span class="math inline">\(\lambda_i\)</span>，那么这个方阵的谱半径就记为 <span class="math inline">\(\rho(A) = max_{1\leq i \leq n}|\lambda_i|\)</span>。方阵 <span class="math inline">\(A\)</span> 的2阶矩阵范数，实际上就是 <span class="math inline">\(A^TA\)</span> 的谱半径开方，即</p>
+<p><span class="math display">\[
+||A||_2 = \sqrt{\rho(A^TA)}
+\]</span></p>
+<p>所以，2阶矩阵范数也称为谱范数。</p>
+<h4 id="无穷矩阵范数">无穷矩阵范数</h4>
+<p>无穷矩阵范数，和1阶矩阵范数有些类似。对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
+<p><span class="math display">\[
+||A||_{\infty} = max_{1\leq i \leq n}\sum_{j=1}^n |a_{ij}|
+\]</span></p>
+<p>可以看出，无穷矩阵范数其实就是方阵 <span class="math inline">\(A\)</span> 中所有行向量1阶范数的最大值。</p>
+<h3 id="矩阵范数和向量范数的相容性">矩阵范数和向量范数的相容性</h3>
+<p>如果矩阵 <span class="math inline">\(A\)</span> 和向量 <span class="math inline">\(\boldsymbol{x}\)</span> 满足</p>
+<p><span class="math display">\[
+||A\boldsymbol{x}|| \leq ||A|| \cdot ||\boldsymbol{x}||
+\]</span></p>
+<p>则称矩阵 <span class="math inline">\(A\)</span> 和向量 <span class="math inline">\(\boldsymbol{x}\)</span> 满足矩阵范数和向量范数的相容性。</p>
+<h2 id="扰动分析和条件数">扰动分析和条件数</h2>
+<p>线性方程组 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的解是由系数矩阵 <span class="math inline">\(A\)</span> 和常数项向量 <span class="math inline">\(\boldsymbol{b}\)</span> 决定的。在实际应用中，这两项数据可能由测量误差、计算机的舍入误差等因素，导致计算时所使用的数据与真实数据之间存在一定的误差，或称其为<strong>扰动</strong>。对于某些特殊的线性方程组，即便扰动非常微小，但是对解的影响可能非常大。</p>
+<p>下面分别对系数矩阵上的扰动以及常数项向量上的扰动对解向量产生的干扰进行分析。</p>
+<h3 id="常数项向量扰动分析">常数项向量扰动分析</h3>
+<p>假定常数项向量上引入了一个扰动 <span class="math inline">\(\delta \boldsymbol{b}\)</span>，对线性方程组解向量造成了扰动 <span class="math inline">\(\delta \boldsymbol{x}\)</span>，那么线性方程组可以改写为</p>
+<p><span class="math display">\[
+A(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b} + \delta \boldsymbol{b}
+\]</span></p>
+<p>经过一系列变换，可以得到以下不等式</p>
+<p><span class="math display">\[
+\frac{||\delta \boldsymbol{x}||}{||\boldsymbol{x}||} \leq ||A|| \cdot ||A^{-1}||\cdot \frac{||\delta \boldsymbol{b}||}{||\boldsymbol{b}||}
+\]</span></p>
+<h3 id="系数矩阵扰动分析">系数矩阵扰动分析</h3>
+<p>假定系数矩阵上引入了一个扰动 <span class="math inline">\(\delta A\)</span>，对线性方程组的解向量造成了扰动 <span class="math inline">\(\delta \boldsymbol{x}\)</span>，那么线性方程组可以改写为</p>
+<p><span class="math display">\[
+(A+\delta A)(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b}
+\]</span></p>
+<p>经过一系列变换，可以得到以下不等式</p>
+<p><span class="math display">\[
+\frac{||\delta \boldsymbol{x}||}{||x + \delta \boldsymbol{x}||} \leq ||A|| \cdot ||A^{-1}|| \cdot \frac{||\delta A||}{||A||}
+\]</span></p>
+<h3 id="条件数">条件数</h3>
+<p>从上面的扰动分析中，可以看出，解的相对扰动与系数矩阵或常数项向量的相对扰动之间，都存在一个放大倍数 <span class="math inline">\(||A||\cdot ||A^{-1}||\)</span>。这个放大倍数称为线性方程组 <span class="math inline">\(A\boldsymbol{x}=\boldsymbol{b}\)</span> 的<strong>条件数</strong>，或矩阵 <span class="math inline">\(A\)</span> 的条件数，用 <span class="math inline">\(cond(A)\)</span> 表示。</p>
+<p>可以看到，矩阵的条件数与矩阵范数是挂钩的。常用的条件数是无穷矩阵范数对应的条件数 <span class="math inline">\(cond_{\infty}(A) = ||A||_{\infty}||A^{-1}||_{\infty}\)</span> 以及2阶矩阵范数对应的条件数 <span class="math inline">\(cons_2(A) = ||A||_2 ||A^{-1}||_2\)</span>。</p>
+<h4 id="条件数的性质">条件数的性质</h4>
+<ol type="1">
+<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond(A) \geq 1\)</span></li>
+<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span> 和非零常数 <span class="math inline">\(c\)</span>，有 <span class="math inline">\(cond(cA) = cond(A)\)</span></li>
+<li>对于任意正交矩阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond_2(A) = 1\)</span></li>
+<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span> 和正交矩阵 <span class="math inline">\(P\)</span>，有 <span class="math inline">\(cond_2(PA) = cond_2(AP) = cond_2(A)\)</span></li>
+</ol>
+<h4 id="良态矩阵和病态矩阵">良态矩阵和病态矩阵</h4>
+<p>对于一个确定的系数矩阵 <span class="math inline">\(A\)</span>，如果其条件数相对小，那么系数矩阵的扰动不会造成解的太大扰动；如果其条件数相对大，那么系数矩阵的扰动会导致解的大幅度扰动。条件数小的矩阵，称为<strong>良态矩阵</strong>；条件数大的矩阵，称为<strong>病态矩阵</strong>。</p>
+<p>一个最常见的病态矩阵就是Hilbert矩阵，即</p>
+<p><span class="math display">\[
+H_n = \begin{pmatrix}
+   1 &amp; \frac{1}{2} &amp; \cdots &amp; \frac{1}{n} \\
+   \frac{1}{2} &amp; \frac{1}{3} &amp; \cdots&amp; \frac{1}{n+1}\\
+   \vdots &amp; &amp; \ddots \\
+   \frac{1}{n} &amp; \frac{1}{n+1} &amp; \cdots &amp; \frac{1}{2n-1}
+\end{pmatrix}
+\]</span></p>
+<p>其条件数为 <span class="math inline">\(cond_2(H_n) \approx e^{3.5n}\)</span>，随着矩阵规模的增大，条件数迅速上升。因此，Hilbert矩阵的阶数越高，其条件数越大，也就越病态。</p>
+<h2 id="基本迭代法">基本迭代法</h2>
+<p>下面介绍如何使用迭代法进行线性方程组的求解。首先，对于线性方程组</p>
+<p><span class="math display">\[
+A\boldsymbol{x} = \boldsymbol{b}
+\]</span></p>
+<p>如果能够将系数矩阵拆解为两个矩阵的差，如 <span class="math inline">\(A = M - N\)</span>，那么上述线性方程组可以转换为</p>
+<p><span class="math display">\[
+M\boldsymbol{x} = N\boldsymbol{x} + \boldsymbol{b}
+\]</span></p>
+<p>假如矩阵 <span class="math inline">\(M\)</span> 可逆，那么</p>
+<p><span class="math display">\[
+\boldsymbol{x} = M^{-1}N\boldsymbol{x} + M^{-1}\boldsymbol{b}
+\]</span></p>
+<p>令 <span class="math inline">\(B = M^{-1}N, \ \boldsymbol{g} = M^{-1} \boldsymbol{b}\)</span>，那么可以建立线性方程组解的迭代公式</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = B\boldsymbol{x}^{(k)}+\boldsymbol{g}
+\]</span></p>
+<p>对于解向量，实际上在迭代的过程中，会形成一个解向量序列 <span class="math inline">\(\{\boldsymbol{x}^{(k)}\}\)</span>，并且最后会收敛至一个解 <span class="math inline">\(\boldsymbol{x}^*\)</span>，满足</p>
+<p><span class="math display">\[
+M\boldsymbol{x}^* = N\boldsymbol{x}^* + \boldsymbol{g}
+\]</span></p>
+<p>即</p>
+<p><span class="math display">\[
+A\boldsymbol{x}^* = \boldsymbol{b}
+\]</span></p>
+<p>如果按 <span class="math inline">\(\boldsymbol{x}^{(k+1)} = B\boldsymbol{x}^{(k)} + \boldsymbol{g}\)</span> 的方式，每次迭代都需要求出 <span class="math inline">\(M^{-1}\)</span>，计算量非常大；所以，实际上的迭代过程都是使用 <span class="math inline">\(M\boldsymbol{x}^{(k+1)} = N\boldsymbol{x}^{(k)}+\boldsymbol{b}\)</span>。每次迭代过程中，等式右侧的部分都是可计算的，那么每次迭代过程就相当于要求解一个以矩阵 <span class="math inline">\(M\)</span> 为系数矩阵，以 <span class="math inline">\(N \boldsymbol{x}^{(k)}+\boldsymbol{g}\)</span> 为常数项向量的非齐次线性方程组。</p>
+<p>为了减少计算量，我们总是希望这个矩阵 <span class="math inline">\(M\)</span> 具有一些易于计算的特征的，例如是对角矩阵或者上三角矩阵等。</p>
+<h2 id="定常迭代法">定常迭代法</h2>
+<p>下面记录三种基本的定常迭代解法：</p>
+<ol type="1">
+<li>Jacobi迭代解法</li>
+<li>Gauss-Seidel迭代解法</li>
+<li>SOR迭代解法</li>
+</ol>
+<h3 id="jacobi迭代解法">Jacobi迭代解法</h3>
+<p>对于线性方程组的迭代求解表达式 <span class="math inline">\(M\boldsymbol{x} = N\boldsymbol{x} + \boldsymbol{b}\)</span>，令</p>
+<p><span class="math display">\[
+M = D,\ N = L + U
+\]</span></p>
+<p>则可以得到Jacobi迭代解法，即</p>
+<p><span class="math display">\[
+D\boldsymbol{x}^{(k+1)} = (L+U)\boldsymbol{x}^{(k)}+\boldsymbol{b}
+\]</span></p>
+<p>迭代收敛条件一般以</p>
+<p><span class="math display">\[
+\frac{||\boldsymbol{b} - A\boldsymbol{x^*}||}{||\boldsymbol{b}||}
+\]</span></p>
+<p>为指标，若该相对误差小于某一阈值则认为迭代收敛。</p>
+<h3 id="gauss-seidel迭代解法">Gauss-Seidel迭代解法</h3>
+<p>Guass-Seidel迭代解法与Jacobi迭代解法非常相似，如下</p>
+<p><span class="math display">\[
+D\boldsymbol{x}^{(k+1)} = L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{b}
+\]</span></p>
+<p>或者也可以简化为</p>
+<p><span class="math display">\[
+(D-L)\boldsymbol{x}^{(k+1)}=U\boldsymbol{x}^{(k)}+\boldsymbol{b}
+\]</span></p>
+<p>虽然形式上很相似，但是GS迭代解法与Jacobi迭代解法有本质上的区别。Jacobi迭代解法中，一次迭代过程中 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 完全由 <span class="math inline">\(\boldsymbol{x}^{(k)}\)</span> 求出；而GS迭代解法中，解 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 的第 <span class="math inline">\(i\)</span> 个分量的求解会使用解 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 的前 <span class="math inline">\(i-1\)</span> 个分量以及 <span class="math inline">\(\boldsymbol{x}^{(k)}\)</span> 的后 <span class="math inline">\(n-i-1\)</span> 个分量作为已知参数。相当于GS迭代解法中，解的更新是分量级别的，而Jacobi迭代解法中，解的更新是解向量级别的，那么相当于GS迭代解法的迭代颗粒度在行级别，而Jacobi迭代解法的迭代颗粒度是矩阵级别。</p>
+<p>第一种写法强调了GS迭代解法中解分量迭代的特性。第二种写法将 <span class="math inline">\(L\boldsymbol{x}^{(k+1)}\)</span> 项移到等式左侧，是因为在计算上这两种写法是等价的，但是容易引起误解，令人认为GS迭代解法和Jacobi迭代解法没有什么区别。</p>
+<blockquote>
+<p>请勿混淆线性方程组迭代解法中对于系数矩阵 <span class="math inline">\(A\)</span> 的分解与 <span class="math inline">\(LDU\)</span> 分解，迭代解法中的系数矩阵分解是线性分解 <span class="math inline">\(A = D - L - U\)</span>，而 <span class="math inline">\(LDU\)</span> 分解指的是矩阵乘法分解 <span class="math inline">\(A = LDU\)</span>。</p>
+</blockquote>
+<h3 id="sor迭代解法">SOR迭代解法</h3>
+<p>SOR迭代解法即Successive Over Relaxation迭代解法，是GS迭代解法的一种衍生版本。对于GS迭代解法，可以将其原始表达式改写为</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)}=D^{-1}(L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{b})
+\]</span></p>
+<p>从修正解的角度考虑，可以将上述进一步改写为</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x}^{(k)}+\boldsymbol{b})
+\]</span></p>
+<p>也就是说 <span class="math inline">\(D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x^{k}}+\boldsymbol{b})\)</span> 可以看作是对当前解的修正值。SOR迭代解法，就是在GS迭代解法的基础上，用一个松弛因子 <span class="math inline">\(\omega\)</span> 来调整这个修正值的大小，从而加速迭代。SOR迭代解法的表达式如下</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \omega D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x}^{(k)}+\boldsymbol{b})
+\]</span></p>
+<p>可以对这条式子进行合并同类项等操作，最后得到</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = (D-\omega L)^{-1}[(1-\omega)D+\omega U]\boldsymbol{x}^{(k)}+\omega(D-\omega L)^{-1} \boldsymbol{b}
+\]</span></p>
+<p>和GS迭代解法的两种表达形式一样，上述写法只是在计算上等价，对于编程来说更加方便，但是迭代求解本质还是第一条表达式反映得更好。另外，从上面的推导中可以看出，SOR迭代解法在 <span class="math inline">\(\omega=1\)</span> 时就是GS迭代解法。</p>
+<h3 id="上述三种定常迭代法的收敛性分析和误差估计">上述三种定常迭代法的收敛性分析和误差估计</h3>
+<p>教材中的一个小例子说明了GS迭代的收敛速度一般优于Jacobi迭代，而SOR的迭代收敛速度与松弛因子是有关系的，如果松弛因子取得好，SOR迭代的收敛速度一般由于GS迭代。但是，这三种定常迭代法不能保证迭代收敛。下面分析一下这三种迭代方法的收敛性以及计算误差。在此之前，先引入几个相关概念。</p>
+<h4 id="置换矩阵">置换矩阵</h4>
+<p>置换矩阵可以认为是单位矩阵经过有限次第一类初等变换所形成的矩阵，其特征是矩阵的每一行中有且仅有一个元素1，每一列中也是有且仅有一个元素1，例如</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    0 &amp; 0 &amp; 1 &amp; 0\\
+    1 &amp; 0 &amp; 0 &amp; 0\\
+    0 &amp; 1 &amp; 0 &amp; 0\\
+    0 &amp; 0 &amp; 0 &amp; 1
+\end{pmatrix}
+\]</span></p>
+<p>就是一个置换矩阵。</p>
+<h4 id="可约矩阵">可约矩阵</h4>
+<p>对于 <span class="math inline">\(n (n\geq 2)\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若存在 <span class="math inline">\(n\)</span> 阶置换矩阵 <span class="math inline">\(P\)</span>，使得</p>
+<p><span class="math display">\[
+P^TAP=\begin{pmatrix}
+    A_{11} &amp; A_{12} \\
+    0 &amp; A_{22}
+\end{pmatrix}
+\]</span></p>
+<p>其中 <span class="math inline">\(A_{11}, A_{22}\)</span> 分别为 <span class="math inline">\(r, n-r\)</span> 阶方阵。若满足上述条件的置换矩阵存在，则称方阵 <span class="math inline">\(A\)</span> 为<strong>可约矩阵</strong>，否则称为<strong>不可约矩阵</strong>。</p>
+<p>可约矩阵的意义在于，可以通过分块矩阵将原来的线性方程组拆分为次数较低的两个线性方程组，从而提升求解速度。在实际计算中，这样的加速效果非常显著。</p>
+<h4 id="对角占优">对角占优</h4>
+<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若满足</p>
+<p><span class="math display">\[
+|a_{ii}| \geq \sum_{j=1, j\neq i}^n |a_{ij}|, i \in \mathcal Z[1, n]
+\]</span></p>
+<p>称矩阵 <span class="math inline">\(A\)</span> <strong>对角占优</strong>。若存在至少一个 <span class="math inline">\(i \in \mathcal Z[1, n]\)</span>$ 使上述不等式取等号，称矩阵 <span class="math inline">\(A\)</span> 为<strong>弱对角占优</strong>；反之，则称矩阵 <span class="math inline">\(A\)</span> 为<strong>严格对角占优</strong>。</p>
+<p>对角占优有一个性质：<em>严格对角占优和不可约弱对角占优矩阵必为非奇异矩阵</em>。</p>
+<h4 id="谱半径相关定理">谱半径相关定理</h4>
+<p>在迭代解法的收敛性分析和误差分析中，矩阵的谱半径是一个重要的概念。下面记录两条相关定理，为后续的收敛性分析和误差分析铺垫。</p>
+<ol type="1">
+<li>对于 <span class="math inline">\(n\)</span> 阶矩阵 <span class="math inline">\(A\)</span>，<span class="math inline">\(A^k \rightarrow 0\)</span> 的充要条件是 <span class="math inline">\(\rho(A) &lt; 1\)</span></li>
+<li>对于 <span class="math inline">\(n\)</span> 阶矩阵 <span class="math inline">\(A\)</span>，<span class="math inline">\(\rho(A) \leq ||A||\)</span>，其中 <span class="math inline">\(||A||\)</span> 表示 <span class="math inline">\(A\)</span> 的任意范数</li>
+</ol>
+<h4 id="基本迭代法收敛性条件">基本迭代法收敛性条件</h4>
+<p>对于线性方程组的基本迭代方程</p>
+<p><span class="math display">\[
+\boldsymbol{x} = B \boldsymbol{x} + \boldsymbol{g}
+\]</span></p>
+<p>若迭代矩阵 <span class="math inline">\(B\)</span> 满足 <span class="math inline">\(\rho(B)&lt;1\)</span>，则从上述基本迭代方程衍生的迭代方法均收敛。另外，若 <span class="math inline">\(||B||&lt;1\)</span>（根据谱半径与范数的关系，基本迭代方法必然收敛），有误差估计</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)} - \boldsymbol{x}^*|| \leq \frac{||B||^k}{1-||B||}(\boldsymbol{x}^{(1)} - \boldsymbol{x}^{(0)})
+\]</span></p>
+<p>或者</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*|| \leq \frac{||B||}{1-||B||}(\boldsymbol{x}^{(k)} - \boldsymbol{x}^{(k-1)})
+\]</span></p>
+<h4 id="jacobi迭代与gs迭代的收敛条件">Jacobi迭代与GS迭代的收敛条件</h4>
+<p>对于Jacobi迭代解法和GS迭代解法，有以下收敛条件</p>
+<ol type="1">
+<li>若系数矩阵 <span class="math inline">\(A\)</span> 为严格对角占优矩阵或不可约弱对角占优矩阵，那么Jacobi和GS迭代均收敛</li>
+<li>若矩阵 <span class="math inline">\(A\)</span> 正定，则Jacobi收敛的充要条件为 <span class="math inline">\(2D-A\)</span> 也正定</li>
+</ol>
+<h4 id="sor迭代的收敛条件">SOR迭代的收敛条件</h4>
+<p>对于SOR迭代解法，有以下收敛条件</p>
+<ol type="1">
+<li>松弛系数 <span class="math inline">\(\omega\)</span> 满足 <span class="math inline">\(0&lt; \omega &lt; 2\)</span> 是收敛的必要条件</li>
+<li>若系数矩阵 <span class="math inline">\(A\)</span> 正定，那么上述条件加强为收敛的充要条件</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Numerical-Analysis/" rel="tag"># Numerical Analysis</a>
+              <a href="/tags/Mathematics/" rel="tag"># Mathematics</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/26/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E5%A4%9A%E9%A1%B9%E5%BC%8F/" rel="prev" title="矩阵分析笔记-多项式">
+                  <i class="fa fa-chevron-left"></i> 矩阵分析笔记-多项式
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/11/28/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E5%85%AD%E7%AB%A0/" rel="next" title="数值分析作业-第六章">
+                  数值分析作业-第六章 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sean Zhou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

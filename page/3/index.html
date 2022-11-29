@@ -159,7 +159,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -208,6 +208,197 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/02/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/11/02/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">卡尔曼滤波器基础</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-02 21:37:10 / 修改时间：22:02:28" itemprop="dateCreated datePublished" datetime="2022-11-02T21:37:10+08:00">2022-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Control-Engineering/" itemprop="url" rel="index"><span itemprop="name">Control Engineering</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="引入">引入</h2>
+<p>卡尔曼滤波器是一种利用观测数据来修正先验数据的滤波器，适用于<em>线性高斯系统</em>。</p>
+<p>以直线运动的车辆为例。记<span class="math inline">\(t\)</span>时刻的车辆位置为<span class="math inline">\(p_t\)</span>，速度为<span class="math inline">\(v_t\)</span>，加速度为<span class="math inline">\(u_t\)</span>，那么在纵向应有车辆运动学模型</p>
+<p><span class="math display">\[
+\left \{ \begin{aligned}
+&amp; p_t = p_{t-1} + \Delta t \ v_{t-1} + \frac{(\Delta t)^2}{2} u_{t-1}  \\
+&amp; v_t = v_{t-1} + \Delta t \ u_{t-1}
+\end{aligned}
+\right.
+\]</span></p>
+<p>令</p>
+<p><span class="math display">\[
+\boldsymbol x_t = \begin{pmatrix} p_t \\ v_t \end{pmatrix}
+\]</span></p>
+<p>有</p>
+<p><span class="math display">\[
+\boldsymbol x_t = \begin{pmatrix} 1 &amp; \Delta t \\ 0 &amp; 1 \end{pmatrix}\boldsymbol x_{t-1} + \begin{pmatrix} \displaystyle \frac{(\Delta t)^2}{2} \\ \Delta t \end{pmatrix}u_{t-1} \tag{1}
+\]</span></p>
+<p>当然，这样的运动学模型是非常简单的。一方面，只考虑了纵向的运动，而且假设加速度的测量是noise-free的；另一方面，由于采样数据是离散的，在<span class="math inline">\(\Delta t\)</span>时间内的加速度变化我们不得而知。因此，利用这样的运动学模型对车辆的运动状态进行估计，误差必然会随着时间的推移而增大。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/11/02/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%9F%BA%E7%A1%80/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/02/Ubuntu-Debian%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85Python%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/11/02/Ubuntu-Debian%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85Python%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">Ubuntu/Debian从源码安装Python记录</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-02 17:50:36 / 修改时间：17:51:52" itemprop="dateCreated datePublished" datetime="2022-11-02T17:50:36+08:00">2022-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Technical-Issues/" itemprop="url" rel="index"><span itemprop="name">Technical Issues</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>先安装编译所需的依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/11/02/Ubuntu-Debian%E4%BB%8E%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85Python%E8%AE%B0%E5%BD%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
