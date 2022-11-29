@@ -1127,6 +1127,38 @@ C^* = \mathop{argmin}\limits_{C}W(C) = \mathop{argmin}\limits_{C}\sum^k_{i=1}\su
       </tags>
   </entry>
   <entry>
+    <title>统计学习方法-模型评估与选择</title>
+    <url>/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/</url>
+    <content><![CDATA[<h2 id="模型评估参数">模型评估参数</h2>
+<h3 id="训练误差">训练误差</h3>
+<p>将训练得到的模型记为 <span class="math inline">\(Y = \hat f(X)\)</span>，那么训练误差就是模型 <span class="math inline">\(\hat f\)</span> 在训练集 <span class="math inline">\(T\)</span> 中的经验风险函数。</p>
+<p><span class="math display">\[
+R_{emp}(\hat f) = \frac{1}{N}\sum^N_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \in T
+\]</span></p>
+<h3 id="测试误差">测试误差</h3>
+<p>测试误差指的是模型 <span class="math inline">\(\hat f\)</span> 在测试集中的经验风险函数。</p>
+<p><span class="math display">\[
+e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \in T_{test}
+\]</span></p>
+<h3 id="模型评估方法">模型评估方法</h3>
+<p>训练误差对于模型的好坏评价意义不大，主要用来判断假设空间选取是否合适；测试误差对于模型的泛化能力评估意义比较大。</p>
+<h2 id="交叉验证-cross-validation">交叉验证 Cross Validation</h2>
+<p>为了更好地评估训练得到模型的性能，交叉验证是必要的。利用测试集进行模型泛化能力的评估是交叉验证的结果，本小节的重点是记录交叉验证的方法，或者说如何进行训练集和测试集的划分。</p>
+<h3 id="简单交叉验证">简单交叉验证</h3>
+<p>随机将数据集的70%作为训练集，剩余30%作为测试集。</p>
+<h3 id="s折交叉验证-s-fold">S折交叉验证 S-Fold</h3>
+<p>S折交叉验证是工业中最常用的交叉验证方法，因为这种方法能最大程度上发挥数据集的作用。具体的做法是，将数据集随机分成S个子集，随后进行S次迭代，每一次迭代都将S个子集中的其中一个子集作为测试集，其他的S-1个子集作为训练集。经过S次迭代之后，选出平均测试误差最小的模型作为最优模型。</p>
+<h3 id="留一交叉验证-leave-one-cut">留一交叉验证 Leave-one-cut</h3>
+<p>留一交叉验证是S折交叉验证的一种特殊情况，即取S的值为样本容量。</p>
+]]></content>
+      <categories>
+        <category>Computer Science</category>
+      </categories>
+      <tags>
+        <tag>Machine Learning</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>VMD算法笔记</title>
     <url>/2022/11/21/VMD%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<h2 id="什么是mode">什么是Mode</h2>
@@ -1188,38 +1220,6 @@ L(m_n, \omega_n, \lambda) = \alpha \sum^n ||\frac{\partial}{\partial t}\{[(\delt
       </categories>
       <tags>
         <tag>Signal Processing</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>统计学习方法-模型评估与选择</title>
-    <url>/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/</url>
-    <content><![CDATA[<h2 id="模型评估参数">模型评估参数</h2>
-<h3 id="训练误差">训练误差</h3>
-<p>将训练得到的模型记为 <span class="math inline">\(Y = \hat f(X)\)</span>，那么训练误差就是模型 <span class="math inline">\(\hat f\)</span> 在训练集 <span class="math inline">\(T\)</span> 中的经验风险函数。</p>
-<p><span class="math display">\[
-R_{emp}(\hat f) = \frac{1}{N}\sum^N_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \in T
-\]</span></p>
-<h3 id="测试误差">测试误差</h3>
-<p>测试误差指的是模型 <span class="math inline">\(\hat f\)</span> 在测试集中的经验风险函数。</p>
-<p><span class="math display">\[
-e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \in T_{test}
-\]</span></p>
-<h3 id="模型评估方法">模型评估方法</h3>
-<p>训练误差对于模型的好坏评价意义不大，主要用来判断假设空间选取是否合适；测试误差对于模型的泛化能力评估意义比较大。</p>
-<h2 id="交叉验证-cross-validation">交叉验证 Cross Validation</h2>
-<p>为了更好地评估训练得到模型的性能，交叉验证是必要的。利用测试集进行模型泛化能力的评估是交叉验证的结果，本小节的重点是记录交叉验证的方法，或者说如何进行训练集和测试集的划分。</p>
-<h3 id="简单交叉验证">简单交叉验证</h3>
-<p>随机将数据集的70%作为训练集，剩余30%作为测试集。</p>
-<h3 id="s折交叉验证-s-fold">S折交叉验证 S-Fold</h3>
-<p>S折交叉验证是工业中最常用的交叉验证方法，因为这种方法能最大程度上发挥数据集的作用。具体的做法是，将数据集随机分成S个子集，随后进行S次迭代，每一次迭代都将S个子集中的其中一个子集作为测试集，其他的S-1个子集作为训练集。经过S次迭代之后，选出平均测试误差最小的模型作为最优模型。</p>
-<h3 id="留一交叉验证-leave-one-cut">留一交叉验证 Leave-one-cut</h3>
-<p>留一交叉验证是S折交叉验证的一种特殊情况，即取S的值为样本容量。</p>
-]]></content>
-      <categories>
-        <category>Computer Science</category>
-      </categories>
-      <tags>
-        <tag>Machine Learning</tag>
       </tags>
   </entry>
   <entry>
@@ -1664,6 +1664,7 @@ P^TAP=\begin{pmatrix}
     <url>/2022/11/28/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E5%85%AD%E7%AB%A0/</url>
     <content><![CDATA[<p>姓名：周晓</p>
 <p>学号：2231573</p>
+<p>本作业的代码运算平台为Intel Core i7-9750H CPU。</p>
 <span id="more"></span>
 <h2 id="第一题">第一题</h2>
 <h3 id="jacobi迭代求解">Jacobi迭代求解</h3>
