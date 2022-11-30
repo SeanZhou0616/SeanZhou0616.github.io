@@ -253,7 +253,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-29 22:01:13" itemprop="dateModified" datetime="2022-11-29T22:01:13+08:00">2022-11-29</time>
+      <time title="修改时间：2022-11-29 22:07:59" itemprop="dateModified" datetime="2022-11-29T22:07:59+08:00">2022-11-29</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -347,7 +347,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-29 11:08:59" itemprop="dateModified" datetime="2022-11-29T11:08:59+08:00">2022-11-29</time>
+      <time title="修改时间：2022-11-30 17:39:16" itemprop="dateModified" datetime="2022-11-30T17:39:16+08:00">2022-11-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -371,249 +371,14 @@
     <div class="post-body" itemprop="articleBody">
           <h2 id="范数和条件数">范数和条件数</h2>
 <p>由于线性方程组的解是一个列向量，那么线性方程组的精确解和近似解之间的误差也会是一个列向量。所以，要衡量线性方程组解的精度，必须对误差向量的大小进行评判。为此，需要引入范数的概念。</p>
-<h3 id="什么是范数">什么是范数？</h3>
-<p>范数定义了如何确定一个矩阵或向量的大小，一个矩阵或向量的范数是一个非负实数。事实上，我们平时常用的对一个二维向量 <span class="math inline">\(\boldsymbol{x} = (a, b)\)</span> 求模的计算公式 <span class="math inline">\(|\boldsymbol{x}|=\sqrt{a^2 + b^2}\)</span> 结果就是 <span class="math inline">\(\boldsymbol{x}\)</span> 的二阶范数。</p>
-<h3 id="向量范数">向量范数</h3>
-<p>向量范数的定义如下：</p>
-<ol type="1">
-<li>对于任一 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，其范数的符号表示为 <span class="math inline">\(||\boldsymbol{x}||\)</span></li>
-<li><span class="math inline">\(||\boldsymbol{x}|| \geq 0\)</span>，当且仅当 <span class="math inline">\(\boldsymbol{x}\)</span> 为零向量时，<span class="math inline">\(||\boldsymbol{x}|| = 0\)</span></li>
-<li>对任意实数 <span class="math inline">\(\alpha\)</span>，有 <span class="math inline">\(||\alpha \boldsymbol{x}|| = ||\alpha||\cdot ||\boldsymbol{x}||\)</span></li>
-<li>对任意向量 <span class="math inline">\(\boldsymbol{x}, \boldsymbol{y}\)</span>，有 <span class="math inline">\(||\boldsymbol{x}+\boldsymbol{y}||\leq ||\boldsymbol{x}|| + ||\boldsymbol{y}||\)</span></li>
-</ol>
-<h4 id="阶向量范数">1阶向量范数</h4>
-<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
-<p><span class="math display">\[
-||\boldsymbol{x}||_1 = \sum_{i=1}^n |x_i|
-\]</span></p>
-<h4 id="阶向量范数-1">2阶向量范数</h4>
-<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
-<p><span class="math display">\[
-||\boldsymbol{x}||_2 = \sqrt{\sum_{i=1}^n x_i^2}
-\]</span></p>
-<h4 id="无穷向量范数">无穷向量范数</h4>
-<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
-<p><span class="math display">\[
-||\boldsymbol{x}||_{\infty} = max_{1\leq i\leq n} |x_i|
-\]</span></p>
-<p>以上三种范数比较常用。</p>
-<h3 id="矩阵范数">矩阵范数</h3>
-<p>矩阵范数和向量范数的定义基本一致，但是对两个矩阵相乘结果的范数也做了定义，应有 <span class="math inline">\(||AB|| \leq ||A|| \cdot ||B||\)</span>。下面列出几种常用的矩阵范数。</p>
-<h4 id="阶矩阵范数">1阶矩阵范数</h4>
-<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
-<p><span class="math display">\[
-||A||_1 = max_{1\leq j \leq n} \sum_{i=1}^n |a_{ij}|
-\]</span></p>
-<p>即方阵 <span class="math inline">\(A\)</span> 的1阶矩阵范数等于方阵 <span class="math inline">\(A\)</span> 中所有列向量1阶向量范数的最大值。</p>
-<h4 id="f矩阵范数">F矩阵范数</h4>
-<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
-<p><span class="math display">\[
-||A||_F = \sqrt{\sum_{i=1}^n \sum_{j=1}^n a_{ij}^2}
-\]</span></p>
-<p>很明显，F矩阵范数是2阶向量范数在矩阵上的推广。</p>
-<h4 id="阶矩阵范数-1">2阶矩阵范数</h4>
-<p>首先，要引入方阵的谱半径概念。对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若记其第 <span class="math inline">\(i\)</span> 个特征值为 <span class="math inline">\(\lambda_i\)</span>，那么这个方阵的谱半径就记为 <span class="math inline">\(\rho(A) = max_{1\leq i \leq n}|\lambda_i|\)</span>。方阵 <span class="math inline">\(A\)</span> 的2阶矩阵范数，实际上就是 <span class="math inline">\(A^TA\)</span> 的谱半径开方，即</p>
-<p><span class="math display">\[
-||A||_2 = \sqrt{\rho(A^TA)}
-\]</span></p>
-<p>所以，2阶矩阵范数也称为谱范数。</p>
-<h4 id="无穷矩阵范数">无穷矩阵范数</h4>
-<p>无穷矩阵范数，和1阶矩阵范数有些类似。对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
-<p><span class="math display">\[
-||A||_{\infty} = max_{1\leq i \leq n}\sum_{j=1}^n |a_{ij}|
-\]</span></p>
-<p>可以看出，无穷矩阵范数其实就是方阵 <span class="math inline">\(A\)</span> 中所有行向量1阶范数的最大值。</p>
-<h3 id="矩阵范数和向量范数的相容性">矩阵范数和向量范数的相容性</h3>
-<p>如果矩阵 <span class="math inline">\(A\)</span> 和向量 <span class="math inline">\(\boldsymbol{x}\)</span> 满足</p>
-<p><span class="math display">\[
-||A\boldsymbol{x}|| \leq ||A|| \cdot ||\boldsymbol{x}||
-\]</span></p>
-<p>则称矩阵 <span class="math inline">\(A\)</span> 和向量 <span class="math inline">\(\boldsymbol{x}\)</span> 满足矩阵范数和向量范数的相容性。</p>
-<h2 id="扰动分析和条件数">扰动分析和条件数</h2>
-<p>线性方程组 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的解是由系数矩阵 <span class="math inline">\(A\)</span> 和常数项向量 <span class="math inline">\(\boldsymbol{b}\)</span> 决定的。在实际应用中，这两项数据可能由测量误差、计算机的舍入误差等因素，导致计算时所使用的数据与真实数据之间存在一定的误差，或称其为<strong>扰动</strong>。对于某些特殊的线性方程组，即便扰动非常微小，但是对解的影响可能非常大。</p>
-<p>下面分别对系数矩阵上的扰动以及常数项向量上的扰动对解向量产生的干扰进行分析。</p>
-<h3 id="常数项向量扰动分析">常数项向量扰动分析</h3>
-<p>假定常数项向量上引入了一个扰动 <span class="math inline">\(\delta \boldsymbol{b}\)</span>，对线性方程组解向量造成了扰动 <span class="math inline">\(\delta \boldsymbol{x}\)</span>，那么线性方程组可以改写为</p>
-<p><span class="math display">\[
-A(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b} + \delta \boldsymbol{b}
-\]</span></p>
-<p>经过一系列变换，可以得到以下不等式</p>
-<p><span class="math display">\[
-\frac{||\delta \boldsymbol{x}||}{||\boldsymbol{x}||} \leq ||A|| \cdot ||A^{-1}||\cdot \frac{||\delta \boldsymbol{b}||}{||\boldsymbol{b}||}
-\]</span></p>
-<h3 id="系数矩阵扰动分析">系数矩阵扰动分析</h3>
-<p>假定系数矩阵上引入了一个扰动 <span class="math inline">\(\delta A\)</span>，对线性方程组的解向量造成了扰动 <span class="math inline">\(\delta \boldsymbol{x}\)</span>，那么线性方程组可以改写为</p>
-<p><span class="math display">\[
-(A+\delta A)(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b}
-\]</span></p>
-<p>经过一系列变换，可以得到以下不等式</p>
-<p><span class="math display">\[
-\frac{||\delta \boldsymbol{x}||}{||x + \delta \boldsymbol{x}||} \leq ||A|| \cdot ||A^{-1}|| \cdot \frac{||\delta A||}{||A||}
-\]</span></p>
-<h3 id="条件数">条件数</h3>
-<p>从上面的扰动分析中，可以看出，解的相对扰动与系数矩阵或常数项向量的相对扰动之间，都存在一个放大倍数 <span class="math inline">\(||A||\cdot ||A^{-1}||\)</span>。这个放大倍数称为线性方程组 <span class="math inline">\(A\boldsymbol{x}=\boldsymbol{b}\)</span> 的<strong>条件数</strong>，或矩阵 <span class="math inline">\(A\)</span> 的条件数，用 <span class="math inline">\(cond(A)\)</span> 表示。</p>
-<p>可以看到，矩阵的条件数与矩阵范数是挂钩的。常用的条件数是无穷矩阵范数对应的条件数 <span class="math inline">\(cond_{\infty}(A) = ||A||_{\infty}||A^{-1}||_{\infty}\)</span> 以及2阶矩阵范数对应的条件数 <span class="math inline">\(cons_2(A) = ||A||_2 ||A^{-1}||_2\)</span>。</p>
-<h4 id="条件数的性质">条件数的性质</h4>
-<ol type="1">
-<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond(A) \geq 1\)</span></li>
-<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span> 和非零常数 <span class="math inline">\(c\)</span>，有 <span class="math inline">\(cond(cA) = cond(A)\)</span></li>
-<li>对于任意正交矩阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond_2(A) = 1\)</span></li>
-<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span> 和正交矩阵 <span class="math inline">\(P\)</span>，有 <span class="math inline">\(cond_2(PA) = cond_2(AP) = cond_2(A)\)</span></li>
-</ol>
-<h4 id="良态矩阵和病态矩阵">良态矩阵和病态矩阵</h4>
-<p>对于一个确定的系数矩阵 <span class="math inline">\(A\)</span>，如果其条件数相对小，那么系数矩阵的扰动不会造成解的太大扰动；如果其条件数相对大，那么系数矩阵的扰动会导致解的大幅度扰动。条件数小的矩阵，称为<strong>良态矩阵</strong>；条件数大的矩阵，称为<strong>病态矩阵</strong>。</p>
-<p>一个最常见的病态矩阵就是Hilbert矩阵，即</p>
-<p><span class="math display">\[
-H_n = \begin{pmatrix}
-   1 &amp; \frac{1}{2} &amp; \cdots &amp; \frac{1}{n} \\
-   \frac{1}{2} &amp; \frac{1}{3} &amp; \cdots&amp; \frac{1}{n+1}\\
-   \vdots &amp; &amp; \ddots \\
-   \frac{1}{n} &amp; \frac{1}{n+1} &amp; \cdots &amp; \frac{1}{2n-1}
-\end{pmatrix}
-\]</span></p>
-<p>其条件数为 <span class="math inline">\(cond_2(H_n) \approx e^{3.5n}\)</span>，随着矩阵规模的增大，条件数迅速上升。因此，Hilbert矩阵的阶数越高，其条件数越大，也就越病态。</p>
-<h2 id="基本迭代法">基本迭代法</h2>
-<p>下面介绍如何使用迭代法进行线性方程组的求解。首先，对于线性方程组</p>
-<p><span class="math display">\[
-A\boldsymbol{x} = \boldsymbol{b}
-\]</span></p>
-<p>如果能够将系数矩阵拆解为两个矩阵的差，如 <span class="math inline">\(A = M - N\)</span>，那么上述线性方程组可以转换为</p>
-<p><span class="math display">\[
-M\boldsymbol{x} = N\boldsymbol{x} + \boldsymbol{b}
-\]</span></p>
-<p>假如矩阵 <span class="math inline">\(M\)</span> 可逆，那么</p>
-<p><span class="math display">\[
-\boldsymbol{x} = M^{-1}N\boldsymbol{x} + M^{-1}\boldsymbol{b}
-\]</span></p>
-<p>令 <span class="math inline">\(B = M^{-1}N, \ \boldsymbol{g} = M^{-1} \boldsymbol{b}\)</span>，那么可以建立线性方程组解的迭代公式</p>
-<p><span class="math display">\[
-\boldsymbol{x}^{(k+1)} = B\boldsymbol{x}^{(k)}+\boldsymbol{g}
-\]</span></p>
-<p>对于解向量，实际上在迭代的过程中，会形成一个解向量序列 <span class="math inline">\(\{\boldsymbol{x}^{(k)}\}\)</span>，并且最后会收敛至一个解 <span class="math inline">\(\boldsymbol{x}^*\)</span>，满足</p>
-<p><span class="math display">\[
-M\boldsymbol{x}^* = N\boldsymbol{x}^* + \boldsymbol{g}
-\]</span></p>
-<p>即</p>
-<p><span class="math display">\[
-A\boldsymbol{x}^* = \boldsymbol{b}
-\]</span></p>
-<p>如果按 <span class="math inline">\(\boldsymbol{x}^{(k+1)} = B\boldsymbol{x}^{(k)} + \boldsymbol{g}\)</span> 的方式，每次迭代都需要求出 <span class="math inline">\(M^{-1}\)</span>，计算量非常大；所以，实际上的迭代过程都是使用 <span class="math inline">\(M\boldsymbol{x}^{(k+1)} = N\boldsymbol{x}^{(k)}+\boldsymbol{b}\)</span>。每次迭代过程中，等式右侧的部分都是可计算的，那么每次迭代过程就相当于要求解一个以矩阵 <span class="math inline">\(M\)</span> 为系数矩阵，以 <span class="math inline">\(N \boldsymbol{x}^{(k)}+\boldsymbol{g}\)</span> 为常数项向量的非齐次线性方程组。</p>
-<p>为了减少计算量，我们总是希望这个矩阵 <span class="math inline">\(M\)</span> 具有一些易于计算的特征的，例如是对角矩阵或者上三角矩阵等。</p>
-<h2 id="定常迭代法">定常迭代法</h2>
-<p>下面记录三种基本的定常迭代解法：</p>
-<ol type="1">
-<li>Jacobi迭代解法</li>
-<li>Gauss-Seidel迭代解法</li>
-<li>SOR迭代解法</li>
-</ol>
-<h3 id="jacobi迭代解法">Jacobi迭代解法</h3>
-<p>对于线性方程组的迭代求解表达式 <span class="math inline">\(M\boldsymbol{x} = N\boldsymbol{x} + \boldsymbol{b}\)</span>，令</p>
-<p><span class="math display">\[
-M = D,\ N = L + U
-\]</span></p>
-<p>则可以得到Jacobi迭代解法，即</p>
-<p><span class="math display">\[
-D\boldsymbol{x}^{(k+1)} = (L+U)\boldsymbol{x}^{(k)}+\boldsymbol{b}
-\]</span></p>
-<p>迭代收敛条件一般以</p>
-<p><span class="math display">\[
-\frac{||\boldsymbol{b} - A\boldsymbol{x^*}||}{||\boldsymbol{b}||}
-\]</span></p>
-<p>为指标，若该相对误差小于某一阈值则认为迭代收敛。</p>
-<h3 id="gauss-seidel迭代解法">Gauss-Seidel迭代解法</h3>
-<p>Guass-Seidel迭代解法与Jacobi迭代解法非常相似，如下</p>
-<p><span class="math display">\[
-D\boldsymbol{x}^{(k+1)} = L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{b}
-\]</span></p>
-<p>或者也可以简化为</p>
-<p><span class="math display">\[
-(D-L)\boldsymbol{x}^{(k+1)}=U\boldsymbol{x}^{(k)}+\boldsymbol{b}
-\]</span></p>
-<p>虽然形式上很相似，但是GS迭代解法与Jacobi迭代解法有本质上的区别。Jacobi迭代解法中，一次迭代过程中 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 完全由 <span class="math inline">\(\boldsymbol{x}^{(k)}\)</span> 求出；而GS迭代解法中，解 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 的第 <span class="math inline">\(i\)</span> 个分量的求解会使用解 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 的前 <span class="math inline">\(i-1\)</span> 个分量以及 <span class="math inline">\(\boldsymbol{x}^{(k)}\)</span> 的后 <span class="math inline">\(n-i-1\)</span> 个分量作为已知参数。相当于GS迭代解法中，解的更新是分量级别的，而Jacobi迭代解法中，解的更新是解向量级别的，那么相当于GS迭代解法的迭代颗粒度在行级别，而Jacobi迭代解法的迭代颗粒度是矩阵级别。</p>
-<p>第一种写法强调了GS迭代解法中解分量迭代的特性。第二种写法将 <span class="math inline">\(L\boldsymbol{x}^{(k+1)}\)</span> 项移到等式左侧，是因为在计算上这两种写法是等价的，但是容易引起误解，令人认为GS迭代解法和Jacobi迭代解法没有什么区别。</p>
-<blockquote>
-<p>请勿混淆线性方程组迭代解法中对于系数矩阵 <span class="math inline">\(A\)</span> 的分解与 <span class="math inline">\(LDU\)</span> 分解，迭代解法中的系数矩阵分解是线性分解 <span class="math inline">\(A = D - L - U\)</span>，而 <span class="math inline">\(LDU\)</span> 分解指的是矩阵乘法分解 <span class="math inline">\(A = LDU\)</span>。</p>
-</blockquote>
-<h3 id="sor迭代解法">SOR迭代解法</h3>
-<p>SOR迭代解法即Successive Over Relaxation迭代解法，是GS迭代解法的一种衍生版本。对于GS迭代解法，可以将其原始表达式改写为</p>
-<p><span class="math display">\[
-\boldsymbol{x}^{(k+1)}=D^{-1}(L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{b})
-\]</span></p>
-<p>从修正解的角度考虑，可以将上述进一步改写为</p>
-<p><span class="math display">\[
-\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x}^{(k)}+\boldsymbol{b})
-\]</span></p>
-<p>也就是说 <span class="math inline">\(D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x^{k}}+\boldsymbol{b})\)</span> 可以看作是对当前解的修正值。SOR迭代解法，就是在GS迭代解法的基础上，用一个松弛因子 <span class="math inline">\(\omega\)</span> 来调整这个修正值的大小，从而加速迭代。SOR迭代解法的表达式如下</p>
-<p><span class="math display">\[
-\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \omega D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x}^{(k)}+\boldsymbol{b})
-\]</span></p>
-<p>可以对这条式子进行合并同类项等操作，最后得到</p>
-<p><span class="math display">\[
-\boldsymbol{x}^{(k+1)} = (D-\omega L)^{-1}[(1-\omega)D+\omega U]\boldsymbol{x}^{(k)}+\omega(D-\omega L)^{-1} \boldsymbol{b}
-\]</span></p>
-<p>和GS迭代解法的两种表达形式一样，上述写法只是在计算上等价，对于编程来说更加方便，但是迭代求解本质还是第一条表达式反映得更好。另外，从上面的推导中可以看出，SOR迭代解法在 <span class="math inline">\(\omega=1\)</span> 时就是GS迭代解法。</p>
-<h3 id="上述三种定常迭代法的收敛性分析和误差估计">上述三种定常迭代法的收敛性分析和误差估计</h3>
-<p>教材中的一个小例子说明了GS迭代的收敛速度一般优于Jacobi迭代，而SOR的迭代收敛速度与松弛因子是有关系的，如果松弛因子取得好，SOR迭代的收敛速度一般由于GS迭代。但是，这三种定常迭代法不能保证迭代收敛。下面分析一下这三种迭代方法的收敛性以及计算误差。在此之前，先引入几个相关概念。</p>
-<h4 id="置换矩阵">置换矩阵</h4>
-<p>置换矩阵可以认为是单位矩阵经过有限次第一类初等变换所形成的矩阵，其特征是矩阵的每一行中有且仅有一个元素1，每一列中也是有且仅有一个元素1，例如</p>
-<p><span class="math display">\[
-\begin{pmatrix}
-    0 &amp; 0 &amp; 1 &amp; 0\\
-    1 &amp; 0 &amp; 0 &amp; 0\\
-    0 &amp; 1 &amp; 0 &amp; 0\\
-    0 &amp; 0 &amp; 0 &amp; 1
-\end{pmatrix}
-\]</span></p>
-<p>就是一个置换矩阵。</p>
-<h4 id="可约矩阵">可约矩阵</h4>
-<p>对于 <span class="math inline">\(n (n\geq 2)\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若存在 <span class="math inline">\(n\)</span> 阶置换矩阵 <span class="math inline">\(P\)</span>，使得</p>
-<p><span class="math display">\[
-P^TAP=\begin{pmatrix}
-    A_{11} &amp; A_{12} \\
-    0 &amp; A_{22}
-\end{pmatrix}
-\]</span></p>
-<p>其中 <span class="math inline">\(A_{11}, A_{22}\)</span> 分别为 <span class="math inline">\(r, n-r\)</span> 阶方阵。若满足上述条件的置换矩阵存在，则称方阵 <span class="math inline">\(A\)</span> 为<strong>可约矩阵</strong>，否则称为<strong>不可约矩阵</strong>。</p>
-<p>可约矩阵的意义在于，可以通过分块矩阵将原来的线性方程组拆分为次数较低的两个线性方程组，从而提升求解速度。在实际计算中，这样的加速效果非常显著。</p>
-<h4 id="对角占优">对角占优</h4>
-<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若满足</p>
-<p><span class="math display">\[
-|a_{ii}| \geq \sum_{j=1, j\neq i}^n |a_{ij}|, i \in \mathcal Z[1, n]
-\]</span></p>
-<p>称矩阵 <span class="math inline">\(A\)</span> <strong>对角占优</strong>。若存在至少一个 <span class="math inline">\(i \in \mathcal Z[1, n]\)</span>$ 使上述不等式取等号，称矩阵 <span class="math inline">\(A\)</span> 为<strong>弱对角占优</strong>；反之，则称矩阵 <span class="math inline">\(A\)</span> 为<strong>严格对角占优</strong>。</p>
-<p>对角占优有一个性质：<em>严格对角占优和不可约弱对角占优矩阵必为非奇异矩阵</em>。</p>
-<h4 id="谱半径相关定理">谱半径相关定理</h4>
-<p>在迭代解法的收敛性分析和误差分析中，矩阵的谱半径是一个重要的概念。下面记录两条相关定理，为后续的收敛性分析和误差分析铺垫。</p>
-<ol type="1">
-<li>对于 <span class="math inline">\(n\)</span> 阶矩阵 <span class="math inline">\(A\)</span>，<span class="math inline">\(A^k \rightarrow 0\)</span> 的充要条件是 <span class="math inline">\(\rho(A) &lt; 1\)</span></li>
-<li>对于 <span class="math inline">\(n\)</span> 阶矩阵 <span class="math inline">\(A\)</span>，<span class="math inline">\(\rho(A) \leq ||A||\)</span>，其中 <span class="math inline">\(||A||\)</span> 表示 <span class="math inline">\(A\)</span> 的任意范数</li>
-</ol>
-<h4 id="基本迭代法收敛性条件">基本迭代法收敛性条件</h4>
-<p>对于线性方程组的基本迭代方程</p>
-<p><span class="math display">\[
-\boldsymbol{x} = B \boldsymbol{x} + \boldsymbol{g}
-\]</span></p>
-<p>若迭代矩阵 <span class="math inline">\(B\)</span> 满足 <span class="math inline">\(\rho(B)&lt;1\)</span>，则从上述基本迭代方程衍生的迭代方法均收敛。另外，若 <span class="math inline">\(||B||&lt;1\)</span>（根据谱半径与范数的关系，基本迭代方法必然收敛），有误差估计</p>
-<p><span class="math display">\[
-||\boldsymbol{x}^{(k)} - \boldsymbol{x}^*|| \leq \frac{||B||^k}{1-||B||}(\boldsymbol{x}^{(1)} - \boldsymbol{x}^{(0)})
-\]</span></p>
-<p>或者</p>
-<p><span class="math display">\[
-||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*|| \leq \frac{||B||}{1-||B||}(\boldsymbol{x}^{(k)} - \boldsymbol{x}^{(k-1)})
-\]</span></p>
-<h4 id="jacobi迭代与gs迭代的收敛条件">Jacobi迭代与GS迭代的收敛条件</h4>
-<p>对于Jacobi迭代解法和GS迭代解法，有以下收敛条件</p>
-<ol type="1">
-<li>若系数矩阵 <span class="math inline">\(A\)</span> 为严格对角占优矩阵或不可约弱对角占优矩阵，那么Jacobi和GS迭代均收敛</li>
-<li>若矩阵 <span class="math inline">\(A\)</span> 正定，则Jacobi收敛的充要条件为 <span class="math inline">\(2D-A\)</span> 也正定</li>
-</ol>
-<h4 id="sor迭代的收敛条件">SOR迭代的收敛条件</h4>
-<p>对于SOR迭代解法，有以下收敛条件</p>
-<ol type="1">
-<li>松弛系数 <span class="math inline">\(\omega\)</span> 满足 <span class="math inline">\(0&lt; \omega &lt; 2\)</span> 是收敛的必要条件</li>
-<li>若系数矩阵 <span class="math inline">\(A\)</span> 正定，那么上述条件加强为收敛的充要条件</li>
-</ol>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -675,7 +440,7 @@ P^TAP=\begin{pmatrix}
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-27 20:30:57" itemprop="dateModified" datetime="2022-11-27T20:30:57+08:00">2022-11-27</time>
+      <time title="修改时间：2022-11-30 22:16:02" itemprop="dateModified" datetime="2022-11-30T22:16:02+08:00">2022-11-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
