@@ -1311,263 +1311,6 @@ L(m_n, \omega_n, \lambda) = \alpha \sum^n ||\frac{\partial}{\partial t}\{[(\delt
       </tags>
   </entry>
   <entry>
-    <title>数值分析笔记-线性方程组的迭代解法</title>
-    <url>/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="范数和条件数">范数和条件数</h2>
-<p>由于线性方程组的解是一个列向量，那么线性方程组的精确解和近似解之间的误差也会是一个列向量。所以，要衡量线性方程组解的精度，必须对误差向量的大小进行评判。为此，需要引入范数的概念。</p>
-<span id="more"></span>
-<h3 id="什么是范数">什么是范数？</h3>
-<p>范数定义了如何确定一个矩阵或向量的大小，一个矩阵或向量的范数是一个非负实数。事实上，我们平时常用的对一个二维向量 <span class="math inline">\(\boldsymbol{x} = (a, b)\)</span> 求模的计算公式 <span class="math inline">\(|\boldsymbol{x}|=\sqrt{a^2 + b^2}\)</span> 结果就是 <span class="math inline">\(\boldsymbol{x}\)</span> 的二阶范数。</p>
-<h3 id="向量范数">向量范数</h3>
-<p>向量范数的定义如下：</p>
-<ol type="1">
-<li>对于任一 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，其范数的符号表示为 <span class="math inline">\(||\boldsymbol{x}||\)</span></li>
-<li><span class="math inline">\(||\boldsymbol{x}|| \geq 0\)</span>，当且仅当 <span class="math inline">\(\boldsymbol{x}\)</span> 为零向量时，<span class="math inline">\(||\boldsymbol{x}|| = 0\)</span></li>
-<li>对任意实数 <span class="math inline">\(\alpha\)</span>，有 <span class="math inline">\(||\alpha \boldsymbol{x}|| = ||\alpha||\cdot ||\boldsymbol{x}||\)</span></li>
-<li>对任意向量 <span class="math inline">\(\boldsymbol{x}, \boldsymbol{y}\)</span>，有 <span class="math inline">\(||\boldsymbol{x}+\boldsymbol{y}||\leq ||\boldsymbol{x}|| + ||\boldsymbol{y}||\)</span></li>
-</ol>
-<h4 id="阶向量范数">1阶向量范数</h4>
-<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
-<p><span class="math display">\[
-||\boldsymbol{x}||_1 = \sum_{i=1}^n |x_i|
-\]</span></p>
-<h4 id="阶向量范数-1">2阶向量范数</h4>
-<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
-<p><span class="math display">\[
-||\boldsymbol{x}||_2 = \sqrt{\sum_{i=1}^n x_i^2}
-\]</span></p>
-<h4 id="无穷向量范数">无穷向量范数</h4>
-<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
-<p><span class="math display">\[
-||\boldsymbol{x}||_{\infty} = max_{1\leq i\leq n} |x_i|
-\]</span></p>
-<p>以上三种范数比较常用。</p>
-<h3 id="矩阵范数">矩阵范数</h3>
-<p>矩阵范数和向量范数的定义基本一致，但是对两个矩阵相乘结果的范数也做了定义，应有 <span class="math inline">\(||AB|| \leq ||A|| \cdot ||B||\)</span>。下面列出几种常用的矩阵范数。</p>
-<h4 id="阶矩阵范数">1阶矩阵范数</h4>
-<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
-<p><span class="math display">\[
-||A||_1 = max_{1\leq j \leq n} \sum_{i=1}^n |a_{ij}|
-\]</span></p>
-<p>即方阵 <span class="math inline">\(A\)</span> 的1阶矩阵范数等于方阵 <span class="math inline">\(A\)</span> 中所有列向量1阶向量范数的最大值。</p>
-<h4 id="f矩阵范数">F矩阵范数</h4>
-<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
-<p><span class="math display">\[
-||A||_F = \sqrt{\sum_{i=1}^n \sum_{j=1}^n a_{ij}^2}
-\]</span></p>
-<p>很明显，F矩阵范数是2阶向量范数在矩阵上的推广。</p>
-<h4 id="阶矩阵范数-1">2阶矩阵范数</h4>
-<p>首先，要引入方阵的谱半径概念。对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若记其第 <span class="math inline">\(i\)</span> 个特征值为 <span class="math inline">\(\lambda_i\)</span>，那么这个方阵的谱半径就记为 <span class="math inline">\(\rho(A) = max_{1\leq i \leq n}|\lambda_i|\)</span>。方阵 <span class="math inline">\(A\)</span> 的2阶矩阵范数，实际上就是 <span class="math inline">\(A^TA\)</span> 的谱半径开方，即</p>
-<p><span class="math display">\[
-||A||_2 = \sqrt{\rho(A^TA)}
-\]</span></p>
-<p>所以，2阶矩阵范数也称为谱范数。</p>
-<h4 id="无穷矩阵范数">无穷矩阵范数</h4>
-<p>无穷矩阵范数，和1阶矩阵范数有些类似。对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
-<p><span class="math display">\[
-||A||_{\infty} = max_{1\leq i \leq n}\sum_{j=1}^n |a_{ij}|
-\]</span></p>
-<p>可以看出，无穷矩阵范数其实就是方阵 <span class="math inline">\(A\)</span> 中所有行向量1阶范数的最大值。</p>
-<h3 id="矩阵范数和向量范数的相容性">矩阵范数和向量范数的相容性</h3>
-<p>如果矩阵 <span class="math inline">\(A\)</span> 和向量 <span class="math inline">\(\boldsymbol{x}\)</span> 满足</p>
-<p><span class="math display">\[
-||A\boldsymbol{x}|| \leq ||A|| \cdot ||\boldsymbol{x}||
-\]</span></p>
-<p>则称矩阵 <span class="math inline">\(A\)</span> 和向量 <span class="math inline">\(\boldsymbol{x}\)</span> 满足矩阵范数和向量范数的相容性。</p>
-<h2 id="扰动分析和条件数">扰动分析和条件数</h2>
-<p>线性方程组 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的解是由系数矩阵 <span class="math inline">\(A\)</span> 和常数项向量 <span class="math inline">\(\boldsymbol{b}\)</span> 决定的。在实际应用中，这两项数据可能由测量误差、计算机的舍入误差等因素，导致计算时所使用的数据与真实数据之间存在一定的误差，或称其为<strong>扰动</strong>。对于某些特殊的线性方程组，即便扰动非常微小，但是对解的影响可能非常大。</p>
-<p>下面分别对系数矩阵上的扰动以及常数项向量上的扰动对解向量产生的干扰进行分析。</p>
-<h3 id="常数项向量扰动分析">常数项向量扰动分析</h3>
-<p>假定常数项向量上引入了一个扰动 <span class="math inline">\(\delta \boldsymbol{b}\)</span>，对线性方程组解向量造成了扰动 <span class="math inline">\(\delta \boldsymbol{x}\)</span>，那么线性方程组可以改写为</p>
-<p><span class="math display">\[
-A(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b} + \delta \boldsymbol{b}
-\]</span></p>
-<p>经过一系列变换，可以得到以下不等式</p>
-<p><span class="math display">\[
-\frac{||\delta \boldsymbol{x}||}{||\boldsymbol{x}||} \leq ||A|| \cdot ||A^{-1}||\cdot \frac{||\delta \boldsymbol{b}||}{||\boldsymbol{b}||}
-\]</span></p>
-<h3 id="系数矩阵扰动分析">系数矩阵扰动分析</h3>
-<p>假定系数矩阵上引入了一个扰动 <span class="math inline">\(\delta A\)</span>，对线性方程组的解向量造成了扰动 <span class="math inline">\(\delta \boldsymbol{x}\)</span>，那么线性方程组可以改写为</p>
-<p><span class="math display">\[
-(A+\delta A)(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b}
-\]</span></p>
-<p>经过一系列变换，可以得到以下不等式</p>
-<p><span class="math display">\[
-\frac{||\delta \boldsymbol{x}||}{||x + \delta \boldsymbol{x}||} \leq ||A|| \cdot ||A^{-1}|| \cdot \frac{||\delta A||}{||A||}
-\]</span></p>
-<h3 id="条件数">条件数</h3>
-<p>从上面的扰动分析中，可以看出，解的相对扰动与系数矩阵或常数项向量的相对扰动之间，都存在一个放大倍数 <span class="math inline">\(||A||\cdot ||A^{-1}||\)</span>。这个放大倍数称为线性方程组 <span class="math inline">\(A\boldsymbol{x}=\boldsymbol{b}\)</span> 的<strong>条件数</strong>，或矩阵 <span class="math inline">\(A\)</span> 的条件数，用 <span class="math inline">\(cond(A)\)</span> 表示。</p>
-<p>可以看到，矩阵的条件数与矩阵范数是挂钩的。常用的条件数是无穷矩阵范数对应的条件数 <span class="math inline">\(cond_{\infty}(A) = ||A||_{\infty}||A^{-1}||_{\infty}\)</span> 以及2阶矩阵范数对应的条件数 <span class="math inline">\(cons_2(A) = ||A||_2 ||A^{-1}||_2\)</span>。</p>
-<h4 id="条件数的性质">条件数的性质</h4>
-<ol type="1">
-<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond(A) \geq 1\)</span></li>
-<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span> 和非零常数 <span class="math inline">\(c\)</span>，有 <span class="math inline">\(cond(cA) = cond(A)\)</span></li>
-<li>对于任意正交矩阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond_2(A) = 1\)</span></li>
-<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span> 和正交矩阵 <span class="math inline">\(P\)</span>，有 <span class="math inline">\(cond_2(PA) = cond_2(AP) = cond_2(A)\)</span></li>
-</ol>
-<h4 id="良态矩阵和病态矩阵">良态矩阵和病态矩阵</h4>
-<p>对于一个确定的系数矩阵 <span class="math inline">\(A\)</span>，如果其条件数相对小，那么系数矩阵的扰动不会造成解的太大扰动；如果其条件数相对大，那么系数矩阵的扰动会导致解的大幅度扰动。条件数小的矩阵，称为<strong>良态矩阵</strong>；条件数大的矩阵，称为<strong>病态矩阵</strong>。</p>
-<p>一个最常见的病态矩阵就是Hilbert矩阵，即</p>
-<p><span class="math display">\[
-H_n = \begin{pmatrix}
-   1 &amp; \frac{1}{2} &amp; \cdots &amp; \frac{1}{n} \\
-   \frac{1}{2} &amp; \frac{1}{3} &amp; \cdots&amp; \frac{1}{n+1}\\
-   \vdots &amp; &amp; \ddots \\
-   \frac{1}{n} &amp; \frac{1}{n+1} &amp; \cdots &amp; \frac{1}{2n-1}
-\end{pmatrix}
-\]</span></p>
-<p>其条件数为 <span class="math inline">\(cond_2(H_n) \approx e^{3.5n}\)</span>，随着矩阵规模的增大，条件数迅速上升。因此，Hilbert矩阵的阶数越高，其条件数越大，也就越病态。</p>
-<h2 id="基本迭代法">基本迭代法</h2>
-<p>下面介绍如何使用迭代法进行线性方程组的求解。首先，对于线性方程组</p>
-<p><span class="math display">\[
-A\boldsymbol{x} = \boldsymbol{b}
-\]</span></p>
-<p>如果能够将系数矩阵拆解为两个矩阵的差，如 <span class="math inline">\(A = M - N\)</span>，那么上述线性方程组可以转换为</p>
-<p><span class="math display">\[
-M\boldsymbol{x} = N\boldsymbol{x} + \boldsymbol{b}
-\]</span></p>
-<p>假如矩阵 <span class="math inline">\(M\)</span> 可逆，那么</p>
-<p><span class="math display">\[
-\boldsymbol{x} = M^{-1}N\boldsymbol{x} + M^{-1}\boldsymbol{b}
-\]</span></p>
-<p>令 <span class="math inline">\(B = M^{-1}N, \ \boldsymbol{g} = M^{-1} \boldsymbol{b}\)</span>，那么可以建立线性方程组解的迭代公式</p>
-<p><span class="math display">\[
-\boldsymbol{x}^{(k+1)} = B\boldsymbol{x}^{(k)}+\boldsymbol{g}
-\]</span></p>
-<p>对于解向量，实际上在迭代的过程中，会形成一个解向量序列 <span class="math inline">\(\{\boldsymbol{x}^{(k)}\}\)</span>，并且最后会收敛至一个解 <span class="math inline">\(\boldsymbol{x}^*\)</span>，满足</p>
-<p><span class="math display">\[
-M\boldsymbol{x}^* = N\boldsymbol{x}^* + \boldsymbol{g}
-\]</span></p>
-<p>即</p>
-<p><span class="math display">\[
-A\boldsymbol{x}^* = \boldsymbol{b}
-\]</span></p>
-<p>如果按 <span class="math inline">\(\boldsymbol{x}^{(k+1)} = B\boldsymbol{x}^{(k)} + \boldsymbol{g}\)</span> 的方式，每次迭代都需要求出 <span class="math inline">\(M^{-1}\)</span>，计算量非常大；所以，实际上的迭代过程都是使用 <span class="math inline">\(M\boldsymbol{x}^{(k+1)} = N\boldsymbol{x}^{(k)}+\boldsymbol{b}\)</span>。每次迭代过程中，等式右侧的部分都是可计算的，那么每次迭代过程就相当于要求解一个以矩阵 <span class="math inline">\(M\)</span> 为系数矩阵，以 <span class="math inline">\(N \boldsymbol{x}^{(k)}+\boldsymbol{g}\)</span> 为常数项向量的非齐次线性方程组。</p>
-<p>为了减少计算量，我们总是希望这个矩阵 <span class="math inline">\(M\)</span> 具有一些易于计算的特征的，例如是对角矩阵或者上三角矩阵等。</p>
-<h2 id="定常迭代法">定常迭代法</h2>
-<p>下面记录三种基本的定常迭代解法：</p>
-<ol type="1">
-<li>Jacobi迭代解法</li>
-<li>Gauss-Seidel迭代解法</li>
-<li>SOR迭代解法</li>
-</ol>
-<h3 id="jacobi迭代解法">Jacobi迭代解法</h3>
-<p>对于线性方程组的迭代求解表达式 <span class="math inline">\(M\boldsymbol{x} = N\boldsymbol{x} + \boldsymbol{b}\)</span>，令</p>
-<p><span class="math display">\[
-M = D,\ N = L + U
-\]</span></p>
-<p>则可以得到Jacobi迭代解法，即</p>
-<p><span class="math display">\[
-D\boldsymbol{x}^{(k+1)} = (L+U)\boldsymbol{x}^{(k)}+\boldsymbol{b}
-\]</span></p>
-<p>迭代收敛条件一般以</p>
-<p><span class="math display">\[
-\frac{||\boldsymbol{b} - A\boldsymbol{x^*}||}{||\boldsymbol{b}||}
-\]</span></p>
-<p>为指标，若该相对误差小于某一阈值则认为迭代收敛。</p>
-<h3 id="gauss-seidel迭代解法">Gauss-Seidel迭代解法</h3>
-<p>Guass-Seidel迭代解法与Jacobi迭代解法非常相似，如下</p>
-<p><span class="math display">\[
-D\boldsymbol{x}^{(k+1)} = L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{b}
-\]</span></p>
-<p>或者也可以简化为</p>
-<p><span class="math display">\[
-(D-L)\boldsymbol{x}^{(k+1)}=U\boldsymbol{x}^{(k)}+\boldsymbol{b}
-\]</span></p>
-<p>虽然形式上很相似，但是GS迭代解法与Jacobi迭代解法有本质上的区别。Jacobi迭代解法中，一次迭代过程中 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 完全由 <span class="math inline">\(\boldsymbol{x}^{(k)}\)</span> 求出；而GS迭代解法中，解 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 的第 <span class="math inline">\(i\)</span> 个分量的求解会使用解 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 的前 <span class="math inline">\(i-1\)</span> 个分量以及 <span class="math inline">\(\boldsymbol{x}^{(k)}\)</span> 的后 <span class="math inline">\(n-i-1\)</span> 个分量作为已知参数。相当于GS迭代解法中，解的更新是分量级别的，而Jacobi迭代解法中，解的更新是解向量级别的，那么相当于GS迭代解法的迭代颗粒度在行级别，而Jacobi迭代解法的迭代颗粒度是矩阵级别。</p>
-<p>第一种写法强调了GS迭代解法中解分量迭代的特性。第二种写法将 <span class="math inline">\(L\boldsymbol{x}^{(k+1)}\)</span> 项移到等式左侧，是因为在计算上这两种写法是等价的，但是容易引起误解，令人认为GS迭代解法和Jacobi迭代解法没有什么区别。</p>
-<blockquote>
-<p>请勿混淆线性方程组迭代解法中对于系数矩阵 <span class="math inline">\(A\)</span> 的分解与 <span class="math inline">\(LDU\)</span> 分解，迭代解法中的系数矩阵分解是线性分解 <span class="math inline">\(A = D - L - U\)</span>，而 <span class="math inline">\(LDU\)</span> 分解指的是矩阵乘法分解 <span class="math inline">\(A = LDU\)</span>。</p>
-</blockquote>
-<h3 id="sor迭代解法">SOR迭代解法</h3>
-<p>SOR迭代解法即Successive Over Relaxation迭代解法，是GS迭代解法的一种衍生版本。对于GS迭代解法，可以将其原始表达式改写为</p>
-<p><span class="math display">\[
-\boldsymbol{x}^{(k+1)}=D^{-1}(L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{b})
-\]</span></p>
-<p>从修正解的角度考虑，可以将上述进一步改写为</p>
-<p><span class="math display">\[
-\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x}^{(k)}+\boldsymbol{b})
-\]</span></p>
-<p>也就是说 <span class="math inline">\(D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x^{k}}+\boldsymbol{b})\)</span> 可以看作是对当前解的修正值。SOR迭代解法，就是在GS迭代解法的基础上，用一个松弛因子 <span class="math inline">\(\omega\)</span> 来调整这个修正值的大小，从而加速迭代。SOR迭代解法的表达式如下</p>
-<p><span class="math display">\[
-\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \omega D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x}^{(k)}+\boldsymbol{b})
-\]</span></p>
-<p>可以对这条式子进行合并同类项等操作，最后得到</p>
-<p><span class="math display">\[
-\boldsymbol{x}^{(k+1)} = (D-\omega L)^{-1}[(1-\omega)D+\omega U]\boldsymbol{x}^{(k)}+\omega(D-\omega L)^{-1} \boldsymbol{b}
-\]</span></p>
-<p>和GS迭代解法的两种表达形式一样，上述写法只是在计算上等价，对于编程来说更加方便，但是迭代求解本质还是第一条表达式反映得更好。另外，从上面的推导中可以看出，SOR迭代解法在 <span class="math inline">\(\omega=1\)</span> 时就是GS迭代解法。</p>
-<h3 id="上述三种定常迭代法的收敛性分析和误差估计">上述三种定常迭代法的收敛性分析和误差估计</h3>
-<p>教材中的一个小例子说明了GS迭代的收敛速度一般优于Jacobi迭代，而SOR的迭代收敛速度与松弛因子是有关系的，如果松弛因子取得好，SOR迭代的收敛速度一般由于GS迭代。但是，这三种定常迭代法不能保证迭代收敛。下面分析一下这三种迭代方法的收敛性以及计算误差。在此之前，先引入几个相关概念。</p>
-<h4 id="置换矩阵">置换矩阵</h4>
-<p>置换矩阵可以认为是单位矩阵经过有限次第一类初等变换所形成的矩阵，其特征是矩阵的每一行中有且仅有一个元素1，每一列中也是有且仅有一个元素1，例如</p>
-<p><span class="math display">\[
-\begin{pmatrix}
-    0 &amp; 0 &amp; 1 &amp; 0\\
-    1 &amp; 0 &amp; 0 &amp; 0\\
-    0 &amp; 1 &amp; 0 &amp; 0\\
-    0 &amp; 0 &amp; 0 &amp; 1
-\end{pmatrix}
-\]</span></p>
-<p>就是一个置换矩阵。</p>
-<h4 id="可约矩阵">可约矩阵</h4>
-<p>对于 <span class="math inline">\(n (n\geq 2)\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若存在 <span class="math inline">\(n\)</span> 阶置换矩阵 <span class="math inline">\(P\)</span>，使得</p>
-<p><span class="math display">\[
-P^TAP=\begin{pmatrix}
-    A_{11} &amp; A_{12} \\
-    0 &amp; A_{22}
-\end{pmatrix}
-\]</span></p>
-<p>其中 <span class="math inline">\(A_{11}, A_{22}\)</span> 分别为 <span class="math inline">\(r, n-r\)</span> 阶方阵。若满足上述条件的置换矩阵存在，则称方阵 <span class="math inline">\(A\)</span> 为<strong>可约矩阵</strong>，否则称为<strong>不可约矩阵</strong>。</p>
-<p>可约矩阵的意义在于，可以通过分块矩阵将原来的线性方程组拆分为次数较低的两个线性方程组，从而提升求解速度。在实际计算中，这样的加速效果非常显著。</p>
-<h4 id="对角占优">对角占优</h4>
-<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若满足</p>
-<p><span class="math display">\[
-|a_{ii}| \geq \sum_{j=1, j\neq i}^n |a_{ij}|, i \in \mathcal Z[1, n]
-\]</span></p>
-<p>称矩阵 <span class="math inline">\(A\)</span> <strong>对角占优</strong>。若存在至少一个 <span class="math inline">\(i \in \mathcal Z[1, n]\)</span>$ 使上述不等式取等号，称矩阵 <span class="math inline">\(A\)</span> 为<strong>弱对角占优</strong>；反之，则称矩阵 <span class="math inline">\(A\)</span> 为<strong>严格对角占优</strong>。</p>
-<p>对角占优有一个性质：<em>严格对角占优和不可约弱对角占优矩阵必为非奇异矩阵</em>。</p>
-<h4 id="谱半径相关定理">谱半径相关定理</h4>
-<p>在迭代解法的收敛性分析和误差分析中，矩阵的谱半径是一个重要的概念。下面记录两条相关定理，为后续的收敛性分析和误差分析铺垫。</p>
-<ol type="1">
-<li>对于 <span class="math inline">\(n\)</span> 阶矩阵 <span class="math inline">\(A\)</span>，<span class="math inline">\(A^k \rightarrow 0\)</span> 的充要条件是 <span class="math inline">\(\rho(A) &lt; 1\)</span></li>
-<li>对于 <span class="math inline">\(n\)</span> 阶矩阵 <span class="math inline">\(A\)</span>，<span class="math inline">\(\rho(A) \leq ||A||\)</span>，其中 <span class="math inline">\(||A||\)</span> 表示 <span class="math inline">\(A\)</span> 的任意范数</li>
-</ol>
-<h4 id="基本迭代法收敛性条件">基本迭代法收敛性条件</h4>
-<p>对于线性方程组的基本迭代方程</p>
-<p><span class="math display">\[
-\boldsymbol{x} = B \boldsymbol{x} + \boldsymbol{g}
-\]</span></p>
-<p>若迭代矩阵 <span class="math inline">\(B\)</span> 满足 <span class="math inline">\(\rho(B)&lt;1\)</span>，则从上述基本迭代方程衍生的迭代方法均收敛。另外，若 <span class="math inline">\(||B||&lt;1\)</span>（根据谱半径与范数的关系，基本迭代方法必然收敛），有误差估计</p>
-<p><span class="math display">\[
-||\boldsymbol{x}^{(k)} - \boldsymbol{x}^*|| \leq \frac{||B||^k}{1-||B||}(\boldsymbol{x}^{(1)} - \boldsymbol{x}^{(0)})
-\]</span></p>
-<p>或者</p>
-<p><span class="math display">\[
-||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*|| \leq \frac{||B||}{1-||B||}(\boldsymbol{x}^{(k)} - \boldsymbol{x}^{(k-1)})
-\]</span></p>
-<h4 id="jacobi迭代与gs迭代的收敛条件">Jacobi迭代与GS迭代的收敛条件</h4>
-<p>对于Jacobi迭代解法和GS迭代解法，有以下收敛条件</p>
-<ol type="1">
-<li>若系数矩阵 <span class="math inline">\(A\)</span> 为严格对角占优矩阵或不可约弱对角占优矩阵，那么Jacobi和GS迭代均收敛</li>
-<li>若矩阵 <span class="math inline">\(A\)</span> 正定，则Jacobi收敛的充要条件为 <span class="math inline">\(2D-A\)</span> 也正定</li>
-</ol>
-<h4 id="sor迭代的收敛条件">SOR迭代的收敛条件</h4>
-<p>对于SOR迭代解法，有以下收敛条件</p>
-<ol type="1">
-<li>松弛系数 <span class="math inline">\(\omega\)</span> 满足 <span class="math inline">\(0&lt; \omega &lt; 2\)</span> 是收敛的必要条件</li>
-<li>若系数矩阵 <span class="math inline">\(A\)</span> 正定，那么上述条件加强为收敛的充要条件</li>
-</ol>
-]]></content>
-      <categories>
-        <category>University</category>
-      </categories>
-      <tags>
-        <tag>Numerical Analysis</tag>
-        <tag>Mathematics</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数值分析作业-第六章</title>
     <url>/2022/11/28/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E5%85%AD%E7%AB%A0/</url>
     <content><![CDATA[<p>姓名：周晓</p>
@@ -2212,424 +1955,6 @@ a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
       </tags>
   </entry>
   <entry>
-    <title>数值分析笔记-数值积分</title>
-    <url>/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86/</url>
-    <content><![CDATA[<h2 id="数值积分引入">数值积分引入</h2>
-<p>对于连续函数 <span class="math inline">\(f(x)\)</span> 来说，如果这个函数的表达式比较简单，我们一般可以使用Newton-Leibniz公式进行积分</p>
-<p><span class="math display">\[
-\int_a^b f(x)dx = F(b) - F(a)
-\]</span></p>
-<p>其中，<span class="math inline">\(F&#39;(x)=f(x)\)</span>，即 <span class="math inline">\(F(x)\)</span> 是 <span class="math inline">\(f(x)\)</span> 的原函数。</p>
-<p>使用Newton-Leibniz公式进行积分其实是非常理想的情况。假如函数 <span class="math inline">\(f(x)\)</span> 的表达式非常复杂，或是根本就不可积，或是根本没有表达式，仅仅是给出了某些节点上的函数值，那么我们就只能通过数值积分的方式进行近似的积分求解了。</p>
-<span id="more"></span>
-<h2 id="数值积分误差估计">数值积分误差估计</h2>
-<p>对于函数 <span class="math inline">\(f(x)\in C[a, b]\)</span>，假如存在一个 <span class="math inline">\(n\)</span> 阶多项式 <span class="math inline">\(P_n(x)\)</span>，可以近似有 <span class="math inline">\(f(x) \approx P_n(x)\)</span>，那么应能近似得到</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx \approx \int_a^bP_n(x)dx
-\]</span></p>
-<p>对于上述数值积分，其误差是可以估计的。</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx - \int_a^bP_n(x)dx = \int_a^b[f(x)-P_n(x)]dx=\int_a^bR_n(x)dx
-\]</span></p>
-<p>如果有 <span class="math inline">\(max_{a\leq x \leq b}R_n(x)\leq \varepsilon\)</span>，那么显然，上述数值积分的误差限为</p>
-<p><span class="math display">\[
-\int_a^bR_n(x)dx \leq (b-a)\varepsilon
-\]</span></p>
-<p>如果 <span class="math inline">\(\varepsilon\)</span> 很小的话，数值积分的误差限也很小，那么使用数值积分来近似真实的积分值，完全是可行的。</p>
-<h2 id="求积公式">求积公式</h2>
-<h3 id="中点公式">中点公式</h3>
-<h4 id="中点公式的计算">中点公式的计算</h4>
-<p>近似求积分的一种非常自然的想法，是使用一个矩形围成的面积来近似函数曲线在区间上与x轴所围成的面积。这种做数值积分的方式可以概括为中点公式。若 <span class="math inline">\(f(x) \in C[a,b]\)</span>，那么</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx \approx (b-a)f(\frac{a+b}{2})
-\]</span></p>
-<p>利用区间中点对应的函数值乘以区间长度，得到的矩形面积，近似函数积分。</p>
-<h4 id="中点公式的误差分析">中点公式的误差分析</h4>
-<p>对于上述近似，可以进行近似误差的估计。假设函数 <span class="math inline">\(f(x)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上二阶可导，那么根据泰勒公式</p>
-<p><span class="math display">\[
-f(x) = f(\frac{a+b}{2}) + f&#39;(\frac{a+b}{2})(x-\frac{a+b}{2}) + \frac{f&#39;&#39;(\xi)}{2}(x-\frac{a+b}{2})^2
-\]</span></p>
-<p>对上述等式两边做积分，可以得到</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx-(b-a)f(\frac{a+b}{2}) = \frac{1}{24}(b-a)^3f&#39;&#39;(\xi)
-\]</span></p>
-<p>也就是说，中点公式的误差差不多就是在 <span class="math inline">\((b-a)^3\)</span> 量级。</p>
-<h3 id="梯形公式">梯形公式</h3>
-<h4 id="梯形公式的计算">梯形公式的计算</h4>
-<p>梯形公式是另一种非常自然的近似积分想法。从图形上来看，就是将 <span class="math inline">\(f(a)\)</span> 与 <span class="math inline">\(f(b)\)</span> 相连，形成一条直线，然后计算这条线段在 <span class="math inline">\([a, b]\)</span> 上的积分。</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx = \frac{1}{2}(b-a)[f(a)+f(b)]
-\]</span></p>
-<h4 id="梯形公式的误差分析">梯形公式的误差分析</h4>
-<p>梯形公式涉及到一条一次拟合多项式，因此可以用一次多项式拟合的误差来计算梯形公式的误差，如下</p>
-<p><span class="math display">\[
-R_1(x) = f(x) - L_1(x) = \frac{1}{2}f&#39;&#39;(\xi)(x-a)(x-b)
-\]</span></p>
-<p>那么</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx - \int_a^bL_1(x)dx = \int_a^bR_1(x) = -\frac{1}{12}(b-a)^3f&#39;&#39;(\xi)
-\]</span></p>
-<p>分析到这里，可能出现了比较反直觉的一点性质，即梯形公式的误差似乎要比中点公式的误差还要大，后者的系数是 <span class="math inline">\(\frac{1}{24}\)</span>。</p>
-<h3 id="simpson公式">Simpson公式</h3>
-<h4 id="simpson公式的计算">Simpson公式的计算</h4>
-<p>Simpson公式，也叫抛物型公式。这种数值积分方式实际上就是在区间上用一条抛物线来近似积分，即</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx \approx \int_a^bL_2(x)dx=\frac{1}{6}(b-a)[f(a) + 4f(\frac{a+b}{2}) + f(b)]
-\]</span></p>
-<h4 id="simpson公式的误差估计">Simpson公式的误差估计</h4>
-<p>和梯形公式类似的，Simpson公式的近似误差也可以通过二次多项式的误差估计得到。由于二次多项式的误差分析展开比较复杂，也不是什么重点，这边的笔记就略去了，最后可以得到</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx - \int_a^bL_2(x)dx = -\frac{(b-a)^5}{2880}f^{(4)}(\xi)
-\]</span></p>
-<p>可以观察到，Simpson公式的近似误差量级是 <span class="math inline">\((b-a)^5\)</span>，比梯形公式和中点公式的近似误差要小两个量级。事实上，Simpson近似积分的精度确实要比前面两种高很多。</p>
-<h3 id="求积公式一般化">求积公式一般化</h3>
-<p>观察中点公式、梯形公式和Simpson公式，可以发现一个共同点：这些公式都可以写成 <span class="math inline">\(\sum_{i=0}^{n-1}\omega_if(x_i)\)</span> 的形式。因此，上面的这些公式都可以称为求积公式。</p>
-<p>求积公式有一个叫做<strong>代数精度</strong>的指标。所谓代数精度，指的是这个求积公式最高能够对多少次的多项式精确求积分。若某个求积公式对于 <span class="math inline">\(m\)</span> 阶多项式 <span class="math inline">\(x^m\)</span> 都可以满足精确求解的要求，但是对于 <span class="math inline">\(m+1\)</span> 阶多项式就不满足精确求积分的要求，那么这个求积公式的代数精度就为 <span class="math inline">\(m\)</span> 次。</p>
-<h2 id="复合求积">复合求积</h2>
-<p>前面提到，数值积分的误差与区间长度有关，像中间公式的积分误差与区间长度的3次方呈正相关关系，Simpson公式的积分误差与区间长度的5次方呈正相关关系。那么，为了减小数值积分的误差，就必须减小区间长度。事实上，对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，我们往往会将区间 <span class="math inline">\([a, b]\)</span> 等分为 <span class="math inline">\(n\)</span> 份，在一个小区间 <span class="math inline">\([x_i, x_{i+1}]\)</span> 上进行求积，即</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx = \sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f(x)dx
-\]</span></p>
-<p>一般来说，我们会将小区间的长度称为<strong>积分步长</strong>，用符号 <span class="math inline">\(h\)</span> 表示。</p>
-<p><span class="math display">\[
-h = \frac{b-a}{n}
-\]</span></p>
-<h3 id="中点复合求积">中点复合求积</h3>
-<p>对一个小区间内的积分进行数值近似，可以得到</p>
-<p><span class="math display">\[
-\int_{x_i}^{x_{i+1}}f(x)dx=(x_{i+1}-x_i)f(x_{i+\frac{1}{2}})=hf(x_{i+\frac{1}{2}})
-\]</span></p>
-<p>那么，整个区间的积分即</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx = \sum_{i=0}^{n-1}hf(x_{i+\frac{1}{2}}) \triangleq M_n
-\]</span></p>
-<h3 id="梯形复合求积">梯形复合求积</h3>
-<p>同上，很容易得到</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx = \sum_{i=0}^{n-1}\frac{h}{2}[f(x_i)+f(x_{i+1})] = \frac{h}{2}[f(a)+f(b)+2\sum_{i=1}^{n-1}f(x_i)] \triangleq T_n
-\]</span></p>
-<h3 id="simpson复合求积">Simpson复合求积</h3>
-<p><span class="math display">\[
-\int_a^bf(x)dx = \sum_{i=0}^{n-1}\frac{h}{6}[f(x_i) + f(x_{i+1}) + 4f(x_{i+\frac{1}{2}})]=\frac{h}{6}[f(a) + f(b) + 4\sum_{i=1}^{n-1}f(x_{i+\frac{1}{2}})+2\sum_{i=1}^{n-1}f(x_i)] \triangleq S_n
-\]</span></p>
-<h3 id="上述复合求积公式的误差分析">上述复合求积公式的误差分析</h3>
-<p>为了进行上述复合求积公式的误差限分析，首先引入一个定理：对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，存在一点 <span class="math inline">\(\eta \in (a, b)\)</span>，满足 <span class="math inline">\(\sum_{i=0}^{n-1}\omega_if(x_i)=f(\eta)\sum_{i=0}^{n-1}\omega_i\)</span>。</p>
-<p>这个定理的求证其实非常简单。对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，必然存在一个 <span class="math inline">\(f_{min}\)</span> 和一个 <span class="math inline">\(f_{max}\)</span>，很自然有</p>
-<p><span class="math display">\[
-f_{min}\sum_{i=0}^{n-1}\omega_i \leq \sum_{i=0}^{n-1}\omega_i f(x_i) \leq f_{max}\sum_{i=0}^{n-1}\omega_i
-\]</span></p>
-<p>由于 <span class="math inline">\(f(x)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上连续，那么必然存在某一个 <span class="math inline">\(f\)</span>，恰好满足</p>
-<p><span class="math display">\[
-f\sum_{i=0}^{n-1}\omega_i=\sum_{i=0}^{n-1}\omega_i f(x_i)
-\]</span></p>
-<h4 id="中点复合求积误差">中点复合求积误差</h4>
-<p>有了上面这个定理，求复合求积误差就很容易了。对于</p>
-<p><span class="math display">\[
-\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f(x)dx = h\sum_{i=0}^{n-1}f(x_{i+\frac{1}{2}})
-\]</span></p>
-<p>作差，得到</p>
-<p><span class="math display">\[
-\sum_{i=0}^{n-1}[\int_{x_i}^{x_{i+1}}f(x)dx-hf(x_{i+\frac{1}{2}})]
-\]</span></p>
-<p>注意到求和公式内部是一个中点求积误差的表达式，代入可得</p>
-<p><span class="math display">\[
-\sum_{i=0}^{n-1}[\int_{x_i}^{x_{i+1}}f(x)dx - hf(x_{i+\frac{1}{2}})]=\sum_{i=0}^{n-1}\frac{1}{24}h^3f&#39;&#39;(\xi)
-\]</span></p>
-<p>注意到，求和项与 <span class="math inline">\(i\)</span> 无关，因此可以得到中点复合求积误差为</p>
-<p><span class="math display">\[
-\frac{b-a}{24}h^2f&#39;&#39;(\xi)
-\]</span></p>
-<h4 id="梯形复合求积误差">梯形复合求积误差</h4>
-<p><span class="math display">\[
--\frac{b-a}{12}h^2f&#39;&#39;(\xi)
-\]</span></p>
-<h4 id="simpson复合求积误差">Simpson复合求积误差</h4>
-<p><span class="math display">\[
--\frac{b-a}{2880}h^4f&#39;&#39;(\xi)
-\]</span></p>
-<p>可以观察到，复合求积误差本质上就是将原来的 <span class="math inline">\((b-a)\)</span> 替换为 <span class="math inline">\(h\)</span>，但其中一次因为 <span class="math inline">\(n\)</span> 项求和退化为 <span class="math inline">\((b-a)\)</span>，因此原来是 <span class="math inline">\((b-a)^m\)</span> 量级的误差都变为 <span class="math inline">\(h^{m-1}\)</span> 量级。</p>
-<p>中点复合求积以及梯形复合求积的误差都是 <span class="math inline">\(O(h^2)\)</span> 量级的，而Simpson复合求积的误差是 <span class="math inline">\(O(h^4)\)</span> 量级的，因此如果对于近似精度要求较高，应尽量选择使用Simpson复合求积。</p>
-<h2 id="变步长方法以及外推加速技术">变步长方法以及外推加速技术</h2>
-<p>前面所介绍的求积方法都是定步长的方法。定步长数值积分编程很容易，但是确定步长是一件比较麻烦的事情。如果步长定得太大，精度就会比较差；如果步长定得太小，计算效率可能就低很多。因此，变步长方法被引入到数值积分中。下面通过一个简单的变步长方法，初步了解一下变步长数值积分的基本原理。</p>
-<h3 id="区间折半法">区间折半法</h3>
-<p>变步长积分的主要思想是，对于给定的积分精度，一开始可以在整个区间上进行数值积分，若精度达不到要求，则将积分步长减半；不断地将积分步长减半，直到积分精度满足给定要求为止。</p>
-<p>以梯形求积为例，若记 <span class="math inline">\(I = \int_a^bf(x)dx\)</span>，那么</p>
-<p><span class="math display">\[
-|I-T_n| = \frac{1}{12}(b-a)h^2f&#39;&#39;(\xi)
-\]</span></p>
-<p>如果进行了一次区间折半，得到 <span class="math inline">\(T_{2n}\)</span>，那么应有</p>
-<p><span class="math display">\[
-|I-T_{2n}| = \frac{1}{12}(b-a)(\frac{h}{2})^2f&#39;&#39;(\xi)
-\]</span></p>
-<p>如果忽略两个误差项中的 <span class="math inline">\(f&#39;&#39;(\xi)\)</span> 上的细微误差，基本上可以认为</p>
-<p><span class="math display">\[
-|I-T_{2n}| = \frac{1}{4}|I-T_n|
-\]</span></p>
-<p>也就是说，一次区间折半大约可以提升四倍精度。另外，可以通过 <span class="math inline">\(|T_n-T_{2n}|\)</span> 来估算 <span class="math inline">\(I-T_{2n}\)</span> 的水平。因为 <span class="math inline">\(|I-T_{2n}|\approx\frac{1}{4}|I-T_n|\)</span>，因此，基本上可以认为</p>
-<p><span class="math display">\[
-|I - T_{2n}| = \frac{1}{3}|T_n-T_{2n}|
-\]</span></p>
-<p>所以，区间折半法进行数值积分时，可以以 <span class="math inline">\(|T_n-T_{2n}|\)</span> 的水平来判断变步长数值积分的精度是否已经符合要求。</p>
-<h3 id="romberg求积">Romberg求积</h3>
-<p>虽然区间折半法原理很简单，编程也很容易实现，但是精度收敛还是太慢了，这会导致要想实现高精度的数值积分，不得不将 <span class="math inline">\(h\)</span> 缩放到一个很小的水平，那么 <span class="math inline">\(n\)</span> 就会变得很大，导致计算量快速上升。Richardson搞出了一种外推加速的方法，利用这种方法进行数值计算的方式称为Romberg求积。</p>
-<p>Romberg求积需要用到Euler-MacLaurin公式，但是我并不想在这里引入这个复杂的公式，其实对于说明Romberg求积而言不是很有必要。</p>
-<p>简单来说，引入Euler-MacLaurin公式的目的是为了说明</p>
-<p><span class="math display">\[
-T_n - I = a_1 h^2 + a_2 h^4 + ...
-\]</span></p>
-<p>对于上面这条等式，如果进行一次区间折半，可以得到</p>
-<p><span class="math display">\[
-T_{2n} - I = a_1(\frac{h}{2})^2 + a_2 (\frac{h}{2})^4 + ...
-\]</span></p>
-<p>为了构造出一个性质更好的求积项，将 <span class="math inline">\(T_n - I\)</span> 乘以 <span class="math inline">\(\frac{1}{4}\)</span>，然后用上式做减法，可以得到</p>
-<p><span class="math display">\[
-T_{2n} - \frac{3}{4}I - \frac{1}{4}T_n = \bar a_2 h^4 + ...
-\]</span></p>
-<p>上式可以通过等号两边同时乘以 <span class="math inline">\(\frac{4}{3}\)</span>，改写为</p>
-<p><span class="math display">\[
-T_n^{(2)} - I = \tilde a_2 h^4 + ...
-\]</span></p>
-<p>改写为这种形式的意义在于，我们构造出了 <span class="math inline">\(T_n^{(2)}\)</span> 这一项精度更高的近似积分项，这一项实际上等于</p>
-<p><span class="math display">\[
-T_n^{(2)} = \frac{T_{2n} - 2^{-2}T_n}{1-2^{-2}}
-\]</span></p>
-<p>也就是说，通过一次区间折半，我们能够将精度提高 <span class="math inline">\(\displaystyle\frac{1}{h^2}\)</span> 倍！这效果无疑远优于区间折半法，因为普通的区间折半一次只能提升大约4倍的精度，而通过Romberg求积，一次区间折半能将精度提升 <span class="math inline">\(\displaystyle\frac{1}{h^2}\)</span> 倍，这意味着Romberg求积的收敛速度是越来越快的，因为随着区间的折半 <span class="math inline">\(h\)</span> 也在不断减小。</p>
-<p>事实上，Romberg求积项可以一般化为</p>
-<p><span class="math display">\[
-T_n^{(m)} = \frac{T_{2n}^{(m-1)}-2^{-2m}T_n^{(m-1)}}{1-2^{-2m}}
-\]</span></p>
-<p>注意上标并不是求导的意思，这表示的是Romberg求积区间折半的次数。</p>
-<h2 id="newton-cotes公式">Newton-Cotes公式</h2>
-<p>前面的中点公式、梯形公式以及Simpson公式分别可以看作使用常数、一次函数、二次函数在区间上进行插值，利用插值函数的积分作为原函数的积分替代。对这种方法进行进一步的推广，将 <span class="math inline">\(f(x)\)</span> 用 <span class="math inline">\(n+1\)</span> 个<strong>等距节点</strong>上的 <span class="math inline">\(n\)</span> 次拉格朗日插值多项式替代，然后进行积分，就可以得到 <strong>Newton-Cotes公式</strong>。</p>
-<p>具体的推导过程如下：若区间 <span class="math inline">\([a, b]\)</span> 上存在 <span class="math inline">\(n+1\)</span> 个等距节点 <span class="math inline">\(x_i\)</span>，记 <span class="math inline">\(x = a+th, t \in [0, n]\)</span>，可以将 <span class="math inline">\(n\)</span> 次拉格朗日插值多项式 <span class="math inline">\(L_n(x)\)</span> 表示为</p>
-<p><span class="math display">\[
-L_n(x) = \sum_{i=0}^n (\prod_{j=0, j\neq i}^n \frac{x-x_j}{x_i-x_j})f(x_i)
-\]</span></p>
-<p>将 <span class="math inline">\(x=a+th\)</span> 代入，可以得到</p>
-<p><span class="math display">\[
-L_n(x) = \sum_{i=0}^n [\prod_{j=0, j\neq i}^n \frac{(a+th)-(a+jh)}{(a+ih) - (a+jh)}]f(x_i)= \sum_{i=0}^n (\prod_{j=0, j\neq i}^n\frac{t-j}{i-j})f(x_i)
-\]</span></p>
-<p>观察 <span class="math inline">\(\prod_{j=0, j\neq i}^n \frac{1}{i-j}\)</span> 项，发现可以写成阶乘的形式 <span class="math inline">\(\frac{(-1)^{n-i}}{i!(n-i)!}\)</span>，那么</p>
-<p><span class="math display">\[
-L_n(x) = \sum_{i=0}^n \frac{(-1)^{n-i}}{i!(n-i)!}(\prod_{j=0, j\neq i}^n(t-j))f(x_i)
-\]</span></p>
-<p>由于 <span class="math inline">\(f(x) \approx L_n(x)\)</span>，那么</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx \approx \int_a^b L_n(x)dx
-\]</span></p>
-<p>观察到 <span class="math inline">\(L_n(x)\)</span> 实际上已经写作了 <span class="math inline">\(L_n(t)\)</span> 的形式，所以对积分式可以进行一次换元</p>
-<p><span class="math display">\[
-dx = hdt
-\]</span></p>
-<p>代入积分式，可以得到</p>
-<p><span class="math display">\[
-\int_a^bL_n(x)dx = (b-a)\sum_{i=0}^n\frac{(-1)^{n-i}}{ni!(n-i)!}(\int_0^n\prod_{j=0, j\neq i}^n(t-j)dt)f(x_i)
-\]</span></p>
-<p>这条式子计算起来还是比较复杂的，但可以观察到，这条式子中 <span class="math inline">\(f(x_i)\)</span> 之前的部分只与区间长度以及等距节点的数量有关，那么其实可以把前面这一部分系数直接用求积系数 <span class="math inline">\(\omega_i\)</span> 来表示，所以最后仍然可以表示为下面这样的形式</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx \approx \sum_{i=0}^n \omega_i f(x_i)
-\]</span></p>
-<p>Newton-Cotes公式的简化写法其实指明了数值积分的精髓，即<em>对求积节点对应的函数值与求积系数的积求和</em>。</p>
-<h3 id="cotes系数">Cotes系数</h3>
-<p>观察到，求积系数 <span class="math inline">\(\omega_i\)</span> 实际上也可以写成两个部分，即</p>
-<p><span class="math display">\[
-\omega_i = (b-a) \sum_{i=0}^n\frac{(-1)^{n-i}}{ni!(n-i)!} \int_0^n\prod_{j=0, j\neq i}^n(t-j)dt = (b-a) C_i^{(n)}
-\]</span></p>
-<p><span class="math inline">\(C_i^{(n)}\)</span> 这一项被称为 <strong>Cotes系数</strong>。由于积分时进行了一次换元，所以Cotes系数的积分区间线性变换至 <span class="math inline">\([0, n]\)</span> 上，成为了只与节点数量有关的项。那么只需事先计算好不同节点数量下的Cotes系数，就可以很方便地使用Newton-Cotes公式进行数值积分了。</p>
-<p>实际上中点公式、梯形公式或Simpson公式对应的求积系数就是 <span class="math inline">\(n\)</span> 分别为0,1,2时的Cotes系数。下面给出 <span class="math inline">\(n\leq 8\)</span> 时的Cotes系数表。</p>
-<figure>
-<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Snipaste_2022-11-16_11-47-11.png" alt><figcaption>Cotes系数表</figcaption>
-</figure>
-<p>Cotes系数具有以下性质</p>
-<ol type="1">
-<li>Cotes系数随着 <span class="math inline">\(i\)</span> 的增大体现出对称性</li>
-<li><span class="math inline">\(\sum_{i=0}^nC_i^{(n)}=1\)</span></li>
-<li>Cotes系数在 <span class="math inline">\(n\geq 8\)</span> 时有正有负，这会导致数值积分的不稳定，所以一般在实际使用Newton-Cotes公式进行数值积分时 <span class="math inline">\(n\leq 7\)</span></li>
-<li>Newton-Cotes公式在 <span class="math inline">\(n\)</span> 为奇数时代数精度至少为 <span class="math inline">\(n\)</span> 次，<span class="math inline">\(n\)</span> 为偶数时代数精度至少为 <span class="math inline">\(n+1\)</span> 次</li>
-</ol>
-<h3 id="newton-cotes公式的误差">Newton-Cotes公式的误差</h3>
-<p>考虑到 <span class="math inline">\(f(x_i)\)</span> 有时可能只是测量值，与真值之间也存在误差。假如 <span class="math inline">\(f(x_i)\)</span> 与真值之间的最大误差为 <span class="math inline">\(\varepsilon\)</span>，那么Newton-Cotes公式进行数值积分的最大误差为 <span class="math inline">\((b-a)\varepsilon\)</span>。</p>
-<h2 id="高斯公式">高斯公式</h2>
-<p>前面考虑的数值积分都是在等距节点上进行求积，下面介绍一种精度更高的非等距节点求积方法——<strong>高斯积分</strong>。</p>
-<h3 id="高斯公式的定义">高斯公式的定义</h3>
-<p>高斯公式的定义中引入了权函数，是在区间上进行带权积分</p>
-<p><span class="math display">\[
-\int_a^b\rho(x)f(x)dx \approx \sum_{i=0}^n \omega_if(x_i)
-\]</span></p>
-<p>另外，高斯积分对于积分节点是有要求的，满足相应要求的积分节点称为 <strong>高斯点</strong>；积分节点与对应的积分系数之间存在确定关系，这个对应的积分系数称为 <strong>高斯系数</strong>。高斯积分的特征在于，在 <span class="math inline">\(n+1\)</span> 个非等距节点上，能够实现代数精度高达 <span class="math inline">\(2n+1\)</span> 次的数值积分。</p>
-<p>要推导任意节点数量的高斯公式非常复杂，但是如果能够先找到高斯点，然后求出对应的高斯系数，就可以直接确定一条高斯积分公式。其中，找高斯点是最困难的一件事。</p>
-<h3 id="寻找高斯点">寻找高斯点</h3>
-<p>对于高斯点，存在以下定理：</p>
-<p>区间 <span class="math inline">\([a, b]\)</span> 上的 <span class="math inline">\(n+1\)</span> 个点均为高斯点的充要条件是，这些点所形成的多项式 <span class="math inline">\(\Pi(x) = \prod_{i=0}^n(x-x_i)\)</span> 在区间上与任意次数不超过 <span class="math inline">\(n\)</span> 次的多项式 <span class="math inline">\(q(x)\)</span> 带权正交，即</p>
-<p><span class="math display">\[
-\int_a^b \rho(x) \Pi(x) q(x)dx = 0
-\]</span></p>
-<p>这条定理的证明稍微有点麻烦，对应用来说也不太重要，见教材。这条定理的意义在于说明了高斯点其实就是区间 <span class="math inline">\([a, b]\)</span> 上的 <span class="math inline">\(n+1\)</span> 次带权正交多项式的零点。在多项式章节中介绍了四种不同的正交多项式</p>
-<ul>
-<li>Legendre正交多项式</li>
-<li>Chebyshev正交多项式</li>
-<li>Laguerre正交多项式</li>
-<li>Hermite正交多项式</li>
-</ul>
-<p>这四种正交多项式可以与高斯积分定义式结合，形成四种不同的高斯积分公式。在介绍这四种积分公式之前，还要补充3点高斯积分的性质：</p>
-<ol type="1">
-<li>高斯积分是所有利用 <span class="math inline">\(n+1\)</span> 个积分节点进行积分的方式中，代数精度最高的积分算法</li>
-<li>高斯积分的所有积分系数均大于0，因此积分结果一定是稳定的</li>
-<li>高斯积分在 <span class="math inline">\(n\rightarrow \infty\)</span> 时，积分结果一定是收敛的</li>
-</ol>
-<p>前面两点性质基于以下定理：利用 <span class="math inline">\(n+1\)</span> 个积分节点进行数值积分的最高代数精度是 <span class="math inline">\(2n+1\)</span> 次，而且当积分精度达到 <span class="math inline">\(2n+1\)</span> 次时，积分系数 <span class="math inline">\(\omega_i &gt;0\)</span>。</p>
-<p>这些性质的证明都不是特别复杂，但是对于数值分析这门课而言不是特别重要，因此不花费过多的精力在讨论性质的证明上。</p>
-<h3 id="四种常用的高斯积分公式">四种常用的高斯积分公式</h3>
-<h4 id="gauss-legendre公式">Gauss-Legendre公式</h4>
-<p>Legendre正交多项式是区间 <span class="math inline">\([-1, 1]\)</span> 上权函数为 <span class="math inline">\(\rho(x) \equiv 1\)</span> 的正交多项式。</p>
-<p><span class="math inline">\(n=0\)</span> 时，Gauss-Legendre公式为</p>
-<p><span class="math display">\[
-\int_{-1}^1f(x)dx \approx 2f(0)
-\]</span></p>
-<p><span class="math inline">\(n=1\)</span> 时，Gauss-Legendre公式为</p>
-<p><span class="math display">\[
-\int_{-1}^1f(x)dx \approx f(-\frac{1}{\sqrt{3}}) + f(\frac{1}{\sqrt{3}})
-\]</span></p>
-<p><span class="math inline">\(n=2\)</span> 时，Gauss-Legendre公式为</p>
-<p><span class="math display">\[
-\int_{-1}^1f(x)dx \approx \frac{5}{9}f(-\sqrt{\frac{3}{5}}) + \frac{8}{9}f(0) + \frac{5}{9}f(\sqrt{\frac{3}{5}})
-\]</span></p>
-<figure>
-<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Legendre.png" alt><figcaption>Gauss-Legendre公式常用的高斯点及其高斯系数</figcaption>
-</figure>
-<p>对于计算来说，这一部分内容也不太需要进行定理的推导和证明，只需要记住一些常用的高斯点和高斯系数，然后知道这些点和系数与各公式之间的对应关系，会算简单数值积分即可。</p>
-<h4 id="gauss-chebyshev公式">Gauss-Chebyshev公式</h4>
-<p>Chebyshev正交多项式是区间 <span class="math inline">\([-1, 1]\)</span> 上权函数为 <span class="math inline">\(\rho(x)=\frac{1}{\sqrt{1-x^2}}\)</span> 的正交多项式。Chebyshev的零点表达式如下</p>
-<p><span class="math display">\[
-x_i = cos\frac{2i+1}{2(n+1)}\pi, i = 0, 1, ..., n
-\]</span></p>
-<p>相应的高斯系数为</p>
-<p><span class="math display">\[
-\omega_i = \frac{\pi}{n+1}
-\]</span></p>
-<p>Gauss-Chebyshev公式中的所有高斯系数都是相同的！而且高斯点的表达式也很好记忆，因此很容易使用Gauss-Chebyshev公式进行 <span class="math inline">\(n\)</span> 很大时的高斯积分！不过需要注意，Gauss-Chebyshev公式的权函数并不为1，因此应用时应看清楚场合，不然算出来的结果是错的。</p>
-<p>Gauss-Chebyshev公式整理如下</p>
-<p><span class="math display">\[
-\int_{-1}^1\frac{1}{\sqrt{1-x^2}}f(x)dx = \frac{\pi}{n+1}\sum_{i=0}^n f(cos\frac{2i+1}{2(n+1)}\pi)
-\]</span></p>
-<h4 id="gauss-laguerre公式">Gauss-Laguerre公式</h4>
-<p>Laguerre正交多项式是区间 <span class="math inline">\([0, \infty)\)</span> 上权函数为 <span class="math inline">\(\rho(x)=e^{-x}\)</span> 的正交多项式。</p>
-<p><span class="math inline">\(n=0\)</span> 时，Gauss-Laguerre公式为</p>
-<p><span class="math display">\[
-\int_0^{\infty}e^{-x}f(x)dx \approx f(1)
-\]</span></p>
-<p><span class="math inline">\(n=1\)</span> 时，Gauss-Laguerre公式为</p>
-<p><span class="math display">\[
-\int_0^{\infty}e^{-x}f(x)dx \approx \frac{2+\sqrt{2}}{4}f(2-\sqrt{2})+\frac{2+\sqrt{2}}{4}f(2+\sqrt{2})
-\]</span></p>
-<figure>
-<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Laguerre.png" alt><figcaption>Gauss-Laguerre公式常用的高斯点及其高斯系数</figcaption>
-</figure>
-<h4 id="gauss-hermite公式">Gauss-Hermite公式</h4>
-<p>Hermite正交多项式是区间 <span class="math inline">\([-\infty, \infty]\)</span> 上权函数为 <span class="math inline">\(\rho(x) = e^{-x^2}\)</span> 的正交多项式。</p>
-<p><span class="math inline">\(n=1\)</span> 时，Gauss-Hermite公式为</p>
-<p><span class="math display">\[
-\int_{-\infty}^{\infty} e^{-x^2}f(x)dx \approx \frac{\sqrt{\pi}}{2}f(-\frac{\sqrt{2}}{2}) + \frac{\sqrt{\pi}}{2}f(\frac{\sqrt{2}}{2})
-\]</span></p>
-<p><span class="math inline">\(n=2\)</span> 时，Gauss-Hermite公式为</p>
-<p><span class="math display">\[
-\int_{-\infty}^{\infty} e^{-x^2}f(x)dx \approx \frac{\sqrt{\pi}}{6}f(-\frac{\sqrt{6}}{2})+\frac{2\sqrt{\pi}}{3}f(0) + \frac{\sqrt{\pi}}{6}f(\frac{\sqrt{6}}{2})
-\]</span></p>
-<figure>
-<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Hermite.png" alt><figcaption>Gauss-Hermite公式常用的高斯点及其高斯系数</figcaption>
-</figure>
-<h4 id="高斯公式使用注意事项">高斯公式使用注意事项</h4>
-<p>应用高斯公式时，首先要观察权函数 <span class="math inline">\(\rho(x)\)</span>，其次要观察积分区间。一般来说，根据权函数就可以确定一个积分问题需要用什么积分公式，积分区间和权函数往往是挂钩的。</p>
-<h2 id="多重数值积分">多重数值积分</h2>
-<p>对于重积分来说，前面提到的数值积分方法可以解决一些比较简单的重积分问题，比如使用复合Simpson求积可以解决重数比较低的多重数值积分问题。下面以二重积分为例，简单地说明一下多重数值积分问题。</p>
-<h3 id="以二重积分为例描述多重数值积分问题">以二重积分为例描述多重数值积分问题</h3>
-<p>对于一个二重积分问题，可以将目标积分式写为</p>
-<p><span class="math display">\[
-\iint_{\Omega} f(x, y) dxdy
-\]</span></p>
-<p>其中，<span class="math inline">\(\Omega\)</span> 表示二维积分区间，可以表示为</p>
-<p><span class="math display">\[
-\Omega = \{a \leq x \leq b, \varphi_1(x) \leq y \leq \varphi_2(x)\}
-\]</span></p>
-<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//二重积分求积区域.png" alt="二重积分求积区域" width="40%" align="center"></p>
-<p>上面的二重积分可以拆解为对 <span class="math inline">\(x\)</span> 和对 <span class="math inline">\(y\)</span> 的两个积分</p>
-<p><span class="math display">\[
-\iint_{\Omega} f(x, y) dxdy = \int_a^b dx \int_{\varphi_1(x)}^{\varphi_2(x)}f(x, y)dy
-\]</span></p>
-<p>令 <span class="math inline">\(F(x) = \displaystyle\int_{\varphi_1(x)}^{\varphi_2(x)}f(x, y)dy\)</span>，有</p>
-<p><span class="math display">\[
-\iint_{\Omega} f(x, y)dxdy = \int_a^bF(x) dx
-\]</span></p>
-<p>由数值积分公式，可以得到</p>
-<p><span class="math display">\[
-\int_a^bF(x)dx \approx \sum_{i=0}^n \omega_i^{(1)} F(x_i)
-\]</span></p>
-<p><span class="math inline">\(F(x_i)\)</span> 应也能写成</p>
-<p><span class="math display">\[
-F(x_i) = \int_{\varphi_1(x_i)}^{\varphi_2(x_i)}f(x_i, y)dy \approx \sum_{j=0}^m\omega_j^{(2)}f(x_i, y_j)
-\]</span></p>
-<p>整合上述两条式子，可以得到双重积分的数值积分公式</p>
-<p><span class="math display">\[
-\iint_{\Omega} f(x, y)dxdy \approx \sum_{i=0}^n \omega_i^{(1)} \sum_{j=0}^m \omega_j^{(2)} f(x_i, y_j)
-\]</span></p>
-<p>记 <span class="math inline">\(\omega_{ij}=\omega_i^{(1)} \omega_j^{(2)}\)</span>，可以有</p>
-<p><span class="math display">\[
-\iint_{\Omega}f(x, y)dxdy\approx \sum_{i=0}^n \sum_{j=0}^m \omega_{ij}f(x_i, y_j)
-\]</span></p>
-<p>所以双重积分的数值积分本质上就是一个双重求积问题。我们可以使用Newton-Cotes公式对这个求积问题进行求解，但事实上使用Newton-Cotes方式进行重积分的数值求解精度不高。教材中展示了使用复合Simpson公式进行二重积分求积的案例，其过程非常复杂，也不实用，因此在笔记中略去。下面直接介绍对于多重积分数值求解来说比较实用的Monte-Carlo方法。</p>
-<h3 id="使用monte-carlo方法求解多重积分">使用Monte-Carlo方法求解多重积分</h3>
-<p>Monte-Carlo方法是一种随机模拟思想，并不是一种具体的方法实现。下面以Monte-Carlo方法在一维数值积分中的应用为例，来简单地描述一下Monte-Carlo方法如何应用于数值积分。</p>
-<h4 id="monte-carlo方法求解一维数值积分">Monte-Carlo方法求解一维数值积分</h4>
-<p>假定随机变量 <span class="math inline">\(X\)</span> 在区间 <span class="math inline">\([0, 1]\)</span> 上服从均匀分布（均匀分布即概率密度函数 <span class="math inline">\(f(x) = \frac{1}{b-a}\)</span>，其中 <span class="math inline">\(b-a\)</span> 为区间长度），函数 <span class="math inline">\(f(x)\)</span> 为任意可积函数，那么 <span class="math inline">\(f(X)\)</span> 的数学期望为</p>
-<p><span class="math display">\[
-E[f(X)] = \int_0^1 f(x) dx
-\]</span></p>
-<blockquote>
-<p>回顾一下统计学的知识：数学期望指的是随机变量所有可能的取值与其出现概率之积求和。</p>
-</blockquote>
-<p>也就是说，服从均匀分布的随机变量 <span class="math inline">\(X\)</span> 对应函数值的数学期望 <span class="math inline">\(E[f(X)]\)</span> 恰好是函数 <span class="math inline">\(f(x)\)</span> 在对应区间上的积分值。那么如果有办法求出随机变量对应函数值的数学期望 <span class="math inline">\(E[f(X)]\)</span>，那么就可以得到函数 <span class="math inline">\(f(x)\)</span> 的区间上的积分，而不是直接做数值积分运算。</p>
-<p>假如在区间 <span class="math inline">\([0, 1]\)</span> 上共有 <span class="math inline">\(N\)</span> 个相互独立的、服从均匀分布的随机变量 <span class="math inline">\(X_i\)</span>，记</p>
-<p><span class="math display">\[
-I_N[f] = \frac{1}{N}\sum_{i=1}^N f(X_i)
-\]</span></p>
-<p>显然，<span class="math inline">\(I_N[f]\)</span> 也是一个随机变量，这个随机变量的数学期望 <span class="math inline">\(E[I_N[f]]\)</span> 在形式上恰好与区间上的数值积分公式类似</p>
-<p><span class="math display">\[
-E[I_N[f]] = E[\frac{1}{N}\sum_{i=1}^N f(X_i)] = \frac{1}{N}\sum_{i=1}^NE[f(X_i)]=\frac{1}{N}\sum_{i=1}^N\int_0^1f(x)dx = I[f]
-\]</span></p>
-<p>从这个角度来说，可以把 <span class="math inline">\(I_N[f]\)</span> 视为 <span class="math inline">\(I[f]\)</span> 的无偏估计。由大数定律，知 <span class="math inline">\(N \rightarrow \infty\)</span> 时，<span class="math inline">\(I_N[f] \rightarrow I[f]\)</span>。</p>
-<p>说白了，Monte-Carlo方法就是在区间内随机取点求函数值，然后加起来求平均。</p>
-<h4 id="monte-carlo方法的一维数值积分误差">Monte-Carlo方法的一维数值积分误差</h4>
-<p>积分误差 <span class="math inline">\(R_N[f]\)</span> 可以表示为</p>
-<p><span class="math display">\[
-R_N[f] = I_N[f] - I[f]
-\]</span></p>
-<p>由于 <span class="math inline">\(I_N[f]\)</span> 是一个随机变量，因此 <span class="math inline">\(R_N[f]\)</span> 也是一个随机变量。为此需要使用 <span class="math inline">\(R_N[f]\)</span> 的方差衡量Monte-Carlo方法的一维数值积分误差。</p>
-<p><span class="math display">\[
-var(R_N[f])= E\{[I_N[f] - I[f]]^2\} = \frac{1}{N^2}E\{\sum_{i=1}^N(f(X_i) - I[f])\sum_{j=1}^N(f(X_j) - I[f])\}
-\]</span></p>
-<p>当 <span class="math inline">\(i\neq j\)</span> 时，由于 <span class="math inline">\(X_i, X_j\)</span> 是相互独立的随机变量，因此</p>
-<p><span class="math display">\[
-E\{[f(X_i) - I[f]][f(X_j) - I[f]]\} = E[f(X_i) - I[f]]E[f(X_j) - I[f]] = 0
-\]</span></p>
-<p>那么，只有在 <span class="math inline">\(i=j\)</span> 的情况下，数学期望是非零的，所以上面的数学期望可以简化为</p>
-<p><span class="math display">\[
-var(R_N[f]) = \frac{1}{N^2} E\{\sum_{i=1}^N[f(X_i)-I[f]]^2\}
-\]</span></p>
-<p>而 <span class="math inline">\(\displaystyle\frac{1}{N}E\{\sum_{i=1}^N[f(X_i) - I[f]]^2\}\)</span> 实际上就是 <span class="math inline">\(var(f)\)</span>，即 <span class="math inline">\(f(X)\)</span> 的方差。这个值在随机变量的分布和函数结构确定以后，便是一个常数。工程上来说，这个方差可以通过抽样的方法进行估计，例如区间上随机取 <span class="math inline">\(N\)</span> 个点求函数值，取其均值作为数学期望的估计，然后用这些函数值和估计期望求出估计的方差。</p>
-<p>总之Monte-Carlo方法求一维数值积分的误差 <span class="math inline">\(var(R_N[f]) = \displaystyle\frac{1}{N}var(f)\)</span> 是与 <span class="math inline">\(N\)</span> 成反比例关系的。事实上，只要 <span class="math inline">\(f(x)\)</span> 是平方可积函数，<span class="math inline">\(var(f)\)</span> 就必然是有限值，那么Monte-Carlo方法求数值积分一定是稳定的，并且精度随着 <span class="math inline">\(N\)</span> 的增大而提高。</p>
-<h4 id="monte-carlo方法的多重数值积分误差">Monte-Carlo方法的多重数值积分误差</h4>
-<p>Monte-Carlo方法求多重数值积分的误差仍然是 <span class="math inline">\(\displaystyle\frac{1}{N}var(f)\)</span>，与维度无关。这个特性太屌了，所以工程上求多重数值积分基本上都是用Monte-Carlo方法进行求解的。</p>
-<p>当然，计算机并不能生成真正的随机数，只能生成伪随机数，所以在实际计算的时候，Monte-Carlo方法的数值积分精度可能略低于理论精度，但与理论相差不会太大。</p>
-]]></content>
-      <categories>
-        <category>University</category>
-      </categories>
-      <tags>
-        <tag>Numerical Analysis</tag>
-        <tag>Mathematics</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数值分析作业-第五章</title>
     <url>/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0/</url>
     <content><![CDATA[<p>姓名：周晓</p>
@@ -3118,6 +2443,424 @@ s_t = s_{tl} + s_{tr} = 1.184011822285978 + 1.160219279622929 = 2.34423110190890
       </tags>
   </entry>
   <entry>
+    <title>数值分析笔记-数值积分</title>
+    <url>/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86/</url>
+    <content><![CDATA[<h2 id="数值积分引入">数值积分引入</h2>
+<p>对于连续函数 <span class="math inline">\(f(x)\)</span> 来说，如果这个函数的表达式比较简单，我们一般可以使用Newton-Leibniz公式进行积分</p>
+<p><span class="math display">\[
+\int_a^b f(x)dx = F(b) - F(a)
+\]</span></p>
+<p>其中，<span class="math inline">\(F&#39;(x)=f(x)\)</span>，即 <span class="math inline">\(F(x)\)</span> 是 <span class="math inline">\(f(x)\)</span> 的原函数。</p>
+<p>使用Newton-Leibniz公式进行积分其实是非常理想的情况。假如函数 <span class="math inline">\(f(x)\)</span> 的表达式非常复杂，或是根本就不可积，或是根本没有表达式，仅仅是给出了某些节点上的函数值，那么我们就只能通过数值积分的方式进行近似的积分求解了。</p>
+<span id="more"></span>
+<h2 id="数值积分误差估计">数值积分误差估计</h2>
+<p>对于函数 <span class="math inline">\(f(x)\in C[a, b]\)</span>，假如存在一个 <span class="math inline">\(n\)</span> 阶多项式 <span class="math inline">\(P_n(x)\)</span>，可以近似有 <span class="math inline">\(f(x) \approx P_n(x)\)</span>，那么应能近似得到</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx \int_a^bP_n(x)dx
+\]</span></p>
+<p>对于上述数值积分，其误差是可以估计的。</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx - \int_a^bP_n(x)dx = \int_a^b[f(x)-P_n(x)]dx=\int_a^bR_n(x)dx
+\]</span></p>
+<p>如果有 <span class="math inline">\(max_{a\leq x \leq b}R_n(x)\leq \varepsilon\)</span>，那么显然，上述数值积分的误差限为</p>
+<p><span class="math display">\[
+\int_a^bR_n(x)dx \leq (b-a)\varepsilon
+\]</span></p>
+<p>如果 <span class="math inline">\(\varepsilon\)</span> 很小的话，数值积分的误差限也很小，那么使用数值积分来近似真实的积分值，完全是可行的。</p>
+<h2 id="求积公式">求积公式</h2>
+<h3 id="中点公式">中点公式</h3>
+<h4 id="中点公式的计算">中点公式的计算</h4>
+<p>近似求积分的一种非常自然的想法，是使用一个矩形围成的面积来近似函数曲线在区间上与x轴所围成的面积。这种做数值积分的方式可以概括为中点公式。若 <span class="math inline">\(f(x) \in C[a,b]\)</span>，那么</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx (b-a)f(\frac{a+b}{2})
+\]</span></p>
+<p>利用区间中点对应的函数值乘以区间长度，得到的矩形面积，近似函数积分。</p>
+<h4 id="中点公式的误差分析">中点公式的误差分析</h4>
+<p>对于上述近似，可以进行近似误差的估计。假设函数 <span class="math inline">\(f(x)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上二阶可导，那么根据泰勒公式</p>
+<p><span class="math display">\[
+f(x) = f(\frac{a+b}{2}) + f&#39;(\frac{a+b}{2})(x-\frac{a+b}{2}) + \frac{f&#39;&#39;(\xi)}{2}(x-\frac{a+b}{2})^2
+\]</span></p>
+<p>对上述等式两边做积分，可以得到</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx-(b-a)f(\frac{a+b}{2}) = \frac{1}{24}(b-a)^3f&#39;&#39;(\xi)
+\]</span></p>
+<p>也就是说，中点公式的误差差不多就是在 <span class="math inline">\((b-a)^3\)</span> 量级。</p>
+<h3 id="梯形公式">梯形公式</h3>
+<h4 id="梯形公式的计算">梯形公式的计算</h4>
+<p>梯形公式是另一种非常自然的近似积分想法。从图形上来看，就是将 <span class="math inline">\(f(a)\)</span> 与 <span class="math inline">\(f(b)\)</span> 相连，形成一条直线，然后计算这条线段在 <span class="math inline">\([a, b]\)</span> 上的积分。</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx = \frac{1}{2}(b-a)[f(a)+f(b)]
+\]</span></p>
+<h4 id="梯形公式的误差分析">梯形公式的误差分析</h4>
+<p>梯形公式涉及到一条一次拟合多项式，因此可以用一次多项式拟合的误差来计算梯形公式的误差，如下</p>
+<p><span class="math display">\[
+R_1(x) = f(x) - L_1(x) = \frac{1}{2}f&#39;&#39;(\xi)(x-a)(x-b)
+\]</span></p>
+<p>那么</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx - \int_a^bL_1(x)dx = \int_a^bR_1(x) = -\frac{1}{12}(b-a)^3f&#39;&#39;(\xi)
+\]</span></p>
+<p>分析到这里，可能出现了比较反直觉的一点性质，即梯形公式的误差似乎要比中点公式的误差还要大，后者的系数是 <span class="math inline">\(\frac{1}{24}\)</span>。</p>
+<h3 id="simpson公式">Simpson公式</h3>
+<h4 id="simpson公式的计算">Simpson公式的计算</h4>
+<p>Simpson公式，也叫抛物型公式。这种数值积分方式实际上就是在区间上用一条抛物线来近似积分，即</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx \int_a^bL_2(x)dx=\frac{1}{6}(b-a)[f(a) + 4f(\frac{a+b}{2}) + f(b)]
+\]</span></p>
+<h4 id="simpson公式的误差估计">Simpson公式的误差估计</h4>
+<p>和梯形公式类似的，Simpson公式的近似误差也可以通过二次多项式的误差估计得到。由于二次多项式的误差分析展开比较复杂，也不是什么重点，这边的笔记就略去了，最后可以得到</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx - \int_a^bL_2(x)dx = -\frac{(b-a)^5}{2880}f^{(4)}(\xi)
+\]</span></p>
+<p>可以观察到，Simpson公式的近似误差量级是 <span class="math inline">\((b-a)^5\)</span>，比梯形公式和中点公式的近似误差要小两个量级。事实上，Simpson近似积分的精度确实要比前面两种高很多。</p>
+<h3 id="求积公式一般化">求积公式一般化</h3>
+<p>观察中点公式、梯形公式和Simpson公式，可以发现一个共同点：这些公式都可以写成 <span class="math inline">\(\sum_{i=0}^{n-1}\omega_if(x_i)\)</span> 的形式。因此，上面的这些公式都可以称为求积公式。</p>
+<p>求积公式有一个叫做<strong>代数精度</strong>的指标。所谓代数精度，指的是这个求积公式最高能够对多少次的多项式精确求积分。若某个求积公式对于 <span class="math inline">\(m\)</span> 阶多项式 <span class="math inline">\(x^m\)</span> 都可以满足精确求解的要求，但是对于 <span class="math inline">\(m+1\)</span> 阶多项式就不满足精确求积分的要求，那么这个求积公式的代数精度就为 <span class="math inline">\(m\)</span> 次。</p>
+<h2 id="复合求积">复合求积</h2>
+<p>前面提到，数值积分的误差与区间长度有关，像中间公式的积分误差与区间长度的3次方呈正相关关系，Simpson公式的积分误差与区间长度的5次方呈正相关关系。那么，为了减小数值积分的误差，就必须减小区间长度。事实上，对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，我们往往会将区间 <span class="math inline">\([a, b]\)</span> 等分为 <span class="math inline">\(n\)</span> 份，在一个小区间 <span class="math inline">\([x_i, x_{i+1}]\)</span> 上进行求积，即</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx = \sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f(x)dx
+\]</span></p>
+<p>一般来说，我们会将小区间的长度称为<strong>积分步长</strong>，用符号 <span class="math inline">\(h\)</span> 表示。</p>
+<p><span class="math display">\[
+h = \frac{b-a}{n}
+\]</span></p>
+<h3 id="中点复合求积">中点复合求积</h3>
+<p>对一个小区间内的积分进行数值近似，可以得到</p>
+<p><span class="math display">\[
+\int_{x_i}^{x_{i+1}}f(x)dx=(x_{i+1}-x_i)f(x_{i+\frac{1}{2}})=hf(x_{i+\frac{1}{2}})
+\]</span></p>
+<p>那么，整个区间的积分即</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx = \sum_{i=0}^{n-1}hf(x_{i+\frac{1}{2}}) \triangleq M_n
+\]</span></p>
+<h3 id="梯形复合求积">梯形复合求积</h3>
+<p>同上，很容易得到</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx = \sum_{i=0}^{n-1}\frac{h}{2}[f(x_i)+f(x_{i+1})] = \frac{h}{2}[f(a)+f(b)+2\sum_{i=1}^{n-1}f(x_i)] \triangleq T_n
+\]</span></p>
+<h3 id="simpson复合求积">Simpson复合求积</h3>
+<p><span class="math display">\[
+\int_a^bf(x)dx = \sum_{i=0}^{n-1}\frac{h}{6}[f(x_i) + f(x_{i+1}) + 4f(x_{i+\frac{1}{2}})]=\frac{h}{6}[f(a) + f(b) + 4\sum_{i=1}^{n-1}f(x_{i+\frac{1}{2}})+2\sum_{i=1}^{n-1}f(x_i)] \triangleq S_n
+\]</span></p>
+<h3 id="上述复合求积公式的误差分析">上述复合求积公式的误差分析</h3>
+<p>为了进行上述复合求积公式的误差限分析，首先引入一个定理：对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，存在一点 <span class="math inline">\(\eta \in (a, b)\)</span>，满足 <span class="math inline">\(\sum_{i=0}^{n-1}\omega_if(x_i)=f(\eta)\sum_{i=0}^{n-1}\omega_i\)</span>。</p>
+<p>这个定理的求证其实非常简单。对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，必然存在一个 <span class="math inline">\(f_{min}\)</span> 和一个 <span class="math inline">\(f_{max}\)</span>，很自然有</p>
+<p><span class="math display">\[
+f_{min}\sum_{i=0}^{n-1}\omega_i \leq \sum_{i=0}^{n-1}\omega_i f(x_i) \leq f_{max}\sum_{i=0}^{n-1}\omega_i
+\]</span></p>
+<p>由于 <span class="math inline">\(f(x)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上连续，那么必然存在某一个 <span class="math inline">\(f\)</span>，恰好满足</p>
+<p><span class="math display">\[
+f\sum_{i=0}^{n-1}\omega_i=\sum_{i=0}^{n-1}\omega_i f(x_i)
+\]</span></p>
+<h4 id="中点复合求积误差">中点复合求积误差</h4>
+<p>有了上面这个定理，求复合求积误差就很容易了。对于</p>
+<p><span class="math display">\[
+\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f(x)dx = h\sum_{i=0}^{n-1}f(x_{i+\frac{1}{2}})
+\]</span></p>
+<p>作差，得到</p>
+<p><span class="math display">\[
+\sum_{i=0}^{n-1}[\int_{x_i}^{x_{i+1}}f(x)dx-hf(x_{i+\frac{1}{2}})]
+\]</span></p>
+<p>注意到求和公式内部是一个中点求积误差的表达式，代入可得</p>
+<p><span class="math display">\[
+\sum_{i=0}^{n-1}[\int_{x_i}^{x_{i+1}}f(x)dx - hf(x_{i+\frac{1}{2}})]=\sum_{i=0}^{n-1}\frac{1}{24}h^3f&#39;&#39;(\xi)
+\]</span></p>
+<p>注意到，求和项与 <span class="math inline">\(i\)</span> 无关，因此可以得到中点复合求积误差为</p>
+<p><span class="math display">\[
+\frac{b-a}{24}h^2f&#39;&#39;(\xi)
+\]</span></p>
+<h4 id="梯形复合求积误差">梯形复合求积误差</h4>
+<p><span class="math display">\[
+-\frac{b-a}{12}h^2f&#39;&#39;(\xi)
+\]</span></p>
+<h4 id="simpson复合求积误差">Simpson复合求积误差</h4>
+<p><span class="math display">\[
+-\frac{b-a}{2880}h^4f&#39;&#39;(\xi)
+\]</span></p>
+<p>可以观察到，复合求积误差本质上就是将原来的 <span class="math inline">\((b-a)\)</span> 替换为 <span class="math inline">\(h\)</span>，但其中一次因为 <span class="math inline">\(n\)</span> 项求和退化为 <span class="math inline">\((b-a)\)</span>，因此原来是 <span class="math inline">\((b-a)^m\)</span> 量级的误差都变为 <span class="math inline">\(h^{m-1}\)</span> 量级。</p>
+<p>中点复合求积以及梯形复合求积的误差都是 <span class="math inline">\(O(h^2)\)</span> 量级的，而Simpson复合求积的误差是 <span class="math inline">\(O(h^4)\)</span> 量级的，因此如果对于近似精度要求较高，应尽量选择使用Simpson复合求积。</p>
+<h2 id="变步长方法以及外推加速技术">变步长方法以及外推加速技术</h2>
+<p>前面所介绍的求积方法都是定步长的方法。定步长数值积分编程很容易，但是确定步长是一件比较麻烦的事情。如果步长定得太大，精度就会比较差；如果步长定得太小，计算效率可能就低很多。因此，变步长方法被引入到数值积分中。下面通过一个简单的变步长方法，初步了解一下变步长数值积分的基本原理。</p>
+<h3 id="区间折半法">区间折半法</h3>
+<p>变步长积分的主要思想是，对于给定的积分精度，一开始可以在整个区间上进行数值积分，若精度达不到要求，则将积分步长减半；不断地将积分步长减半，直到积分精度满足给定要求为止。</p>
+<p>以梯形求积为例，若记 <span class="math inline">\(I = \int_a^bf(x)dx\)</span>，那么</p>
+<p><span class="math display">\[
+|I-T_n| = \frac{1}{12}(b-a)h^2f&#39;&#39;(\xi)
+\]</span></p>
+<p>如果进行了一次区间折半，得到 <span class="math inline">\(T_{2n}\)</span>，那么应有</p>
+<p><span class="math display">\[
+|I-T_{2n}| = \frac{1}{12}(b-a)(\frac{h}{2})^2f&#39;&#39;(\xi)
+\]</span></p>
+<p>如果忽略两个误差项中的 <span class="math inline">\(f&#39;&#39;(\xi)\)</span> 上的细微误差，基本上可以认为</p>
+<p><span class="math display">\[
+|I-T_{2n}| = \frac{1}{4}|I-T_n|
+\]</span></p>
+<p>也就是说，一次区间折半大约可以提升四倍精度。另外，可以通过 <span class="math inline">\(|T_n-T_{2n}|\)</span> 来估算 <span class="math inline">\(I-T_{2n}\)</span> 的水平。因为 <span class="math inline">\(|I-T_{2n}|\approx\frac{1}{4}|I-T_n|\)</span>，因此，基本上可以认为</p>
+<p><span class="math display">\[
+|I - T_{2n}| = \frac{1}{3}|T_n-T_{2n}|
+\]</span></p>
+<p>所以，区间折半法进行数值积分时，可以以 <span class="math inline">\(|T_n-T_{2n}|\)</span> 的水平来判断变步长数值积分的精度是否已经符合要求。</p>
+<h3 id="romberg求积">Romberg求积</h3>
+<p>虽然区间折半法原理很简单，编程也很容易实现，但是精度收敛还是太慢了，这会导致要想实现高精度的数值积分，不得不将 <span class="math inline">\(h\)</span> 缩放到一个很小的水平，那么 <span class="math inline">\(n\)</span> 就会变得很大，导致计算量快速上升。Richardson搞出了一种外推加速的方法，利用这种方法进行数值计算的方式称为Romberg求积。</p>
+<p>Romberg求积需要用到Euler-MacLaurin公式，但是我并不想在这里引入这个复杂的公式，其实对于说明Romberg求积而言不是很有必要。</p>
+<p>简单来说，引入Euler-MacLaurin公式的目的是为了说明</p>
+<p><span class="math display">\[
+T_n - I = a_1 h^2 + a_2 h^4 + ...
+\]</span></p>
+<p>对于上面这条等式，如果进行一次区间折半，可以得到</p>
+<p><span class="math display">\[
+T_{2n} - I = a_1(\frac{h}{2})^2 + a_2 (\frac{h}{2})^4 + ...
+\]</span></p>
+<p>为了构造出一个性质更好的求积项，将 <span class="math inline">\(T_n - I\)</span> 乘以 <span class="math inline">\(\frac{1}{4}\)</span>，然后用上式做减法，可以得到</p>
+<p><span class="math display">\[
+T_{2n} - \frac{3}{4}I - \frac{1}{4}T_n = \bar a_2 h^4 + ...
+\]</span></p>
+<p>上式可以通过等号两边同时乘以 <span class="math inline">\(\frac{4}{3}\)</span>，改写为</p>
+<p><span class="math display">\[
+T_n^{(2)} - I = \tilde a_2 h^4 + ...
+\]</span></p>
+<p>改写为这种形式的意义在于，我们构造出了 <span class="math inline">\(T_n^{(2)}\)</span> 这一项精度更高的近似积分项，这一项实际上等于</p>
+<p><span class="math display">\[
+T_n^{(2)} = \frac{T_{2n} - 2^{-2}T_n}{1-2^{-2}}
+\]</span></p>
+<p>也就是说，通过一次区间折半，我们能够将精度提高 <span class="math inline">\(\displaystyle\frac{1}{h^2}\)</span> 倍！这效果无疑远优于区间折半法，因为普通的区间折半一次只能提升大约4倍的精度，而通过Romberg求积，一次区间折半能将精度提升 <span class="math inline">\(\displaystyle\frac{1}{h^2}\)</span> 倍，这意味着Romberg求积的收敛速度是越来越快的，因为随着区间的折半 <span class="math inline">\(h\)</span> 也在不断减小。</p>
+<p>事实上，Romberg求积项可以一般化为</p>
+<p><span class="math display">\[
+T_n^{(m)} = \frac{T_{2n}^{(m-1)}-2^{-2m}T_n^{(m-1)}}{1-2^{-2m}}
+\]</span></p>
+<p>注意上标并不是求导的意思，这表示的是Romberg求积区间折半的次数。</p>
+<h2 id="newton-cotes公式">Newton-Cotes公式</h2>
+<p>前面的中点公式、梯形公式以及Simpson公式分别可以看作使用常数、一次函数、二次函数在区间上进行插值，利用插值函数的积分作为原函数的积分替代。对这种方法进行进一步的推广，将 <span class="math inline">\(f(x)\)</span> 用 <span class="math inline">\(n+1\)</span> 个<strong>等距节点</strong>上的 <span class="math inline">\(n\)</span> 次拉格朗日插值多项式替代，然后进行积分，就可以得到 <strong>Newton-Cotes公式</strong>。</p>
+<p>具体的推导过程如下：若区间 <span class="math inline">\([a, b]\)</span> 上存在 <span class="math inline">\(n+1\)</span> 个等距节点 <span class="math inline">\(x_i\)</span>，记 <span class="math inline">\(x = a+th, t \in [0, n]\)</span>，可以将 <span class="math inline">\(n\)</span> 次拉格朗日插值多项式 <span class="math inline">\(L_n(x)\)</span> 表示为</p>
+<p><span class="math display">\[
+L_n(x) = \sum_{i=0}^n (\prod_{j=0, j\neq i}^n \frac{x-x_j}{x_i-x_j})f(x_i)
+\]</span></p>
+<p>将 <span class="math inline">\(x=a+th\)</span> 代入，可以得到</p>
+<p><span class="math display">\[
+L_n(x) = \sum_{i=0}^n [\prod_{j=0, j\neq i}^n \frac{(a+th)-(a+jh)}{(a+ih) - (a+jh)}]f(x_i)= \sum_{i=0}^n (\prod_{j=0, j\neq i}^n\frac{t-j}{i-j})f(x_i)
+\]</span></p>
+<p>观察 <span class="math inline">\(\prod_{j=0, j\neq i}^n \frac{1}{i-j}\)</span> 项，发现可以写成阶乘的形式 <span class="math inline">\(\frac{(-1)^{n-i}}{i!(n-i)!}\)</span>，那么</p>
+<p><span class="math display">\[
+L_n(x) = \sum_{i=0}^n \frac{(-1)^{n-i}}{i!(n-i)!}(\prod_{j=0, j\neq i}^n(t-j))f(x_i)
+\]</span></p>
+<p>由于 <span class="math inline">\(f(x) \approx L_n(x)\)</span>，那么</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx \int_a^b L_n(x)dx
+\]</span></p>
+<p>观察到 <span class="math inline">\(L_n(x)\)</span> 实际上已经写作了 <span class="math inline">\(L_n(t)\)</span> 的形式，所以对积分式可以进行一次换元</p>
+<p><span class="math display">\[
+dx = hdt
+\]</span></p>
+<p>代入积分式，可以得到</p>
+<p><span class="math display">\[
+\int_a^bL_n(x)dx = (b-a)\sum_{i=0}^n\frac{(-1)^{n-i}}{ni!(n-i)!}(\int_0^n\prod_{j=0, j\neq i}^n(t-j)dt)f(x_i)
+\]</span></p>
+<p>这条式子计算起来还是比较复杂的，但可以观察到，这条式子中 <span class="math inline">\(f(x_i)\)</span> 之前的部分只与区间长度以及等距节点的数量有关，那么其实可以把前面这一部分系数直接用求积系数 <span class="math inline">\(\omega_i\)</span> 来表示，所以最后仍然可以表示为下面这样的形式</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx \sum_{i=0}^n \omega_i f(x_i)
+\]</span></p>
+<p>Newton-Cotes公式的简化写法其实指明了数值积分的精髓，即<em>对求积节点对应的函数值与求积系数的积求和</em>。</p>
+<h3 id="cotes系数">Cotes系数</h3>
+<p>观察到，求积系数 <span class="math inline">\(\omega_i\)</span> 实际上也可以写成两个部分，即</p>
+<p><span class="math display">\[
+\omega_i = (b-a) \sum_{i=0}^n\frac{(-1)^{n-i}}{ni!(n-i)!} \int_0^n\prod_{j=0, j\neq i}^n(t-j)dt = (b-a) C_i^{(n)}
+\]</span></p>
+<p><span class="math inline">\(C_i^{(n)}\)</span> 这一项被称为 <strong>Cotes系数</strong>。由于积分时进行了一次换元，所以Cotes系数的积分区间线性变换至 <span class="math inline">\([0, n]\)</span> 上，成为了只与节点数量有关的项。那么只需事先计算好不同节点数量下的Cotes系数，就可以很方便地使用Newton-Cotes公式进行数值积分了。</p>
+<p>实际上中点公式、梯形公式或Simpson公式对应的求积系数就是 <span class="math inline">\(n\)</span> 分别为0,1,2时的Cotes系数。下面给出 <span class="math inline">\(n\leq 8\)</span> 时的Cotes系数表。</p>
+<figure>
+<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Snipaste_2022-11-16_11-47-11.png" alt><figcaption>Cotes系数表</figcaption>
+</figure>
+<p>Cotes系数具有以下性质</p>
+<ol type="1">
+<li>Cotes系数随着 <span class="math inline">\(i\)</span> 的增大体现出对称性</li>
+<li><span class="math inline">\(\sum_{i=0}^nC_i^{(n)}=1\)</span></li>
+<li>Cotes系数在 <span class="math inline">\(n\geq 8\)</span> 时有正有负，这会导致数值积分的不稳定，所以一般在实际使用Newton-Cotes公式进行数值积分时 <span class="math inline">\(n\leq 7\)</span></li>
+<li>Newton-Cotes公式在 <span class="math inline">\(n\)</span> 为奇数时代数精度至少为 <span class="math inline">\(n\)</span> 次，<span class="math inline">\(n\)</span> 为偶数时代数精度至少为 <span class="math inline">\(n+1\)</span> 次</li>
+</ol>
+<h3 id="newton-cotes公式的误差">Newton-Cotes公式的误差</h3>
+<p>考虑到 <span class="math inline">\(f(x_i)\)</span> 有时可能只是测量值，与真值之间也存在误差。假如 <span class="math inline">\(f(x_i)\)</span> 与真值之间的最大误差为 <span class="math inline">\(\varepsilon\)</span>，那么Newton-Cotes公式进行数值积分的最大误差为 <span class="math inline">\((b-a)\varepsilon\)</span>。</p>
+<h2 id="高斯公式">高斯公式</h2>
+<p>前面考虑的数值积分都是在等距节点上进行求积，下面介绍一种精度更高的非等距节点求积方法——<strong>高斯积分</strong>。</p>
+<h3 id="高斯公式的定义">高斯公式的定义</h3>
+<p>高斯公式的定义中引入了权函数，是在区间上进行带权积分</p>
+<p><span class="math display">\[
+\int_a^b\rho(x)f(x)dx \approx \sum_{i=0}^n \omega_if(x_i)
+\]</span></p>
+<p>另外，高斯积分对于积分节点是有要求的，满足相应要求的积分节点称为 <strong>高斯点</strong>；积分节点与对应的积分系数之间存在确定关系，这个对应的积分系数称为 <strong>高斯系数</strong>。高斯积分的特征在于，在 <span class="math inline">\(n+1\)</span> 个非等距节点上，能够实现代数精度高达 <span class="math inline">\(2n+1\)</span> 次的数值积分。</p>
+<p>要推导任意节点数量的高斯公式非常复杂，但是如果能够先找到高斯点，然后求出对应的高斯系数，就可以直接确定一条高斯积分公式。其中，找高斯点是最困难的一件事。</p>
+<h3 id="寻找高斯点">寻找高斯点</h3>
+<p>对于高斯点，存在以下定理：</p>
+<p>区间 <span class="math inline">\([a, b]\)</span> 上的 <span class="math inline">\(n+1\)</span> 个点均为高斯点的充要条件是，这些点所形成的多项式 <span class="math inline">\(\Pi(x) = \prod_{i=0}^n(x-x_i)\)</span> 在区间上与任意次数不超过 <span class="math inline">\(n\)</span> 次的多项式 <span class="math inline">\(q(x)\)</span> 带权正交，即</p>
+<p><span class="math display">\[
+\int_a^b \rho(x) \Pi(x) q(x)dx = 0
+\]</span></p>
+<p>这条定理的证明稍微有点麻烦，对应用来说也不太重要，见教材。这条定理的意义在于说明了高斯点其实就是区间 <span class="math inline">\([a, b]\)</span> 上的 <span class="math inline">\(n+1\)</span> 次带权正交多项式的零点。在多项式章节中介绍了四种不同的正交多项式</p>
+<ul>
+<li>Legendre正交多项式</li>
+<li>Chebyshev正交多项式</li>
+<li>Laguerre正交多项式</li>
+<li>Hermite正交多项式</li>
+</ul>
+<p>这四种正交多项式可以与高斯积分定义式结合，形成四种不同的高斯积分公式。在介绍这四种积分公式之前，还要补充3点高斯积分的性质：</p>
+<ol type="1">
+<li>高斯积分是所有利用 <span class="math inline">\(n+1\)</span> 个积分节点进行积分的方式中，代数精度最高的积分算法</li>
+<li>高斯积分的所有积分系数均大于0，因此积分结果一定是稳定的</li>
+<li>高斯积分在 <span class="math inline">\(n\rightarrow \infty\)</span> 时，积分结果一定是收敛的</li>
+</ol>
+<p>前面两点性质基于以下定理：利用 <span class="math inline">\(n+1\)</span> 个积分节点进行数值积分的最高代数精度是 <span class="math inline">\(2n+1\)</span> 次，而且当积分精度达到 <span class="math inline">\(2n+1\)</span> 次时，积分系数 <span class="math inline">\(\omega_i &gt;0\)</span>。</p>
+<p>这些性质的证明都不是特别复杂，但是对于数值分析这门课而言不是特别重要，因此不花费过多的精力在讨论性质的证明上。</p>
+<h3 id="四种常用的高斯积分公式">四种常用的高斯积分公式</h3>
+<h4 id="gauss-legendre公式">Gauss-Legendre公式</h4>
+<p>Legendre正交多项式是区间 <span class="math inline">\([-1, 1]\)</span> 上权函数为 <span class="math inline">\(\rho(x) \equiv 1\)</span> 的正交多项式。</p>
+<p><span class="math inline">\(n=0\)</span> 时，Gauss-Legendre公式为</p>
+<p><span class="math display">\[
+\int_{-1}^1f(x)dx \approx 2f(0)
+\]</span></p>
+<p><span class="math inline">\(n=1\)</span> 时，Gauss-Legendre公式为</p>
+<p><span class="math display">\[
+\int_{-1}^1f(x)dx \approx f(-\frac{1}{\sqrt{3}}) + f(\frac{1}{\sqrt{3}})
+\]</span></p>
+<p><span class="math inline">\(n=2\)</span> 时，Gauss-Legendre公式为</p>
+<p><span class="math display">\[
+\int_{-1}^1f(x)dx \approx \frac{5}{9}f(-\sqrt{\frac{3}{5}}) + \frac{8}{9}f(0) + \frac{5}{9}f(\sqrt{\frac{3}{5}})
+\]</span></p>
+<figure>
+<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Legendre.png" alt><figcaption>Gauss-Legendre公式常用的高斯点及其高斯系数</figcaption>
+</figure>
+<p>对于计算来说，这一部分内容也不太需要进行定理的推导和证明，只需要记住一些常用的高斯点和高斯系数，然后知道这些点和系数与各公式之间的对应关系，会算简单数值积分即可。</p>
+<h4 id="gauss-chebyshev公式">Gauss-Chebyshev公式</h4>
+<p>Chebyshev正交多项式是区间 <span class="math inline">\([-1, 1]\)</span> 上权函数为 <span class="math inline">\(\rho(x)=\frac{1}{\sqrt{1-x^2}}\)</span> 的正交多项式。Chebyshev的零点表达式如下</p>
+<p><span class="math display">\[
+x_i = cos\frac{2i+1}{2(n+1)}\pi, i = 0, 1, ..., n
+\]</span></p>
+<p>相应的高斯系数为</p>
+<p><span class="math display">\[
+\omega_i = \frac{\pi}{n+1}
+\]</span></p>
+<p>Gauss-Chebyshev公式中的所有高斯系数都是相同的！而且高斯点的表达式也很好记忆，因此很容易使用Gauss-Chebyshev公式进行 <span class="math inline">\(n\)</span> 很大时的高斯积分！不过需要注意，Gauss-Chebyshev公式的权函数并不为1，因此应用时应看清楚场合，不然算出来的结果是错的。</p>
+<p>Gauss-Chebyshev公式整理如下</p>
+<p><span class="math display">\[
+\int_{-1}^1\frac{1}{\sqrt{1-x^2}}f(x)dx = \frac{\pi}{n+1}\sum_{i=0}^n f(cos\frac{2i+1}{2(n+1)}\pi)
+\]</span></p>
+<h4 id="gauss-laguerre公式">Gauss-Laguerre公式</h4>
+<p>Laguerre正交多项式是区间 <span class="math inline">\([0, \infty)\)</span> 上权函数为 <span class="math inline">\(\rho(x)=e^{-x}\)</span> 的正交多项式。</p>
+<p><span class="math inline">\(n=0\)</span> 时，Gauss-Laguerre公式为</p>
+<p><span class="math display">\[
+\int_0^{\infty}e^{-x}f(x)dx \approx f(1)
+\]</span></p>
+<p><span class="math inline">\(n=1\)</span> 时，Gauss-Laguerre公式为</p>
+<p><span class="math display">\[
+\int_0^{\infty}e^{-x}f(x)dx \approx \frac{2+\sqrt{2}}{4}f(2-\sqrt{2})+\frac{2+\sqrt{2}}{4}f(2+\sqrt{2})
+\]</span></p>
+<figure>
+<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Laguerre.png" alt><figcaption>Gauss-Laguerre公式常用的高斯点及其高斯系数</figcaption>
+</figure>
+<h4 id="gauss-hermite公式">Gauss-Hermite公式</h4>
+<p>Hermite正交多项式是区间 <span class="math inline">\([-\infty, \infty]\)</span> 上权函数为 <span class="math inline">\(\rho(x) = e^{-x^2}\)</span> 的正交多项式。</p>
+<p><span class="math inline">\(n=1\)</span> 时，Gauss-Hermite公式为</p>
+<p><span class="math display">\[
+\int_{-\infty}^{\infty} e^{-x^2}f(x)dx \approx \frac{\sqrt{\pi}}{2}f(-\frac{\sqrt{2}}{2}) + \frac{\sqrt{\pi}}{2}f(\frac{\sqrt{2}}{2})
+\]</span></p>
+<p><span class="math inline">\(n=2\)</span> 时，Gauss-Hermite公式为</p>
+<p><span class="math display">\[
+\int_{-\infty}^{\infty} e^{-x^2}f(x)dx \approx \frac{\sqrt{\pi}}{6}f(-\frac{\sqrt{6}}{2})+\frac{2\sqrt{\pi}}{3}f(0) + \frac{\sqrt{\pi}}{6}f(\frac{\sqrt{6}}{2})
+\]</span></p>
+<figure>
+<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Hermite.png" alt><figcaption>Gauss-Hermite公式常用的高斯点及其高斯系数</figcaption>
+</figure>
+<h4 id="高斯公式使用注意事项">高斯公式使用注意事项</h4>
+<p>应用高斯公式时，首先要观察权函数 <span class="math inline">\(\rho(x)\)</span>，其次要观察积分区间。一般来说，根据权函数就可以确定一个积分问题需要用什么积分公式，积分区间和权函数往往是挂钩的。</p>
+<h2 id="多重数值积分">多重数值积分</h2>
+<p>对于重积分来说，前面提到的数值积分方法可以解决一些比较简单的重积分问题，比如使用复合Simpson求积可以解决重数比较低的多重数值积分问题。下面以二重积分为例，简单地说明一下多重数值积分问题。</p>
+<h3 id="以二重积分为例描述多重数值积分问题">以二重积分为例描述多重数值积分问题</h3>
+<p>对于一个二重积分问题，可以将目标积分式写为</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y) dxdy
+\]</span></p>
+<p>其中，<span class="math inline">\(\Omega\)</span> 表示二维积分区间，可以表示为</p>
+<p><span class="math display">\[
+\Omega = \{a \leq x \leq b, \varphi_1(x) \leq y \leq \varphi_2(x)\}
+\]</span></p>
+<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//二重积分求积区域.png" alt="二重积分求积区域" width="40%" align="center"></p>
+<p>上面的二重积分可以拆解为对 <span class="math inline">\(x\)</span> 和对 <span class="math inline">\(y\)</span> 的两个积分</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y) dxdy = \int_a^b dx \int_{\varphi_1(x)}^{\varphi_2(x)}f(x, y)dy
+\]</span></p>
+<p>令 <span class="math inline">\(F(x) = \displaystyle\int_{\varphi_1(x)}^{\varphi_2(x)}f(x, y)dy\)</span>，有</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y)dxdy = \int_a^bF(x) dx
+\]</span></p>
+<p>由数值积分公式，可以得到</p>
+<p><span class="math display">\[
+\int_a^bF(x)dx \approx \sum_{i=0}^n \omega_i^{(1)} F(x_i)
+\]</span></p>
+<p><span class="math inline">\(F(x_i)\)</span> 应也能写成</p>
+<p><span class="math display">\[
+F(x_i) = \int_{\varphi_1(x_i)}^{\varphi_2(x_i)}f(x_i, y)dy \approx \sum_{j=0}^m\omega_j^{(2)}f(x_i, y_j)
+\]</span></p>
+<p>整合上述两条式子，可以得到双重积分的数值积分公式</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y)dxdy \approx \sum_{i=0}^n \omega_i^{(1)} \sum_{j=0}^m \omega_j^{(2)} f(x_i, y_j)
+\]</span></p>
+<p>记 <span class="math inline">\(\omega_{ij}=\omega_i^{(1)} \omega_j^{(2)}\)</span>，可以有</p>
+<p><span class="math display">\[
+\iint_{\Omega}f(x, y)dxdy\approx \sum_{i=0}^n \sum_{j=0}^m \omega_{ij}f(x_i, y_j)
+\]</span></p>
+<p>所以双重积分的数值积分本质上就是一个双重求积问题。我们可以使用Newton-Cotes公式对这个求积问题进行求解，但事实上使用Newton-Cotes方式进行重积分的数值求解精度不高。教材中展示了使用复合Simpson公式进行二重积分求积的案例，其过程非常复杂，也不实用，因此在笔记中略去。下面直接介绍对于多重积分数值求解来说比较实用的Monte-Carlo方法。</p>
+<h3 id="使用monte-carlo方法求解多重积分">使用Monte-Carlo方法求解多重积分</h3>
+<p>Monte-Carlo方法是一种随机模拟思想，并不是一种具体的方法实现。下面以Monte-Carlo方法在一维数值积分中的应用为例，来简单地描述一下Monte-Carlo方法如何应用于数值积分。</p>
+<h4 id="monte-carlo方法求解一维数值积分">Monte-Carlo方法求解一维数值积分</h4>
+<p>假定随机变量 <span class="math inline">\(X\)</span> 在区间 <span class="math inline">\([0, 1]\)</span> 上服从均匀分布（均匀分布即概率密度函数 <span class="math inline">\(f(x) = \frac{1}{b-a}\)</span>，其中 <span class="math inline">\(b-a\)</span> 为区间长度），函数 <span class="math inline">\(f(x)\)</span> 为任意可积函数，那么 <span class="math inline">\(f(X)\)</span> 的数学期望为</p>
+<p><span class="math display">\[
+E[f(X)] = \int_0^1 f(x) dx
+\]</span></p>
+<blockquote>
+<p>回顾一下统计学的知识：数学期望指的是随机变量所有可能的取值与其出现概率之积求和。</p>
+</blockquote>
+<p>也就是说，服从均匀分布的随机变量 <span class="math inline">\(X\)</span> 对应函数值的数学期望 <span class="math inline">\(E[f(X)]\)</span> 恰好是函数 <span class="math inline">\(f(x)\)</span> 在对应区间上的积分值。那么如果有办法求出随机变量对应函数值的数学期望 <span class="math inline">\(E[f(X)]\)</span>，那么就可以得到函数 <span class="math inline">\(f(x)\)</span> 的区间上的积分，而不是直接做数值积分运算。</p>
+<p>假如在区间 <span class="math inline">\([0, 1]\)</span> 上共有 <span class="math inline">\(N\)</span> 个相互独立的、服从均匀分布的随机变量 <span class="math inline">\(X_i\)</span>，记</p>
+<p><span class="math display">\[
+I_N[f] = \frac{1}{N}\sum_{i=1}^N f(X_i)
+\]</span></p>
+<p>显然，<span class="math inline">\(I_N[f]\)</span> 也是一个随机变量，这个随机变量的数学期望 <span class="math inline">\(E[I_N[f]]\)</span> 在形式上恰好与区间上的数值积分公式类似</p>
+<p><span class="math display">\[
+E[I_N[f]] = E[\frac{1}{N}\sum_{i=1}^N f(X_i)] = \frac{1}{N}\sum_{i=1}^NE[f(X_i)]=\frac{1}{N}\sum_{i=1}^N\int_0^1f(x)dx = I[f]
+\]</span></p>
+<p>从这个角度来说，可以把 <span class="math inline">\(I_N[f]\)</span> 视为 <span class="math inline">\(I[f]\)</span> 的无偏估计。由大数定律，知 <span class="math inline">\(N \rightarrow \infty\)</span> 时，<span class="math inline">\(I_N[f] \rightarrow I[f]\)</span>。</p>
+<p>说白了，Monte-Carlo方法就是在区间内随机取点求函数值，然后加起来求平均。</p>
+<h4 id="monte-carlo方法的一维数值积分误差">Monte-Carlo方法的一维数值积分误差</h4>
+<p>积分误差 <span class="math inline">\(R_N[f]\)</span> 可以表示为</p>
+<p><span class="math display">\[
+R_N[f] = I_N[f] - I[f]
+\]</span></p>
+<p>由于 <span class="math inline">\(I_N[f]\)</span> 是一个随机变量，因此 <span class="math inline">\(R_N[f]\)</span> 也是一个随机变量。为此需要使用 <span class="math inline">\(R_N[f]\)</span> 的方差衡量Monte-Carlo方法的一维数值积分误差。</p>
+<p><span class="math display">\[
+var(R_N[f])= E\{[I_N[f] - I[f]]^2\} = \frac{1}{N^2}E\{\sum_{i=1}^N(f(X_i) - I[f])\sum_{j=1}^N(f(X_j) - I[f])\}
+\]</span></p>
+<p>当 <span class="math inline">\(i\neq j\)</span> 时，由于 <span class="math inline">\(X_i, X_j\)</span> 是相互独立的随机变量，因此</p>
+<p><span class="math display">\[
+E\{[f(X_i) - I[f]][f(X_j) - I[f]]\} = E[f(X_i) - I[f]]E[f(X_j) - I[f]] = 0
+\]</span></p>
+<p>那么，只有在 <span class="math inline">\(i=j\)</span> 的情况下，数学期望是非零的，所以上面的数学期望可以简化为</p>
+<p><span class="math display">\[
+var(R_N[f]) = \frac{1}{N^2} E\{\sum_{i=1}^N[f(X_i)-I[f]]^2\}
+\]</span></p>
+<p>而 <span class="math inline">\(\displaystyle\frac{1}{N}E\{\sum_{i=1}^N[f(X_i) - I[f]]^2\}\)</span> 实际上就是 <span class="math inline">\(var(f)\)</span>，即 <span class="math inline">\(f(X)\)</span> 的方差。这个值在随机变量的分布和函数结构确定以后，便是一个常数。工程上来说，这个方差可以通过抽样的方法进行估计，例如区间上随机取 <span class="math inline">\(N\)</span> 个点求函数值，取其均值作为数学期望的估计，然后用这些函数值和估计期望求出估计的方差。</p>
+<p>总之Monte-Carlo方法求一维数值积分的误差 <span class="math inline">\(var(R_N[f]) = \displaystyle\frac{1}{N}var(f)\)</span> 是与 <span class="math inline">\(N\)</span> 成反比例关系的。事实上，只要 <span class="math inline">\(f(x)\)</span> 是平方可积函数，<span class="math inline">\(var(f)\)</span> 就必然是有限值，那么Monte-Carlo方法求数值积分一定是稳定的，并且精度随着 <span class="math inline">\(N\)</span> 的增大而提高。</p>
+<h4 id="monte-carlo方法的多重数值积分误差">Monte-Carlo方法的多重数值积分误差</h4>
+<p>Monte-Carlo方法求多重数值积分的误差仍然是 <span class="math inline">\(\displaystyle\frac{1}{N}var(f)\)</span>，与维度无关。这个特性太屌了，所以工程上求多重数值积分基本上都是用Monte-Carlo方法进行求解的。</p>
+<p>当然，计算机并不能生成真正的随机数，只能生成伪随机数，所以在实际计算的时候，Monte-Carlo方法的数值积分精度可能略低于理论精度，但与理论相差不会太大。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>矩阵分析笔记-多项式</title>
     <url>/2022/11/26/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E5%A4%9A%E9%A1%B9%E5%BC%8F/</url>
     <content><![CDATA[<p>本章节介绍多项式的一些基础知识，为后续章节中的矩阵分析做基础知识铺垫。</p>
@@ -3427,6 +3170,398 @@ f_n(x) \equiv \sum_{i=1}^{m-1}\frac{f_n^{(i)}(x_0)}{i!}(x-x_0)^i \ mod \ (x-x_0)
       <tags>
         <tag>Mathematics</tag>
         <tag>Matrix Analysis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数值分析笔记-线性方程组的迭代解法</title>
+    <url>/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="范数和条件数">范数和条件数</h2>
+<p>由于线性方程组的解是一个列向量，那么线性方程组的精确解和近似解之间的误差也会是一个列向量。所以，要衡量线性方程组解的精度，必须对误差向量的大小进行评判。为此，需要引入范数的概念。</p>
+<span id="more"></span>
+<h3 id="什么是范数">什么是范数？</h3>
+<p>范数定义了如何确定一个矩阵或向量的大小，一个矩阵或向量的范数是一个非负实数。事实上，我们平时常用的对一个二维向量 <span class="math inline">\(\boldsymbol{x} = (a, b)\)</span> 求模的计算公式 <span class="math inline">\(|\boldsymbol{x}|=\sqrt{a^2 + b^2}\)</span> 结果就是 <span class="math inline">\(\boldsymbol{x}\)</span> 的二阶范数。</p>
+<h3 id="向量范数">向量范数</h3>
+<p>向量范数的定义如下：</p>
+<ol type="1">
+<li>对于任一 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，其范数的符号表示为 <span class="math inline">\(||\boldsymbol{x}||\)</span></li>
+<li><span class="math inline">\(||\boldsymbol{x}|| \geq 0\)</span>，当且仅当 <span class="math inline">\(\boldsymbol{x}\)</span> 为零向量时，<span class="math inline">\(||\boldsymbol{x}|| = 0\)</span></li>
+<li>对任意实数 <span class="math inline">\(\alpha\)</span>，有 <span class="math inline">\(||\alpha \boldsymbol{x}|| = ||\alpha||\cdot ||\boldsymbol{x}||\)</span></li>
+<li>对任意向量 <span class="math inline">\(\boldsymbol{x}, \boldsymbol{y}\)</span>，有 <span class="math inline">\(||\boldsymbol{x}+\boldsymbol{y}||\leq ||\boldsymbol{x}|| + ||\boldsymbol{y}||\)</span></li>
+</ol>
+<h4 id="阶向量范数">1阶向量范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}||_1 = \sum_{i=1}^n |x_i|
+\]</span></p>
+<h4 id="阶向量范数-1">2阶向量范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}||_2 = \sqrt{\sum_{i=1}^n x_i^2}
+\]</span></p>
+<h4 id="无穷向量范数">无穷向量范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 维向量 <span class="math inline">\(\boldsymbol{x}\)</span>，有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}||_{\infty} = max_{1\leq i\leq n} |x_i|
+\]</span></p>
+<p>以上三种范数比较常用。</p>
+<h3 id="矩阵范数">矩阵范数</h3>
+<p>矩阵范数和向量范数的定义基本一致，但是对两个矩阵相乘结果的范数也做了定义，应有 <span class="math inline">\(||AB|| \leq ||A|| \cdot ||B||\)</span>。下面列出几种常用的矩阵范数。</p>
+<h4 id="阶矩阵范数">1阶矩阵范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
+<p><span class="math display">\[
+||A||_1 = max_{1\leq j \leq n} \sum_{i=1}^n |a_{ij}|
+\]</span></p>
+<p>即方阵 <span class="math inline">\(A\)</span> 的1阶矩阵范数等于方阵 <span class="math inline">\(A\)</span> 中所有列向量1阶向量范数的最大值。</p>
+<h4 id="f矩阵范数">F矩阵范数</h4>
+<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
+<p><span class="math display">\[
+||A||_F = \sqrt{\sum_{i=1}^n \sum_{j=1}^n a_{ij}^2}
+\]</span></p>
+<p>很明显，F矩阵范数是2阶向量范数在矩阵上的推广。</p>
+<h4 id="阶矩阵范数-1">2阶矩阵范数</h4>
+<p>首先，要引入方阵的谱半径概念。对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若记其第 <span class="math inline">\(i\)</span> 个特征值为 <span class="math inline">\(\lambda_i\)</span>，那么这个方阵的谱半径就记为 <span class="math inline">\(\rho(A) = max_{1\leq i \leq n}|\lambda_i|\)</span>。方阵 <span class="math inline">\(A\)</span> 的2阶矩阵范数，实际上就是 <span class="math inline">\(A^TA\)</span> 的谱半径开方，即</p>
+<p><span class="math display">\[
+||A||_2 = \sqrt{\rho(A^TA)}
+\]</span></p>
+<p>所以，2阶矩阵范数也称为谱范数。</p>
+<h4 id="无穷矩阵范数">无穷矩阵范数</h4>
+<p>无穷矩阵范数，和1阶矩阵范数有些类似。对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，有</p>
+<p><span class="math display">\[
+||A||_{\infty} = max_{1\leq i \leq n}\sum_{j=1}^n |a_{ij}|
+\]</span></p>
+<p>可以看出，无穷矩阵范数其实就是方阵 <span class="math inline">\(A\)</span> 中所有行向量1阶范数的最大值。</p>
+<h3 id="矩阵范数和向量范数的相容性">矩阵范数和向量范数的相容性</h3>
+<p>如果矩阵 <span class="math inline">\(A\)</span> 和向量 <span class="math inline">\(\boldsymbol{x}\)</span> 满足</p>
+<p><span class="math display">\[
+||A\boldsymbol{x}|| \leq ||A|| \cdot ||\boldsymbol{x}||
+\]</span></p>
+<p>则称矩阵 <span class="math inline">\(A\)</span> 和向量 <span class="math inline">\(\boldsymbol{x}\)</span> 满足矩阵范数和向量范数的相容性。</p>
+<h2 id="扰动分析和条件数">扰动分析和条件数</h2>
+<p>线性方程组 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的解是由系数矩阵 <span class="math inline">\(A\)</span> 和常数项向量 <span class="math inline">\(\boldsymbol{b}\)</span> 决定的。在实际应用中，这两项数据可能由测量误差、计算机的舍入误差等因素，导致计算时所使用的数据与真实数据之间存在一定的误差，或称其为<strong>扰动</strong>。对于某些特殊的线性方程组，即便扰动非常微小，但是对解的影响可能非常大。</p>
+<p>下面分别对系数矩阵上的扰动以及常数项向量上的扰动对解向量产生的干扰进行分析。</p>
+<h3 id="常数项向量扰动分析">常数项向量扰动分析</h3>
+<p>假定常数项向量上引入了一个扰动 <span class="math inline">\(\delta \boldsymbol{b}\)</span>，对线性方程组解向量造成了扰动 <span class="math inline">\(\delta \boldsymbol{x}\)</span>，那么线性方程组可以改写为</p>
+<p><span class="math display">\[
+A(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b} + \delta \boldsymbol{b}
+\]</span></p>
+<p>经过一系列变换，可以得到以下不等式</p>
+<p><span class="math display">\[
+\frac{||\delta \boldsymbol{x}||}{||\boldsymbol{x}||} \leq ||A|| \cdot ||A^{-1}||\cdot \frac{||\delta \boldsymbol{b}||}{||\boldsymbol{b}||}
+\]</span></p>
+<h3 id="系数矩阵扰动分析">系数矩阵扰动分析</h3>
+<p>假定系数矩阵上引入了一个扰动 <span class="math inline">\(\delta A\)</span>，对线性方程组的解向量造成了扰动 <span class="math inline">\(\delta \boldsymbol{x}\)</span>，那么线性方程组可以改写为</p>
+<p><span class="math display">\[
+(A+\delta A)(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b}
+\]</span></p>
+<p>经过一系列变换，可以得到以下不等式</p>
+<p><span class="math display">\[
+\frac{||\delta \boldsymbol{x}||}{||x + \delta \boldsymbol{x}||} \leq ||A|| \cdot ||A^{-1}|| \cdot \frac{||\delta A||}{||A||}
+\]</span></p>
+<h3 id="条件数">条件数</h3>
+<p>从上面的扰动分析中，可以看出，解的相对扰动与系数矩阵或常数项向量的相对扰动之间，都存在一个放大倍数 <span class="math inline">\(||A||\cdot ||A^{-1}||\)</span>。这个放大倍数称为线性方程组 <span class="math inline">\(A\boldsymbol{x}=\boldsymbol{b}\)</span> 的<strong>条件数</strong>，或矩阵 <span class="math inline">\(A\)</span> 的条件数，用 <span class="math inline">\(cond(A)\)</span> 表示。</p>
+<p>可以看到，矩阵的条件数与矩阵范数是挂钩的。常用的条件数是无穷矩阵范数对应的条件数 <span class="math inline">\(cond_{\infty}(A) = ||A||_{\infty}||A^{-1}||_{\infty}\)</span> 以及2阶矩阵范数对应的条件数 <span class="math inline">\(cond_2(A) = ||A||_2 ||A^{-1}||_2\)</span>。</p>
+<h4 id="条件数的性质">条件数的性质</h4>
+<ol type="1">
+<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond(A) \geq 1\)</span></li>
+<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span> 和非零常数 <span class="math inline">\(c\)</span>，有 <span class="math inline">\(cond(cA) = cond(A)\)</span></li>
+<li>对于任意正交矩阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond_2(A) = 1\)</span></li>
+<li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span> 和正交矩阵 <span class="math inline">\(P\)</span>，有 <span class="math inline">\(cond_2(PA) = cond_2(AP) = cond_2(A)\)</span></li>
+</ol>
+<h4 id="良态矩阵和病态矩阵">良态矩阵和病态矩阵</h4>
+<p>对于一个确定的系数矩阵 <span class="math inline">\(A\)</span>，如果其条件数相对小，那么系数矩阵的扰动不会造成解的太大扰动；如果其条件数相对大，那么系数矩阵的扰动会导致解的大幅度扰动。条件数小的矩阵，称为<strong>良态矩阵</strong>；条件数大的矩阵，称为<strong>病态矩阵</strong>。</p>
+<p>一个最常见的病态矩阵就是Hilbert矩阵，即</p>
+<p><span class="math display">\[
+H_n = \begin{pmatrix}
+   1 &amp; \frac{1}{2} &amp; \cdots &amp; \frac{1}{n} \\
+   \frac{1}{2} &amp; \frac{1}{3} &amp; \cdots&amp; \frac{1}{n+1}\\
+   \vdots &amp; &amp; \ddots \\
+   \frac{1}{n} &amp; \frac{1}{n+1} &amp; \cdots &amp; \frac{1}{2n-1}
+\end{pmatrix}
+\]</span></p>
+<p>其条件数为 <span class="math inline">\(cond_2(H_n) \approx e^{3.5n}\)</span>，随着矩阵规模的增大，条件数迅速上升。因此，Hilbert矩阵的阶数越高，其条件数越大，也就越病态。</p>
+<h2 id="基本迭代法">基本迭代法</h2>
+<p>下面介绍如何使用迭代法进行线性方程组的求解。首先，对于线性方程组</p>
+<p><span class="math display">\[
+A\boldsymbol{x} = \boldsymbol{b}
+\]</span></p>
+<p>如果能够将系数矩阵拆解为两个矩阵的差，如 <span class="math inline">\(A = M - N\)</span>，那么上述线性方程组可以转换为</p>
+<p><span class="math display">\[
+M\boldsymbol{x} = N\boldsymbol{x} + \boldsymbol{b}
+\]</span></p>
+<p>假如矩阵 <span class="math inline">\(M\)</span> 可逆，那么</p>
+<p><span class="math display">\[
+\boldsymbol{x} = M^{-1}N\boldsymbol{x} + M^{-1}\boldsymbol{b}
+\]</span></p>
+<p>令 <span class="math inline">\(B = M^{-1}N, \ \boldsymbol{g} = M^{-1} \boldsymbol{b}\)</span>，那么可以建立线性方程组解的迭代公式</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = B\boldsymbol{x}^{(k)}+\boldsymbol{g}
+\]</span></p>
+<p>对于解向量，实际上在迭代的过程中，会形成一个解向量序列 <span class="math inline">\(\{\boldsymbol{x}^{(k)}\}\)</span>，并且最后会收敛至一个解 <span class="math inline">\(\boldsymbol{x}^*\)</span>，满足</p>
+<p><span class="math display">\[
+M\boldsymbol{x}^* = N\boldsymbol{x}^* + \boldsymbol{g}
+\]</span></p>
+<p>即</p>
+<p><span class="math display">\[
+A\boldsymbol{x}^* = \boldsymbol{b}
+\]</span></p>
+<p>如果按 <span class="math inline">\(\boldsymbol{x}^{(k+1)} = B\boldsymbol{x}^{(k)} + \boldsymbol{g}\)</span> 的方式，每次迭代都需要求出 <span class="math inline">\(M^{-1}\)</span>，计算量非常大；所以，实际上的迭代过程都是使用 <span class="math inline">\(M\boldsymbol{x}^{(k+1)} = N\boldsymbol{x}^{(k)}+\boldsymbol{b}\)</span>。每次迭代过程中，等式右侧的部分都是可计算的，那么每次迭代过程就相当于要求解一个以矩阵 <span class="math inline">\(M\)</span> 为系数矩阵，以 <span class="math inline">\(N \boldsymbol{x}^{(k)}+\boldsymbol{g}\)</span> 为常数项向量的非齐次线性方程组。</p>
+<p>为了减少计算量，我们总是希望这个矩阵 <span class="math inline">\(M\)</span> 具有一些易于计算的特征的，例如是对角矩阵或者上三角矩阵等。</p>
+<h2 id="定常迭代法">定常迭代法</h2>
+<p>下面记录三种基本的定常迭代解法：</p>
+<ol type="1">
+<li>Jacobi迭代解法</li>
+<li>Gauss-Seidel迭代解法</li>
+<li>SOR迭代解法</li>
+</ol>
+<h3 id="jacobi迭代解法">Jacobi迭代解法</h3>
+<p>对于线性方程组的迭代求解表达式 <span class="math inline">\(M\boldsymbol{x} = N\boldsymbol{x} + \boldsymbol{b}\)</span>，令</p>
+<p><span class="math display">\[
+M = D,\ N = L + U
+\]</span></p>
+<p>则可以得到Jacobi迭代解法，即</p>
+<p><span class="math display">\[
+D\boldsymbol{x}^{(k+1)} = (L+U)\boldsymbol{x}^{(k)}+\boldsymbol{b}
+\]</span></p>
+<p>迭代收敛条件一般以</p>
+<p><span class="math display">\[
+\frac{||\boldsymbol{b} - A\boldsymbol{x^*}||}{||\boldsymbol{b}||}
+\]</span></p>
+<p>为指标，若该相对误差小于某一阈值则认为迭代收敛。</p>
+<h3 id="gauss-seidel迭代解法">Gauss-Seidel迭代解法</h3>
+<p>Guass-Seidel迭代解法与Jacobi迭代解法非常相似，如下</p>
+<p><span class="math display">\[
+D\boldsymbol{x}^{(k+1)} = L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{b}
+\]</span></p>
+<p>或者也可以简化为</p>
+<p><span class="math display">\[
+(D-L)\boldsymbol{x}^{(k+1)}=U\boldsymbol{x}^{(k)}+\boldsymbol{b}
+\]</span></p>
+<p>虽然形式上很相似，但是GS迭代解法与Jacobi迭代解法有本质上的区别。Jacobi迭代解法中，一次迭代过程中 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 完全由 <span class="math inline">\(\boldsymbol{x}^{(k)}\)</span> 求出；而GS迭代解法中，解 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 的第 <span class="math inline">\(i\)</span> 个分量的求解会使用解 <span class="math inline">\(\boldsymbol{x}^{(k+1)}\)</span> 的前 <span class="math inline">\(i-1\)</span> 个分量以及 <span class="math inline">\(\boldsymbol{x}^{(k)}\)</span> 的后 <span class="math inline">\(n-i-1\)</span> 个分量作为已知参数。相当于GS迭代解法中，解的更新是分量级别的，而Jacobi迭代解法中，解的更新是解向量级别的，那么相当于GS迭代解法的迭代颗粒度在行级别，而Jacobi迭代解法的迭代颗粒度是矩阵级别。</p>
+<p>第一种写法强调了GS迭代解法中解分量迭代的特性。第二种写法将 <span class="math inline">\(L\boldsymbol{x}^{(k+1)}\)</span> 项移到等式左侧，是因为在计算上这两种写法是等价的，但是容易引起误解，令人认为GS迭代解法和Jacobi迭代解法没有什么区别。</p>
+<blockquote>
+<p>请勿混淆线性方程组迭代解法中对于系数矩阵 <span class="math inline">\(A\)</span> 的分解与 <span class="math inline">\(LDU\)</span> 分解，迭代解法中的系数矩阵分解是线性分解 <span class="math inline">\(A = D - L - U\)</span>，而 <span class="math inline">\(LDU\)</span> 分解指的是矩阵乘法分解 <span class="math inline">\(A = LDU\)</span>。</p>
+</blockquote>
+<h3 id="sor迭代解法">SOR迭代解法</h3>
+<p>SOR迭代解法即Successive Over Relaxation迭代解法，是GS迭代解法的一种衍生版本。对于GS迭代解法，可以将其原始表达式改写为</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)}=D^{-1}(L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsymbol{b})
+\]</span></p>
+<p>从修正解的角度考虑，可以将上述进一步改写为</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x}^{(k)}+\boldsymbol{b})
+\]</span></p>
+<p>也就是说 <span class="math inline">\(D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x^{k}}+\boldsymbol{b})\)</span> 可以看作是对当前解的修正值。SOR迭代解法，就是在GS迭代解法的基础上，用一个松弛因子 <span class="math inline">\(\omega\)</span> 来调整这个修正值的大小，从而加速迭代。SOR迭代解法的表达式如下</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \omega D^{-1}(D\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}-D\boldsymbol{x}^{(k)}+\boldsymbol{b})
+\]</span></p>
+<p>可以对这条式子进行合并同类项等操作，最后得到</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = (D-\omega L)^{-1}[(1-\omega)D+\omega U]\boldsymbol{x}^{(k)}+\omega(D-\omega L)^{-1} \boldsymbol{b}
+\]</span></p>
+<p>和GS迭代解法的两种表达形式一样，上述写法只是在计算上等价，对于编程来说更加方便，但是迭代求解本质还是第一条表达式反映得更好。另外，从上面的推导中可以看出，SOR迭代解法在 <span class="math inline">\(\omega=1\)</span> 时就是GS迭代解法。</p>
+<h3 id="上述三种定常迭代法的收敛性分析和误差估计">上述三种定常迭代法的收敛性分析和误差估计</h3>
+<p>教材中的一个小例子说明了GS迭代的收敛速度一般优于Jacobi迭代，而SOR的迭代收敛速度与松弛因子是有关系的，如果松弛因子取得好，SOR迭代的收敛速度一般由于GS迭代。但是，这三种定常迭代法不能保证迭代收敛。下面分析一下这三种迭代方法的收敛性以及计算误差。在此之前，先引入几个相关概念。</p>
+<h4 id="置换矩阵">置换矩阵</h4>
+<p>置换矩阵可以认为是单位矩阵经过有限次第一类初等变换所形成的矩阵，其特征是矩阵的每一行中有且仅有一个元素1，每一列中也是有且仅有一个元素1，例如</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    0 &amp; 0 &amp; 1 &amp; 0\\
+    1 &amp; 0 &amp; 0 &amp; 0\\
+    0 &amp; 1 &amp; 0 &amp; 0\\
+    0 &amp; 0 &amp; 0 &amp; 1
+\end{pmatrix}
+\]</span></p>
+<p>就是一个置换矩阵。</p>
+<h4 id="可约矩阵">可约矩阵</h4>
+<p>对于 <span class="math inline">\(n (n\geq 2)\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若存在 <span class="math inline">\(n\)</span> 阶置换矩阵 <span class="math inline">\(P\)</span>，使得</p>
+<p><span class="math display">\[
+P^TAP=\begin{pmatrix}
+    A_{11} &amp; A_{12} \\
+    0 &amp; A_{22}
+\end{pmatrix}
+\]</span></p>
+<p>其中 <span class="math inline">\(A_{11}, A_{22}\)</span> 分别为 <span class="math inline">\(r, n-r\)</span> 阶方阵。若满足上述条件的置换矩阵存在，则称方阵 <span class="math inline">\(A\)</span> 为<strong>可约矩阵</strong>，否则称为<strong>不可约矩阵</strong>。</p>
+<p>可约矩阵的意义在于，可以通过分块矩阵将原来的线性方程组拆分为次数较低的两个线性方程组，从而提升求解速度。在实际计算中，这样的加速效果非常显著。</p>
+<h4 id="对角占优">对角占优</h4>
+<p>对于 <span class="math inline">\(n\)</span> 阶方阵 <span class="math inline">\(A\)</span>，若满足</p>
+<p><span class="math display">\[
+|a_{ii}| \geq \sum_{j=1, j\neq i}^n |a_{ij}|, i \in \mathcal Z[1, n]
+\]</span></p>
+<p>称矩阵 <span class="math inline">\(A\)</span> <strong>对角占优</strong>。若存在至少一个 <span class="math inline">\(i \in \mathcal Z[1, n]\)</span>$ 使上述不等式取等号，称矩阵 <span class="math inline">\(A\)</span> 为<strong>弱对角占优</strong>；反之，则称矩阵 <span class="math inline">\(A\)</span> 为<strong>严格对角占优</strong>。</p>
+<p>对角占优有一个性质：<em>严格对角占优和不可约弱对角占优矩阵必为非奇异矩阵</em>。</p>
+<h4 id="谱半径相关定理">谱半径相关定理</h4>
+<p>在迭代解法的收敛性分析和误差分析中，矩阵的谱半径是一个重要的概念。下面记录两条相关定理，为后续的收敛性分析和误差分析铺垫。</p>
+<ol type="1">
+<li>对于 <span class="math inline">\(n\)</span> 阶矩阵 <span class="math inline">\(A\)</span>，<span class="math inline">\(A^k \rightarrow 0\)</span> 的充要条件是 <span class="math inline">\(\rho(A) &lt; 1\)</span></li>
+<li>对于 <span class="math inline">\(n\)</span> 阶矩阵 <span class="math inline">\(A\)</span>，<span class="math inline">\(\rho(A) \leq ||A||\)</span>，其中 <span class="math inline">\(||A||\)</span> 表示 <span class="math inline">\(A\)</span> 的任意范数</li>
+</ol>
+<h4 id="基本迭代法收敛性条件">基本迭代法收敛性条件</h4>
+<p>对于线性方程组的基本迭代方程</p>
+<p><span class="math display">\[
+\boldsymbol{x} = B \boldsymbol{x} + \boldsymbol{g}
+\]</span></p>
+<p>若迭代矩阵 <span class="math inline">\(B\)</span> 满足 <span class="math inline">\(\rho(B)&lt;1\)</span>，则从上述基本迭代方程衍生的迭代方法均收敛。另外，若 <span class="math inline">\(||B||&lt;1\)</span>（根据谱半径与范数的关系，基本迭代方法必然收敛），有误差估计</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)} - \boldsymbol{x}^*|| \leq \frac{||B||^k}{1-||B||}(\boldsymbol{x}^{(1)} - \boldsymbol{x}^{(0)})
+\]</span></p>
+<p>或者</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*|| \leq \frac{||B||}{1-||B||}(\boldsymbol{x}^{(k)} - \boldsymbol{x}^{(k-1)})
+\]</span></p>
+<h4 id="jacobi迭代与gs迭代的收敛条件">Jacobi迭代与GS迭代的收敛条件</h4>
+<p>对于Jacobi迭代解法和GS迭代解法，有以下收敛条件</p>
+<ol type="1">
+<li>若系数矩阵 <span class="math inline">\(A\)</span> 为严格对角占优矩阵或不可约弱对角占优矩阵，那么Jacobi和GS迭代均收敛</li>
+<li>若矩阵 <span class="math inline">\(A\)</span> 正定，则Jacobi收敛的充要条件为 <span class="math inline">\(2D-A\)</span> 也正定</li>
+</ol>
+<h4 id="sor迭代的收敛条件">SOR迭代的收敛条件</h4>
+<p>对于SOR迭代解法，有以下收敛条件</p>
+<ol type="1">
+<li>松弛系数 <span class="math inline">\(\omega\)</span> 满足 <span class="math inline">\(0&lt; \omega &lt; 2\)</span> 是收敛的必要条件</li>
+<li>若系数矩阵 <span class="math inline">\(A\)</span> 正定，那么上述条件加强为收敛的充要条件</li>
+</ol>
+<h2 id="不定常迭代法">不定常迭代法</h2>
+<p>本教材介绍两种常用的不定常迭代法。一种是针对于<em>对称正定</em>线性方程组的最速下降法以及其优化版本——共轭梯度法，另一种是针对于<em>不对称</em>线性方程组的广义极小残量法。广义极小残量法不作要求。</p>
+<h3 id="最速下降法">最速下降法</h3>
+<p>对于线性方程组</p>
+<p><span class="math display">\[
+A\boldsymbol{x} = \boldsymbol{b}
+\]</span></p>
+<p>我们可以将其求解问题转换为一个多元二次函数 <span class="math inline">\(\varphi(x)\)</span> 的极值求解问题。这个多元二次函数的表达式为</p>
+<p><span class="math display">\[
+\varphi(\boldsymbol{x}) = \frac{1}{2}(\boldsymbol{x}, A\boldsymbol{x}) - (\boldsymbol{x}, \boldsymbol{b})
+\]</span></p>
+<p>其中 <span class="math inline">\((\boldsymbol{a}, \boldsymbol{b}) = \sum_{i=1}^n a_ib_i\)</span>，表示两个向量的内积。上面这个多元二次函数的梯度 <span class="math inline">\(\nabla \varphi(\boldsymbol{x})\)</span> 恰为 <span class="math inline">\(\displaystyle\sum_{i=1}^n \displaystyle\frac{\partial \varphi}{\partial \boldsymbol{x}_i}=\sum_{i=1}^n \sum_{j=1}^n (a_{ij}\boldsymbol{x}_j - \boldsymbol{b}_i) = \sum_{i=1}^n A_i \boldsymbol{x} - \boldsymbol{b}_i = A\boldsymbol{x} - \boldsymbol{b}\)</span>，所以上述二次函数的极值点 <span class="math inline">\(\boldsymbol{x}^*\)</span> 恰为 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的解。</p>
+<p>最速下降法利用迭代求解方法逼近 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 的极值。从某一搜索向量 <span class="math inline">\(\boldsymbol{x}\)</span> 出发，通过加上一个位移向量 <span class="math inline">\(\alpha \boldsymbol{y}\)</span>，得到新的搜索向量 <span class="math inline">\(\boldsymbol{x} + \alpha \boldsymbol{y}\)</span>，然后计算当前搜索向量对应的函数梯度 <span class="math inline">\(\nabla \varphi(\boldsymbol{x} + \alpha \boldsymbol{y})\)</span>，完成一个迭代求解过程。利用最速下降法时，搜索向量在位移后计算得到的函数梯度应当小于位移前对应的函数梯度，那么经过若干次迭代，搜索向量对应的函数梯度应趋于0，那么最终的搜索向量也就是线性方程组 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的解。</p>
+<p>为了以最少的计算量求得 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 的极值点，每一次搜索不应是漫无目的的，而应该是有明确搜索目标的。观察到位移向量 <span class="math inline">\(\alpha \boldsymbol{y}\)</span> 总是由两个部分组成，<span class="math inline">\(\alpha\)</span> 表示搜索步长，<span class="math inline">\(\boldsymbol{y}\)</span> 表示搜索方向。</p>
+<h4 id="最速下降法的搜索方向">最速下降法的搜索方向</h4>
+<p>最速下降法的搜索方向很简单，就是搜索向量所在点的函数梯度反方向 <span class="math inline">\(-\nabla \varphi(\boldsymbol{x}) = \boldsymbol{b} - A\boldsymbol{x}\)</span>。这也是最速下降法命名的由来。</p>
+<h4 id="最速下降法的搜索步长">最速下降法的搜索步长</h4>
+<p>最速下降法的搜索步长可以由线性方程组的系数矩阵和常数项向量自动确定。对于 <span class="math inline">\(\varphi(\boldsymbol{x}^{(k)} + \alpha_k \boldsymbol{y}^{(k)})\)</span>，可以将其展开为</p>
+<p><span class="math display">\[
+\varphi(\boldsymbol{x}^{(k)} + \alpha_k \boldsymbol{y}^{(k)}) = \varphi(\boldsymbol{x}^{(k)})+\alpha_k (\boldsymbol{y}^{(k)}, A\boldsymbol{x}^{(k)}-\boldsymbol{b})+\frac{1}{2}\alpha_k^2(\boldsymbol{y}^{(k)}, A\boldsymbol{y}^{(k)})
+\]</span></p>
+<p>考虑到 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 是一个二次函数，因此可以尝试通过对 <span class="math inline">\(\alpha_k\)</span> 求一阶导数的零点，来求出关于 <span class="math inline">\(\alpha_k\)</span> 的极值。在此之前，需要确认 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 关于 <span class="math inline">\(\alpha_k\)</span> 的二阶导数是不是单调递增的。</p>
+<p><span class="math display">\[
+\frac{d^2}{d\alpha_k ^2}\varphi(\boldsymbol{x}^{(k)}+\alpha_k \boldsymbol{y}^{(k)}) = (\boldsymbol{y}^{(k)}, A \boldsymbol{y}^{(k)})
+\]</span></p>
+<p>注意，我们要求矩阵 <span class="math inline">\(A\)</span> 是对称正定矩阵，因此对于任一非0向量，都有 <span class="math inline">\(\boldsymbol{x}^TA\boldsymbol{x}&gt;0\)</span>，而 <span class="math inline">\((\boldsymbol{y^{(k)}}, A\boldsymbol{y}^{(k)})=\boldsymbol{y}^TA\boldsymbol{y}\)</span>，所以</p>
+<p><span class="math display">\[
+\frac{d^2}{d\alpha_k ^2}\varphi(\boldsymbol{x}^{(k)}+\alpha_k \boldsymbol{y}^{(k)}) = (\boldsymbol{y}^{(k)}, A \boldsymbol{y}^{(k)})&gt;0
+\]</span></p>
+<p>那么可以确定，<span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 关于 <span class="math inline">\(\alpha_k\)</span> 的一阶导数零点，就是 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 关于 <span class="math inline">\(\alpha_k\)</span> 的极值。</p>
+<p><span class="math display">\[
+\frac{d}{d\alpha_k}\varphi(\boldsymbol{x}^{(k)}+\alpha_k \boldsymbol{y}^{(k)}) = (\boldsymbol{y}^{(k)}, A\boldsymbol{x}^{(k)}-\boldsymbol{b}) + \alpha_k (\boldsymbol{y}^{(k)}, A\boldsymbol{y}^{(k)})=0
+\]</span></p>
+<p>令每次迭代的残差为 <span class="math inline">\(\boldsymbol{r}^{(k)}=\boldsymbol{b}-A\boldsymbol{x}^{(k)}\)</span>，<span class="math inline">\(\alpha_k\)</span> 可以表示为</p>
+<p><span class="math display">\[
+\alpha_k = \frac{(\boldsymbol{y}^{(k)}, \boldsymbol{r}^{(k)})}{(\boldsymbol{y}^{(k)}, A\boldsymbol{y}^{(k)})}
+\]</span></p>
+<p>有趣的是，迭代残差恰为负梯度方向，所以 <span class="math inline">\(\alpha_k\)</span> 又可以表示为</p>
+<p><span class="math display">\[
+\alpha_k = \frac{(\boldsymbol{r}^{(k)}, \boldsymbol{r}^{(k)})}{\boldsymbol{r}^{(k)}, A\boldsymbol{r}^{(k)}}
+\]</span></p>
+<h4 id="最速下降法误差估计">最速下降法误差估计</h4>
+<p>下面不加证明地给出最速下降法的求解误差</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)} - \boldsymbol{x}^*||_A \leq [\frac{\lambda_1 - \lambda_n}{\lambda_1 + \lambda_n}]^k ||\boldsymbol{x}^{(0)} - \boldsymbol{x}^*||_A
+\]</span></p>
+<p>其中 <span class="math inline">\(||\boldsymbol{x}||_A\)</span> 表示 <span class="math inline">\(\boldsymbol{x}^TA\boldsymbol{x}\)</span>，<span class="math inline">\(\lambda_1, \lambda_n\)</span> 分别为矩阵 <span class="math inline">\(A\)</span> 的最大特征值和最小特征值。可以看出，最速下降法从理论上来说是收敛的，但如果矩阵 <span class="math inline">\(A\)</span> 是病态矩阵，那么 <span class="math inline">\(\displaystyle\frac{\lambda_1 - \lambda_n}{\lambda_1 + \lambda_n}\)</span> 将非常接近1，这将会导致最速下降法的收敛非常缓慢。</p>
+<h4 id="最速下降法总结">最速下降法总结</h4>
+<p>最速下降法最基本的思想：<em>将线性方程组 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的求解问题转换为多元二次函数 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 的极值求解问题</em>。</p>
+<p>最速下降法的基本迭代公式：</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \alpha_k \boldsymbol{r}^{(k)}
+\]</span></p>
+<p>其中，有</p>
+<p><span class="math display">\[
+\boldsymbol{r}^{(k)} = \boldsymbol{b} - A\boldsymbol{x}^{(k)}
+\]</span></p>
+<p><span class="math display">\[
+\alpha_k = \frac{(\boldsymbol{r}^{(k)}, \boldsymbol{r}^{(k)})}{(\boldsymbol{r}^{(k)}, A\boldsymbol{r}^{(k)})}
+\]</span></p>
+<p>最速下降法的误差估计：</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*||_A \leq [\frac{\lambda_1 - \lambda_n}{\lambda_1 + \lambda_n}]^k ||\boldsymbol{x}^{(0)} - \boldsymbol{x}^*||_A
+\]</span></p>
+<h3 id="共轭梯度法">共轭梯度法</h3>
+<p>最速下降法是一种不错的线性方程组求解方法，但还有优化的空间，因为局部最优的搜索方向并不一定是全局最优的，这可能会导致在迭代求解的过程中绕很大的弯路。为了优化搜索方向，共轭梯度法作为最速下降法的优化版本被提出。</p>
+<p>共轭梯度法的最优步长计算与最速下降法的思路是一致的，同样是通过求 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 对 <span class="math inline">\(\alpha\)</span> 的一阶导数零点求出极值点；但是，共轭梯度法不再使用 <span class="math inline">\(\boldsymbol{r}^{(k)}\)</span> 作为搜索方向，而是对其进行了修正。</p>
+<p>对于迭代格式</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \alpha_k \boldsymbol{y}^{(k)}
+\]</span></p>
+<p>共轭梯度法使用 <span class="math inline">\(\boldsymbol{p}^{(k)}\)</span> 来表示修正量，即</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \alpha_k \boldsymbol{p}^{(k)}
+\]</span></p>
+<p>对于最速下降法来说，<span class="math inline">\(\boldsymbol{p}^{(k)}=\boldsymbol{r}^{(k)}\)</span>；而在共轭梯度法中，<span class="math inline">\(\boldsymbol{p}^{(k)}=\boldsymbol{r}^{(k-1)} + \beta_{k-1}\boldsymbol{p}^{(k-1)}\)</span>，也就是说，共轭梯度法不像最速下降法那样直接使用当前搜索向量所在位置的负梯度方向作为搜索方向，而是在负梯度方向的基础上进行了一定的调整，从而实现更加快速的收敛效果。下面整理一下，共轭梯度法对这个搜索方向的修正思路。</p>
+<h4 id="共轭梯度法的优化思路">共轭梯度法的优化思路</h4>
+<p>观察 <span class="math inline">\(\varphi(\boldsymbol{x}+\alpha \boldsymbol{y})\)</span> 的展开式</p>
+<p><span class="math display">\[
+\varphi(\boldsymbol{x}+\alpha \boldsymbol{y}) = \varphi(\boldsymbol{x}) + \frac{1}{2}\alpha^2(\boldsymbol{y}, A\boldsymbol{y}) + \alpha(\boldsymbol{y}, A\boldsymbol{x}-\boldsymbol{b})
+\]</span></p>
+<p>注意到，将 <span class="math inline">\(\alpha(\boldsymbol{y}, A\boldsymbol{x}-\boldsymbol{b})\)</span> 拆分为 <span class="math inline">\(\alpha(\boldsymbol{y}, A\boldsymbol{x}) - \alpha(\boldsymbol{y}, \boldsymbol{b})\)</span> 后，会发现 <span class="math inline">\(\varphi(\boldsymbol{x}+\alpha \boldsymbol{y})\)</span> 的展开式中存在 <span class="math inline">\(\boldsymbol{x}, \boldsymbol{y}\)</span> 的耦合项 <span class="math inline">\((\boldsymbol{y}, A\boldsymbol{x})\)</span>。这一项的存在会干扰最优 <span class="math inline">\(\boldsymbol{y}\)</span> 即最优搜索方向的选取，因此我们希望这一项恒为0。</p>
+<p>在此之前，先要说明一个基本事实。由 <span class="math inline">\(\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)}+\alpha_k\boldsymbol{p}^{(k)}\)</span>，可以推出</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(j)} = \sum_i^{j-1} \boldsymbol{p}^{(i)}
+\]</span></p>
+<p>即搜索向量实际上就是 <span class="math inline">\(\boldsymbol{p}^{(0)}, \boldsymbol{p}^{(1)}, \cdots\)</span> 的线性组合。</p>
+<p>明确了这一点以后，又因为共轭梯度法中 <span class="math inline">\(\boldsymbol{y} = \boldsymbol{p}\)</span>，此时再来考虑耦合项 <span class="math inline">\((\boldsymbol{y}, A\boldsymbol{x})\)</span>。这时会发现，由于矩阵 <span class="math inline">\(A\)</span> 对称正定，那么假如任意 <span class="math inline">\(\boldsymbol{p}^{(i)}, \boldsymbol{p}^{(j)}\)</span> 满足 <span class="math inline">\((\boldsymbol{p}^{(i)}, A\boldsymbol{p}^{(j)})=0\)</span> 或 <span class="math inline">\((\boldsymbol{p}^{(j)}, A\boldsymbol{p}^{(i)})=0\)</span>，那么 <span class="math inline">\((\boldsymbol{p}, A\boldsymbol{x})\)</span> 必然恒为0。</p>
+<p>这里就引出了所谓共轭的概念。假如存在一组向量 <span class="math inline">\(\{\boldsymbol{p}\}\)</span> 满足从这组向量中任取两个 <span class="math inline">\(\boldsymbol{p}^{(i)}, \boldsymbol{p}^{(j)}\)</span>，对矩阵 <span class="math inline">\(A\)</span> 均有 <span class="math inline">\((\boldsymbol{p}^{(i)}, A\boldsymbol{p}^{(j)})=0\)</span> 成立，那么称 <span class="math inline">\(\{\boldsymbol{p}\}\)</span> 是矩阵 <span class="math inline">\(A\)</span> 的一组共轭向量。特别的，如果矩阵 <span class="math inline">\(A\)</span> 恰为单位阵，那么向量组 <span class="math inline">\(\{\boldsymbol{p}\}\)</span> 就是一组正交向量。可以看出，共轭向量其实是正交向量的推广。</p>
+<p>先暂且不论如何求出这一组共轭向量。假如我们已经得到了共轭向量组 <span class="math inline">\(\{\boldsymbol{p}\}\)</span>，那么 <span class="math inline">\(\varphi(\boldsymbol{x}+\alpha \boldsymbol{p})\)</span> 的展开式将变为</p>
+<p><span class="math display">\[
+\varphi(\boldsymbol{x}+\alpha \boldsymbol{p}) = \varphi(\boldsymbol{x}) + \frac{1}{2}\alpha^2(\boldsymbol{p}, A\boldsymbol{p}) - \alpha(\boldsymbol{p}, \boldsymbol{b})
+\]</span></p>
+<p>那么求 <span class="math inline">\(\varphi(\boldsymbol{x}+\alpha \boldsymbol{p})\)</span> 最小值的问题，就可以分解为求 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 对 <span class="math inline">\(\boldsymbol{x}\)</span> 的最小值以及求 <span class="math inline">\(\frac{1}{2}\alpha^2(\boldsymbol{p}, A\boldsymbol{p}) - \alpha (\boldsymbol{p}, \boldsymbol{b})\)</span> 对 <span class="math inline">\(\alpha\)</span> 的最小值的问题。</p>
+<p>后者其实就是求共轭梯度法最优步长的问题。同样，由于这一部分对 <span class="math inline">\(\alpha\)</span> 的二阶导数恒为正，因此求出这一部分一阶导数的零点，就可以得到使其取最小值的 <span class="math inline">\(\alpha\)</span>，那么有</p>
+<p><span class="math display">\[
+\alpha_k (\boldsymbol{p}^{(k)}, A\boldsymbol{p}^{(k)})-(\boldsymbol{p}^{(k)}, \boldsymbol{b}) = 0
+\]</span></p>
+<p>可以得到</p>
+<p><span class="math display">\[
+\alpha_k = \frac{(\boldsymbol{p}^{(k)}, \boldsymbol{b})}{(\boldsymbol{p}^{(k)}, A\boldsymbol{p}^{(k)})}
+\]</span></p>
+<p>而前者，求 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 对 <span class="math inline">\(\boldsymbol{x}\)</span> 的最小值，实际上就是每一步迭代在做的事情，也就是说求 <span class="math inline">\(\varphi(\boldsymbol{x}^{(k)})\)</span> 的最小值，又可以分解为求 <span class="math inline">\(\varphi(\boldsymbol{x}^{(k-1)})\)</span> 的最小值和求 <span class="math inline">\(\frac{1}{2}\alpha_{k-1}^2(\boldsymbol{p}^{(k-1)}, A\boldsymbol{p}^{(k-1)}) - \alpha_{k-1} (\boldsymbol{p}^{(k-1)}, \boldsymbol{b})\)</span> 对 <span class="math inline">\(\alpha_{k-1}\)</span> 的最小值的问题。如此循环往复，实际上每一步只要求出最优步长即可。</p>
+<p>那么如何找到这样一组共轭向量呢？不妨令 <span class="math inline">\(\boldsymbol{p}^{(k)} = \boldsymbol{r}^{(k)} + \beta_{k-1}\boldsymbol{p}^{(k-1)}\)</span>，根据 <span class="math inline">\((\boldsymbol{p}^{(k)}, A\boldsymbol{p}^{(k-1)}) = 0\)</span>，可以得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+(\boldsymbol{r}^{(k)}+\beta_{k-1}\boldsymbol{p}^{(k-1)}, A\boldsymbol{p}^{(k-1)}) = 0\\
+(\boldsymbol{r}^{(k)}, A\boldsymbol{p}^{(k-1)}) + \beta_{k-1}(\boldsymbol{p}^{(k-1)}, A\boldsymbol{p}^{(k-1)}) = 0
+\end{aligned}
+\]</span></p>
+<p>那么可以得到 <span class="math inline">\(\beta_{k-1}\)</span> 的表达式</p>
+<p><span class="math display">\[
+\beta_{k-1} = -\frac{(\boldsymbol{r}^{(k)}, A\boldsymbol{p}^{(k-1)})}{(\boldsymbol{p}^{(k-1)}, A\boldsymbol{p}^{(k-1)})}
+\]</span></p>
+<p>根据这样的关系，实际上我们令 <span class="math inline">\(\boldsymbol{p}^{(0)} = \boldsymbol{r}^{(0)}\)</span>，就可以递推得到所有 <span class="math inline">\(\{\boldsymbol{p}^{(i)}\}\)</span> 了。</p>
+<h4 id="共轭梯度法的误差分析">共轭梯度法的误差分析</h4>
+<p>下面，我们不加证明地给出共轭梯度法的误差分析式</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*||_A\leq 2[\frac{\sqrt{\lambda_1} - \sqrt{\lambda_n}}{\sqrt{\lambda_1}+\sqrt{\lambda_n}}]^k ||\boldsymbol{x}^{(0)}-\boldsymbol{x}^*||_A
+\]</span></p>
+<p>若记 <span class="math inline">\(\mu = \displaystyle\frac{\lambda_1}{\lambda_n}\)</span>，则有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*||_A\leq 2[\frac{\sqrt{\mu}-1}{\sqrt{\mu}+1}]^k ||\boldsymbol{x}^{(0)}-\boldsymbol{x}^*||_A
+\]</span></p>
+<p>显然，共轭梯度法的收敛速度要快于最速下降法。事实上，共轭梯度法在不丢失精度的情况下，一定可以在 <span class="math inline">\(k\)</span> 步以内收敛，但是由于数值计算存在数值误差，向量组 <span class="math inline">\(\{\boldsymbol{p}\}\)</span> 会逐渐失去正交性，因此共轭梯度法在应用时收敛步长总是略大于 <span class="math inline">\(k\)</span> 步，但这也是一个非常不错的线性方程组求解方法了。</p>
+<h4 id="共轭梯度法的预处理方法">共轭梯度法的预处理方法</h4>
+<p>对于共轭梯度法来说，可以对原线性方程组做以下预处理，以加速收敛</p>
+<p><span class="math display">\[
+M^{-1}A\boldsymbol{x} = M^{-1}\boldsymbol{b}
+\]</span></p>
+<p>如果矩阵 <span class="math inline">\(M\)</span> 可以分解为 <span class="math inline">\(LL^T\)</span>，那么还可以将上述方程组写作</p>
+<p><span class="math display">\[
+L^{-1}AL^{-T}\boldsymbol{y} = L^{-1}\boldsymbol{b}, \ L^{-T}\boldsymbol{y} = \boldsymbol{x}
+\]</span></p>
+<p>其中，矩阵 <span class="math inline">\(M\)</span> 是一个与矩阵 <span class="math inline">\(A\)</span> 类似的矩阵。一般来说，可以取 <span class="math inline">\(M=diag(A)\)</span>，以简化预处理。事实证明，经过预处理的共轭梯度法收敛要比共轭梯度法更快。具体的证明略去。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
       </tags>
   </entry>
   <entry>

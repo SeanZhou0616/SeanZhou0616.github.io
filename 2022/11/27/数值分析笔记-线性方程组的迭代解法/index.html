@@ -30,7 +30,7 @@
 <meta property="og:description" content="范数和条件数 由于线性方程组的解是一个列向量，那么线性方程组的精确解和近似解之间的误差也会是一个列向量。所以，要衡量线性方程组解的精度，必须对误差向量的大小进行评判。为此，需要引入范数的概念。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-11-27T12:36:31.000Z">
-<meta property="article:modified_time" content="2022-11-30T09:39:16.112Z">
+<meta property="article:modified_time" content="2022-12-03T07:36:18.353Z">
 <meta property="article:author" content="Sean Zhou">
 <meta property="article:tag" content="Numerical Analysis">
 <meta property="article:tag" content="Mathematics">
@@ -148,7 +148,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8C%83%E6%95%B0%E5%92%8C%E6%9D%A1%E4%BB%B6%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">范数和条件数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%8C%83%E6%95%B0"><span class="nav-number">1.1.</span> <span class="nav-text">什么是范数？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">向量范数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">1阶向量范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">2阶向量范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E7%A9%B7%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0"><span class="nav-number">1.2.3.</span> <span class="nav-text">无穷向量范数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">矩阵范数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.1.</span> <span class="nav-text">1阶矩阵范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#f%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">F矩阵范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0-1"><span class="nav-number">1.3.3.</span> <span class="nav-text">2阶矩阵范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E7%A9%B7%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.4.</span> <span class="nav-text">无穷矩阵范数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0%E5%92%8C%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0%E7%9A%84%E7%9B%B8%E5%AE%B9%E6%80%A7"><span class="nav-number">1.4.</span> <span class="nav-text">矩阵范数和向量范数的相容性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%B0%E5%8A%A8%E5%88%86%E6%9E%90%E5%92%8C%E6%9D%A1%E4%BB%B6%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">扰动分析和条件数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E6%95%B0%E9%A1%B9%E5%90%91%E9%87%8F%E6%89%B0%E5%8A%A8%E5%88%86%E6%9E%90"><span class="nav-number">2.1.</span> <span class="nav-text">常数项向量扰动分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E6%95%B0%E7%9F%A9%E9%98%B5%E6%89%B0%E5%8A%A8%E5%88%86%E6%9E%90"><span class="nav-number">2.2.</span> <span class="nav-text">系数矩阵扰动分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">条件数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%95%B0%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">2.3.1.</span> <span class="nav-text">条件数的性质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%89%AF%E6%80%81%E7%9F%A9%E9%98%B5%E5%92%8C%E7%97%85%E6%80%81%E7%9F%A9%E9%98%B5"><span class="nav-number">2.3.2.</span> <span class="nav-text">良态矩阵和病态矩阵</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%BF%AD%E4%BB%A3%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">基本迭代法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E5%B8%B8%E8%BF%AD%E4%BB%A3%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">定常迭代法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jacobi%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">Jacobi迭代解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gauss-seidel%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">Gauss-Seidel迭代解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sor%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95"><span class="nav-number">4.3.</span> <span class="nav-text">SOR迭代解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E8%BF%B0%E4%B8%89%E7%A7%8D%E5%AE%9A%E5%B8%B8%E8%BF%AD%E4%BB%A3%E6%B3%95%E7%9A%84%E6%94%B6%E6%95%9B%E6%80%A7%E5%88%86%E6%9E%90%E5%92%8C%E8%AF%AF%E5%B7%AE%E4%BC%B0%E8%AE%A1"><span class="nav-number">4.4.</span> <span class="nav-text">上述三种定常迭代法的收敛性分析和误差估计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%AE%E6%8D%A2%E7%9F%A9%E9%98%B5"><span class="nav-number">4.4.1.</span> <span class="nav-text">置换矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E7%BA%A6%E7%9F%A9%E9%98%B5"><span class="nav-number">4.4.2.</span> <span class="nav-text">可约矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E8%A7%92%E5%8D%A0%E4%BC%98"><span class="nav-number">4.4.3.</span> <span class="nav-text">对角占优</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%B1%E5%8D%8A%E5%BE%84%E7%9B%B8%E5%85%B3%E5%AE%9A%E7%90%86"><span class="nav-number">4.4.4.</span> <span class="nav-text">谱半径相关定理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%BF%AD%E4%BB%A3%E6%B3%95%E6%94%B6%E6%95%9B%E6%80%A7%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.4.5.</span> <span class="nav-text">基本迭代法收敛性条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jacobi%E8%BF%AD%E4%BB%A3%E4%B8%8Egs%E8%BF%AD%E4%BB%A3%E7%9A%84%E6%94%B6%E6%95%9B%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.4.6.</span> <span class="nav-text">Jacobi迭代与GS迭代的收敛条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sor%E8%BF%AD%E4%BB%A3%E7%9A%84%E6%94%B6%E6%95%9B%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.4.7.</span> <span class="nav-text">SOR迭代的收敛条件</span></a></li></ol></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8C%83%E6%95%B0%E5%92%8C%E6%9D%A1%E4%BB%B6%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">范数和条件数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%8C%83%E6%95%B0"><span class="nav-number">1.1.</span> <span class="nav-text">什么是范数？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">向量范数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">1阶向量范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">2阶向量范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E7%A9%B7%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0"><span class="nav-number">1.2.3.</span> <span class="nav-text">无穷向量范数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.</span> <span class="nav-text">矩阵范数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.1.</span> <span class="nav-text">1阶矩阵范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#f%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">F矩阵范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B6%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0-1"><span class="nav-number">1.3.3.</span> <span class="nav-text">2阶矩阵范数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E7%A9%B7%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0"><span class="nav-number">1.3.4.</span> <span class="nav-text">无穷矩阵范数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%8C%83%E6%95%B0%E5%92%8C%E5%90%91%E9%87%8F%E8%8C%83%E6%95%B0%E7%9A%84%E7%9B%B8%E5%AE%B9%E6%80%A7"><span class="nav-number">1.4.</span> <span class="nav-text">矩阵范数和向量范数的相容性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%B0%E5%8A%A8%E5%88%86%E6%9E%90%E5%92%8C%E6%9D%A1%E4%BB%B6%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">扰动分析和条件数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E6%95%B0%E9%A1%B9%E5%90%91%E9%87%8F%E6%89%B0%E5%8A%A8%E5%88%86%E6%9E%90"><span class="nav-number">2.1.</span> <span class="nav-text">常数项向量扰动分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E6%95%B0%E7%9F%A9%E9%98%B5%E6%89%B0%E5%8A%A8%E5%88%86%E6%9E%90"><span class="nav-number">2.2.</span> <span class="nav-text">系数矩阵扰动分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">条件数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%95%B0%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">2.3.1.</span> <span class="nav-text">条件数的性质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%89%AF%E6%80%81%E7%9F%A9%E9%98%B5%E5%92%8C%E7%97%85%E6%80%81%E7%9F%A9%E9%98%B5"><span class="nav-number">2.3.2.</span> <span class="nav-text">良态矩阵和病态矩阵</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%BF%AD%E4%BB%A3%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">基本迭代法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E5%B8%B8%E8%BF%AD%E4%BB%A3%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">定常迭代法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jacobi%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">Jacobi迭代解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gauss-seidel%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">Gauss-Seidel迭代解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sor%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95"><span class="nav-number">4.3.</span> <span class="nav-text">SOR迭代解法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E8%BF%B0%E4%B8%89%E7%A7%8D%E5%AE%9A%E5%B8%B8%E8%BF%AD%E4%BB%A3%E6%B3%95%E7%9A%84%E6%94%B6%E6%95%9B%E6%80%A7%E5%88%86%E6%9E%90%E5%92%8C%E8%AF%AF%E5%B7%AE%E4%BC%B0%E8%AE%A1"><span class="nav-number">4.4.</span> <span class="nav-text">上述三种定常迭代法的收敛性分析和误差估计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%AE%E6%8D%A2%E7%9F%A9%E9%98%B5"><span class="nav-number">4.4.1.</span> <span class="nav-text">置换矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E7%BA%A6%E7%9F%A9%E9%98%B5"><span class="nav-number">4.4.2.</span> <span class="nav-text">可约矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E8%A7%92%E5%8D%A0%E4%BC%98"><span class="nav-number">4.4.3.</span> <span class="nav-text">对角占优</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%B1%E5%8D%8A%E5%BE%84%E7%9B%B8%E5%85%B3%E5%AE%9A%E7%90%86"><span class="nav-number">4.4.4.</span> <span class="nav-text">谱半径相关定理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%BF%AD%E4%BB%A3%E6%B3%95%E6%94%B6%E6%95%9B%E6%80%A7%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.4.5.</span> <span class="nav-text">基本迭代法收敛性条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jacobi%E8%BF%AD%E4%BB%A3%E4%B8%8Egs%E8%BF%AD%E4%BB%A3%E7%9A%84%E6%94%B6%E6%95%9B%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.4.6.</span> <span class="nav-text">Jacobi迭代与GS迭代的收敛条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sor%E8%BF%AD%E4%BB%A3%E7%9A%84%E6%94%B6%E6%95%9B%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.4.7.</span> <span class="nav-text">SOR迭代的收敛条件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%AE%9A%E5%B8%B8%E8%BF%AD%E4%BB%A3%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">不定常迭代法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E9%80%9F%E4%B8%8B%E9%99%8D%E6%B3%95"><span class="nav-number">5.1.</span> <span class="nav-text">最速下降法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E9%80%9F%E4%B8%8B%E9%99%8D%E6%B3%95%E7%9A%84%E6%90%9C%E7%B4%A2%E6%96%B9%E5%90%91"><span class="nav-number">5.1.1.</span> <span class="nav-text">最速下降法的搜索方向</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E9%80%9F%E4%B8%8B%E9%99%8D%E6%B3%95%E7%9A%84%E6%90%9C%E7%B4%A2%E6%AD%A5%E9%95%BF"><span class="nav-number">5.1.2.</span> <span class="nav-text">最速下降法的搜索步长</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E9%80%9F%E4%B8%8B%E9%99%8D%E6%B3%95%E8%AF%AF%E5%B7%AE%E4%BC%B0%E8%AE%A1"><span class="nav-number">5.1.3.</span> <span class="nav-text">最速下降法误差估计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E9%80%9F%E4%B8%8B%E9%99%8D%E6%B3%95%E6%80%BB%E7%BB%93"><span class="nav-number">5.1.4.</span> <span class="nav-text">最速下降法总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">共轭梯度法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95%E7%9A%84%E4%BC%98%E5%8C%96%E6%80%9D%E8%B7%AF"><span class="nav-number">5.2.1.</span> <span class="nav-text">共轭梯度法的优化思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95%E7%9A%84%E8%AF%AF%E5%B7%AE%E5%88%86%E6%9E%90"><span class="nav-number">5.2.2.</span> <span class="nav-text">共轭梯度法的误差分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B1%E8%BD%AD%E6%A2%AF%E5%BA%A6%E6%B3%95%E7%9A%84%E9%A2%84%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95"><span class="nav-number">5.2.3.</span> <span class="nav-text">共轭梯度法的预处理方法</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -258,7 +258,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-30 17:39:16" itemprop="dateModified" datetime="2022-11-30T17:39:16+08:00">2022-11-30</time>
+      <time title="修改时间：2022-12-03 15:36:18" itemprop="dateModified" datetime="2022-12-03T15:36:18+08:00">2022-12-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -364,7 +364,7 @@ A(\boldsymbol{x} + \delta \boldsymbol{x}) = \boldsymbol{b} + \delta \boldsymbol{
 \]</span></p>
 <h3 id="条件数">条件数</h3>
 <p>从上面的扰动分析中，可以看出，解的相对扰动与系数矩阵或常数项向量的相对扰动之间，都存在一个放大倍数 <span class="math inline">\(||A||\cdot ||A^{-1}||\)</span>。这个放大倍数称为线性方程组 <span class="math inline">\(A\boldsymbol{x}=\boldsymbol{b}\)</span> 的<strong>条件数</strong>，或矩阵 <span class="math inline">\(A\)</span> 的条件数，用 <span class="math inline">\(cond(A)\)</span> 表示。</p>
-<p>可以看到，矩阵的条件数与矩阵范数是挂钩的。常用的条件数是无穷矩阵范数对应的条件数 <span class="math inline">\(cond_{\infty}(A) = ||A||_{\infty}||A^{-1}||_{\infty}\)</span> 以及2阶矩阵范数对应的条件数 <span class="math inline">\(cons_2(A) = ||A||_2 ||A^{-1}||_2\)</span>。</p>
+<p>可以看到，矩阵的条件数与矩阵范数是挂钩的。常用的条件数是无穷矩阵范数对应的条件数 <span class="math inline">\(cond_{\infty}(A) = ||A||_{\infty}||A^{-1}||_{\infty}\)</span> 以及2阶矩阵范数对应的条件数 <span class="math inline">\(cond_2(A) = ||A||_2 ||A^{-1}||_2\)</span>。</p>
 <h4 id="条件数的性质">条件数的性质</h4>
 <ol type="1">
 <li>对于任意 <span class="math inline">\(n\)</span> 阶非奇异方阵 <span class="math inline">\(A\)</span>，有 <span class="math inline">\(cond(A) \geq 1\)</span></li>
@@ -525,6 +525,141 @@ P^TAP=\begin{pmatrix}
 <li>松弛系数 <span class="math inline">\(\omega\)</span> 满足 <span class="math inline">\(0&lt; \omega &lt; 2\)</span> 是收敛的必要条件</li>
 <li>若系数矩阵 <span class="math inline">\(A\)</span> 正定，那么上述条件加强为收敛的充要条件</li>
 </ol>
+<h2 id="不定常迭代法">不定常迭代法</h2>
+<p>本教材介绍两种常用的不定常迭代法。一种是针对于<em>对称正定</em>线性方程组的最速下降法以及其优化版本——共轭梯度法，另一种是针对于<em>不对称</em>线性方程组的广义极小残量法。广义极小残量法不作要求。</p>
+<h3 id="最速下降法">最速下降法</h3>
+<p>对于线性方程组</p>
+<p><span class="math display">\[
+A\boldsymbol{x} = \boldsymbol{b}
+\]</span></p>
+<p>我们可以将其求解问题转换为一个多元二次函数 <span class="math inline">\(\varphi(x)\)</span> 的极值求解问题。这个多元二次函数的表达式为</p>
+<p><span class="math display">\[
+\varphi(\boldsymbol{x}) = \frac{1}{2}(\boldsymbol{x}, A\boldsymbol{x}) - (\boldsymbol{x}, \boldsymbol{b})
+\]</span></p>
+<p>其中 <span class="math inline">\((\boldsymbol{a}, \boldsymbol{b}) = \sum_{i=1}^n a_ib_i\)</span>，表示两个向量的内积。上面这个多元二次函数的梯度 <span class="math inline">\(\nabla \varphi(\boldsymbol{x})\)</span> 恰为 <span class="math inline">\(\displaystyle\sum_{i=1}^n \displaystyle\frac{\partial \varphi}{\partial \boldsymbol{x}_i}=\sum_{i=1}^n \sum_{j=1}^n (a_{ij}\boldsymbol{x}_j - \boldsymbol{b}_i) = \sum_{i=1}^n A_i \boldsymbol{x} - \boldsymbol{b}_i = A\boldsymbol{x} - \boldsymbol{b}\)</span>，所以上述二次函数的极值点 <span class="math inline">\(\boldsymbol{x}^*\)</span> 恰为 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的解。</p>
+<p>最速下降法利用迭代求解方法逼近 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 的极值。从某一搜索向量 <span class="math inline">\(\boldsymbol{x}\)</span> 出发，通过加上一个位移向量 <span class="math inline">\(\alpha \boldsymbol{y}\)</span>，得到新的搜索向量 <span class="math inline">\(\boldsymbol{x} + \alpha \boldsymbol{y}\)</span>，然后计算当前搜索向量对应的函数梯度 <span class="math inline">\(\nabla \varphi(\boldsymbol{x} + \alpha \boldsymbol{y})\)</span>，完成一个迭代求解过程。利用最速下降法时，搜索向量在位移后计算得到的函数梯度应当小于位移前对应的函数梯度，那么经过若干次迭代，搜索向量对应的函数梯度应趋于0，那么最终的搜索向量也就是线性方程组 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的解。</p>
+<p>为了以最少的计算量求得 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 的极值点，每一次搜索不应是漫无目的的，而应该是有明确搜索目标的。观察到位移向量 <span class="math inline">\(\alpha \boldsymbol{y}\)</span> 总是由两个部分组成，<span class="math inline">\(\alpha\)</span> 表示搜索步长，<span class="math inline">\(\boldsymbol{y}\)</span> 表示搜索方向。</p>
+<h4 id="最速下降法的搜索方向">最速下降法的搜索方向</h4>
+<p>最速下降法的搜索方向很简单，就是搜索向量所在点的函数梯度反方向 <span class="math inline">\(-\nabla \varphi(\boldsymbol{x}) = \boldsymbol{b} - A\boldsymbol{x}\)</span>。这也是最速下降法命名的由来。</p>
+<h4 id="最速下降法的搜索步长">最速下降法的搜索步长</h4>
+<p>最速下降法的搜索步长可以由线性方程组的系数矩阵和常数项向量自动确定。对于 <span class="math inline">\(\varphi(\boldsymbol{x}^{(k)} + \alpha_k \boldsymbol{y}^{(k)})\)</span>，可以将其展开为</p>
+<p><span class="math display">\[
+\varphi(\boldsymbol{x}^{(k)} + \alpha_k \boldsymbol{y}^{(k)}) = \varphi(\boldsymbol{x}^{(k)})+\alpha_k (\boldsymbol{y}^{(k)}, A\boldsymbol{x}^{(k)}-\boldsymbol{b})+\frac{1}{2}\alpha_k^2(\boldsymbol{y}^{(k)}, A\boldsymbol{y}^{(k)})
+\]</span></p>
+<p>考虑到 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 是一个二次函数，因此可以尝试通过对 <span class="math inline">\(\alpha_k\)</span> 求一阶导数的零点，来求出关于 <span class="math inline">\(\alpha_k\)</span> 的极值。在此之前，需要确认 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 关于 <span class="math inline">\(\alpha_k\)</span> 的二阶导数是不是单调递增的。</p>
+<p><span class="math display">\[
+\frac{d^2}{d\alpha_k ^2}\varphi(\boldsymbol{x}^{(k)}+\alpha_k \boldsymbol{y}^{(k)}) = (\boldsymbol{y}^{(k)}, A \boldsymbol{y}^{(k)})
+\]</span></p>
+<p>注意，我们要求矩阵 <span class="math inline">\(A\)</span> 是对称正定矩阵，因此对于任一非0向量，都有 <span class="math inline">\(\boldsymbol{x}^TA\boldsymbol{x}&gt;0\)</span>，而 <span class="math inline">\((\boldsymbol{y^{(k)}}, A\boldsymbol{y}^{(k)})=\boldsymbol{y}^TA\boldsymbol{y}\)</span>，所以</p>
+<p><span class="math display">\[
+\frac{d^2}{d\alpha_k ^2}\varphi(\boldsymbol{x}^{(k)}+\alpha_k \boldsymbol{y}^{(k)}) = (\boldsymbol{y}^{(k)}, A \boldsymbol{y}^{(k)})&gt;0
+\]</span></p>
+<p>那么可以确定，<span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 关于 <span class="math inline">\(\alpha_k\)</span> 的一阶导数零点，就是 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 关于 <span class="math inline">\(\alpha_k\)</span> 的极值。</p>
+<p><span class="math display">\[
+\frac{d}{d\alpha_k}\varphi(\boldsymbol{x}^{(k)}+\alpha_k \boldsymbol{y}^{(k)}) = (\boldsymbol{y}^{(k)}, A\boldsymbol{x}^{(k)}-\boldsymbol{b}) + \alpha_k (\boldsymbol{y}^{(k)}, A\boldsymbol{y}^{(k)})=0
+\]</span></p>
+<p>令每次迭代的残差为 <span class="math inline">\(\boldsymbol{r}^{(k)}=\boldsymbol{b}-A\boldsymbol{x}^{(k)}\)</span>，<span class="math inline">\(\alpha_k\)</span> 可以表示为</p>
+<p><span class="math display">\[
+\alpha_k = \frac{(\boldsymbol{y}^{(k)}, \boldsymbol{r}^{(k)})}{(\boldsymbol{y}^{(k)}, A\boldsymbol{y}^{(k)})}
+\]</span></p>
+<p>有趣的是，迭代残差恰为负梯度方向，所以 <span class="math inline">\(\alpha_k\)</span> 又可以表示为</p>
+<p><span class="math display">\[
+\alpha_k = \frac{(\boldsymbol{r}^{(k)}, \boldsymbol{r}^{(k)})}{\boldsymbol{r}^{(k)}, A\boldsymbol{r}^{(k)}}
+\]</span></p>
+<h4 id="最速下降法误差估计">最速下降法误差估计</h4>
+<p>下面不加证明地给出最速下降法的求解误差</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)} - \boldsymbol{x}^*||_A \leq [\frac{\lambda_1 - \lambda_n}{\lambda_1 + \lambda_n}]^k ||\boldsymbol{x}^{(0)} - \boldsymbol{x}^*||_A
+\]</span></p>
+<p>其中 <span class="math inline">\(||\boldsymbol{x}||_A\)</span> 表示 <span class="math inline">\(\boldsymbol{x}^TA\boldsymbol{x}\)</span>，<span class="math inline">\(\lambda_1, \lambda_n\)</span> 分别为矩阵 <span class="math inline">\(A\)</span> 的最大特征值和最小特征值。可以看出，最速下降法从理论上来说是收敛的，但如果矩阵 <span class="math inline">\(A\)</span> 是病态矩阵，那么 <span class="math inline">\(\displaystyle\frac{\lambda_1 - \lambda_n}{\lambda_1 + \lambda_n}\)</span> 将非常接近1，这将会导致最速下降法的收敛非常缓慢。</p>
+<h4 id="最速下降法总结">最速下降法总结</h4>
+<p>最速下降法最基本的思想：<em>将线性方程组 <span class="math inline">\(A\boldsymbol{x} = \boldsymbol{b}\)</span> 的求解问题转换为多元二次函数 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 的极值求解问题</em>。</p>
+<p>最速下降法的基本迭代公式：</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \alpha_k \boldsymbol{r}^{(k)}
+\]</span></p>
+<p>其中，有</p>
+<p><span class="math display">\[
+\boldsymbol{r}^{(k)} = \boldsymbol{b} - A\boldsymbol{x}^{(k)}
+\]</span></p>
+<p><span class="math display">\[
+\alpha_k = \frac{(\boldsymbol{r}^{(k)}, \boldsymbol{r}^{(k)})}{(\boldsymbol{r}^{(k)}, A\boldsymbol{r}^{(k)})}
+\]</span></p>
+<p>最速下降法的误差估计：</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*||_A \leq [\frac{\lambda_1 - \lambda_n}{\lambda_1 + \lambda_n}]^k ||\boldsymbol{x}^{(0)} - \boldsymbol{x}^*||_A
+\]</span></p>
+<h3 id="共轭梯度法">共轭梯度法</h3>
+<p>最速下降法是一种不错的线性方程组求解方法，但还有优化的空间，因为局部最优的搜索方向并不一定是全局最优的，这可能会导致在迭代求解的过程中绕很大的弯路。为了优化搜索方向，共轭梯度法作为最速下降法的优化版本被提出。</p>
+<p>共轭梯度法的最优步长计算与最速下降法的思路是一致的，同样是通过求 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 对 <span class="math inline">\(\alpha\)</span> 的一阶导数零点求出极值点；但是，共轭梯度法不再使用 <span class="math inline">\(\boldsymbol{r}^{(k)}\)</span> 作为搜索方向，而是对其进行了修正。</p>
+<p>对于迭代格式</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \alpha_k \boldsymbol{y}^{(k)}
+\]</span></p>
+<p>共轭梯度法使用 <span class="math inline">\(\boldsymbol{p}^{(k)}\)</span> 来表示修正量，即</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)} + \alpha_k \boldsymbol{p}^{(k)}
+\]</span></p>
+<p>对于最速下降法来说，<span class="math inline">\(\boldsymbol{p}^{(k)}=\boldsymbol{r}^{(k)}\)</span>；而在共轭梯度法中，<span class="math inline">\(\boldsymbol{p}^{(k)}=\boldsymbol{r}^{(k-1)} + \beta_{k-1}\boldsymbol{p}^{(k-1)}\)</span>，也就是说，共轭梯度法不像最速下降法那样直接使用当前搜索向量所在位置的负梯度方向作为搜索方向，而是在负梯度方向的基础上进行了一定的调整，从而实现更加快速的收敛效果。下面整理一下，共轭梯度法对这个搜索方向的修正思路。</p>
+<h4 id="共轭梯度法的优化思路">共轭梯度法的优化思路</h4>
+<p>观察 <span class="math inline">\(\varphi(\boldsymbol{x}+\alpha \boldsymbol{y})\)</span> 的展开式</p>
+<p><span class="math display">\[
+\varphi(\boldsymbol{x}+\alpha \boldsymbol{y}) = \varphi(\boldsymbol{x}) + \frac{1}{2}\alpha^2(\boldsymbol{y}, A\boldsymbol{y}) + \alpha(\boldsymbol{y}, A\boldsymbol{x}-\boldsymbol{b})
+\]</span></p>
+<p>注意到，将 <span class="math inline">\(\alpha(\boldsymbol{y}, A\boldsymbol{x}-\boldsymbol{b})\)</span> 拆分为 <span class="math inline">\(\alpha(\boldsymbol{y}, A\boldsymbol{x}) - \alpha(\boldsymbol{y}, \boldsymbol{b})\)</span> 后，会发现 <span class="math inline">\(\varphi(\boldsymbol{x}+\alpha \boldsymbol{y})\)</span> 的展开式中存在 <span class="math inline">\(\boldsymbol{x}, \boldsymbol{y}\)</span> 的耦合项 <span class="math inline">\((\boldsymbol{y}, A\boldsymbol{x})\)</span>。这一项的存在会干扰最优 <span class="math inline">\(\boldsymbol{y}\)</span> 即最优搜索方向的选取，因此我们希望这一项恒为0。</p>
+<p>在此之前，先要说明一个基本事实。由 <span class="math inline">\(\boldsymbol{x}^{(k+1)} = \boldsymbol{x}^{(k)}+\alpha_k\boldsymbol{p}^{(k)}\)</span>，可以推出</p>
+<p><span class="math display">\[
+\boldsymbol{x}^{(j)} = \sum_i^{j-1} \boldsymbol{p}^{(i)}
+\]</span></p>
+<p>即搜索向量实际上就是 <span class="math inline">\(\boldsymbol{p}^{(0)}, \boldsymbol{p}^{(1)}, \cdots\)</span> 的线性组合。</p>
+<p>明确了这一点以后，又因为共轭梯度法中 <span class="math inline">\(\boldsymbol{y} = \boldsymbol{p}\)</span>，此时再来考虑耦合项 <span class="math inline">\((\boldsymbol{y}, A\boldsymbol{x})\)</span>。这时会发现，由于矩阵 <span class="math inline">\(A\)</span> 对称正定，那么假如任意 <span class="math inline">\(\boldsymbol{p}^{(i)}, \boldsymbol{p}^{(j)}\)</span> 满足 <span class="math inline">\((\boldsymbol{p}^{(i)}, A\boldsymbol{p}^{(j)})=0\)</span> 或 <span class="math inline">\((\boldsymbol{p}^{(j)}, A\boldsymbol{p}^{(i)})=0\)</span>，那么 <span class="math inline">\((\boldsymbol{p}, A\boldsymbol{x})\)</span> 必然恒为0。</p>
+<p>这里就引出了所谓共轭的概念。假如存在一组向量 <span class="math inline">\(\{\boldsymbol{p}\}\)</span> 满足从这组向量中任取两个 <span class="math inline">\(\boldsymbol{p}^{(i)}, \boldsymbol{p}^{(j)}\)</span>，对矩阵 <span class="math inline">\(A\)</span> 均有 <span class="math inline">\((\boldsymbol{p}^{(i)}, A\boldsymbol{p}^{(j)})=0\)</span> 成立，那么称 <span class="math inline">\(\{\boldsymbol{p}\}\)</span> 是矩阵 <span class="math inline">\(A\)</span> 的一组共轭向量。特别的，如果矩阵 <span class="math inline">\(A\)</span> 恰为单位阵，那么向量组 <span class="math inline">\(\{\boldsymbol{p}\}\)</span> 就是一组正交向量。可以看出，共轭向量其实是正交向量的推广。</p>
+<p>先暂且不论如何求出这一组共轭向量。假如我们已经得到了共轭向量组 <span class="math inline">\(\{\boldsymbol{p}\}\)</span>，那么 <span class="math inline">\(\varphi(\boldsymbol{x}+\alpha \boldsymbol{p})\)</span> 的展开式将变为</p>
+<p><span class="math display">\[
+\varphi(\boldsymbol{x}+\alpha \boldsymbol{p}) = \varphi(\boldsymbol{x}) + \frac{1}{2}\alpha^2(\boldsymbol{p}, A\boldsymbol{p}) - \alpha(\boldsymbol{p}, \boldsymbol{b})
+\]</span></p>
+<p>那么求 <span class="math inline">\(\varphi(\boldsymbol{x}+\alpha \boldsymbol{p})\)</span> 最小值的问题，就可以分解为求 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 对 <span class="math inline">\(\boldsymbol{x}\)</span> 的最小值以及求 <span class="math inline">\(\frac{1}{2}\alpha^2(\boldsymbol{p}, A\boldsymbol{p}) - \alpha (\boldsymbol{p}, \boldsymbol{b})\)</span> 对 <span class="math inline">\(\alpha\)</span> 的最小值的问题。</p>
+<p>后者其实就是求共轭梯度法最优步长的问题。同样，由于这一部分对 <span class="math inline">\(\alpha\)</span> 的二阶导数恒为正，因此求出这一部分一阶导数的零点，就可以得到使其取最小值的 <span class="math inline">\(\alpha\)</span>，那么有</p>
+<p><span class="math display">\[
+\alpha_k (\boldsymbol{p}^{(k)}, A\boldsymbol{p}^{(k)})-(\boldsymbol{p}^{(k)}, \boldsymbol{b}) = 0
+\]</span></p>
+<p>可以得到</p>
+<p><span class="math display">\[
+\alpha_k = \frac{(\boldsymbol{p}^{(k)}, \boldsymbol{b})}{(\boldsymbol{p}^{(k)}, A\boldsymbol{p}^{(k)})}
+\]</span></p>
+<p>而前者，求 <span class="math inline">\(\varphi(\boldsymbol{x})\)</span> 对 <span class="math inline">\(\boldsymbol{x}\)</span> 的最小值，实际上就是每一步迭代在做的事情，也就是说求 <span class="math inline">\(\varphi(\boldsymbol{x}^{(k)})\)</span> 的最小值，又可以分解为求 <span class="math inline">\(\varphi(\boldsymbol{x}^{(k-1)})\)</span> 的最小值和求 <span class="math inline">\(\frac{1}{2}\alpha_{k-1}^2(\boldsymbol{p}^{(k-1)}, A\boldsymbol{p}^{(k-1)}) - \alpha_{k-1} (\boldsymbol{p}^{(k-1)}, \boldsymbol{b})\)</span> 对 <span class="math inline">\(\alpha_{k-1}\)</span> 的最小值的问题。如此循环往复，实际上每一步只要求出最优步长即可。</p>
+<p>那么如何找到这样一组共轭向量呢？不妨令 <span class="math inline">\(\boldsymbol{p}^{(k)} = \boldsymbol{r}^{(k)} + \beta_{k-1}\boldsymbol{p}^{(k-1)}\)</span>，根据 <span class="math inline">\((\boldsymbol{p}^{(k)}, A\boldsymbol{p}^{(k-1)}) = 0\)</span>，可以得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+(\boldsymbol{r}^{(k)}+\beta_{k-1}\boldsymbol{p}^{(k-1)}, A\boldsymbol{p}^{(k-1)}) = 0\\
+(\boldsymbol{r}^{(k)}, A\boldsymbol{p}^{(k-1)}) + \beta_{k-1}(\boldsymbol{p}^{(k-1)}, A\boldsymbol{p}^{(k-1)}) = 0
+\end{aligned}
+\]</span></p>
+<p>那么可以得到 <span class="math inline">\(\beta_{k-1}\)</span> 的表达式</p>
+<p><span class="math display">\[
+\beta_{k-1} = -\frac{(\boldsymbol{r}^{(k)}, A\boldsymbol{p}^{(k-1)})}{(\boldsymbol{p}^{(k-1)}, A\boldsymbol{p}^{(k-1)})}
+\]</span></p>
+<p>根据这样的关系，实际上我们令 <span class="math inline">\(\boldsymbol{p}^{(0)} = \boldsymbol{r}^{(0)}\)</span>，就可以递推得到所有 <span class="math inline">\(\{\boldsymbol{p}^{(i)}\}\)</span> 了。</p>
+<h4 id="共轭梯度法的误差分析">共轭梯度法的误差分析</h4>
+<p>下面，我们不加证明地给出共轭梯度法的误差分析式</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*||_A\leq 2[\frac{\sqrt{\lambda_1} - \sqrt{\lambda_n}}{\sqrt{\lambda_1}+\sqrt{\lambda_n}}]^k ||\boldsymbol{x}^{(0)}-\boldsymbol{x}^*||_A
+\]</span></p>
+<p>若记 <span class="math inline">\(\mu = \displaystyle\frac{\lambda_1}{\lambda_n}\)</span>，则有</p>
+<p><span class="math display">\[
+||\boldsymbol{x}^{(k)}-\boldsymbol{x}^*||_A\leq 2[\frac{\sqrt{\mu}-1}{\sqrt{\mu}+1}]^k ||\boldsymbol{x}^{(0)}-\boldsymbol{x}^*||_A
+\]</span></p>
+<p>显然，共轭梯度法的收敛速度要快于最速下降法。事实上，共轭梯度法在不丢失精度的情况下，一定可以在 <span class="math inline">\(k\)</span> 步以内收敛，但是由于数值计算存在数值误差，向量组 <span class="math inline">\(\{\boldsymbol{p}\}\)</span> 会逐渐失去正交性，因此共轭梯度法在应用时收敛步长总是略大于 <span class="math inline">\(k\)</span> 步，但这也是一个非常不错的线性方程组求解方法了。</p>
+<h4 id="共轭梯度法的预处理方法">共轭梯度法的预处理方法</h4>
+<p>对于共轭梯度法来说，可以对原线性方程组做以下预处理，以加速收敛</p>
+<p><span class="math display">\[
+M^{-1}A\boldsymbol{x} = M^{-1}\boldsymbol{b}
+\]</span></p>
+<p>如果矩阵 <span class="math inline">\(M\)</span> 可以分解为 <span class="math inline">\(LL^T\)</span>，那么还可以将上述方程组写作</p>
+<p><span class="math display">\[
+L^{-1}AL^{-T}\boldsymbol{y} = L^{-1}\boldsymbol{b}, \ L^{-T}\boldsymbol{y} = \boldsymbol{x}
+\]</span></p>
+<p>其中，矩阵 <span class="math inline">\(M\)</span> 是一个与矩阵 <span class="math inline">\(A\)</span> 类似的矩阵。一般来说，可以取 <span class="math inline">\(M=diag(A)\)</span>，以简化预处理。事实证明，经过预处理的共轭梯度法收敛要比共轭梯度法更快。具体的证明略去。</p>
 
     </div>
 
