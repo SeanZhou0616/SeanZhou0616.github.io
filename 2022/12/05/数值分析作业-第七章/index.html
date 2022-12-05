@@ -22,26 +22,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Sean Zhou&#39;s personal blog.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Elysium">
-<meta property="og:url" content="http://seanzhou0616.github.io/tags/Computer-Science/">
+    <meta name="description" content="第一题 证明 \(x&#x3D;cosx\) 的全局收敛性。 第二题 将 \(x&#x3D;tanx\) 化为合适的迭代格式，并求解 \(x&#x3D;4.5\) 附近的根。 第三题 用牛顿法求解 \(f(x)&#x3D;sin(x^3)\) 的改进方法 第四题 使用牛顿法或割线法计算 \(f(x) &#x3D; 3x^3 - 8x^2 - 8x - 12&#x3D;0\) 的某个近似根，使误差在 \(10^{-4}\) 以内。 第五题 非线性方程组求解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数值分析作业-第七章">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/12/05/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%B8%83%E7%AB%A0/">
 <meta property="og:site_name" content="Elysium">
-<meta property="og:description" content="Sean Zhou&#39;s personal blog.">
+<meta property="og:description" content="第一题 证明 \(x&#x3D;cosx\) 的全局收敛性。 第二题 将 \(x&#x3D;tanx\) 化为合适的迭代格式，并求解 \(x&#x3D;4.5\) 附近的根。 第三题 用牛顿法求解 \(f(x)&#x3D;sin(x^3)\) 的改进方法 第四题 使用牛顿法或割线法计算 \(f(x) &#x3D; 3x^3 - 8x^2 - 8x - 12&#x3D;0\) 的某个近似根，使误差在 \(10^{-4}\) 以内。 第五题 非线性方程组求解。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-05T08:05:38.000Z">
+<meta property="article:modified_time" content="2022-12-05T08:10:05.071Z">
 <meta property="article:author" content="Sean Zhou">
-<meta property="article:tag" content="Personal-Blog">
+<meta property="article:tag" content="Numerical Analysis">
+<meta property="article:tag" content="Mathematics">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://seanzhou0616.github.io/tags/Computer-Science/">
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/12/05/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%B8%83%E7%AB%A0/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"tags/Computer-Science/index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/12/05/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%B8%83%E7%AB%A0/","path":"2022/12/05/数值分析作业-第七章/","title":"数值分析作业-第七章"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>标签: Computer Science | Elysium</title>
+<title>数值分析作业-第七章 | Elysium</title>
   
 
 
@@ -132,7 +135,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -145,6 +148,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">第一题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">第二题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">第三题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">第四题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">第五题</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -207,50 +211,114 @@
 </noscript>
 
 
-    <div class="main-inner tag posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
+
+
+<div class="post-block">
   
   
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h1 class="collection-header">Computer Science
-          <small>标签</small>
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/12/05/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%B8%83%E7%AB%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数值分析作业-第七章 | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数值分析作业-第七章
         </h1>
-      </div>
 
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
+
+      <time title="创建时间：2022-12-05 16:05:38 / 修改时间：16:10:05" itemprop="dateCreated datePublished" datetime="2022-12-05T16:05:38+08:00">2022-12-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/University/" itemprop="url" rel="index"><span itemprop="name">University</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="第一题">第一题</h2>
+<p>证明 <span class="math inline">\(x=cosx\)</span> 的全局收敛性。</p>
+<h2 id="第二题">第二题</h2>
+<p>将 <span class="math inline">\(x=tanx\)</span> 化为合适的迭代格式，并求解 <span class="math inline">\(x=4.5\)</span> 附近的根。</p>
+<h2 id="第三题">第三题</h2>
+<p>用牛顿法求解 <span class="math inline">\(f(x)=sin(x^3)\)</span> 的改进方法</p>
+<h2 id="第四题">第四题</h2>
+<p>使用牛顿法或割线法计算 <span class="math inline">\(f(x) = 3x^3 - 8x^2 - 8x - 12=0\)</span> 的某个近似根，使误差在 <span class="math inline">\(10^{-4}\)</span> 以内。</p>
+<h2 id="第五题">第五题</h2>
+<p>非线性方程组求解。</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2022-11-25T15:07:07+08:00"
-              content="2022-11-25">
-          11-25
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/11/25/%E5%A4%A7%E8%AF%9D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%AC%94%E8%AE%B0-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%BB%AA%E8%AE%BA/" itemprop="url">
-            <span itemprop="name">大话数据结构笔记-数据结构绪论</span>
-          </a>
-      </div>
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Numerical-Analysis/" rel="tag"># Numerical Analysis</a>
+              <a href="/tags/Mathematics/" rel="tag"># Mathematics</a>
+          </div>
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/12/05/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E6%B1%82%E6%A0%B9/" rel="prev" title="数值分析笔记-非线性方程求根">
+                  <i class="fa fa-chevron-left"></i> 数值分析笔记-非线性方程求根
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/12/05/Ubuntu%E4%B8%8B%E5%BC%BA%E5%88%B6apt%E8%B5%B0%E4%BB%A3%E7%90%86/" rel="next" title="Ubuntu下强制apt走代理">
+                  Ubuntu下强制apt走代理 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
   </article>
+</div>
 
-    </div>
-  </div>
-  
-  
-  
+
+
+
+
 
 </div>
   </main>

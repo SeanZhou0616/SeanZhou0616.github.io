@@ -1955,6 +1955,35 @@ a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
       </tags>
   </entry>
   <entry>
+    <title>Ubuntu下强制apt走代理</title>
+    <url>/2022/12/05/Ubuntu%E4%B8%8B%E5%BC%BA%E5%88%B6apt%E8%B5%B0%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<p>今天闲着没事，鼓捣了一下Rock Pi，发现 <code>export http_proxy</code> 对 <code>apt</code> 不起作用。查了一下，发现可以通过以下命令强制 <code>apt</code> 走代理。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt -o Acquire::http::proxy=<span class="string">&quot;http://192.168.2.101:7890&quot;</span> upgrade</span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
+    <title>数值分析作业-第七章</title>
+    <url>/2022/12/05/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%B8%83%E7%AB%A0/</url>
+    <content><![CDATA[<h2 id="第一题">第一题</h2>
+<p>证明 <span class="math inline">\(x=cosx\)</span> 的全局收敛性。</p>
+<h2 id="第二题">第二题</h2>
+<p>将 <span class="math inline">\(x=tanx\)</span> 化为合适的迭代格式，并求解 <span class="math inline">\(x=4.5\)</span> 附近的根。</p>
+<h2 id="第三题">第三题</h2>
+<p>用牛顿法求解 <span class="math inline">\(f(x)=sin(x^3)\)</span> 的改进方法</p>
+<h2 id="第四题">第四题</h2>
+<p>使用牛顿法或割线法计算 <span class="math inline">\(f(x) = 3x^3 - 8x^2 - 8x - 12=0\)</span> 的某个近似根，使误差在 <span class="math inline">\(10^{-4}\)</span> 以内。</p>
+<h2 id="第五题">第五题</h2>
+<p>非线性方程组求解。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数值分析作业-第五章</title>
     <url>/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E4%BA%94%E7%AB%A0/</url>
     <content><![CDATA[<p>姓名：周晓</p>
