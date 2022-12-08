@@ -1696,6 +1696,97 @@ D\boldsymbol{x}^{(k+1)} = L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsym
       </tags>
   </entry>
   <entry>
+    <title>数值分析笔记-最小二乘法</title>
+    <url>/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="由函数表估计函数关系的常见方法">由函数表估计函数关系的常见方法</h2>
+<ol type="1">
+<li>多项式插值</li>
+<li>样条曲线拟合</li>
+</ol>
+<p>多项式插值是一种很简单的函数拟合方法，对于关系比较简单的函数表来说效果还可以，但是如果函数表中的点复杂一些，就会有很大的误差，而且很容易出现Runge现象；样条曲线拟合是一种很好的函数拟合方式，每两个函数点之间都进行一次三次样条插值，且在插值点上能够实现一阶或两阶导数相等，但是计算量非常大。</p>
+<p>上面提到的两种方法都有各自的优势和弊端。下面介绍另外一种函数拟合的方式——最小二乘法。最小二乘法可以克服数值振荡的问题，同时计算量也能够得到控制。</p>
+<span id="more"></span>
+<h2 id="什么是最小二乘法">什么是最小二乘法？</h2>
+<p>最小二乘法是这样一系列操作：在函数空间 <span class="math inline">\(\Phi\)</span> 中，求一个最优的函数 <span class="math inline">\(s^*(x)\)</span>，使得</p>
+<p><span class="math display">\[
+\sum_{i=0}^m\omega_i [s^*(x_i) - f(x_i)]^2=min_{s(x)\in \Phi} \sum_{i=0}^m \omega_i [s(x_i) - f(x_i)]^2
+\]</span></p>
+<p>其中 <span class="math inline">\(\omega_i\)</span> 表示 <span class="math inline">\(x=x_i\)</span> 处的权。最小二乘法本质上是函数逼近。</p>
+<h2 id="最小二乘法的具体做法">最小二乘法的具体做法</h2>
+<p>求上面所述的 <span class="math inline">\(s^*(x)\)</span> 可以等价为求一系列 <span class="math inline">\(\{a_n\}\)</span> 使得</p>
+<p><span class="math display">\[
+\sum_{i=0}^m [a_i\varphi_i(x_i)-f(x_i)]^2
+\]</span></p>
+<p>取得极小值。为此可以写出在第 <span class="math inline">\(k\)</span> 个基函数 <span class="math inline">\(\varphi_k(x)\)</span> 上的法方程</p>
+<p><span class="math display">\[
+\sum_{j=0}^m (\varphi_j, \varphi_k)a_j = (f, \varphi_k), k = 0, 1, 2, ..., n
+\]</span></p>
+<p>其中，<span class="math inline">\((f, g)\)</span> 表示函数 <span class="math inline">\(f\)</span> 和 <span class="math inline">\(g\)</span> 在所有插值点上的函数值之积求和。法方程可以总结为被逼近函数 <span class="math inline">\(f(x)\)</span> 与基函数 <span class="math inline">\(\varphi_k(x)\)</span> 在插值点上的积之总和等于基函数 <span class="math inline">\(\varphi_k(x)\)</span> 与其他所有线性无关基函数 <span class="math inline">\(\varphi_j(x)\)</span> 在插值点上的积之总和的加权和，其中加权系数为 <span class="math inline">\(a_j\)</span>。</p>
+<p>法方程展开可以得到以下等式</p>
+<p><span class="math display">\[
+\sum_{j=0}^m a_j\sum_{i=0}^n \omega_i(x_i) \varphi_j(x_i) \varphi_k(x_i) = \sum_{i=0}^n \omega_i(x_i) \varphi_k(x_i) f(x_i), k=0, 1, 2, ..., n
+\]</span></p>
+<p><em>由法方程可以推导出 <span class="math inline">\(s^*(x)\)</span> 的唯一性</em> 由于 <span class="math inline">\({\varphi(x)}\)</span> 是一组线性无关的基函数，因此上述方程组是非奇异的，那么必然能够解出唯一的一组 <span class="math inline">\(\{a_j\}\)</span>，所以 <span class="math inline">\(s^*(x)\)</span> 存在且唯一。</p>
+<h2 id="最小二乘逼近的技巧">最小二乘逼近的技巧</h2>
+<p>提高最小二乘法拟合精度的技巧主要在于选择合适的函数空间 <span class="math inline">\(\Phi\)</span>。所谓选择合适的函数空间，其实就是选择合适的拟合模型，这一点对于做ECM拟合的人来说应该是非常熟悉的事情了。一种常用的模型是多项式模型 <span class="math inline">\(\{x^n\}\)</span>，但用这个模型进行最小二乘法拟合的效果比多项式插值可能还要差，因为多项式的次数太高了，很容易出现病态问题——即函数表的数据稍有变化，拟合函数的参数 <span class="math inline">\(a_j\)</span> 就出现剧烈的变化。所以多项式模型做最小二乘逼近是很少使用的。</p>
+<p>一种比较好的方法是，采用<strong>正交多项式族</strong>作为基函数。所谓的正交多项式族，是指一些形如 <span class="math inline">\(ax^3 + bx^2 + cx\)</span> 以及 <span class="math inline">\(ax^2 + bx + c\)</span> 的函数组成的一组基函数，这些多项式函数两两正交。</p>
+<h3 id="正交多项式族">正交多项式族</h3>
+<p>正交多项式族可以用以下公式求得</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;p_0(x) = 1\\
+&amp;p_{k+1}(x) = (x -\alpha_k)p_k(x) - \beta_{k-1} p_{k-1}(x)\\
+\end{aligned}
+\]</span></p>
+<p>其中 <span class="math display">\[
+\begin{aligned}
+&amp; \alpha_k = \frac{(xp_k, p_k)}{(p_k, p_k)}\\
+&amp; \beta_{k-1} = \frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\\
+\end{aligned}
+\]</span></p>
+<p>同样，<span class="math inline">\((p_k, p_k)\)</span> 表示函数 <span class="math inline">\(p_k(x)\)</span> 和自己在所有插值点上的函数值之积求和。</p>
+<p>由于正交多项式族是通过给定的插值点构造出来的，因此最易于计算的一组正交多项式族应当满足在插值点上正交，即在插值点上与其他所有基函数的函数值之积求和恰好为0，那么法方程就可以简化为</p>
+<p><span class="math display">\[
+a_k(\varphi_k, \varphi_k) = (f, \varphi_k), k= 0, 1, 2, ..., n
+\]</span></p>
+<p>所以，加权系数 <span class="math inline">\({a_k}\)</span> 的表达式就变得非常简单</p>
+<p><span class="math display">\[
+a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
+\]</span></p>
+<h3 id="利用正交多项式族进行最小二乘逼近">利用正交多项式族进行最小二乘逼近</h3>
+<ol type="1">
+<li>写出第 <span class="math inline">\(k\)</span> 项正交多项式 <span class="math inline">\(p_k(x) = (x - \alpha_{k-1})p_{k-1}(x) - \beta_{k-2}p_{k-2}(x)\)</span></li>
+<li>由 <span class="math inline">\(p_k(x)\)</span> 可以计算得到 <span class="math inline">\(a_k=\displaystyle\frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}\)</span></li>
+<li>第 <span class="math inline">\(k\)</span> 项正交多项式基函数 <span class="math inline">\(g_k(x)=a_kp_k(x)+g_{k-1}(x)\)</span></li>
+<li>为了求出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span>，必须求出 <span class="math inline">\(\alpha_k\)</span> 和 <span class="math inline">\(\beta_{k-1}\)</span>，<span class="math inline">\(\alpha_k=\displaystyle\frac{(xp_k, p_k)}{(p_k, p_k)}\)</span>, <span class="math inline">\(\beta_{k-1} = \displaystyle\frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\)</span></li>
+<li>写出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span></li>
+</ol>
+<h2 id="周期函数逼近">周期函数逼近</h2>
+<p>如果被逼近函数是一个周期函数，那么可以在函数空间 <span class="math inline">\(\Phi = \{1, sinx, cosx, sin2x, cos2x, ..., sinnx, cosnx\}\)</span> 上求最佳平方逼近函数 <span class="math inline">\(s_n(x) = \displaystyle\frac{a_0}{2} + \sum_{j=1}^n(a_jcosjx + b_jsinjx)\)</span>，其中</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) cosjxdx, \ j = 0, 1, ...,n\\
+&amp;b_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) sinjxdx, \ j = 1, 2, ..., n
+\end{aligned}
+\]</span></p>
+<p>其实实际应用中不可能进行连续积分，一般只能给出离散的采样点 <span class="math inline">\((x_i, y_i)\)</span>，那么可以将上面的连续积分离散化，得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_j = \frac{2}{N}\sum_{i=0}^{N-1}y_icoskx_i, \  k=0, 1, ..., n\\
+&amp;b_j = \frac{2}{N}\sum_{i=0}^{N-1}y_isinkx_i, \ k = 1, 2, ..., n
+\end{aligned}
+\]</span></p>
+<p>不过需要注意，上面的 <span class="math inline">\(x\)</span> 应线性变换至 <span class="math inline">\((0, 2\pi)\)</span>。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Rust入门-通用编程概念</title>
     <url>/2022/11/07/Rust%E5%85%A5%E9%97%A8-%E9%80%9A%E7%94%A8%E7%BC%96%E7%A8%8B%E6%A6%82%E5%BF%B5/</url>
     <content><![CDATA[<h2 id="变量与可变性">变量与可变性</h2>
@@ -1864,95 +1955,13 @@ D\boldsymbol{x}^{(k+1)} = L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsym
       </tags>
   </entry>
   <entry>
-    <title>数值分析笔记-最小二乘法</title>
-    <url>/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="由函数表估计函数关系的常见方法">由函数表估计函数关系的常见方法</h2>
-<ol type="1">
-<li>多项式插值</li>
-<li>样条曲线拟合</li>
-</ol>
-<p>多项式插值是一种很简单的函数拟合方法，对于关系比较简单的函数表来说效果还可以，但是如果函数表中的点复杂一些，就会有很大的误差，而且很容易出现Runge现象；样条曲线拟合是一种很好的函数拟合方式，每两个函数点之间都进行一次三次样条插值，且在插值点上能够实现一阶或两阶导数相等，但是计算量非常大。</p>
-<p>上面提到的两种方法都有各自的优势和弊端。下面介绍另外一种函数拟合的方式——最小二乘法。最小二乘法可以克服数值振荡的问题，同时计算量也能够得到控制。</p>
-<span id="more"></span>
-<h2 id="什么是最小二乘法">什么是最小二乘法？</h2>
-<p>最小二乘法是这样一系列操作：在函数空间 <span class="math inline">\(\Phi\)</span> 中，求一个最优的函数 <span class="math inline">\(s^*(x)\)</span>，使得</p>
-<p><span class="math display">\[
-\sum_{i=0}^m\omega_i [s^*(x_i) - f(x_i)]^2=min_{s(x)\in \Phi} \sum_{i=0}^m \omega_i [s(x_i) - f(x_i)]^2
-\]</span></p>
-<p>其中 <span class="math inline">\(\omega_i\)</span> 表示 <span class="math inline">\(x=x_i\)</span> 处的权。最小二乘法本质上是函数逼近。</p>
-<h2 id="最小二乘法的具体做法">最小二乘法的具体做法</h2>
-<p>求上面所述的 <span class="math inline">\(s^*(x)\)</span> 可以等价为求一系列 <span class="math inline">\(\{a_n\}\)</span> 使得</p>
-<p><span class="math display">\[
-\sum_{i=0}^m [a_i\varphi_i(x_i)-f(x_i)]^2
-\]</span></p>
-<p>取得极小值。为此可以写出在第 <span class="math inline">\(k\)</span> 个基函数 <span class="math inline">\(\varphi_k(x)\)</span> 上的法方程</p>
-<p><span class="math display">\[
-\sum_{j=0}^m (\varphi_j, \varphi_k)a_j = (f, \varphi_k), k = 0, 1, 2, ..., n
-\]</span></p>
-<p>其中，<span class="math inline">\((f, g)\)</span> 表示函数 <span class="math inline">\(f\)</span> 和 <span class="math inline">\(g\)</span> 在所有插值点上的函数值之积求和。法方程可以总结为被逼近函数 <span class="math inline">\(f(x)\)</span> 与基函数 <span class="math inline">\(\varphi_k(x)\)</span> 在插值点上的积之总和等于基函数 <span class="math inline">\(\varphi_k(x)\)</span> 与其他所有线性无关基函数 <span class="math inline">\(\varphi_j(x)\)</span> 在插值点上的积之总和的加权和，其中加权系数为 <span class="math inline">\(a_j\)</span>。</p>
-<p>法方程展开可以得到以下等式</p>
-<p><span class="math display">\[
-\sum_{j=0}^m a_j\sum_{i=0}^n \omega_i(x_i) \varphi_j(x_i) \varphi_k(x_i) = \sum_{i=0}^n \omega_i(x_i) \varphi_k(x_i) f(x_i), k=0, 1, 2, ..., n
-\]</span></p>
-<p><em>由法方程可以推导出 <span class="math inline">\(s^*(x)\)</span> 的唯一性</em> 由于 <span class="math inline">\({\varphi(x)}\)</span> 是一组线性无关的基函数，因此上述方程组是非奇异的，那么必然能够解出唯一的一组 <span class="math inline">\(\{a_j\}\)</span>，所以 <span class="math inline">\(s^*(x)\)</span> 存在且唯一。</p>
-<h2 id="最小二乘逼近的技巧">最小二乘逼近的技巧</h2>
-<p>提高最小二乘法拟合精度的技巧主要在于选择合适的函数空间 <span class="math inline">\(\Phi\)</span>。所谓选择合适的函数空间，其实就是选择合适的拟合模型，这一点对于做ECM拟合的人来说应该是非常熟悉的事情了。一种常用的模型是多项式模型 <span class="math inline">\(\{x^n\}\)</span>，但用这个模型进行最小二乘法拟合的效果比多项式插值可能还要差，因为多项式的次数太高了，很容易出现病态问题——即函数表的数据稍有变化，拟合函数的参数 <span class="math inline">\(a_j\)</span> 就出现剧烈的变化。所以多项式模型做最小二乘逼近是很少使用的。</p>
-<p>一种比较好的方法是，采用<strong>正交多项式族</strong>作为基函数。所谓的正交多项式族，是指一些形如 <span class="math inline">\(ax^3 + bx^2 + cx\)</span> 以及 <span class="math inline">\(ax^2 + bx + c\)</span> 的函数组成的一组基函数，这些多项式函数两两正交。</p>
-<h3 id="正交多项式族">正交多项式族</h3>
-<p>正交多项式族可以用以下公式求得</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp;p_0(x) = 1\\
-&amp;p_{k+1}(x) = (x -\alpha_k)p_k(x) - \beta_{k-1} p_{k-1}(x)\\
-\end{aligned}
-\]</span></p>
-<p>其中 <span class="math display">\[
-\begin{aligned}
-&amp; \alpha_k = \frac{(xp_k, p_k)}{(p_k, p_k)}\\
-&amp; \beta_{k-1} = \frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\\
-\end{aligned}
-\]</span></p>
-<p>同样，<span class="math inline">\((p_k, p_k)\)</span> 表示函数 <span class="math inline">\(p_k(x)\)</span> 和自己在所有插值点上的函数值之积求和。</p>
-<p>由于正交多项式族是通过给定的插值点构造出来的，因此最易于计算的一组正交多项式族应当满足在插值点上正交，即在插值点上与其他所有基函数的函数值之积求和恰好为0，那么法方程就可以简化为</p>
-<p><span class="math display">\[
-a_k(\varphi_k, \varphi_k) = (f, \varphi_k), k= 0, 1, 2, ..., n
-\]</span></p>
-<p>所以，加权系数 <span class="math inline">\({a_k}\)</span> 的表达式就变得非常简单</p>
-<p><span class="math display">\[
-a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
-\]</span></p>
-<h3 id="利用正交多项式族进行最小二乘逼近">利用正交多项式族进行最小二乘逼近</h3>
-<ol type="1">
-<li>写出第 <span class="math inline">\(k\)</span> 项正交多项式 <span class="math inline">\(p_k(x) = (x - \alpha_{k-1})p_{k-1}(x) - \beta_{k-2}p_{k-2}(x)\)</span></li>
-<li>由 <span class="math inline">\(p_k(x)\)</span> 可以计算得到 <span class="math inline">\(a_k=\displaystyle\frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}\)</span></li>
-<li>第 <span class="math inline">\(k\)</span> 项正交多项式基函数 <span class="math inline">\(g_k(x)=a_kp_k(x)+g_{k-1}(x)\)</span></li>
-<li>为了求出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span>，必须求出 <span class="math inline">\(\alpha_k\)</span> 和 <span class="math inline">\(\beta_{k-1}\)</span>，<span class="math inline">\(\alpha_k=\displaystyle\frac{(xp_k, p_k)}{(p_k, p_k)}\)</span>, <span class="math inline">\(\beta_{k-1} = \displaystyle\frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\)</span></li>
-<li>写出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span></li>
-</ol>
-<h2 id="周期函数逼近">周期函数逼近</h2>
-<p>如果被逼近函数是一个周期函数，那么可以在函数空间 <span class="math inline">\(\Phi = \{1, sinx, cosx, sin2x, cos2x, ..., sinnx, cosnx\}\)</span> 上求最佳平方逼近函数 <span class="math inline">\(s_n(x) = \displaystyle\frac{a_0}{2} + \sum_{j=1}^n(a_jcosjx + b_jsinjx)\)</span>，其中</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp;a_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) cosjxdx, \ j = 0, 1, ...,n\\
-&amp;b_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) sinjxdx, \ j = 1, 2, ..., n
-\end{aligned}
-\]</span></p>
-<p>其实实际应用中不可能进行连续积分，一般只能给出离散的采样点 <span class="math inline">\((x_i, y_i)\)</span>，那么可以将上面的连续积分离散化，得到</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp;a_j = \frac{2}{N}\sum_{i=0}^{N-1}y_icoskx_i, \  k=0, 1, ..., n\\
-&amp;b_j = \frac{2}{N}\sum_{i=0}^{N-1}y_isinkx_i, \ k = 1, 2, ..., n
-\end{aligned}
-\]</span></p>
-<p>不过需要注意，上面的 <span class="math inline">\(x\)</span> 应线性变换至 <span class="math inline">\((0, 2\pi)\)</span>。</p>
+    <title>Ubuntu下强制apt走代理</title>
+    <url>/2022/12/05/Ubuntu%E4%B8%8B%E5%BC%BA%E5%88%B6apt%E8%B5%B0%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<p>今天闲着没事，鼓捣了一下Rock Pi，发现 <code>export http_proxy</code> 对 <code>apt</code> 不起作用。查了一下，发现可以通过以下命令强制 <code>apt</code> 走代理。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt -o Acquire::http::proxy=<span class="string">&quot;http://192.168.2.101:7890&quot;</span> upgrade</span><br></pre></td></tr></table></figure>
+<p>或者新建 <code>/etc/apt/apt.conf.d/proxy.conf</code>，输入</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Acquire::http::Proxy &quot;http://192.168.2.101:7890&quot;;</span><br><span class="line">Acquire::https::Proxy &quot;http://192.168.2.101:7890&quot;;</span><br></pre></td></tr></table></figure>
 ]]></content>
-      <categories>
-        <category>University</category>
-      </categories>
-      <tags>
-        <tag>Numerical Analysis</tag>
-        <tag>Mathematics</tag>
-      </tags>
   </entry>
   <entry>
     <title>数值分析作业-第七章</title>
@@ -2146,430 +2155,99 @@ f_i(\boldsymbol{x}) = f_i(\boldsymbol{x}^{(k)}) + \sum_{j=i}^{i+4}\frac{\partial
       </tags>
   </entry>
   <entry>
-    <title>Ubuntu下强制apt走代理</title>
-    <url>/2022/12/05/Ubuntu%E4%B8%8B%E5%BC%BA%E5%88%B6apt%E8%B5%B0%E4%BB%A3%E7%90%86/</url>
-    <content><![CDATA[<p>今天闲着没事，鼓捣了一下Rock Pi，发现 <code>export http_proxy</code> 对 <code>apt</code> 不起作用。查了一下，发现可以通过以下命令强制 <code>apt</code> 走代理。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt -o Acquire::http::proxy=<span class="string">&quot;http://192.168.2.101:7890&quot;</span> upgrade</span><br></pre></td></tr></table></figure>
-<p>或者新建 <code>/etc/apt/apt.conf.d/proxy.conf</code>，输入</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Acquire::http::Proxy &quot;http://192.168.2.101:7890&quot;;</span><br><span class="line">Acquire::https::Proxy &quot;http://192.168.2.101:7890&quot;;</span><br></pre></td></tr></table></figure>
-]]></content>
-  </entry>
-  <entry>
-    <title>数值分析笔记-数值积分</title>
-    <url>/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86/</url>
-    <content><![CDATA[<h2 id="数值积分引入">数值积分引入</h2>
-<p>对于连续函数 <span class="math inline">\(f(x)\)</span> 来说，如果这个函数的表达式比较简单，我们一般可以使用Newton-Leibniz公式进行积分</p>
+    <title>RNN入门</title>
+    <url>/2022/12/08/RNN%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h2 id="naive-rnn">Naive RNN</h2>
+<p><img src="/2022/12/08/RNN%E5%85%A5%E9%97%A8//Naive-RNN.jpg" align="center" width="80%"></p>
+<p>RNN(Recurrent Neural Network)，即循环神经网络，是神经网络中的一种与时间序列有关的神经网络。与一般的卷积神经网络不同的地方在于，循环神经网络会存储时间序列中每一时刻的状态。原生的神经网络结构可以用以下式子表达</p>
 <p><span class="math display">\[
-\int_a^b f(x)dx = F(b) - F(a)
+\begin{aligned}
+    h_t &amp;= \sigma(W_ix_t+W_hh_{t-1})\\
+    y_t &amp;= \sigma(W_oh_t)
+\end{aligned}
 \]</span></p>
-<p>其中，<span class="math inline">\(F&#39;(x)=f(x)\)</span>，即 <span class="math inline">\(F(x)\)</span> 是 <span class="math inline">\(f(x)\)</span> 的原函数。</p>
-<p>使用Newton-Leibniz公式进行积分其实是非常理想的情况。假如函数 <span class="math inline">\(f(x)\)</span> 的表达式非常复杂，或是根本就不可积，或是根本没有表达式，仅仅是给出了某些节点上的函数值，那么我们就只能通过数值积分的方式进行近似的积分求解了。</p>
 <span id="more"></span>
-<h2 id="数值积分误差估计">数值积分误差估计</h2>
-<p>对于函数 <span class="math inline">\(f(x)\in C[a, b]\)</span>，假如存在一个 <span class="math inline">\(n\)</span> 阶多项式 <span class="math inline">\(P_n(x)\)</span>，可以近似有 <span class="math inline">\(f(x) \approx P_n(x)\)</span>，那么应能近似得到</p>
+<p>其中，<span class="math inline">\(x_t\)</span> 表示 <span class="math inline">\(t\)</span> 时刻的输入数据，<span class="math inline">\(y_t\)</span> 表示 <span class="math inline">\(t\)</span> 时刻的输出数据，<span class="math inline">\(h_{t-1}\)</span> 表示 <span class="math inline">\(t-1\)</span> 时刻的隐藏状态(hidden state)，<span class="math inline">\(h_t\)</span> 表示 <span class="math inline">\(t\)</span> 时刻的隐藏状态，<span class="math inline">\(\sigma\)</span> 表示sigmoid激活函数。<span class="math inline">\(W_i\)</span> 表示输入权重，<span class="math inline">\(W_h\)</span> 表示隐藏状态权重，<span class="math inline">\(W_o\)</span> 表示输出权重，下标分别对应于input, hidden和output。</p>
+<p>Naive RNN的结构非常简单，这是一个序列式的网络，对应于输入数据的序列长度，序列中每一时刻的数据都会有相应的网络结点。从序列起始开始，每一个结点都会输入上一结点的隐藏状态 <span class="math inline">\(h_{t-1}\)</span> 和当前结点的输入数据 <span class="math inline">\(x_t\)</span>，经过一定的计算，输出当前结点的隐藏状态 <span class="math inline">\(h_t\)</span> 以及计算结果 <span class="math inline">\(y_t\)</span>。</p>
+<p><img src="/2022/12/08/RNN%E5%85%A5%E9%97%A8//Naive-RNN-Expanded.jpg" align="center" width="80%"></p>
+<p>RNN的这种网络结构使其具有记忆性，可以针对过去的输入进行对应的输出，特别适合用于NLP等与时间序列相关的应用。但是，Naive RNN的结构过于简单，对于长序列数据容易出现梯度爆炸或是梯度消失这两种极端情况。为此，1997年有人提出了一种RNN的改良版本，LSTM(Long Short-term Memory)。</p>
+<h2 id="lstm">LSTM</h2>
+<p>LSTM和Naive RNN的最大区别在于，Naive RNN中只有一个隐藏状态，而LSTM中具有两个，分别对应Long Term Memory和Short Term Memory，在LSTM中分别用 <span class="math inline">\(c_t\)</span> 和 <span class="math inline">\(h_t\)</span> 表示，分别成为cell state和hidden state。</p>
+<p><img src="/2022/12/08/RNN%E5%85%A5%E9%97%A8//LSTM.jpg" align="center" width="80%"></p>
+<h3 id="lstm内部细节">LSTM内部细节</h3>
+<p>首先介绍LSTM的三个以 <span class="math inline">\(x_t\)</span> 和 <span class="math inline">\(h_{t-1}\)</span> 为输入的门控信号，分别对应LSTM的三个重要过程。第一个是遗忘门控信号，用 <span class="math inline">\(z_f\)</span> 表示，其表达式如下</p>
 <p><span class="math display">\[
-\int_a^bf(x)dx \approx \int_a^bP_n(x)dx
+z_f = \sigma(W_{if}x_t + W_{hf}h_{t-1})
 \]</span></p>
-<p>对于上述数值积分，其误差是可以估计的。</p>
+<p>下标 <span class="math inline">\(f\)</span> 表示forget，望文生义，这个门控信号就是用来表示RNN中的遗忘环节。就像一个人一样，会随着时间的流逝以及外部的输入而忘记一些东西。</p>
+<p>第二个是信息门控信号，用 <span class="math inline">\(z_i\)</span> 表示，下标表示information，其表达式如下</p>
 <p><span class="math display">\[
-\int_a^bf(x)dx - \int_a^bP_n(x)dx = \int_a^b[f(x)-P_n(x)]dx=\int_a^bR_n(x)dx
+z_i = \sigma(W_{ii}x_t + W_{hi}h_{t-1})
 \]</span></p>
-<p>如果有 <span class="math inline">\(max_{a\leq x \leq b}R_n(x)\leq \varepsilon\)</span>，那么显然，上述数值积分的误差限为</p>
+<p>这个门控信号用来表示RNN中获取新信息的环节。上述两个门控信号往往结合使用，来表示RNN在学习的过程中获取一些新信息、遗忘一些旧信息的过程，也就是学一些、忘一些。</p>
+<p>先不讲第三个门控信号，因为第三个门控信号的作用对象还没有生成。对于输入数据 <span class="math inline">\(x_t\)</span> 和上一时刻的短时记忆 <span class="math inline">\(h_{t-1}\)</span>，LSTM会进行一步预处理，得到输入量 <span class="math inline">\(g\)</span>，表达式如下</p>
 <p><span class="math display">\[
-\int_a^bR_n(x)dx \leq (b-a)\varepsilon
+g = tanh(W_{ig}x_t + W_{hg}h_{t-1})
 \]</span></p>
-<p>如果 <span class="math inline">\(\varepsilon\)</span> 很小的话，数值积分的误差限也很小，那么使用数值积分来近似真实的积分值，完全是可行的。</p>
-<h2 id="求积公式">求积公式</h2>
-<h3 id="中点公式">中点公式</h3>
-<h4 id="中点公式的计算">中点公式的计算</h4>
-<p>近似求积分的一种非常自然的想法，是使用一个矩形围成的面积来近似函数曲线在区间上与x轴所围成的面积。这种做数值积分的方式可以概括为中点公式。若 <span class="math inline">\(f(x) \in C[a,b]\)</span>，那么</p>
+<p>接下来这一步，讲的就是第三个门控信号的作用对象。利用遗忘门控信号去作用于上一时刻的长期记忆 <span class="math inline">\(c_{t-1}\)</span>，利用信息门控信号去作用于输入量 <span class="math inline">\(g\)</span>，可以得到这一时刻的长期记忆 <span class="math inline">\(c_t\)</span>，表达式如下</p>
 <p><span class="math display">\[
-\int_a^bf(x)dx \approx (b-a)f(\frac{a+b}{2})
+c_t = (z_f * c_{t-1}) + (z_i * g)
 \]</span></p>
-<p>利用区间中点对应的函数值乘以区间长度，得到的矩形面积，近似函数积分。</p>
-<h4 id="中点公式的误差分析">中点公式的误差分析</h4>
-<p>对于上述近似，可以进行近似误差的估计。假设函数 <span class="math inline">\(f(x)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上二阶可导，那么根据泰勒公式</p>
+<p>其中 <span class="math inline">\(*\)</span> 表示Hadamard Product，即同型矩阵对应元素相乘。举个简单的例子</p>
 <p><span class="math display">\[
-f(x) = f(\frac{a+b}{2}) + f&#39;(\frac{a+b}{2})(x-\frac{a+b}{2}) + \frac{f&#39;&#39;(\xi)}{2}(x-\frac{a+b}{2})^2
+\begin{pmatrix}
+    a &amp; b\\
+    c &amp; d
+\end{pmatrix} *
+\begin{pmatrix}
+    a &amp; b \\
+    c &amp; d
+\end{pmatrix}=
+\begin{pmatrix}
+    a^2 &amp; b^2\\
+    c^2 &amp; d^2
+\end{pmatrix}
 \]</span></p>
-<p>对上述等式两边做积分，可以得到</p>
+<p>得到 <span class="math inline">\(c_t\)</span> 以后，我们来讲第三个门控信号 <span class="math inline">\(z_o\)</span>，这个门控信号用于从长期记忆 <span class="math inline">\(c_t\)</span> 更新短期记忆 <span class="math inline">\(h_t\)</span>，表达式如下</p>
 <p><span class="math display">\[
-\int_a^bf(x)dx-(b-a)f(\frac{a+b}{2}) = \frac{1}{24}(b-a)^3f&#39;&#39;(\xi)
+z_o = \sigma(W_{io}x_t + W_{ho}h_{t-1})
 \]</span></p>
-<p>也就是说，中点公式的误差差不多就是在 <span class="math inline">\((b-a)^3\)</span> 量级。</p>
-<h3 id="梯形公式">梯形公式</h3>
-<h4 id="梯形公式的计算">梯形公式的计算</h4>
-<p>梯形公式是另一种非常自然的近似积分想法。从图形上来看，就是将 <span class="math inline">\(f(a)\)</span> 与 <span class="math inline">\(f(b)\)</span> 相连，形成一条直线，然后计算这条线段在 <span class="math inline">\([a, b]\)</span> 上的积分。</p>
+<p>可以看到，门控信号都采用sigmoid激活函数进行运算，因为sigmoid函数的输出结果在 <span class="math inline">\([0,1]\)</span> 区间内，在数学上也有比较好的性质。得到 <span class="math inline">\(z_o\)</span> 以后，有 <span class="math inline">\(h_t\)</span> 的表达式如下</p>
 <p><span class="math display">\[
-\int_a^bf(x)dx = \frac{1}{2}(b-a)[f(a)+f(b)]
+h_t = z_o * tanh(c_t)
 \]</span></p>
-<h4 id="梯形公式的误差分析">梯形公式的误差分析</h4>
-<p>梯形公式涉及到一条一次拟合多项式，因此可以用一次多项式拟合的误差来计算梯形公式的误差，如下</p>
+<p>最后，从短期记忆 <span class="math inline">\(h_t\)</span> 中输出信息至网络输出结果 <span class="math inline">\(y_t\)</span></p>
 <p><span class="math display">\[
-R_1(x) = f(x) - L_1(x) = \frac{1}{2}f&#39;&#39;(\xi)(x-a)(x-b)
+y_t = \sigma(W_hh_t)
 \]</span></p>
-<p>那么</p>
+<p>在PyTorch的文档中，可能还存在一些常数项 <span class="math inline">\(b\)</span>。由于本文只是为了快速描述清楚RNN的基本原理，因此这些细节全部省去。</p>
+<h2 id="gru">GRU</h2>
+<p>LSTM在RNN相关领域得到了广泛的应用，不过在2014年又有人提出了新的RNN结构，成为Gate Recurrent Unit，即GRU。GRU可以理解为一种简化的LSTM，但在某些应用场景下能够表现出与LSTM相近的性能，因此也作为一种提高训练效率的LSTM替代方案。</p>
+<p><img src="/2022/12/08/RNN%E5%85%A5%E9%97%A8//GRU.jpg" align="center" width="80%"></p>
+<h3 id="gru内部细节">GRU内部细节</h3>
+<p>GRU的总体框架和Naive RNN一样，只有一个隐藏变量，另外内部的门控信号也少了很多，所以计算效率比LSTM更高一些。</p>
+<p>GRU内部有两个门控信号，一个称为重置门(Reset Gate)，另一个称为更新门(Update Gate)，分别记为 <span class="math inline">\(r\)</span> 和 <span class="math inline">\(z\)</span>，也是以sigmoid作为激活函数，以 <span class="math inline">\(x_t\)</span> 和 <span class="math inline">\(h_{t-1}\)</span> 作为输入数据的门控信号，表达式分别为</p>
 <p><span class="math display">\[
-\int_a^bf(x)dx - \int_a^bL_1(x)dx = \int_a^bR_1(x) = -\frac{1}{12}(b-a)^3f&#39;&#39;(\xi)
+\begin{aligned}
+    r = \sigma(W_{ir}x_t + W_{hr}h_{t-1})\\
+    z = \sigma(W_{iz}x_t + W_{hz}h_{t-1})
+\end{aligned}
 \]</span></p>
-<p>分析到这里，可能出现了比较反直觉的一点性质，即梯形公式的误差似乎要比中点公式的误差还要大，后者的系数是 <span class="math inline">\(\frac{1}{24}\)</span>。</p>
-<h3 id="simpson公式">Simpson公式</h3>
-<h4 id="simpson公式的计算">Simpson公式的计算</h4>
-<p>Simpson公式，也叫抛物型公式。这种数值积分方式实际上就是在区间上用一条抛物线来近似积分，即</p>
+<p>形式上，所有门控信号都是相似的，区别只在于权重矩阵不同。</p>
+<p>接下来，使用重置门对 <span class="math inline">\(h_{t-1}\)</span> 进行修正，有</p>
 <p><span class="math display">\[
-\int_a^bf(x)dx \approx \int_a^bL_2(x)dx=\frac{1}{6}(b-a)[f(a) + 4f(\frac{a+b}{2}) + f(b)]
+h_{t-1}&#39; = tanh(W_h(r * h_{t-1}) + W_ix_t)
 \]</span></p>
-<h4 id="simpson公式的误差估计">Simpson公式的误差估计</h4>
-<p>和梯形公式类似的，Simpson公式的近似误差也可以通过二次多项式的误差估计得到。由于二次多项式的误差分析展开比较复杂，也不是什么重点，这边的笔记就略去了，最后可以得到</p>
+<p><span class="math inline">\(h&#39;_{t-1}\)</span> 是一个经过修正的记忆。GRU相当于用一个重置门替代了原来LSTM的遗忘门和信息门，输出一个过程量 <span class="math inline">\(r * h_{t-1}\)</span>，然后直接与输入数据进行加权，修正记忆 <span class="math inline">\(h&#39;_{t-1}\)</span>。</p>
+<p>随后，利用更新门进行记忆的更新，有</p>
 <p><span class="math display">\[
-\int_a^bf(x)dx - \int_a^bL_2(x)dx = -\frac{(b-a)^5}{2880}f^{(4)}(\xi)
+h_t = (1-z) * h_{t-1} + z * h&#39;_{t-1}
 \]</span></p>
-<p>可以观察到，Simpson公式的近似误差量级是 <span class="math inline">\((b-a)^5\)</span>，比梯形公式和中点公式的近似误差要小两个量级。事实上，Simpson近似积分的精度确实要比前面两种高很多。</p>
-<h3 id="求积公式一般化">求积公式一般化</h3>
-<p>观察中点公式、梯形公式和Simpson公式，可以发现一个共同点：这些公式都可以写成 <span class="math inline">\(\sum_{i=0}^{n-1}\omega_if(x_i)\)</span> 的形式。因此，上面的这些公式都可以称为求积公式。</p>
-<p>求积公式有一个叫做<strong>代数精度</strong>的指标。所谓代数精度，指的是这个求积公式最高能够对多少次的多项式精确求积分。若某个求积公式对于 <span class="math inline">\(m\)</span> 阶多项式 <span class="math inline">\(x^m\)</span> 都可以满足精确求解的要求，但是对于 <span class="math inline">\(m+1\)</span> 阶多项式就不满足精确求积分的要求，那么这个求积公式的代数精度就为 <span class="math inline">\(m\)</span> 次。</p>
-<h2 id="复合求积">复合求积</h2>
-<p>前面提到，数值积分的误差与区间长度有关，像中间公式的积分误差与区间长度的3次方呈正相关关系，Simpson公式的积分误差与区间长度的5次方呈正相关关系。那么，为了减小数值积分的误差，就必须减小区间长度。事实上，对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，我们往往会将区间 <span class="math inline">\([a, b]\)</span> 等分为 <span class="math inline">\(n\)</span> 份，在一个小区间 <span class="math inline">\([x_i, x_{i+1}]\)</span> 上进行求积，即</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx = \sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f(x)dx
-\]</span></p>
-<p>一般来说，我们会将小区间的长度称为<strong>积分步长</strong>，用符号 <span class="math inline">\(h\)</span> 表示。</p>
-<p><span class="math display">\[
-h = \frac{b-a}{n}
-\]</span></p>
-<h3 id="中点复合求积">中点复合求积</h3>
-<p>对一个小区间内的积分进行数值近似，可以得到</p>
-<p><span class="math display">\[
-\int_{x_i}^{x_{i+1}}f(x)dx=(x_{i+1}-x_i)f(x_{i+\frac{1}{2}})=hf(x_{i+\frac{1}{2}})
-\]</span></p>
-<p>那么，整个区间的积分即</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx = \sum_{i=0}^{n-1}hf(x_{i+\frac{1}{2}}) \triangleq M_n
-\]</span></p>
-<h3 id="梯形复合求积">梯形复合求积</h3>
-<p>同上，很容易得到</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx = \sum_{i=0}^{n-1}\frac{h}{2}[f(x_i)+f(x_{i+1})] = \frac{h}{2}[f(a)+f(b)+2\sum_{i=1}^{n-1}f(x_i)] \triangleq T_n
-\]</span></p>
-<h3 id="simpson复合求积">Simpson复合求积</h3>
-<p><span class="math display">\[
-\int_a^bf(x)dx = \sum_{i=0}^{n-1}\frac{h}{6}[f(x_i) + f(x_{i+1}) + 4f(x_{i+\frac{1}{2}})]=\frac{h}{6}[f(a) + f(b) + 4\sum_{i=1}^{n-1}f(x_{i+\frac{1}{2}})+2\sum_{i=1}^{n-1}f(x_i)] \triangleq S_n
-\]</span></p>
-<h3 id="上述复合求积公式的误差分析">上述复合求积公式的误差分析</h3>
-<p>为了进行上述复合求积公式的误差限分析，首先引入一个定理：对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，存在一点 <span class="math inline">\(\eta \in (a, b)\)</span>，满足 <span class="math inline">\(\sum_{i=0}^{n-1}\omega_if(x_i)=f(\eta)\sum_{i=0}^{n-1}\omega_i\)</span>。</p>
-<p>这个定理的求证其实非常简单。对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，必然存在一个 <span class="math inline">\(f_{min}\)</span> 和一个 <span class="math inline">\(f_{max}\)</span>，很自然有</p>
-<p><span class="math display">\[
-f_{min}\sum_{i=0}^{n-1}\omega_i \leq \sum_{i=0}^{n-1}\omega_i f(x_i) \leq f_{max}\sum_{i=0}^{n-1}\omega_i
-\]</span></p>
-<p>由于 <span class="math inline">\(f(x)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上连续，那么必然存在某一个 <span class="math inline">\(f\)</span>，恰好满足</p>
-<p><span class="math display">\[
-f\sum_{i=0}^{n-1}\omega_i=\sum_{i=0}^{n-1}\omega_i f(x_i)
-\]</span></p>
-<h4 id="中点复合求积误差">中点复合求积误差</h4>
-<p>有了上面这个定理，求复合求积误差就很容易了。对于</p>
-<p><span class="math display">\[
-\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f(x)dx = h\sum_{i=0}^{n-1}f(x_{i+\frac{1}{2}})
-\]</span></p>
-<p>作差，得到</p>
-<p><span class="math display">\[
-\sum_{i=0}^{n-1}[\int_{x_i}^{x_{i+1}}f(x)dx-hf(x_{i+\frac{1}{2}})]
-\]</span></p>
-<p>注意到求和公式内部是一个中点求积误差的表达式，代入可得</p>
-<p><span class="math display">\[
-\sum_{i=0}^{n-1}[\int_{x_i}^{x_{i+1}}f(x)dx - hf(x_{i+\frac{1}{2}})]=\sum_{i=0}^{n-1}\frac{1}{24}h^3f&#39;&#39;(\xi)
-\]</span></p>
-<p>注意到，求和项与 <span class="math inline">\(i\)</span> 无关，因此可以得到中点复合求积误差为</p>
-<p><span class="math display">\[
-\frac{b-a}{24}h^2f&#39;&#39;(\xi)
-\]</span></p>
-<h4 id="梯形复合求积误差">梯形复合求积误差</h4>
-<p><span class="math display">\[
--\frac{b-a}{12}h^2f&#39;&#39;(\xi)
-\]</span></p>
-<h4 id="simpson复合求积误差">Simpson复合求积误差</h4>
-<p><span class="math display">\[
--\frac{b-a}{2880}h^4f&#39;&#39;(\xi)
-\]</span></p>
-<p>可以观察到，复合求积误差本质上就是将原来的 <span class="math inline">\((b-a)\)</span> 替换为 <span class="math inline">\(h\)</span>，但其中一次因为 <span class="math inline">\(n\)</span> 项求和退化为 <span class="math inline">\((b-a)\)</span>，因此原来是 <span class="math inline">\((b-a)^m\)</span> 量级的误差都变为 <span class="math inline">\(h^{m-1}\)</span> 量级。</p>
-<p>中点复合求积以及梯形复合求积的误差都是 <span class="math inline">\(O(h^2)\)</span> 量级的，而Simpson复合求积的误差是 <span class="math inline">\(O(h^4)\)</span> 量级的，因此如果对于近似精度要求较高，应尽量选择使用Simpson复合求积。</p>
-<h2 id="变步长方法以及外推加速技术">变步长方法以及外推加速技术</h2>
-<p>前面所介绍的求积方法都是定步长的方法。定步长数值积分编程很容易，但是确定步长是一件比较麻烦的事情。如果步长定得太大，精度就会比较差；如果步长定得太小，计算效率可能就低很多。因此，变步长方法被引入到数值积分中。下面通过一个简单的变步长方法，初步了解一下变步长数值积分的基本原理。</p>
-<h3 id="区间折半法">区间折半法</h3>
-<p>变步长积分的主要思想是，对于给定的积分精度，一开始可以在整个区间上进行数值积分，若精度达不到要求，则将积分步长减半；不断地将积分步长减半，直到积分精度满足给定要求为止。</p>
-<p>以梯形求积为例，若记 <span class="math inline">\(I = \int_a^bf(x)dx\)</span>，那么</p>
-<p><span class="math display">\[
-|I-T_n| = \frac{1}{12}(b-a)h^2f&#39;&#39;(\xi)
-\]</span></p>
-<p>如果进行了一次区间折半，得到 <span class="math inline">\(T_{2n}\)</span>，那么应有</p>
-<p><span class="math display">\[
-|I-T_{2n}| = \frac{1}{12}(b-a)(\frac{h}{2})^2f&#39;&#39;(\xi)
-\]</span></p>
-<p>如果忽略两个误差项中的 <span class="math inline">\(f&#39;&#39;(\xi)\)</span> 上的细微误差，基本上可以认为</p>
-<p><span class="math display">\[
-|I-T_{2n}| = \frac{1}{4}|I-T_n|
-\]</span></p>
-<p>也就是说，一次区间折半大约可以提升四倍精度。另外，可以通过 <span class="math inline">\(|T_n-T_{2n}|\)</span> 来估算 <span class="math inline">\(I-T_{2n}\)</span> 的水平。因为 <span class="math inline">\(|I-T_{2n}|\approx\frac{1}{4}|I-T_n|\)</span>，因此，基本上可以认为</p>
-<p><span class="math display">\[
-|I - T_{2n}| = \frac{1}{3}|T_n-T_{2n}|
-\]</span></p>
-<p>所以，区间折半法进行数值积分时，可以以 <span class="math inline">\(|T_n-T_{2n}|\)</span> 的水平来判断变步长数值积分的精度是否已经符合要求。</p>
-<h3 id="romberg求积">Romberg求积</h3>
-<p>虽然区间折半法原理很简单，编程也很容易实现，但是精度收敛还是太慢了，这会导致要想实现高精度的数值积分，不得不将 <span class="math inline">\(h\)</span> 缩放到一个很小的水平，那么 <span class="math inline">\(n\)</span> 就会变得很大，导致计算量快速上升。Richardson搞出了一种外推加速的方法，利用这种方法进行数值计算的方式称为Romberg求积。</p>
-<p>Romberg求积需要用到Euler-MacLaurin公式，但是我并不想在这里引入这个复杂的公式，其实对于说明Romberg求积而言不是很有必要。</p>
-<p>简单来说，引入Euler-MacLaurin公式的目的是为了说明</p>
-<p><span class="math display">\[
-T_n - I = a_1 h^2 + a_2 h^4 + ...
-\]</span></p>
-<p>对于上面这条等式，如果进行一次区间折半，可以得到</p>
-<p><span class="math display">\[
-T_{2n} - I = a_1(\frac{h}{2})^2 + a_2 (\frac{h}{2})^4 + ...
-\]</span></p>
-<p>为了构造出一个性质更好的求积项，将 <span class="math inline">\(T_n - I\)</span> 乘以 <span class="math inline">\(\frac{1}{4}\)</span>，然后用上式做减法，可以得到</p>
-<p><span class="math display">\[
-T_{2n} - \frac{3}{4}I - \frac{1}{4}T_n = \bar a_2 h^4 + ...
-\]</span></p>
-<p>上式可以通过等号两边同时乘以 <span class="math inline">\(\frac{4}{3}\)</span>，改写为</p>
-<p><span class="math display">\[
-T_n^{(2)} - I = \tilde a_2 h^4 + ...
-\]</span></p>
-<p>改写为这种形式的意义在于，我们构造出了 <span class="math inline">\(T_n^{(2)}\)</span> 这一项精度更高的近似积分项，这一项实际上等于</p>
-<p><span class="math display">\[
-T_n^{(2)} = \frac{T_{2n} - 2^{-2}T_n}{1-2^{-2}}
-\]</span></p>
-<p>也就是说，通过一次区间折半，我们能够将精度提高 <span class="math inline">\(\displaystyle\frac{1}{h^2}\)</span> 倍！这效果无疑远优于区间折半法，因为普通的区间折半一次只能提升大约4倍的精度，而通过Romberg求积，一次区间折半能将精度提升 <span class="math inline">\(\displaystyle\frac{1}{h^2}\)</span> 倍，这意味着Romberg求积的收敛速度是越来越快的，因为随着区间的折半 <span class="math inline">\(h\)</span> 也在不断减小。</p>
-<p>事实上，Romberg求积项可以一般化为</p>
-<p><span class="math display">\[
-T_n^{(m)} = \frac{T_{2n}^{(m-1)}-2^{-2m}T_n^{(m-1)}}{1-2^{-2m}}
-\]</span></p>
-<p>注意上标并不是求导的意思，这表示的是Romberg求积区间折半的次数。</p>
-<h2 id="newton-cotes公式">Newton-Cotes公式</h2>
-<p>前面的中点公式、梯形公式以及Simpson公式分别可以看作使用常数、一次函数、二次函数在区间上进行插值，利用插值函数的积分作为原函数的积分替代。对这种方法进行进一步的推广，将 <span class="math inline">\(f(x)\)</span> 用 <span class="math inline">\(n+1\)</span> 个<strong>等距节点</strong>上的 <span class="math inline">\(n\)</span> 次拉格朗日插值多项式替代，然后进行积分，就可以得到 <strong>Newton-Cotes公式</strong>。</p>
-<p>具体的推导过程如下：若区间 <span class="math inline">\([a, b]\)</span> 上存在 <span class="math inline">\(n+1\)</span> 个等距节点 <span class="math inline">\(x_i\)</span>，记 <span class="math inline">\(x = a+th, t \in [0, n]\)</span>，可以将 <span class="math inline">\(n\)</span> 次拉格朗日插值多项式 <span class="math inline">\(L_n(x)\)</span> 表示为</p>
-<p><span class="math display">\[
-L_n(x) = \sum_{i=0}^n (\prod_{j=0, j\neq i}^n \frac{x-x_j}{x_i-x_j})f(x_i)
-\]</span></p>
-<p>将 <span class="math inline">\(x=a+th\)</span> 代入，可以得到</p>
-<p><span class="math display">\[
-L_n(x) = \sum_{i=0}^n [\prod_{j=0, j\neq i}^n \frac{(a+th)-(a+jh)}{(a+ih) - (a+jh)}]f(x_i)= \sum_{i=0}^n (\prod_{j=0, j\neq i}^n\frac{t-j}{i-j})f(x_i)
-\]</span></p>
-<p>观察 <span class="math inline">\(\prod_{j=0, j\neq i}^n \frac{1}{i-j}\)</span> 项，发现可以写成阶乘的形式 <span class="math inline">\(\frac{(-1)^{n-i}}{i!(n-i)!}\)</span>，那么</p>
-<p><span class="math display">\[
-L_n(x) = \sum_{i=0}^n \frac{(-1)^{n-i}}{i!(n-i)!}(\prod_{j=0, j\neq i}^n(t-j))f(x_i)
-\]</span></p>
-<p>由于 <span class="math inline">\(f(x) \approx L_n(x)\)</span>，那么</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx \approx \int_a^b L_n(x)dx
-\]</span></p>
-<p>观察到 <span class="math inline">\(L_n(x)\)</span> 实际上已经写作了 <span class="math inline">\(L_n(t)\)</span> 的形式，所以对积分式可以进行一次换元</p>
-<p><span class="math display">\[
-dx = hdt
-\]</span></p>
-<p>代入积分式，可以得到</p>
-<p><span class="math display">\[
-\int_a^bL_n(x)dx = (b-a)\sum_{i=0}^n\frac{(-1)^{n-i}}{ni!(n-i)!}(\int_0^n\prod_{j=0, j\neq i}^n(t-j)dt)f(x_i)
-\]</span></p>
-<p>这条式子计算起来还是比较复杂的，但可以观察到，这条式子中 <span class="math inline">\(f(x_i)\)</span> 之前的部分只与区间长度以及等距节点的数量有关，那么其实可以把前面这一部分系数直接用求积系数 <span class="math inline">\(\omega_i\)</span> 来表示，所以最后仍然可以表示为下面这样的形式</p>
-<p><span class="math display">\[
-\int_a^bf(x)dx \approx \sum_{i=0}^n \omega_i f(x_i)
-\]</span></p>
-<p>Newton-Cotes公式的简化写法其实指明了数值积分的精髓，即<em>对求积节点对应的函数值与求积系数的积求和</em>。</p>
-<h3 id="cotes系数">Cotes系数</h3>
-<p>观察到，求积系数 <span class="math inline">\(\omega_i\)</span> 实际上也可以写成两个部分，即</p>
-<p><span class="math display">\[
-\omega_i = (b-a) \sum_{i=0}^n\frac{(-1)^{n-i}}{ni!(n-i)!} \int_0^n\prod_{j=0, j\neq i}^n(t-j)dt = (b-a) C_i^{(n)}
-\]</span></p>
-<p><span class="math inline">\(C_i^{(n)}\)</span> 这一项被称为 <strong>Cotes系数</strong>。由于积分时进行了一次换元，所以Cotes系数的积分区间线性变换至 <span class="math inline">\([0, n]\)</span> 上，成为了只与节点数量有关的项。那么只需事先计算好不同节点数量下的Cotes系数，就可以很方便地使用Newton-Cotes公式进行数值积分了。</p>
-<p>实际上中点公式、梯形公式或Simpson公式对应的求积系数就是 <span class="math inline">\(n\)</span> 分别为0,1,2时的Cotes系数。下面给出 <span class="math inline">\(n\leq 8\)</span> 时的Cotes系数表。</p>
-<figure>
-<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Snipaste_2022-11-16_11-47-11.png" alt><figcaption>Cotes系数表</figcaption>
-</figure>
-<p>Cotes系数具有以下性质</p>
-<ol type="1">
-<li>Cotes系数随着 <span class="math inline">\(i\)</span> 的增大体现出对称性</li>
-<li><span class="math inline">\(\sum_{i=0}^nC_i^{(n)}=1\)</span></li>
-<li>Cotes系数在 <span class="math inline">\(n\geq 8\)</span> 时有正有负，这会导致数值积分的不稳定，所以一般在实际使用Newton-Cotes公式进行数值积分时 <span class="math inline">\(n\leq 7\)</span></li>
-<li>Newton-Cotes公式在 <span class="math inline">\(n\)</span> 为奇数时代数精度至少为 <span class="math inline">\(n\)</span> 次，<span class="math inline">\(n\)</span> 为偶数时代数精度至少为 <span class="math inline">\(n+1\)</span> 次</li>
-</ol>
-<h3 id="newton-cotes公式的误差">Newton-Cotes公式的误差</h3>
-<p>考虑到 <span class="math inline">\(f(x_i)\)</span> 有时可能只是测量值，与真值之间也存在误差。假如 <span class="math inline">\(f(x_i)\)</span> 与真值之间的最大误差为 <span class="math inline">\(\varepsilon\)</span>，那么Newton-Cotes公式进行数值积分的最大误差为 <span class="math inline">\((b-a)\varepsilon\)</span>。</p>
-<h2 id="高斯公式">高斯公式</h2>
-<p>前面考虑的数值积分都是在等距节点上进行求积，下面介绍一种精度更高的非等距节点求积方法——<strong>高斯积分</strong>。</p>
-<h3 id="高斯公式的定义">高斯公式的定义</h3>
-<p>高斯公式的定义中引入了权函数，是在区间上进行带权积分</p>
-<p><span class="math display">\[
-\int_a^b\rho(x)f(x)dx \approx \sum_{i=0}^n \omega_if(x_i)
-\]</span></p>
-<p>另外，高斯积分对于积分节点是有要求的，满足相应要求的积分节点称为 <strong>高斯点</strong>；积分节点与对应的积分系数之间存在确定关系，这个对应的积分系数称为 <strong>高斯系数</strong>。高斯积分的特征在于，在 <span class="math inline">\(n+1\)</span> 个非等距节点上，能够实现代数精度高达 <span class="math inline">\(2n+1\)</span> 次的数值积分。</p>
-<p>要推导任意节点数量的高斯公式非常复杂，但是如果能够先找到高斯点，然后求出对应的高斯系数，就可以直接确定一条高斯积分公式。其中，找高斯点是最困难的一件事。</p>
-<h3 id="寻找高斯点">寻找高斯点</h3>
-<p>对于高斯点，存在以下定理：</p>
-<p>区间 <span class="math inline">\([a, b]\)</span> 上的 <span class="math inline">\(n+1\)</span> 个点均为高斯点的充要条件是，这些点所形成的多项式 <span class="math inline">\(\Pi(x) = \prod_{i=0}^n(x-x_i)\)</span> 在区间上与任意次数不超过 <span class="math inline">\(n\)</span> 次的多项式 <span class="math inline">\(q(x)\)</span> 带权正交，即</p>
-<p><span class="math display">\[
-\int_a^b \rho(x) \Pi(x) q(x)dx = 0
-\]</span></p>
-<p>这条定理的证明稍微有点麻烦，对应用来说也不太重要，见教材。这条定理的意义在于说明了高斯点其实就是区间 <span class="math inline">\([a, b]\)</span> 上的 <span class="math inline">\(n+1\)</span> 次带权正交多项式的零点。在多项式章节中介绍了四种不同的正交多项式</p>
-<ul>
-<li>Legendre正交多项式</li>
-<li>Chebyshev正交多项式</li>
-<li>Laguerre正交多项式</li>
-<li>Hermite正交多项式</li>
-</ul>
-<p>这四种正交多项式可以与高斯积分定义式结合，形成四种不同的高斯积分公式。在介绍这四种积分公式之前，还要补充3点高斯积分的性质：</p>
-<ol type="1">
-<li>高斯积分是所有利用 <span class="math inline">\(n+1\)</span> 个积分节点进行积分的方式中，代数精度最高的积分算法</li>
-<li>高斯积分的所有积分系数均大于0，因此积分结果一定是稳定的</li>
-<li>高斯积分在 <span class="math inline">\(n\rightarrow \infty\)</span> 时，积分结果一定是收敛的</li>
-</ol>
-<p>前面两点性质基于以下定理：利用 <span class="math inline">\(n+1\)</span> 个积分节点进行数值积分的最高代数精度是 <span class="math inline">\(2n+1\)</span> 次，而且当积分精度达到 <span class="math inline">\(2n+1\)</span> 次时，积分系数 <span class="math inline">\(\omega_i &gt;0\)</span>。</p>
-<p>这些性质的证明都不是特别复杂，但是对于数值分析这门课而言不是特别重要，因此不花费过多的精力在讨论性质的证明上。</p>
-<h3 id="四种常用的高斯积分公式">四种常用的高斯积分公式</h3>
-<h4 id="gauss-legendre公式">Gauss-Legendre公式</h4>
-<p>Legendre正交多项式是区间 <span class="math inline">\([-1, 1]\)</span> 上权函数为 <span class="math inline">\(\rho(x) \equiv 1\)</span> 的正交多项式。</p>
-<p><span class="math inline">\(n=0\)</span> 时，Gauss-Legendre公式为</p>
-<p><span class="math display">\[
-\int_{-1}^1f(x)dx \approx 2f(0)
-\]</span></p>
-<p><span class="math inline">\(n=1\)</span> 时，Gauss-Legendre公式为</p>
-<p><span class="math display">\[
-\int_{-1}^1f(x)dx \approx f(-\frac{1}{\sqrt{3}}) + f(\frac{1}{\sqrt{3}})
-\]</span></p>
-<p><span class="math inline">\(n=2\)</span> 时，Gauss-Legendre公式为</p>
-<p><span class="math display">\[
-\int_{-1}^1f(x)dx \approx \frac{5}{9}f(-\sqrt{\frac{3}{5}}) + \frac{8}{9}f(0) + \frac{5}{9}f(\sqrt{\frac{3}{5}})
-\]</span></p>
-<figure>
-<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Legendre.png" alt><figcaption>Gauss-Legendre公式常用的高斯点及其高斯系数</figcaption>
-</figure>
-<p>对于计算来说，这一部分内容也不太需要进行定理的推导和证明，只需要记住一些常用的高斯点和高斯系数，然后知道这些点和系数与各公式之间的对应关系，会算简单数值积分即可。</p>
-<h4 id="gauss-chebyshev公式">Gauss-Chebyshev公式</h4>
-<p>Chebyshev正交多项式是区间 <span class="math inline">\([-1, 1]\)</span> 上权函数为 <span class="math inline">\(\rho(x)=\frac{1}{\sqrt{1-x^2}}\)</span> 的正交多项式。Chebyshev的零点表达式如下</p>
-<p><span class="math display">\[
-x_i = cos\frac{2i+1}{2(n+1)}\pi, i = 0, 1, ..., n
-\]</span></p>
-<p>相应的高斯系数为</p>
-<p><span class="math display">\[
-\omega_i = \frac{\pi}{n+1}
-\]</span></p>
-<p>Gauss-Chebyshev公式中的所有高斯系数都是相同的！而且高斯点的表达式也很好记忆，因此很容易使用Gauss-Chebyshev公式进行 <span class="math inline">\(n\)</span> 很大时的高斯积分！不过需要注意，Gauss-Chebyshev公式的权函数并不为1，因此应用时应看清楚场合，不然算出来的结果是错的。</p>
-<p>Gauss-Chebyshev公式整理如下</p>
-<p><span class="math display">\[
-\int_{-1}^1\frac{1}{\sqrt{1-x^2}}f(x)dx = \frac{\pi}{n+1}\sum_{i=0}^n f(cos\frac{2i+1}{2(n+1)}\pi)
-\]</span></p>
-<h4 id="gauss-laguerre公式">Gauss-Laguerre公式</h4>
-<p>Laguerre正交多项式是区间 <span class="math inline">\([0, \infty)\)</span> 上权函数为 <span class="math inline">\(\rho(x)=e^{-x}\)</span> 的正交多项式。</p>
-<p><span class="math inline">\(n=0\)</span> 时，Gauss-Laguerre公式为</p>
-<p><span class="math display">\[
-\int_0^{\infty}e^{-x}f(x)dx \approx f(1)
-\]</span></p>
-<p><span class="math inline">\(n=1\)</span> 时，Gauss-Laguerre公式为</p>
-<p><span class="math display">\[
-\int_0^{\infty}e^{-x}f(x)dx \approx \frac{2+\sqrt{2}}{4}f(2-\sqrt{2})+\frac{2+\sqrt{2}}{4}f(2+\sqrt{2})
-\]</span></p>
-<figure>
-<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Laguerre.png" alt><figcaption>Gauss-Laguerre公式常用的高斯点及其高斯系数</figcaption>
-</figure>
-<h4 id="gauss-hermite公式">Gauss-Hermite公式</h4>
-<p>Hermite正交多项式是区间 <span class="math inline">\([-\infty, \infty]\)</span> 上权函数为 <span class="math inline">\(\rho(x) = e^{-x^2}\)</span> 的正交多项式。</p>
-<p><span class="math inline">\(n=1\)</span> 时，Gauss-Hermite公式为</p>
-<p><span class="math display">\[
-\int_{-\infty}^{\infty} e^{-x^2}f(x)dx \approx \frac{\sqrt{\pi}}{2}f(-\frac{\sqrt{2}}{2}) + \frac{\sqrt{\pi}}{2}f(\frac{\sqrt{2}}{2})
-\]</span></p>
-<p><span class="math inline">\(n=2\)</span> 时，Gauss-Hermite公式为</p>
-<p><span class="math display">\[
-\int_{-\infty}^{\infty} e^{-x^2}f(x)dx \approx \frac{\sqrt{\pi}}{6}f(-\frac{\sqrt{6}}{2})+\frac{2\sqrt{\pi}}{3}f(0) + \frac{\sqrt{\pi}}{6}f(\frac{\sqrt{6}}{2})
-\]</span></p>
-<figure>
-<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Hermite.png" alt><figcaption>Gauss-Hermite公式常用的高斯点及其高斯系数</figcaption>
-</figure>
-<h4 id="高斯公式使用注意事项">高斯公式使用注意事项</h4>
-<p>应用高斯公式时，首先要观察权函数 <span class="math inline">\(\rho(x)\)</span>，其次要观察积分区间。一般来说，根据权函数就可以确定一个积分问题需要用什么积分公式，积分区间和权函数往往是挂钩的。</p>
-<h2 id="多重数值积分">多重数值积分</h2>
-<p>对于重积分来说，前面提到的数值积分方法可以解决一些比较简单的重积分问题，比如使用复合Simpson求积可以解决重数比较低的多重数值积分问题。下面以二重积分为例，简单地说明一下多重数值积分问题。</p>
-<h3 id="以二重积分为例描述多重数值积分问题">以二重积分为例描述多重数值积分问题</h3>
-<p>对于一个二重积分问题，可以将目标积分式写为</p>
-<p><span class="math display">\[
-\iint_{\Omega} f(x, y) dxdy
-\]</span></p>
-<p>其中，<span class="math inline">\(\Omega\)</span> 表示二维积分区间，可以表示为</p>
-<p><span class="math display">\[
-\Omega = \{a \leq x \leq b, \varphi_1(x) \leq y \leq \varphi_2(x)\}
-\]</span></p>
-<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//二重积分求积区域.png" alt="二重积分求积区域" width="40%" align="center"></p>
-<p>上面的二重积分可以拆解为对 <span class="math inline">\(x\)</span> 和对 <span class="math inline">\(y\)</span> 的两个积分</p>
-<p><span class="math display">\[
-\iint_{\Omega} f(x, y) dxdy = \int_a^b dx \int_{\varphi_1(x)}^{\varphi_2(x)}f(x, y)dy
-\]</span></p>
-<p>令 <span class="math inline">\(F(x) = \displaystyle\int_{\varphi_1(x)}^{\varphi_2(x)}f(x, y)dy\)</span>，有</p>
-<p><span class="math display">\[
-\iint_{\Omega} f(x, y)dxdy = \int_a^bF(x) dx
-\]</span></p>
-<p>由数值积分公式，可以得到</p>
-<p><span class="math display">\[
-\int_a^bF(x)dx \approx \sum_{i=0}^n \omega_i^{(1)} F(x_i)
-\]</span></p>
-<p><span class="math inline">\(F(x_i)\)</span> 应也能写成</p>
-<p><span class="math display">\[
-F(x_i) = \int_{\varphi_1(x_i)}^{\varphi_2(x_i)}f(x_i, y)dy \approx \sum_{j=0}^m\omega_j^{(2)}f(x_i, y_j)
-\]</span></p>
-<p>整合上述两条式子，可以得到双重积分的数值积分公式</p>
-<p><span class="math display">\[
-\iint_{\Omega} f(x, y)dxdy \approx \sum_{i=0}^n \omega_i^{(1)} \sum_{j=0}^m \omega_j^{(2)} f(x_i, y_j)
-\]</span></p>
-<p>记 <span class="math inline">\(\omega_{ij}=\omega_i^{(1)} \omega_j^{(2)}\)</span>，可以有</p>
-<p><span class="math display">\[
-\iint_{\Omega}f(x, y)dxdy\approx \sum_{i=0}^n \sum_{j=0}^m \omega_{ij}f(x_i, y_j)
-\]</span></p>
-<p>所以双重积分的数值积分本质上就是一个双重求积问题。我们可以使用Newton-Cotes公式对这个求积问题进行求解，但事实上使用Newton-Cotes方式进行重积分的数值求解精度不高。教材中展示了使用复合Simpson公式进行二重积分求积的案例，其过程非常复杂，也不实用，因此在笔记中略去。下面直接介绍对于多重积分数值求解来说比较实用的Monte-Carlo方法。</p>
-<h3 id="使用monte-carlo方法求解多重积分">使用Monte-Carlo方法求解多重积分</h3>
-<p>Monte-Carlo方法是一种随机模拟思想，并不是一种具体的方法实现。下面以Monte-Carlo方法在一维数值积分中的应用为例，来简单地描述一下Monte-Carlo方法如何应用于数值积分。</p>
-<h4 id="monte-carlo方法求解一维数值积分">Monte-Carlo方法求解一维数值积分</h4>
-<p>假定随机变量 <span class="math inline">\(X\)</span> 在区间 <span class="math inline">\([0, 1]\)</span> 上服从均匀分布（均匀分布即概率密度函数 <span class="math inline">\(f(x) = \frac{1}{b-a}\)</span>，其中 <span class="math inline">\(b-a\)</span> 为区间长度），函数 <span class="math inline">\(f(x)\)</span> 为任意可积函数，那么 <span class="math inline">\(f(X)\)</span> 的数学期望为</p>
-<p><span class="math display">\[
-E[f(X)] = \int_0^1 f(x) dx
-\]</span></p>
-<blockquote>
-<p>回顾一下统计学的知识：数学期望指的是随机变量所有可能的取值与其出现概率之积求和。</p>
-</blockquote>
-<p>也就是说，服从均匀分布的随机变量 <span class="math inline">\(X\)</span> 对应函数值的数学期望 <span class="math inline">\(E[f(X)]\)</span> 恰好是函数 <span class="math inline">\(f(x)\)</span> 在对应区间上的积分值。那么如果有办法求出随机变量对应函数值的数学期望 <span class="math inline">\(E[f(X)]\)</span>，那么就可以得到函数 <span class="math inline">\(f(x)\)</span> 的区间上的积分，而不是直接做数值积分运算。</p>
-<p>假如在区间 <span class="math inline">\([0, 1]\)</span> 上共有 <span class="math inline">\(N\)</span> 个相互独立的、服从均匀分布的随机变量 <span class="math inline">\(X_i\)</span>，记</p>
-<p><span class="math display">\[
-I_N[f] = \frac{1}{N}\sum_{i=1}^N f(X_i)
-\]</span></p>
-<p>显然，<span class="math inline">\(I_N[f]\)</span> 也是一个随机变量，这个随机变量的数学期望 <span class="math inline">\(E[I_N[f]]\)</span> 在形式上恰好与区间上的数值积分公式类似</p>
-<p><span class="math display">\[
-E[I_N[f]] = E[\frac{1}{N}\sum_{i=1}^N f(X_i)] = \frac{1}{N}\sum_{i=1}^NE[f(X_i)]=\frac{1}{N}\sum_{i=1}^N\int_0^1f(x)dx = I[f]
-\]</span></p>
-<p>从这个角度来说，可以把 <span class="math inline">\(I_N[f]\)</span> 视为 <span class="math inline">\(I[f]\)</span> 的无偏估计。由大数定律，知 <span class="math inline">\(N \rightarrow \infty\)</span> 时，<span class="math inline">\(I_N[f] \rightarrow I[f]\)</span>。</p>
-<p>说白了，Monte-Carlo方法就是在区间内随机取点求函数值，然后加起来求平均。</p>
-<h4 id="monte-carlo方法的一维数值积分误差">Monte-Carlo方法的一维数值积分误差</h4>
-<p>积分误差 <span class="math inline">\(R_N[f]\)</span> 可以表示为</p>
-<p><span class="math display">\[
-R_N[f] = I_N[f] - I[f]
-\]</span></p>
-<p>由于 <span class="math inline">\(I_N[f]\)</span> 是一个随机变量，因此 <span class="math inline">\(R_N[f]\)</span> 也是一个随机变量。为此需要使用 <span class="math inline">\(R_N[f]\)</span> 的方差衡量Monte-Carlo方法的一维数值积分误差。</p>
-<p><span class="math display">\[
-var(R_N[f])= E\{[I_N[f] - I[f]]^2\} = \frac{1}{N^2}E\{\sum_{i=1}^N(f(X_i) - I[f])\sum_{j=1}^N(f(X_j) - I[f])\}
-\]</span></p>
-<p>当 <span class="math inline">\(i\neq j\)</span> 时，由于 <span class="math inline">\(X_i, X_j\)</span> 是相互独立的随机变量，因此</p>
-<p><span class="math display">\[
-E\{[f(X_i) - I[f]][f(X_j) - I[f]]\} = E[f(X_i) - I[f]]E[f(X_j) - I[f]] = 0
-\]</span></p>
-<p>那么，只有在 <span class="math inline">\(i=j\)</span> 的情况下，数学期望是非零的，所以上面的数学期望可以简化为</p>
-<p><span class="math display">\[
-var(R_N[f]) = \frac{1}{N^2} E\{\sum_{i=1}^N[f(X_i)-I[f]]^2\}
-\]</span></p>
-<p>而 <span class="math inline">\(\displaystyle\frac{1}{N}E\{\sum_{i=1}^N[f(X_i) - I[f]]^2\}\)</span> 实际上就是 <span class="math inline">\(var(f)\)</span>，即 <span class="math inline">\(f(X)\)</span> 的方差。这个值在随机变量的分布和函数结构确定以后，便是一个常数。工程上来说，这个方差可以通过抽样的方法进行估计，例如区间上随机取 <span class="math inline">\(N\)</span> 个点求函数值，取其均值作为数学期望的估计，然后用这些函数值和估计期望求出估计的方差。</p>
-<p>总之Monte-Carlo方法求一维数值积分的误差 <span class="math inline">\(var(R_N[f]) = \displaystyle\frac{1}{N}var(f)\)</span> 是与 <span class="math inline">\(N\)</span> 成反比例关系的。事实上，只要 <span class="math inline">\(f(x)\)</span> 是平方可积函数，<span class="math inline">\(var(f)\)</span> 就必然是有限值，那么Monte-Carlo方法求数值积分一定是稳定的，并且精度随着 <span class="math inline">\(N\)</span> 的增大而提高。</p>
-<h4 id="monte-carlo方法的多重数值积分误差">Monte-Carlo方法的多重数值积分误差</h4>
-<p>Monte-Carlo方法求多重数值积分的误差仍然是 <span class="math inline">\(\displaystyle\frac{1}{N}var(f)\)</span>，与维度无关。这个特性太屌了，所以工程上求多重数值积分基本上都是用Monte-Carlo方法进行求解的。</p>
-<p>当然，计算机并不能生成真正的随机数，只能生成伪随机数，所以在实际计算的时候，Monte-Carlo方法的数值积分精度可能略低于理论精度，但与理论相差不会太大。</p>
 ]]></content>
-      <categories>
-        <category>University</category>
-      </categories>
       <tags>
-        <tag>Numerical Analysis</tag>
-        <tag>Mathematics</tag>
+        <tag>Neural Network</tag>
+        <tag>Deep Learning</tag>
+        <tag>Recurrent Neural Network</tag>
       </tags>
   </entry>
   <entry>
@@ -3051,6 +2729,424 @@ s_t = s_{tl} + s_{tr} = 1.184011822285978 + 1.160219279622929 = 2.34423110190890
 <p><span class="math display">\[
 \Delta s = s - s_t = 5.934938150577525 - 2.344231101908907 = 3.590707048668619
 \]</span></p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数值分析笔记-数值积分</title>
+    <url>/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86/</url>
+    <content><![CDATA[<h2 id="数值积分引入">数值积分引入</h2>
+<p>对于连续函数 <span class="math inline">\(f(x)\)</span> 来说，如果这个函数的表达式比较简单，我们一般可以使用Newton-Leibniz公式进行积分</p>
+<p><span class="math display">\[
+\int_a^b f(x)dx = F(b) - F(a)
+\]</span></p>
+<p>其中，<span class="math inline">\(F&#39;(x)=f(x)\)</span>，即 <span class="math inline">\(F(x)\)</span> 是 <span class="math inline">\(f(x)\)</span> 的原函数。</p>
+<p>使用Newton-Leibniz公式进行积分其实是非常理想的情况。假如函数 <span class="math inline">\(f(x)\)</span> 的表达式非常复杂，或是根本就不可积，或是根本没有表达式，仅仅是给出了某些节点上的函数值，那么我们就只能通过数值积分的方式进行近似的积分求解了。</p>
+<span id="more"></span>
+<h2 id="数值积分误差估计">数值积分误差估计</h2>
+<p>对于函数 <span class="math inline">\(f(x)\in C[a, b]\)</span>，假如存在一个 <span class="math inline">\(n\)</span> 阶多项式 <span class="math inline">\(P_n(x)\)</span>，可以近似有 <span class="math inline">\(f(x) \approx P_n(x)\)</span>，那么应能近似得到</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx \int_a^bP_n(x)dx
+\]</span></p>
+<p>对于上述数值积分，其误差是可以估计的。</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx - \int_a^bP_n(x)dx = \int_a^b[f(x)-P_n(x)]dx=\int_a^bR_n(x)dx
+\]</span></p>
+<p>如果有 <span class="math inline">\(max_{a\leq x \leq b}R_n(x)\leq \varepsilon\)</span>，那么显然，上述数值积分的误差限为</p>
+<p><span class="math display">\[
+\int_a^bR_n(x)dx \leq (b-a)\varepsilon
+\]</span></p>
+<p>如果 <span class="math inline">\(\varepsilon\)</span> 很小的话，数值积分的误差限也很小，那么使用数值积分来近似真实的积分值，完全是可行的。</p>
+<h2 id="求积公式">求积公式</h2>
+<h3 id="中点公式">中点公式</h3>
+<h4 id="中点公式的计算">中点公式的计算</h4>
+<p>近似求积分的一种非常自然的想法，是使用一个矩形围成的面积来近似函数曲线在区间上与x轴所围成的面积。这种做数值积分的方式可以概括为中点公式。若 <span class="math inline">\(f(x) \in C[a,b]\)</span>，那么</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx (b-a)f(\frac{a+b}{2})
+\]</span></p>
+<p>利用区间中点对应的函数值乘以区间长度，得到的矩形面积，近似函数积分。</p>
+<h4 id="中点公式的误差分析">中点公式的误差分析</h4>
+<p>对于上述近似，可以进行近似误差的估计。假设函数 <span class="math inline">\(f(x)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上二阶可导，那么根据泰勒公式</p>
+<p><span class="math display">\[
+f(x) = f(\frac{a+b}{2}) + f&#39;(\frac{a+b}{2})(x-\frac{a+b}{2}) + \frac{f&#39;&#39;(\xi)}{2}(x-\frac{a+b}{2})^2
+\]</span></p>
+<p>对上述等式两边做积分，可以得到</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx-(b-a)f(\frac{a+b}{2}) = \frac{1}{24}(b-a)^3f&#39;&#39;(\xi)
+\]</span></p>
+<p>也就是说，中点公式的误差差不多就是在 <span class="math inline">\((b-a)^3\)</span> 量级。</p>
+<h3 id="梯形公式">梯形公式</h3>
+<h4 id="梯形公式的计算">梯形公式的计算</h4>
+<p>梯形公式是另一种非常自然的近似积分想法。从图形上来看，就是将 <span class="math inline">\(f(a)\)</span> 与 <span class="math inline">\(f(b)\)</span> 相连，形成一条直线，然后计算这条线段在 <span class="math inline">\([a, b]\)</span> 上的积分。</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx = \frac{1}{2}(b-a)[f(a)+f(b)]
+\]</span></p>
+<h4 id="梯形公式的误差分析">梯形公式的误差分析</h4>
+<p>梯形公式涉及到一条一次拟合多项式，因此可以用一次多项式拟合的误差来计算梯形公式的误差，如下</p>
+<p><span class="math display">\[
+R_1(x) = f(x) - L_1(x) = \frac{1}{2}f&#39;&#39;(\xi)(x-a)(x-b)
+\]</span></p>
+<p>那么</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx - \int_a^bL_1(x)dx = \int_a^bR_1(x) = -\frac{1}{12}(b-a)^3f&#39;&#39;(\xi)
+\]</span></p>
+<p>分析到这里，可能出现了比较反直觉的一点性质，即梯形公式的误差似乎要比中点公式的误差还要大，后者的系数是 <span class="math inline">\(\frac{1}{24}\)</span>。</p>
+<h3 id="simpson公式">Simpson公式</h3>
+<h4 id="simpson公式的计算">Simpson公式的计算</h4>
+<p>Simpson公式，也叫抛物型公式。这种数值积分方式实际上就是在区间上用一条抛物线来近似积分，即</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx \int_a^bL_2(x)dx=\frac{1}{6}(b-a)[f(a) + 4f(\frac{a+b}{2}) + f(b)]
+\]</span></p>
+<h4 id="simpson公式的误差估计">Simpson公式的误差估计</h4>
+<p>和梯形公式类似的，Simpson公式的近似误差也可以通过二次多项式的误差估计得到。由于二次多项式的误差分析展开比较复杂，也不是什么重点，这边的笔记就略去了，最后可以得到</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx - \int_a^bL_2(x)dx = -\frac{(b-a)^5}{2880}f^{(4)}(\xi)
+\]</span></p>
+<p>可以观察到，Simpson公式的近似误差量级是 <span class="math inline">\((b-a)^5\)</span>，比梯形公式和中点公式的近似误差要小两个量级。事实上，Simpson近似积分的精度确实要比前面两种高很多。</p>
+<h3 id="求积公式一般化">求积公式一般化</h3>
+<p>观察中点公式、梯形公式和Simpson公式，可以发现一个共同点：这些公式都可以写成 <span class="math inline">\(\sum_{i=0}^{n-1}\omega_if(x_i)\)</span> 的形式。因此，上面的这些公式都可以称为求积公式。</p>
+<p>求积公式有一个叫做<strong>代数精度</strong>的指标。所谓代数精度，指的是这个求积公式最高能够对多少次的多项式精确求积分。若某个求积公式对于 <span class="math inline">\(m\)</span> 阶多项式 <span class="math inline">\(x^m\)</span> 都可以满足精确求解的要求，但是对于 <span class="math inline">\(m+1\)</span> 阶多项式就不满足精确求积分的要求，那么这个求积公式的代数精度就为 <span class="math inline">\(m\)</span> 次。</p>
+<h2 id="复合求积">复合求积</h2>
+<p>前面提到，数值积分的误差与区间长度有关，像中间公式的积分误差与区间长度的3次方呈正相关关系，Simpson公式的积分误差与区间长度的5次方呈正相关关系。那么，为了减小数值积分的误差，就必须减小区间长度。事实上，对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，我们往往会将区间 <span class="math inline">\([a, b]\)</span> 等分为 <span class="math inline">\(n\)</span> 份，在一个小区间 <span class="math inline">\([x_i, x_{i+1}]\)</span> 上进行求积，即</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx = \sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f(x)dx
+\]</span></p>
+<p>一般来说，我们会将小区间的长度称为<strong>积分步长</strong>，用符号 <span class="math inline">\(h\)</span> 表示。</p>
+<p><span class="math display">\[
+h = \frac{b-a}{n}
+\]</span></p>
+<h3 id="中点复合求积">中点复合求积</h3>
+<p>对一个小区间内的积分进行数值近似，可以得到</p>
+<p><span class="math display">\[
+\int_{x_i}^{x_{i+1}}f(x)dx=(x_{i+1}-x_i)f(x_{i+\frac{1}{2}})=hf(x_{i+\frac{1}{2}})
+\]</span></p>
+<p>那么，整个区间的积分即</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx = \sum_{i=0}^{n-1}hf(x_{i+\frac{1}{2}}) \triangleq M_n
+\]</span></p>
+<h3 id="梯形复合求积">梯形复合求积</h3>
+<p>同上，很容易得到</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx = \sum_{i=0}^{n-1}\frac{h}{2}[f(x_i)+f(x_{i+1})] = \frac{h}{2}[f(a)+f(b)+2\sum_{i=1}^{n-1}f(x_i)] \triangleq T_n
+\]</span></p>
+<h3 id="simpson复合求积">Simpson复合求积</h3>
+<p><span class="math display">\[
+\int_a^bf(x)dx = \sum_{i=0}^{n-1}\frac{h}{6}[f(x_i) + f(x_{i+1}) + 4f(x_{i+\frac{1}{2}})]=\frac{h}{6}[f(a) + f(b) + 4\sum_{i=1}^{n-1}f(x_{i+\frac{1}{2}})+2\sum_{i=1}^{n-1}f(x_i)] \triangleq S_n
+\]</span></p>
+<h3 id="上述复合求积公式的误差分析">上述复合求积公式的误差分析</h3>
+<p>为了进行上述复合求积公式的误差限分析，首先引入一个定理：对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，存在一点 <span class="math inline">\(\eta \in (a, b)\)</span>，满足 <span class="math inline">\(\sum_{i=0}^{n-1}\omega_if(x_i)=f(\eta)\sum_{i=0}^{n-1}\omega_i\)</span>。</p>
+<p>这个定理的求证其实非常简单。对于 <span class="math inline">\(f(x) \in C[a, b]\)</span>，必然存在一个 <span class="math inline">\(f_{min}\)</span> 和一个 <span class="math inline">\(f_{max}\)</span>，很自然有</p>
+<p><span class="math display">\[
+f_{min}\sum_{i=0}^{n-1}\omega_i \leq \sum_{i=0}^{n-1}\omega_i f(x_i) \leq f_{max}\sum_{i=0}^{n-1}\omega_i
+\]</span></p>
+<p>由于 <span class="math inline">\(f(x)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上连续，那么必然存在某一个 <span class="math inline">\(f\)</span>，恰好满足</p>
+<p><span class="math display">\[
+f\sum_{i=0}^{n-1}\omega_i=\sum_{i=0}^{n-1}\omega_i f(x_i)
+\]</span></p>
+<h4 id="中点复合求积误差">中点复合求积误差</h4>
+<p>有了上面这个定理，求复合求积误差就很容易了。对于</p>
+<p><span class="math display">\[
+\sum_{i=0}^{n-1}\int_{x_i}^{x_{i+1}}f(x)dx = h\sum_{i=0}^{n-1}f(x_{i+\frac{1}{2}})
+\]</span></p>
+<p>作差，得到</p>
+<p><span class="math display">\[
+\sum_{i=0}^{n-1}[\int_{x_i}^{x_{i+1}}f(x)dx-hf(x_{i+\frac{1}{2}})]
+\]</span></p>
+<p>注意到求和公式内部是一个中点求积误差的表达式，代入可得</p>
+<p><span class="math display">\[
+\sum_{i=0}^{n-1}[\int_{x_i}^{x_{i+1}}f(x)dx - hf(x_{i+\frac{1}{2}})]=\sum_{i=0}^{n-1}\frac{1}{24}h^3f&#39;&#39;(\xi)
+\]</span></p>
+<p>注意到，求和项与 <span class="math inline">\(i\)</span> 无关，因此可以得到中点复合求积误差为</p>
+<p><span class="math display">\[
+\frac{b-a}{24}h^2f&#39;&#39;(\xi)
+\]</span></p>
+<h4 id="梯形复合求积误差">梯形复合求积误差</h4>
+<p><span class="math display">\[
+-\frac{b-a}{12}h^2f&#39;&#39;(\xi)
+\]</span></p>
+<h4 id="simpson复合求积误差">Simpson复合求积误差</h4>
+<p><span class="math display">\[
+-\frac{b-a}{2880}h^4f&#39;&#39;(\xi)
+\]</span></p>
+<p>可以观察到，复合求积误差本质上就是将原来的 <span class="math inline">\((b-a)\)</span> 替换为 <span class="math inline">\(h\)</span>，但其中一次因为 <span class="math inline">\(n\)</span> 项求和退化为 <span class="math inline">\((b-a)\)</span>，因此原来是 <span class="math inline">\((b-a)^m\)</span> 量级的误差都变为 <span class="math inline">\(h^{m-1}\)</span> 量级。</p>
+<p>中点复合求积以及梯形复合求积的误差都是 <span class="math inline">\(O(h^2)\)</span> 量级的，而Simpson复合求积的误差是 <span class="math inline">\(O(h^4)\)</span> 量级的，因此如果对于近似精度要求较高，应尽量选择使用Simpson复合求积。</p>
+<h2 id="变步长方法以及外推加速技术">变步长方法以及外推加速技术</h2>
+<p>前面所介绍的求积方法都是定步长的方法。定步长数值积分编程很容易，但是确定步长是一件比较麻烦的事情。如果步长定得太大，精度就会比较差；如果步长定得太小，计算效率可能就低很多。因此，变步长方法被引入到数值积分中。下面通过一个简单的变步长方法，初步了解一下变步长数值积分的基本原理。</p>
+<h3 id="区间折半法">区间折半法</h3>
+<p>变步长积分的主要思想是，对于给定的积分精度，一开始可以在整个区间上进行数值积分，若精度达不到要求，则将积分步长减半；不断地将积分步长减半，直到积分精度满足给定要求为止。</p>
+<p>以梯形求积为例，若记 <span class="math inline">\(I = \int_a^bf(x)dx\)</span>，那么</p>
+<p><span class="math display">\[
+|I-T_n| = \frac{1}{12}(b-a)h^2f&#39;&#39;(\xi)
+\]</span></p>
+<p>如果进行了一次区间折半，得到 <span class="math inline">\(T_{2n}\)</span>，那么应有</p>
+<p><span class="math display">\[
+|I-T_{2n}| = \frac{1}{12}(b-a)(\frac{h}{2})^2f&#39;&#39;(\xi)
+\]</span></p>
+<p>如果忽略两个误差项中的 <span class="math inline">\(f&#39;&#39;(\xi)\)</span> 上的细微误差，基本上可以认为</p>
+<p><span class="math display">\[
+|I-T_{2n}| = \frac{1}{4}|I-T_n|
+\]</span></p>
+<p>也就是说，一次区间折半大约可以提升四倍精度。另外，可以通过 <span class="math inline">\(|T_n-T_{2n}|\)</span> 来估算 <span class="math inline">\(I-T_{2n}\)</span> 的水平。因为 <span class="math inline">\(|I-T_{2n}|\approx\frac{1}{4}|I-T_n|\)</span>，因此，基本上可以认为</p>
+<p><span class="math display">\[
+|I - T_{2n}| = \frac{1}{3}|T_n-T_{2n}|
+\]</span></p>
+<p>所以，区间折半法进行数值积分时，可以以 <span class="math inline">\(|T_n-T_{2n}|\)</span> 的水平来判断变步长数值积分的精度是否已经符合要求。</p>
+<h3 id="romberg求积">Romberg求积</h3>
+<p>虽然区间折半法原理很简单，编程也很容易实现，但是精度收敛还是太慢了，这会导致要想实现高精度的数值积分，不得不将 <span class="math inline">\(h\)</span> 缩放到一个很小的水平，那么 <span class="math inline">\(n\)</span> 就会变得很大，导致计算量快速上升。Richardson搞出了一种外推加速的方法，利用这种方法进行数值计算的方式称为Romberg求积。</p>
+<p>Romberg求积需要用到Euler-MacLaurin公式，但是我并不想在这里引入这个复杂的公式，其实对于说明Romberg求积而言不是很有必要。</p>
+<p>简单来说，引入Euler-MacLaurin公式的目的是为了说明</p>
+<p><span class="math display">\[
+T_n - I = a_1 h^2 + a_2 h^4 + ...
+\]</span></p>
+<p>对于上面这条等式，如果进行一次区间折半，可以得到</p>
+<p><span class="math display">\[
+T_{2n} - I = a_1(\frac{h}{2})^2 + a_2 (\frac{h}{2})^4 + ...
+\]</span></p>
+<p>为了构造出一个性质更好的求积项，将 <span class="math inline">\(T_n - I\)</span> 乘以 <span class="math inline">\(\frac{1}{4}\)</span>，然后用上式做减法，可以得到</p>
+<p><span class="math display">\[
+T_{2n} - \frac{3}{4}I - \frac{1}{4}T_n = \bar a_2 h^4 + ...
+\]</span></p>
+<p>上式可以通过等号两边同时乘以 <span class="math inline">\(\frac{4}{3}\)</span>，改写为</p>
+<p><span class="math display">\[
+T_n^{(2)} - I = \tilde a_2 h^4 + ...
+\]</span></p>
+<p>改写为这种形式的意义在于，我们构造出了 <span class="math inline">\(T_n^{(2)}\)</span> 这一项精度更高的近似积分项，这一项实际上等于</p>
+<p><span class="math display">\[
+T_n^{(2)} = \frac{T_{2n} - 2^{-2}T_n}{1-2^{-2}}
+\]</span></p>
+<p>也就是说，通过一次区间折半，我们能够将精度提高 <span class="math inline">\(\displaystyle\frac{1}{h^2}\)</span> 倍！这效果无疑远优于区间折半法，因为普通的区间折半一次只能提升大约4倍的精度，而通过Romberg求积，一次区间折半能将精度提升 <span class="math inline">\(\displaystyle\frac{1}{h^2}\)</span> 倍，这意味着Romberg求积的收敛速度是越来越快的，因为随着区间的折半 <span class="math inline">\(h\)</span> 也在不断减小。</p>
+<p>事实上，Romberg求积项可以一般化为</p>
+<p><span class="math display">\[
+T_n^{(m)} = \frac{T_{2n}^{(m-1)}-2^{-2m}T_n^{(m-1)}}{1-2^{-2m}}
+\]</span></p>
+<p>注意上标并不是求导的意思，这表示的是Romberg求积区间折半的次数。</p>
+<h2 id="newton-cotes公式">Newton-Cotes公式</h2>
+<p>前面的中点公式、梯形公式以及Simpson公式分别可以看作使用常数、一次函数、二次函数在区间上进行插值，利用插值函数的积分作为原函数的积分替代。对这种方法进行进一步的推广，将 <span class="math inline">\(f(x)\)</span> 用 <span class="math inline">\(n+1\)</span> 个<strong>等距节点</strong>上的 <span class="math inline">\(n\)</span> 次拉格朗日插值多项式替代，然后进行积分，就可以得到 <strong>Newton-Cotes公式</strong>。</p>
+<p>具体的推导过程如下：若区间 <span class="math inline">\([a, b]\)</span> 上存在 <span class="math inline">\(n+1\)</span> 个等距节点 <span class="math inline">\(x_i\)</span>，记 <span class="math inline">\(x = a+th, t \in [0, n]\)</span>，可以将 <span class="math inline">\(n\)</span> 次拉格朗日插值多项式 <span class="math inline">\(L_n(x)\)</span> 表示为</p>
+<p><span class="math display">\[
+L_n(x) = \sum_{i=0}^n (\prod_{j=0, j\neq i}^n \frac{x-x_j}{x_i-x_j})f(x_i)
+\]</span></p>
+<p>将 <span class="math inline">\(x=a+th\)</span> 代入，可以得到</p>
+<p><span class="math display">\[
+L_n(x) = \sum_{i=0}^n [\prod_{j=0, j\neq i}^n \frac{(a+th)-(a+jh)}{(a+ih) - (a+jh)}]f(x_i)= \sum_{i=0}^n (\prod_{j=0, j\neq i}^n\frac{t-j}{i-j})f(x_i)
+\]</span></p>
+<p>观察 <span class="math inline">\(\prod_{j=0, j\neq i}^n \frac{1}{i-j}\)</span> 项，发现可以写成阶乘的形式 <span class="math inline">\(\frac{(-1)^{n-i}}{i!(n-i)!}\)</span>，那么</p>
+<p><span class="math display">\[
+L_n(x) = \sum_{i=0}^n \frac{(-1)^{n-i}}{i!(n-i)!}(\prod_{j=0, j\neq i}^n(t-j))f(x_i)
+\]</span></p>
+<p>由于 <span class="math inline">\(f(x) \approx L_n(x)\)</span>，那么</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx \int_a^b L_n(x)dx
+\]</span></p>
+<p>观察到 <span class="math inline">\(L_n(x)\)</span> 实际上已经写作了 <span class="math inline">\(L_n(t)\)</span> 的形式，所以对积分式可以进行一次换元</p>
+<p><span class="math display">\[
+dx = hdt
+\]</span></p>
+<p>代入积分式，可以得到</p>
+<p><span class="math display">\[
+\int_a^bL_n(x)dx = (b-a)\sum_{i=0}^n\frac{(-1)^{n-i}}{ni!(n-i)!}(\int_0^n\prod_{j=0, j\neq i}^n(t-j)dt)f(x_i)
+\]</span></p>
+<p>这条式子计算起来还是比较复杂的，但可以观察到，这条式子中 <span class="math inline">\(f(x_i)\)</span> 之前的部分只与区间长度以及等距节点的数量有关，那么其实可以把前面这一部分系数直接用求积系数 <span class="math inline">\(\omega_i\)</span> 来表示，所以最后仍然可以表示为下面这样的形式</p>
+<p><span class="math display">\[
+\int_a^bf(x)dx \approx \sum_{i=0}^n \omega_i f(x_i)
+\]</span></p>
+<p>Newton-Cotes公式的简化写法其实指明了数值积分的精髓，即<em>对求积节点对应的函数值与求积系数的积求和</em>。</p>
+<h3 id="cotes系数">Cotes系数</h3>
+<p>观察到，求积系数 <span class="math inline">\(\omega_i\)</span> 实际上也可以写成两个部分，即</p>
+<p><span class="math display">\[
+\omega_i = (b-a) \sum_{i=0}^n\frac{(-1)^{n-i}}{ni!(n-i)!} \int_0^n\prod_{j=0, j\neq i}^n(t-j)dt = (b-a) C_i^{(n)}
+\]</span></p>
+<p><span class="math inline">\(C_i^{(n)}\)</span> 这一项被称为 <strong>Cotes系数</strong>。由于积分时进行了一次换元，所以Cotes系数的积分区间线性变换至 <span class="math inline">\([0, n]\)</span> 上，成为了只与节点数量有关的项。那么只需事先计算好不同节点数量下的Cotes系数，就可以很方便地使用Newton-Cotes公式进行数值积分了。</p>
+<p>实际上中点公式、梯形公式或Simpson公式对应的求积系数就是 <span class="math inline">\(n\)</span> 分别为0,1,2时的Cotes系数。下面给出 <span class="math inline">\(n\leq 8\)</span> 时的Cotes系数表。</p>
+<figure>
+<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Snipaste_2022-11-16_11-47-11.png" alt><figcaption>Cotes系数表</figcaption>
+</figure>
+<p>Cotes系数具有以下性质</p>
+<ol type="1">
+<li>Cotes系数随着 <span class="math inline">\(i\)</span> 的增大体现出对称性</li>
+<li><span class="math inline">\(\sum_{i=0}^nC_i^{(n)}=1\)</span></li>
+<li>Cotes系数在 <span class="math inline">\(n\geq 8\)</span> 时有正有负，这会导致数值积分的不稳定，所以一般在实际使用Newton-Cotes公式进行数值积分时 <span class="math inline">\(n\leq 7\)</span></li>
+<li>Newton-Cotes公式在 <span class="math inline">\(n\)</span> 为奇数时代数精度至少为 <span class="math inline">\(n\)</span> 次，<span class="math inline">\(n\)</span> 为偶数时代数精度至少为 <span class="math inline">\(n+1\)</span> 次</li>
+</ol>
+<h3 id="newton-cotes公式的误差">Newton-Cotes公式的误差</h3>
+<p>考虑到 <span class="math inline">\(f(x_i)\)</span> 有时可能只是测量值，与真值之间也存在误差。假如 <span class="math inline">\(f(x_i)\)</span> 与真值之间的最大误差为 <span class="math inline">\(\varepsilon\)</span>，那么Newton-Cotes公式进行数值积分的最大误差为 <span class="math inline">\((b-a)\varepsilon\)</span>。</p>
+<h2 id="高斯公式">高斯公式</h2>
+<p>前面考虑的数值积分都是在等距节点上进行求积，下面介绍一种精度更高的非等距节点求积方法——<strong>高斯积分</strong>。</p>
+<h3 id="高斯公式的定义">高斯公式的定义</h3>
+<p>高斯公式的定义中引入了权函数，是在区间上进行带权积分</p>
+<p><span class="math display">\[
+\int_a^b\rho(x)f(x)dx \approx \sum_{i=0}^n \omega_if(x_i)
+\]</span></p>
+<p>另外，高斯积分对于积分节点是有要求的，满足相应要求的积分节点称为 <strong>高斯点</strong>；积分节点与对应的积分系数之间存在确定关系，这个对应的积分系数称为 <strong>高斯系数</strong>。高斯积分的特征在于，在 <span class="math inline">\(n+1\)</span> 个非等距节点上，能够实现代数精度高达 <span class="math inline">\(2n+1\)</span> 次的数值积分。</p>
+<p>要推导任意节点数量的高斯公式非常复杂，但是如果能够先找到高斯点，然后求出对应的高斯系数，就可以直接确定一条高斯积分公式。其中，找高斯点是最困难的一件事。</p>
+<h3 id="寻找高斯点">寻找高斯点</h3>
+<p>对于高斯点，存在以下定理：</p>
+<p>区间 <span class="math inline">\([a, b]\)</span> 上的 <span class="math inline">\(n+1\)</span> 个点均为高斯点的充要条件是，这些点所形成的多项式 <span class="math inline">\(\Pi(x) = \prod_{i=0}^n(x-x_i)\)</span> 在区间上与任意次数不超过 <span class="math inline">\(n\)</span> 次的多项式 <span class="math inline">\(q(x)\)</span> 带权正交，即</p>
+<p><span class="math display">\[
+\int_a^b \rho(x) \Pi(x) q(x)dx = 0
+\]</span></p>
+<p>这条定理的证明稍微有点麻烦，对应用来说也不太重要，见教材。这条定理的意义在于说明了高斯点其实就是区间 <span class="math inline">\([a, b]\)</span> 上的 <span class="math inline">\(n+1\)</span> 次带权正交多项式的零点。在多项式章节中介绍了四种不同的正交多项式</p>
+<ul>
+<li>Legendre正交多项式</li>
+<li>Chebyshev正交多项式</li>
+<li>Laguerre正交多项式</li>
+<li>Hermite正交多项式</li>
+</ul>
+<p>这四种正交多项式可以与高斯积分定义式结合，形成四种不同的高斯积分公式。在介绍这四种积分公式之前，还要补充3点高斯积分的性质：</p>
+<ol type="1">
+<li>高斯积分是所有利用 <span class="math inline">\(n+1\)</span> 个积分节点进行积分的方式中，代数精度最高的积分算法</li>
+<li>高斯积分的所有积分系数均大于0，因此积分结果一定是稳定的</li>
+<li>高斯积分在 <span class="math inline">\(n\rightarrow \infty\)</span> 时，积分结果一定是收敛的</li>
+</ol>
+<p>前面两点性质基于以下定理：利用 <span class="math inline">\(n+1\)</span> 个积分节点进行数值积分的最高代数精度是 <span class="math inline">\(2n+1\)</span> 次，而且当积分精度达到 <span class="math inline">\(2n+1\)</span> 次时，积分系数 <span class="math inline">\(\omega_i &gt;0\)</span>。</p>
+<p>这些性质的证明都不是特别复杂，但是对于数值分析这门课而言不是特别重要，因此不花费过多的精力在讨论性质的证明上。</p>
+<h3 id="四种常用的高斯积分公式">四种常用的高斯积分公式</h3>
+<h4 id="gauss-legendre公式">Gauss-Legendre公式</h4>
+<p>Legendre正交多项式是区间 <span class="math inline">\([-1, 1]\)</span> 上权函数为 <span class="math inline">\(\rho(x) \equiv 1\)</span> 的正交多项式。</p>
+<p><span class="math inline">\(n=0\)</span> 时，Gauss-Legendre公式为</p>
+<p><span class="math display">\[
+\int_{-1}^1f(x)dx \approx 2f(0)
+\]</span></p>
+<p><span class="math inline">\(n=1\)</span> 时，Gauss-Legendre公式为</p>
+<p><span class="math display">\[
+\int_{-1}^1f(x)dx \approx f(-\frac{1}{\sqrt{3}}) + f(\frac{1}{\sqrt{3}})
+\]</span></p>
+<p><span class="math inline">\(n=2\)</span> 时，Gauss-Legendre公式为</p>
+<p><span class="math display">\[
+\int_{-1}^1f(x)dx \approx \frac{5}{9}f(-\sqrt{\frac{3}{5}}) + \frac{8}{9}f(0) + \frac{5}{9}f(\sqrt{\frac{3}{5}})
+\]</span></p>
+<figure>
+<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Legendre.png" alt><figcaption>Gauss-Legendre公式常用的高斯点及其高斯系数</figcaption>
+</figure>
+<p>对于计算来说，这一部分内容也不太需要进行定理的推导和证明，只需要记住一些常用的高斯点和高斯系数，然后知道这些点和系数与各公式之间的对应关系，会算简单数值积分即可。</p>
+<h4 id="gauss-chebyshev公式">Gauss-Chebyshev公式</h4>
+<p>Chebyshev正交多项式是区间 <span class="math inline">\([-1, 1]\)</span> 上权函数为 <span class="math inline">\(\rho(x)=\frac{1}{\sqrt{1-x^2}}\)</span> 的正交多项式。Chebyshev的零点表达式如下</p>
+<p><span class="math display">\[
+x_i = cos\frac{2i+1}{2(n+1)}\pi, i = 0, 1, ..., n
+\]</span></p>
+<p>相应的高斯系数为</p>
+<p><span class="math display">\[
+\omega_i = \frac{\pi}{n+1}
+\]</span></p>
+<p>Gauss-Chebyshev公式中的所有高斯系数都是相同的！而且高斯点的表达式也很好记忆，因此很容易使用Gauss-Chebyshev公式进行 <span class="math inline">\(n\)</span> 很大时的高斯积分！不过需要注意，Gauss-Chebyshev公式的权函数并不为1，因此应用时应看清楚场合，不然算出来的结果是错的。</p>
+<p>Gauss-Chebyshev公式整理如下</p>
+<p><span class="math display">\[
+\int_{-1}^1\frac{1}{\sqrt{1-x^2}}f(x)dx = \frac{\pi}{n+1}\sum_{i=0}^n f(cos\frac{2i+1}{2(n+1)}\pi)
+\]</span></p>
+<h4 id="gauss-laguerre公式">Gauss-Laguerre公式</h4>
+<p>Laguerre正交多项式是区间 <span class="math inline">\([0, \infty)\)</span> 上权函数为 <span class="math inline">\(\rho(x)=e^{-x}\)</span> 的正交多项式。</p>
+<p><span class="math inline">\(n=0\)</span> 时，Gauss-Laguerre公式为</p>
+<p><span class="math display">\[
+\int_0^{\infty}e^{-x}f(x)dx \approx f(1)
+\]</span></p>
+<p><span class="math inline">\(n=1\)</span> 时，Gauss-Laguerre公式为</p>
+<p><span class="math display">\[
+\int_0^{\infty}e^{-x}f(x)dx \approx \frac{2+\sqrt{2}}{4}f(2-\sqrt{2})+\frac{2+\sqrt{2}}{4}f(2+\sqrt{2})
+\]</span></p>
+<figure>
+<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Laguerre.png" alt><figcaption>Gauss-Laguerre公式常用的高斯点及其高斯系数</figcaption>
+</figure>
+<h4 id="gauss-hermite公式">Gauss-Hermite公式</h4>
+<p>Hermite正交多项式是区间 <span class="math inline">\([-\infty, \infty]\)</span> 上权函数为 <span class="math inline">\(\rho(x) = e^{-x^2}\)</span> 的正交多项式。</p>
+<p><span class="math inline">\(n=1\)</span> 时，Gauss-Hermite公式为</p>
+<p><span class="math display">\[
+\int_{-\infty}^{\infty} e^{-x^2}f(x)dx \approx \frac{\sqrt{\pi}}{2}f(-\frac{\sqrt{2}}{2}) + \frac{\sqrt{\pi}}{2}f(\frac{\sqrt{2}}{2})
+\]</span></p>
+<p><span class="math inline">\(n=2\)</span> 时，Gauss-Hermite公式为</p>
+<p><span class="math display">\[
+\int_{-\infty}^{\infty} e^{-x^2}f(x)dx \approx \frac{\sqrt{\pi}}{6}f(-\frac{\sqrt{6}}{2})+\frac{2\sqrt{\pi}}{3}f(0) + \frac{\sqrt{\pi}}{6}f(\frac{\sqrt{6}}{2})
+\]</span></p>
+<figure>
+<img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//Gauss-Hermite.png" alt><figcaption>Gauss-Hermite公式常用的高斯点及其高斯系数</figcaption>
+</figure>
+<h4 id="高斯公式使用注意事项">高斯公式使用注意事项</h4>
+<p>应用高斯公式时，首先要观察权函数 <span class="math inline">\(\rho(x)\)</span>，其次要观察积分区间。一般来说，根据权函数就可以确定一个积分问题需要用什么积分公式，积分区间和权函数往往是挂钩的。</p>
+<h2 id="多重数值积分">多重数值积分</h2>
+<p>对于重积分来说，前面提到的数值积分方法可以解决一些比较简单的重积分问题，比如使用复合Simpson求积可以解决重数比较低的多重数值积分问题。下面以二重积分为例，简单地说明一下多重数值积分问题。</p>
+<h3 id="以二重积分为例描述多重数值积分问题">以二重积分为例描述多重数值积分问题</h3>
+<p>对于一个二重积分问题，可以将目标积分式写为</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y) dxdy
+\]</span></p>
+<p>其中，<span class="math inline">\(\Omega\)</span> 表示二维积分区间，可以表示为</p>
+<p><span class="math display">\[
+\Omega = \{a \leq x \leq b, \varphi_1(x) \leq y \leq \varphi_2(x)\}
+\]</span></p>
+<p><img src="/2022/11/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%95%B0%E5%80%BC%E7%A7%AF%E5%88%86//二重积分求积区域.png" alt="二重积分求积区域" width="40%" align="center"></p>
+<p>上面的二重积分可以拆解为对 <span class="math inline">\(x\)</span> 和对 <span class="math inline">\(y\)</span> 的两个积分</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y) dxdy = \int_a^b dx \int_{\varphi_1(x)}^{\varphi_2(x)}f(x, y)dy
+\]</span></p>
+<p>令 <span class="math inline">\(F(x) = \displaystyle\int_{\varphi_1(x)}^{\varphi_2(x)}f(x, y)dy\)</span>，有</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y)dxdy = \int_a^bF(x) dx
+\]</span></p>
+<p>由数值积分公式，可以得到</p>
+<p><span class="math display">\[
+\int_a^bF(x)dx \approx \sum_{i=0}^n \omega_i^{(1)} F(x_i)
+\]</span></p>
+<p><span class="math inline">\(F(x_i)\)</span> 应也能写成</p>
+<p><span class="math display">\[
+F(x_i) = \int_{\varphi_1(x_i)}^{\varphi_2(x_i)}f(x_i, y)dy \approx \sum_{j=0}^m\omega_j^{(2)}f(x_i, y_j)
+\]</span></p>
+<p>整合上述两条式子，可以得到双重积分的数值积分公式</p>
+<p><span class="math display">\[
+\iint_{\Omega} f(x, y)dxdy \approx \sum_{i=0}^n \omega_i^{(1)} \sum_{j=0}^m \omega_j^{(2)} f(x_i, y_j)
+\]</span></p>
+<p>记 <span class="math inline">\(\omega_{ij}=\omega_i^{(1)} \omega_j^{(2)}\)</span>，可以有</p>
+<p><span class="math display">\[
+\iint_{\Omega}f(x, y)dxdy\approx \sum_{i=0}^n \sum_{j=0}^m \omega_{ij}f(x_i, y_j)
+\]</span></p>
+<p>所以双重积分的数值积分本质上就是一个双重求积问题。我们可以使用Newton-Cotes公式对这个求积问题进行求解，但事实上使用Newton-Cotes方式进行重积分的数值求解精度不高。教材中展示了使用复合Simpson公式进行二重积分求积的案例，其过程非常复杂，也不实用，因此在笔记中略去。下面直接介绍对于多重积分数值求解来说比较实用的Monte-Carlo方法。</p>
+<h3 id="使用monte-carlo方法求解多重积分">使用Monte-Carlo方法求解多重积分</h3>
+<p>Monte-Carlo方法是一种随机模拟思想，并不是一种具体的方法实现。下面以Monte-Carlo方法在一维数值积分中的应用为例，来简单地描述一下Monte-Carlo方法如何应用于数值积分。</p>
+<h4 id="monte-carlo方法求解一维数值积分">Monte-Carlo方法求解一维数值积分</h4>
+<p>假定随机变量 <span class="math inline">\(X\)</span> 在区间 <span class="math inline">\([0, 1]\)</span> 上服从均匀分布（均匀分布即概率密度函数 <span class="math inline">\(f(x) = \frac{1}{b-a}\)</span>，其中 <span class="math inline">\(b-a\)</span> 为区间长度），函数 <span class="math inline">\(f(x)\)</span> 为任意可积函数，那么 <span class="math inline">\(f(X)\)</span> 的数学期望为</p>
+<p><span class="math display">\[
+E[f(X)] = \int_0^1 f(x) dx
+\]</span></p>
+<blockquote>
+<p>回顾一下统计学的知识：数学期望指的是随机变量所有可能的取值与其出现概率之积求和。</p>
+</blockquote>
+<p>也就是说，服从均匀分布的随机变量 <span class="math inline">\(X\)</span> 对应函数值的数学期望 <span class="math inline">\(E[f(X)]\)</span> 恰好是函数 <span class="math inline">\(f(x)\)</span> 在对应区间上的积分值。那么如果有办法求出随机变量对应函数值的数学期望 <span class="math inline">\(E[f(X)]\)</span>，那么就可以得到函数 <span class="math inline">\(f(x)\)</span> 的区间上的积分，而不是直接做数值积分运算。</p>
+<p>假如在区间 <span class="math inline">\([0, 1]\)</span> 上共有 <span class="math inline">\(N\)</span> 个相互独立的、服从均匀分布的随机变量 <span class="math inline">\(X_i\)</span>，记</p>
+<p><span class="math display">\[
+I_N[f] = \frac{1}{N}\sum_{i=1}^N f(X_i)
+\]</span></p>
+<p>显然，<span class="math inline">\(I_N[f]\)</span> 也是一个随机变量，这个随机变量的数学期望 <span class="math inline">\(E[I_N[f]]\)</span> 在形式上恰好与区间上的数值积分公式类似</p>
+<p><span class="math display">\[
+E[I_N[f]] = E[\frac{1}{N}\sum_{i=1}^N f(X_i)] = \frac{1}{N}\sum_{i=1}^NE[f(X_i)]=\frac{1}{N}\sum_{i=1}^N\int_0^1f(x)dx = I[f]
+\]</span></p>
+<p>从这个角度来说，可以把 <span class="math inline">\(I_N[f]\)</span> 视为 <span class="math inline">\(I[f]\)</span> 的无偏估计。由大数定律，知 <span class="math inline">\(N \rightarrow \infty\)</span> 时，<span class="math inline">\(I_N[f] \rightarrow I[f]\)</span>。</p>
+<p>说白了，Monte-Carlo方法就是在区间内随机取点求函数值，然后加起来求平均。</p>
+<h4 id="monte-carlo方法的一维数值积分误差">Monte-Carlo方法的一维数值积分误差</h4>
+<p>积分误差 <span class="math inline">\(R_N[f]\)</span> 可以表示为</p>
+<p><span class="math display">\[
+R_N[f] = I_N[f] - I[f]
+\]</span></p>
+<p>由于 <span class="math inline">\(I_N[f]\)</span> 是一个随机变量，因此 <span class="math inline">\(R_N[f]\)</span> 也是一个随机变量。为此需要使用 <span class="math inline">\(R_N[f]\)</span> 的方差衡量Monte-Carlo方法的一维数值积分误差。</p>
+<p><span class="math display">\[
+var(R_N[f])= E\{[I_N[f] - I[f]]^2\} = \frac{1}{N^2}E\{\sum_{i=1}^N(f(X_i) - I[f])\sum_{j=1}^N(f(X_j) - I[f])\}
+\]</span></p>
+<p>当 <span class="math inline">\(i\neq j\)</span> 时，由于 <span class="math inline">\(X_i, X_j\)</span> 是相互独立的随机变量，因此</p>
+<p><span class="math display">\[
+E\{[f(X_i) - I[f]][f(X_j) - I[f]]\} = E[f(X_i) - I[f]]E[f(X_j) - I[f]] = 0
+\]</span></p>
+<p>那么，只有在 <span class="math inline">\(i=j\)</span> 的情况下，数学期望是非零的，所以上面的数学期望可以简化为</p>
+<p><span class="math display">\[
+var(R_N[f]) = \frac{1}{N^2} E\{\sum_{i=1}^N[f(X_i)-I[f]]^2\}
+\]</span></p>
+<p>而 <span class="math inline">\(\displaystyle\frac{1}{N}E\{\sum_{i=1}^N[f(X_i) - I[f]]^2\}\)</span> 实际上就是 <span class="math inline">\(var(f)\)</span>，即 <span class="math inline">\(f(X)\)</span> 的方差。这个值在随机变量的分布和函数结构确定以后，便是一个常数。工程上来说，这个方差可以通过抽样的方法进行估计，例如区间上随机取 <span class="math inline">\(N\)</span> 个点求函数值，取其均值作为数学期望的估计，然后用这些函数值和估计期望求出估计的方差。</p>
+<p>总之Monte-Carlo方法求一维数值积分的误差 <span class="math inline">\(var(R_N[f]) = \displaystyle\frac{1}{N}var(f)\)</span> 是与 <span class="math inline">\(N\)</span> 成反比例关系的。事实上，只要 <span class="math inline">\(f(x)\)</span> 是平方可积函数，<span class="math inline">\(var(f)\)</span> 就必然是有限值，那么Monte-Carlo方法求数值积分一定是稳定的，并且精度随着 <span class="math inline">\(N\)</span> 的增大而提高。</p>
+<h4 id="monte-carlo方法的多重数值积分误差">Monte-Carlo方法的多重数值积分误差</h4>
+<p>Monte-Carlo方法求多重数值积分的误差仍然是 <span class="math inline">\(\displaystyle\frac{1}{N}var(f)\)</span>，与维度无关。这个特性太屌了，所以工程上求多重数值积分基本上都是用Monte-Carlo方法进行求解的。</p>
+<p>当然，计算机并不能生成真正的随机数，只能生成伪随机数，所以在实际计算的时候，Monte-Carlo方法的数值积分精度可能略低于理论精度，但与理论相差不会太大。</p>
 ]]></content>
       <categories>
         <category>University</category>
