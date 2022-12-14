@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本笔记知识点来自于C++ Primer第5版。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CPP基础查漏补缺">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/12/11/CPP%E5%9F%BA%E7%A1%80%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/">
+<meta property="og:site_name" content="Elysium">
+<meta property="og:description" content="本笔记知识点来自于C++ Primer第5版。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-11T15:41:01.000Z">
+<meta property="article:modified_time" content="2022-12-12T14:53:22.652Z">
+<meta property="article:author" content="Sean Zhou">
+<meta property="article:tag" content="Programming Language">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/12/11/CPP%E5%9F%BA%E7%A1%80%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/12/11/CPP%E5%9F%BA%E7%A1%80%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/","path":"2022/12/11/CPP基础查漏补缺/","title":"CPP基础查漏补缺"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CPP基础查漏补缺 | Elysium</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Elysium</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Tech, Race, Game</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#c%E5%AF%BC%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">C++导言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E5%BA%93%E7%9A%84io%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.1.</span> <span class="nav-text">标准库的IO对象</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#io%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.1.1.</span> <span class="nav-text">IO对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E5%BA%93%E5%A4%B4%E6%96%87%E4%BB%B6%E6%A0%87%E8%AF%86"><span class="nav-number">1.1.2.</span> <span class="nav-text">标准库头文件标识</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">1.1.3.</span> <span class="nav-text">作用域运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">1.1.4.</span> <span class="nav-text">输入输出运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8D%A2%E8%A1%8C%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="nav-number">1.1.5.</span> <span class="nav-text">换行操作符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stdcin-%E7%9A%84%E7%BB%93%E6%9D%9F%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.1.6.</span> <span class="nav-text">std::cin 的结束条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">1.1.7.</span> <span class="nav-text">文件重定向</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%86%85%E7%BD%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">基本内置类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E7%B1%BB%E5%9E%8B%E5%88%86%E7%B1%BB"><span class="nav-number">1.2.1.</span> <span class="nav-text">字符类型分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B4%E5%9E%8B%E5%88%86%E7%B1%BB"><span class="nav-number">1.2.2.</span> <span class="nav-text">整型分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%86%85%E7%BD%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%AD%97%E9%9D%A2%E5%80%BC%E5%B8%B8%E9%87%8F"><span class="nav-number">1.2.3.</span> <span class="nav-text">基本内置类型的字面值常量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.2.4.</span> <span class="nav-text">变量初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.2.5.</span> <span class="nav-text">默认初始化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E5%92%8C%E5%AE%9A%E4%B9%89"><span class="nav-number">1.3.</span> <span class="nav-text">声明和定义</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sean Zhou"
+      src="/images/Yeah.jpg">
+  <p class="site-author-name" itemprop="name">Sean Zhou</p>
+  <div class="site-description" itemprop="description">Sean Zhou's personal blog.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/SeanZhou0616" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SeanZhou0616" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:seanzhou616@gmail.com" title="E-Mail → mailto:seanzhou616@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/12/11/CPP%E5%9F%BA%E7%A1%80%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CPP基础查漏补缺 | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CPP基础查漏补缺
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-12-11 23:41:01" itemprop="dateCreated datePublished" datetime="2022-12-11T23:41:01+08:00">2022-12-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-12-12 22:53:22" itemprop="dateModified" datetime="2022-12-12T22:53:22+08:00">2022-12-12</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本笔记知识点来自于C++ Primer第5版。</p>
+<span id="more"></span>
+<h2 id="c导言">C++导言</h2>
+<h3 id="标准库的io对象">标准库的IO对象</h3>
+<h4 id="io对象">IO对象</h4>
+<p>标准库中定义了4个常用的IO对象</p>
+<ul>
+<li>cin</li>
+<li>cout</li>
+<li>cerr</li>
+<li>clog</li>
+</ul>
+<p>其中 <code>cin</code> 是一个 <code>istream</code> 对象，剩余的都是 <code>ostream</code> 对象。</p>
+<h4 id="标准库头文件标识">标准库头文件标识</h4>
+<p>如果要在程序中使用这几个IO对象，需要添加头文件</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>注意，由于 <code>iostream</code> 头文件是C++标准库中的头文件，因此使用 <code>&lt;&gt;</code> 标识。普通的头文件使用 <code>""</code> 标识。</p>
+<h4 id="作用域运算符">作用域运算符</h4>
+<p>使用这几个IO对象的时候，需要明确这几个对象的作用域是 <code>std</code>，因此在声明时一定要使用作用域运算符 <code>::</code> 来修饰，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::cout</span><br></pre></td></tr></table></figure>
+<h4 id="输入输出运算符">输入输出运算符</h4>
+<p><code>&lt;&lt;</code> 表示一个输出运算符，要求运算符左侧是一个 <code>ostream</code> 对象，右侧是需要写入到指定 <code>ostream</code> 对象的内容，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::cout &lt;&lt; <span class="string">&quot;Hello!&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>注意，输出运算符进行一次合法运算以后，会返回一个 <code>ostream</code> 对象，因此 <code>&lt;&lt;</code> 可以在同一行表达式中连续使用，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::cout &lt;&lt; <span class="string">&quot;Hello, &quot;</span> &lt;&lt; <span class="string">&quot;world!&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>另外，输出运算符会针对右侧的数据进行自动类型转换，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> i = <span class="number">1</span>;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;i = &quot;</span> &lt;&lt; i;</span><br></pre></td></tr></table></figure>
+<p><code>&gt;&gt;</code> 表示一个输入运算符，要求运算符左侧是一个 <code>istream</code> 对象，右侧是接收来自 <code>istream</code> 对象的数据的对象，例如从命令行接收一个整型数据，有</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> i;</span><br><span class="line">std::cin &gt;&gt; i;</span><br></pre></td></tr></table></figure>
+<p>和输出运算符一样，输入运算符完成一次运算之后，会返回 <code>istream</code> 对象；同样，输入运算符也会进行自动类型转换。</p>
+<h4 id="换行操作符">换行操作符</h4>
+<p><code>std::endl</code> 是一个换行操作符，经常出现在 <code>std::cout</code> 输出的末尾，其作用是输出一个换行符，并强制将stream buffer中的数据刷入到对应的设备中去。例如我们调用一次 <code>std::endl</code> 的时候，会强制将stream buffer中的数据刷到命令行。在程序比较简单的时候，这个刷新buffer的操作不是很明显，因此看起来 <code>std::endl</code> 和 <code>\n</code> 没什么区别。但需要明确的是 <code>std::endl</code> 是一个操作符，而 <code>\n</code> 只是一个转义字符，两者天差地别。</p>
+<h4 id="stdcin-的结束条件"><code>std::cin</code> 的结束条件</h4>
+<p><code>std::cin</code> 在接收到 <code>EOF</code>，即 <code>end of file</code> 标识符的时候，或者 <code>std::cin</code> 的输出无法通过类型转换赋给接收对象的时候，就不再返回 <code>istream</code> 对象，而是会返回无效状态对象。这个结束条件在以 <code>std::cin</code> 的输出语句为条件的 <code>while</code> 循环中特别有效，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (std::cin &gt;&gt; book) &#123;</span><br><span class="line">    new_book += book;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果要在命令行中输入 <code>EOF</code>，可以直接按 <code>Ctrl + D</code>。</p>
+<h4 id="文件重定向">文件重定向</h4>
+<p>假如在我们的代码中，存在一些 <code>std::cin</code> 和 <code>std::cout</code> 语句，那么完全可以把需要输入的内容写在一个文件里，或者将原来输出到命令行的结果输出到一个文件里，例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./main &lt;sales_log.txt &gt;out.txt</span><br></pre></td></tr></table></figure>
+<p>经过测试，Linux bash支持文件重定向，但是Windows的CMD好像不支持。</p>
+<h3 id="基本内置类型">基本内置类型</h3>
+<p>C++中有基本内置类型，也可以自定义变量或者说对象类型。基本内置类型分为两大类</p>
+<ol type="1">
+<li>算术类型
+<ol type="1">
+<li>整型
+<ol type="1">
+<li>整型 int</li>
+<li>字符型 char</li>
+<li>布尔型 boolean</li>
+</ol></li>
+<li>浮点型 float</li>
+</ol></li>
+<li>空类型 void</li>
+</ol>
+<p>在C++的认知中，除了空的变量以外，其他的变量都可以看成是数。而计算机能表示的数又只需要分成整数与浮点数，字符、布尔量统统都用整数表示。</p>
+<h4 id="字符类型分类">字符类型分类</h4>
+<p>C++中的字符主要可以分成4类</p>
+<ol type="1">
+<li>普通字符 <code>char</code>，在内存中占8位</li>
+<li>宽字符 <code>wchar_t</code>，在内存中占16位</li>
+<li>16位字符 <code>char16_t</code>，在内存中占16位，用来表示2字节Unicode字符</li>
+<li>32位字符 <code>char32_t</code>，在内存中占32位，用来表示4字节Unicode字符</li>
+</ol>
+<p>注意，对于3字节的Unicode字符，C++中没有提供对应的类型，直接用 <code>char32_t</code> 存就行了。由于目前的字符集最大也只有32位，因此不存在64位的字符类型。</p>
+<h4 id="整型分类">整型分类</h4>
+<p>C++中的整型主要可以分为2大类，一类是 <code>unsigned</code>，即无符号整型；另一类是 <code>signed</code>，即有符号整型。</p>
+<p>根据长度的不同，整型又可以分为4类，分别是</p>
+<ol type="1">
+<li>短整型 <code>short</code>，一般是16位</li>
+<li>普通整型 <code>int</code>，一般是16位</li>
+<li>长整型 <code>long</code>，一般是32位</li>
+<li>超长整型 <code>long long</code>，一般是64位</li>
+</ol>
+<p>在不同的处理器上，C++的上述几种整型对应的字节长度可能是不一致的。例如嵌入式领域中，处理器一般是32位的，而服务器或家用电脑的处理器则普遍是64位的，所以在开发的时候需要特别注意整型的字节长度变化。</p>
+<p>注意，有符号整型的类型转换可能会出现 <code>undefined</code> 情况，这种情况发生在一个有符号整型被赋予了超出其表示范围的数。</p>
+<h4 id="基本内置类型的字面值常量">基本内置类型的字面值常量</h4>
+<p>字面值常量，即 <code>literal</code>，指的是代码中出现的形如 <code>'a'</code>，<code>123</code> 这样的常量。我们平时可能不太注意字面值常量的类型，但事实上字面值也有不同的类型，最明显的就是 <code>12</code> 是整型的字面值常量，而 <code>1.2</code> 则是浮点型的字面值常量。</p>
+<p>字面值常量的类型可以由前缀、后缀以及字面值共同判断，下面给出对应于不同字面值常量类型的标识</p>
+<ol type="1">
+<li>整型 - 用后缀标识不同类型
+<ol type="1">
+<li><code>u</code> 或 <code>U</code> 表示 <code>unsigned</code>，不带 <code>u</code> 或者 <code>U</code> 默认为 <code>signed</code></li>
+<li><code>l</code> 或 <code>L</code> 表示 <code>long</code> 类型，<code>ll</code> 或 <code>LL</code> 表示 <code>long long</code> 类型，不带默认为 <code>int</code> 类型</li>
+<li>上述两种后缀可以结合使用，例如 <code>123ULL</code> 表示 <code>long long</code> 类型的无符号整型</li>
+</ol></li>
+<li>浮点型 - 用后缀标识不同类型
+<ol type="1">
+<li><code>f</code> 或 <code>F</code> 表示 <code>float</code> 类型</li>
+<li><code>l</code> 或 <code>L</code> 表示 <code>double</code> 类型</li>
+<li>例如 <code>0.168F</code> 表示32位浮点数，<code>3.14L</code> 表示64位浮点数</li>
+</ol></li>
+<li>字符型/字符串 - 用前缀标识不同类型
+<ol type="1">
+<li><code>u</code> 表示 <code>char16_t</code> 类型</li>
+<li><code>U</code> 表示 <code>char32_t</code> 类型</li>
+<li><code>L</code> 表示 <code>wchar_t</code> 类型</li>
+<li><code>u8</code> 表示 <code>utf-8</code> 类型字符串</li>
+</ol></li>
+</ol>
+<p>一般很少在代码中出现特别需要标识的字符型字面值，因为一般来说代码都是用ASCII字符集内的字符写成的。</p>
+<p>还有一个C++11标准引入的新特性，即指针的字面值 <code>nullptr</code>。在C++11以前，如果要定义一个空指针，往往通过例如 <code>int *p = 0;</code> 的语句来定义，但是C++11以后，<code>int *p = nullptr;</code> 这种方式定义一个空指针更被推荐。</p>
+<h4 id="变量初始化">变量初始化</h4>
+<p>一个基本内置类型的初始化可以有以下几种形式</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">a</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> a = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> a&#123;<span class="number">0</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>第一种是最为常规的初始化，第二种初始化方式比较奇葩，类似于利用构造函数的方式进行初始化，一般很少闲着蛋疼对基本内置类型变量这样干。后两种初始化方式统称为<strong>列表初始化</strong>。这个列表初始化有什么好处暂时没有介绍，但是需要注意，如果在列表初始化的时候存在变量精度丢失的可能性，例如用一个浮点型变量的值来初始化一个整型变量，此时编译器将会报错。</p>
+<h4 id="默认初始化">默认初始化</h4>
+<p>基本内置类型的变量如果在全局作用域被定义，但没有显式初始化，那么编译器会默认将其初始化为0；若在非全局作用域被定义，且没有显式初始化，那么编译器会认为这个变量的值是 <code>undefined</code>。而自定义类往往会提供一个无参数的构造函数，所以提供了无参数构造函数的自定义类在定义时不进行显式初始化也没有关系，但如果某一个类仅提供有参数构造函数，那么必须进行显式初始化，且必须给相应的参数，否则编译器将会报错。</p>
+<h3 id="声明和定义">声明和定义</h3>
+<p>C++支持分离式编译(separate compilation)，这使得同一个变量可以在不同的文件中出现，同时也意味着变量的定义和声明应该分离。先来明确变量的定义和声明的区别：</p>
+<ul>
+<li>定义(definition)：为变量分配相应的内存</li>
+<li>声明(declaration)：令变量在当前作用域有效</li>
+</ul>
+<p>也就是说，定义一个变量就是创建一个变量，而声明一个变量，只是让程序知道当前作用域有这样一个可访问的变量。</p>
+<p>那么如何告诉编译器，我们当前是想要声明一个变量、定义一个变量还是同时要定义且声明一个变量呢？C++提供的方案是利用 <code>extern</code> 修饰符和初始化操作共同组合。在编程中，最常见的场景是同时要定义和声明一个变量，例如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a;</span><br></pre></td></tr></table></figure>
+<p>这是一句相当简单的语句，但同时说明了两件事情</p>
+<ol type="1">
+<li>我们想要定义一个类型为 <code>int</code> 的变量 <code>a</code></li>
+<li>变量 <code>a</code> 在当前作用域有效</li>
+</ol>
+<p>事实上，任何包含显式初始化的语句都是定义，因为初始化本身就意味着创建一个变量，所以上述语句改为 <code>int a = 1;</code> 也是在声明的同时进行了定义。假如变量 <code>a</code> 已经在别的文件中定义过了，那么在当前文件中就不能二次定义了，此时就需要仅声明变量，只需加上 <code>extern</code> 修饰符，改为</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">int</span> a;</span><br></pre></td></tr></table></figure>
+<p>这是容易理解的，既然是同一变量，那么程序运行时内存中应该仅存在一个同名变量。这就像教室里坐着一位Sean同学，此时办公室里的老师想叫他过去一趟有点事情要交代，那么老师肯定是想要Sean本身过去，而不是Sean的克隆人或者分身过去。所以，如果在同一个程序中出现变量的重复定义，那么编译器是不会认为这个定义和在另一个文件中出现的同名定义指向同一实体的，而是会分别在两个不同的作用域创建两个不同的变量，这两个同名变量之间没有任何关系。</p>
+<p>有没有可能只定义但不声明一个变量呢？比如，在一个头文件中完成对变量的定义（大概率是一个常量），在其他源码中可以通过声明来引用这个变量。这是可以的。前面提到，所有含有显式初始化的语句都是定义，所以显式初始化一个变量，但又这句语句加上 <code>extern</code> 修饰符，这个语句就是一句定义，而不是一句声明了。需要注意，一般这种语句仅仅出现在头文件，或者说出现在全局作用域，因为内容写在头文件和写在全局作用域是等价的；如果块作用域中出现定义但不声明的语句，编译器将会直接报错，因为这没有任何意义。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Programming-Language/" rel="tag"># Programming Language</a>
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/12/08/RNN%E5%85%A5%E9%97%A8/" rel="prev" title="RNN入门">
+                  <i class="fa fa-chevron-left"></i> RNN入门
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/12/12/Debian%E5%BD%BB%E5%BA%95%E5%88%A0%E9%99%A4DE%E7%9A%84%E6%96%B9%E6%B3%95/" rel="next" title="Debian彻底删除DE的方法">
+                  Debian彻底删除DE的方法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sean Zhou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

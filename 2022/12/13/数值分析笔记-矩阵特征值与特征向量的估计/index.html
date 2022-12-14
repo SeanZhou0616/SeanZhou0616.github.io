@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="引言 在矩阵分析中，我们已经回顾了矩阵的特征值求解以及特征向量求解方法。对于n阶方阵 \(A\)，若有 \(\lambda \in C, \boldsymbol{x} \in C^n\)，其中 \(\boldsymbol{x} \neq \boldsymbol{0}\)，且满足 \[ A\boldsymbol{x} &#x3D; \lambda \boldsymbol{x} \] 那么称 \(\lambda">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数值分析笔记-矩阵特征值与特征向量的估计">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/12/13/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC%E4%B8%8E%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F%E7%9A%84%E4%BC%B0%E8%AE%A1/">
+<meta property="og:site_name" content="Elysium">
+<meta property="og:description" content="引言 在矩阵分析中，我们已经回顾了矩阵的特征值求解以及特征向量求解方法。对于n阶方阵 \(A\)，若有 \(\lambda \in C, \boldsymbol{x} \in C^n\)，其中 \(\boldsymbol{x} \neq \boldsymbol{0}\)，且满足 \[ A\boldsymbol{x} &#x3D; \lambda \boldsymbol{x} \] 那么称 \(\lambda">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-13T01:17:51.000Z">
+<meta property="article:modified_time" content="2022-12-14T02:06:12.814Z">
+<meta property="article:author" content="Sean Zhou">
+<meta property="article:tag" content="Numerical Analysis">
+<meta property="article:tag" content="Mathematics">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/12/13/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC%E4%B8%8E%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F%E7%9A%84%E4%BC%B0%E8%AE%A1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/12/13/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC%E4%B8%8E%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F%E7%9A%84%E4%BC%B0%E8%AE%A1/","path":"2022/12/13/数值分析笔记-矩阵特征值与特征向量的估计/","title":"数值分析笔记-矩阵特征值与特征向量的估计"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数值分析笔记-矩阵特征值与特征向量的估计 | Elysium</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Elysium</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Tech, Race, Game</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC%E7%9B%B8%E5%85%B3%E7%BB%93%E8%AE%BA"><span class="nav-number">1.1.</span> <span class="nav-text">矩阵特征值相关结论</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E5%80%BC%E5%9F%BA%E7%A1%80%E6%80%A7%E8%B4%A8"><span class="nav-number">1.1.1.</span> <span class="nav-text">特征值基础性质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gerschgorin%E5%9C%86%E7%9B%98%E5%AE%9A%E7%90%86"><span class="nav-number">1.1.2.</span> <span class="nav-text">Gerschgorin圆盘定理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rayleigh%E5%95%86%E7%9B%B8%E5%85%B3%E6%80%A7%E8%B4%A8"><span class="nav-number">1.1.3.</span> <span class="nav-text">Rayleigh商相关性质</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%82%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">幂方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%98%E5%B9%82%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">乘幂法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%98%E5%B9%82%E6%B3%95%E7%9A%84%E9%97%AE%E9%A2%98%E4%BB%A5%E5%8F%8A%E6%94%B9%E8%BF%9B%E6%80%9D%E8%B7%AF"><span class="nav-number">2.2.</span> <span class="nav-text">乘幂法的问题以及改进思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%B9%82%E6%B3%95"><span class="nav-number">2.3.</span> <span class="nav-text">反幂法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E5%90%88%E5%8E%9F%E7%82%B9%E5%B9%B3%E7%A7%BB%E7%9A%84%E5%8F%8D%E5%B9%82%E6%B3%95"><span class="nav-number">2.4.</span> <span class="nav-text">结合原点平移的反幂法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#qr%E6%96%B9%E6%B3%95qr-factorization"><span class="nav-number">3.</span> <span class="nav-text">QR方法(QR Factorization)</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sean Zhou"
+      src="/images/Yeah.jpg">
+  <p class="site-author-name" itemprop="name">Sean Zhou</p>
+  <div class="site-description" itemprop="description">Sean Zhou's personal blog.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/SeanZhou0616" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SeanZhou0616" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:seanzhou616@gmail.com" title="E-Mail → mailto:seanzhou616@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/12/13/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC%E4%B8%8E%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F%E7%9A%84%E4%BC%B0%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数值分析笔记-矩阵特征值与特征向量的估计 | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数值分析笔记-矩阵特征值与特征向量的估计
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-12-13 09:17:51" itemprop="dateCreated datePublished" datetime="2022-12-13T09:17:51+08:00">2022-12-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-12-14 10:06:12" itemprop="dateModified" datetime="2022-12-14T10:06:12+08:00">2022-12-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/University/" itemprop="url" rel="index"><span itemprop="name">University</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="引言">引言</h2>
+<p>在矩阵分析中，我们已经回顾了矩阵的特征值求解以及特征向量求解方法。对于n阶方阵 <span class="math inline">\(A\)</span>，若有 <span class="math inline">\(\lambda \in C, \boldsymbol{x} \in C^n\)</span>，其中 <span class="math inline">\(\boldsymbol{x} \neq \boldsymbol{0}\)</span>，且满足</p>
+<p><span class="math display">\[
+A\boldsymbol{x} = \lambda \boldsymbol{x}
+\]</span></p>
+<p>那么称 <span class="math inline">\(\lambda\)</span> 为矩阵 <span class="math inline">\(A\)</span> 的特征值，<span class="math inline">\(\boldsymbol{x}\)</span> 为对应的特征向量。</p>
+<span id="more"></span>
+<p>由上述表达式，可以得到</p>
+<p><span class="math display">\[
+(A - \lambda I)\boldsymbol{x} = 0
+\]</span></p>
+<p>由于 <span class="math inline">\(det(A - \lambda I)\)</span> 为一n次 <span class="math inline">\(\lambda\)</span> 多项式，由介值定理知在复数域上必然存在n个零点。那么根据特征值和特征向量的定义，<span class="math inline">\(det(A-\lambda I)\)</span> 的零点实际上就是矩阵 <span class="math inline">\(A\)</span> 的特征值，而与各特征值对应的满足 <span class="math inline">\((A - \lambda I)\boldsymbol{x} = 0\)</span> 的 <span class="math inline">\(\boldsymbol{x}\)</span> 就是对应的特征向量。</p>
+<p>若矩阵 <span class="math inline">\(A\)</span> 的阶数较低，<span class="math inline">\(det(A - \lambda I)\)</span> 的次数也比较低，此时多项式零点的求解相对而言不太困难，因此可以直接通过多项式求零点的方式求出所有特征值，再通过待定系数法求解得到所有对应的特征向量。但是，当矩阵的阶数较高时，<span class="math inline">\(\lambda\)</span> 多项式求零点的误差会变得很大，此时特征值就不够准确了，相应的特征向量也会与真值之间存在很大的误差。因此，对于高阶矩阵的特征值估计，需要有一种稳定而精确的求解方法。</p>
+<p>为了更好地引出数值分析中高阶矩阵的特征值求解方法，下面先引入一些与矩阵特征值相关的结论。</p>
+<h3 id="矩阵特征值相关结论">矩阵特征值相关结论</h3>
+<h4 id="特征值基础性质">特征值基础性质</h4>
+<p>矩阵的所有特征值之和为矩阵的迹，所有特征值之积为矩阵的行列式，即</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;\sum_{i=1}^n \lambda_i = tr(A) \\
+    &amp;\prod_{i=1}^n \lambda_i = det(A)
+\end{aligned}
+\]</span></p>
+<p>相似矩阵的特征值相同，即对于两个矩阵 <span class="math inline">\(A, B\)</span>，若存在可逆矩阵 <span class="math inline">\(P\)</span> 满足</p>
+<p><span class="math display">\[
+A = P^{-1}BP
+\]</span></p>
+<p>则矩阵 <span class="math inline">\(A, B\)</span> 相似，且有相同的特征值。</p>
+<h4 id="gerschgorin圆盘定理">Gerschgorin圆盘定理</h4>
+<p>若有n阶矩阵 <span class="math inline">\(A\)</span>，则其第 <span class="math inline">\(i\)</span> 个特征值一定满足</p>
+<p><span class="math display">\[
+|\lambda_i - a_{ii}| \leq \sum_{j=1, j\neq i}^n |a_{ij}|
+\]</span></p>
+<p>即n阶矩阵的第 <span class="math inline">\(i\)</span> 个特征值一定落在以 <span class="math inline">\(a_{ii}\)</span> 为原点，以同行所有其他元素的绝对值之和为半径的复平面圆盘上。Gerschgorin圆盘定理说明了对角占优矩阵一定是非奇异矩阵。（对角占优矩阵的性质见<a href="/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/" title="数值分析笔记-线性方程组的迭代解法">数值分析笔记-线性方程组的迭代解法</a>）</p>
+<h4 id="rayleigh商相关性质">Rayleigh商相关性质</h4>
+<p>Rayleigh商指的是，n阶实对称矩阵 <span class="math inline">\(A\)</span> 关于任一非零向量 <span class="math inline">\(\boldsymbol{x}\)</span> 的下列表达式</p>
+<p><span class="math display">\[
+R(\boldsymbol{x}) = \frac{(A\boldsymbol{x}, \boldsymbol{x})}{(\boldsymbol{x}, \boldsymbol{x})}
+\]</span></p>
+<p>Rayleigh商的取值范围恰好在矩阵 <span class="math inline">\(A\)</span> 的最大特征值与最小特征值之间，Rayleigh商的最大值恰为矩阵 <span class="math inline">\(A\)</span> 的最大特征值，最小值恰为矩阵 <span class="math inline">\(A\)</span> 的最小特征值。</p>
+<h2 id="幂方法">幂方法</h2>
+<h3 id="乘幂法">乘幂法</h3>
+<p>乘幂法是计算实矩阵按模最大特征值 <span class="math inline">\(|\lambda|_{max}\)</span> 及其特征向量的迭代方法，其优势在于计算按模最大特征值的同时还能得到对应的特征向量。在应用中，乘幂法常用于计算已知特征值对应的特征向量。</p>
+<p>乘幂法的基本假设是，矩阵 <span class="math inline">\(A\)</span> 的所有特征向量均线性无关。如果矩阵 <span class="math inline">\(A\)</span> 的所有特征向量线性无关，那么任意一个 <span class="math inline">\(n\)</span> 维向量都可以表示为矩阵 <span class="math inline">\(A\)</span> 的所有特征向量的线性组合，即</p>
+<p><span class="math display">\[
+\boldsymbol{v} = \sum_{i=1}^n \alpha_i \boldsymbol{x}_i
+\]</span></p>
+<p>结合特征值的方程 <span class="math inline">\(A\boldsymbol{x}_i = \lambda_i \boldsymbol{x}_i\)</span>，可以直接得到</p>
+<p><span class="math display">\[
+A\boldsymbol{v} = \sum_{i=1}^n \alpha_i \lambda_i \boldsymbol{x}_i
+\]</span></p>
+<p>若令 <span class="math inline">\(\alpha_i \lambda_i = \beta_i\)</span>，可以发现上述结果将又能表示为矩阵 <span class="math inline">\(A\)</span> 的所有特征向量的线性组合</p>
+<p><span class="math display">\[
+A\boldsymbol{v} = \sum_{i=1}^n \beta_i \boldsymbol{x}_i
+\]</span></p>
+<p>也就是说，我们可以反复用矩阵 <span class="math inline">\(A\)</span> 去乘这个向量，最后得到的结果仍然是特征向量的线性组合，而且不同特征向量分量的系数是有规律的</p>
+<p><span class="math display">\[
+A^k\boldsymbol{v} = \sum_{i=1}^n \alpha_i \lambda_i^k \boldsymbol{x}_i
+\]</span></p>
+<p>我们将 <span class="math inline">\(A^k \boldsymbol{v}\)</span> 记作 <span class="math inline">\(\boldsymbol{v}^{(k)}\)</span>，那么初始的 <span class="math inline">\(\boldsymbol{v}\)</span> 可以记作 <span class="math inline">\(\boldsymbol{v}^{(0)}\)</span>，此时就可以形成迭代格式</p>
+<p><span class="math display">\[
+\boldsymbol{v}^{(k+1)} = A\boldsymbol{v}^{(k)}
+\]</span></p>
+<p>若矩阵 <span class="math inline">\(A\)</span> 的特征值各不相同，那么总存在一个按模最大特征值 <span class="math inline">\(|\lambda|_{max}\)</span>。假定第i个特征值就是按模最大特征值，注意到 <span class="math inline">\(\boldsymbol{v}^{(k)}\)</span> 的第i个分量系数是 <span class="math inline">\(\alpha_i \lambda_i^k\)</span>，那么随着 <span class="math inline">\(k\)</span> 的增大，按模最大特征值对应的分量系数将远远大于其他分量系数，在 <span class="math inline">\(k\rightarrow \infty\)</span> 时，有</p>
+<p><span class="math display">\[
+\lim_{k \rightarrow \infty}\boldsymbol{v}^{(k)} = \alpha_i\lambda_i^k\boldsymbol{x}_i, \ (\lambda_i = |\lambda|_{max})
+\]</span></p>
+<p>实际迭代中，只要k取到一个比较大的值，那么 <span class="math inline">\(\boldsymbol{v}^{(k)} \approx \alpha_i \lambda_i^k \boldsymbol{x}_i\)</span> 就可以近似成立了。此时，再进行一次迭代，然后作商可得</p>
+<p><span class="math display">\[
+\frac{\boldsymbol{v}^{(k+1)}}{\boldsymbol{v}^{(k)}} \approx \lambda_i
+\]</span></p>
+<p>注意到 <span class="math inline">\(\boldsymbol{v}^{(k+1)} = A\boldsymbol{v}^{(k)}\)</span>，又有 <span class="math inline">\(\boldsymbol{v}^{(k+1)}=\lambda_i\boldsymbol{v}^{(k)}\)</span>，那么</p>
+<p><span class="math display">\[
+A\boldsymbol{v}^{(k)} = \lambda_i \boldsymbol{v}^{(k)}
+\]</span></p>
+<p>所以可以看出，<span class="math inline">\(\boldsymbol{v}^{(k)}\)</span> 恰为与最后估计得到的特征值对应的特征向量。所以前面提到，乘幂法的特点就是在计算特征值的同时，计算得到特征向量。或者说，乘幂法的本质就是在不断地迭代特征向量。</p>
+<h3 id="乘幂法的问题以及改进思路">乘幂法的问题以及改进思路</h3>
+<p>在实际编程中，我们会发现利用乘幂法进行特征向量迭代的过程中，由于不断地进行乘幂，特征向量的计算可能会出现溢出的问题。这是容易理解的，因为特征值如果大于1，那么特征向量每次迭代都会变大，导致出现上溢；如果特征值小于1的话，也可能会因为每次迭代都越来越接近0，而导致出现下溢。</p>
+<p>实际上特征向量的绝对值对我们来说并没有意义，我们只要知道特征向量各分量之间的关系就可以了，所以可以在每一次迭代过程中都进行一次类似于正则化的操作。当然，完全没有必要将特征向量的长度保持为1，我们可以在每次迭代过程中，找出绝对值最大的分量，然后用这个分量去除特征向量即可。这样的计算量比较小，而且总能将特征向量的所有分量限制在 <span class="math inline">\([-1, 1]\)</span> 范围内。</p>
+<p>上面就是乘幂法的改进算法，其实只是解决了数值计算时溢出的问题，另外能将计算结果限定在数值精度相对较高的浮点表示范围内，提高计算精度，但原理上没有任何区别。</p>
+<p>乘幂法的优点在于计算非常简单，在大型稀疏矩阵的按模最大特征值计算中很有用。但是，乘幂法的收敛速度取决于按模最大特征值与按模次大特征值的比例，如果两个特征值的绝对值非常接近，那么乘幂法的收敛速度将会非常缓慢。</p>
+<h3 id="反幂法">反幂法</h3>
+<p>和乘幂法类似的，如果想要求矩阵 <span class="math inline">\(A\)</span> 的按模最小特征值，那么只需要通过不断地用矩阵 <span class="math inline">\(A\)</span> 的逆矩阵 <span class="math inline">\(A^{-1}\)</span> 去乘一个向量，就可以得到按模最小特征值 <span class="math inline">\(|\lambda^{-1}|_{max}\)</span>，这是因为，矩阵 <span class="math inline">\(A\)</span> 的按模最小特征值就是逆矩阵 <span class="math inline">\(A^{-1}\)</span> 的按模最大特征值。</p>
+<p>那么与乘幂法基本上完全平行的，有</p>
+<p><span class="math display">\[
+\boldsymbol{v}^{(k+1)} = A^{-1}\boldsymbol{v}^{(k)}
+\]</span></p>
+<p>当然，计算 <span class="math inline">\(A\)</span> 的逆矩阵 <span class="math inline">\(A^{-1}\)</span> 可能并不容易，所以可以将上述迭代格式转换为</p>
+<p><span class="math display">\[
+A\boldsymbol{v}^{(k+1)} = \boldsymbol{v}^{(k)}
+\]</span></p>
+<p>变为线性方程组求解问题。反幂法与乘幂法在原理上完全一致，所以性质上也基本完全相同。</p>
+<h3 id="结合原点平移的反幂法">结合原点平移的反幂法</h3>
+<p>假如矩阵 <span class="math inline">\(A\)</span> 某一特征值 <span class="math inline">\(\lambda_i\)</span> 的近似解已知，记为 <span class="math inline">\(p_i\)</span>，那么可以近似认为 <span class="math inline">\(A - p_iI\)</span> 的按模最小特征值就是 <span class="math inline">\(\lambda_i - p_i\)</span>。此时，再利用反幂法，就可以求出 <span class="math inline">\(\lambda_i\)</span> 的更精确的解。</p>
+<h2 id="qr方法qr-factorization">QR方法(QR Factorization)</h2>
+<p>QR方法是计算中小型矩阵的所有特征值的最有效方法之一，具有收敛速度快、稳定等特点。QR方法的原理如下</p>
+<p>对于n阶方阵 <span class="math inline">\(A\)</span>，可以将其分解为</p>
+<p><span class="math display">\[
+A = QR
+\]</span></p>
+<p>若将上述分解得到的正交矩阵和上三角矩阵交换位置进行矩阵乘法，得到</p>
+<p><span class="math display">\[
+B = RQ
+\]</span></p>
+<p>可以发现，矩阵 <span class="math inline">\(A\)</span> 和 <span class="math inline">\(B\)</span> 之间有这样的关系</p>
+<p><span class="math display">\[
+B = Q^{-1}AQ
+\]</span></p>
+<p>由于 <span class="math inline">\(Q\)</span> 是正交矩阵，所以矩阵 <span class="math inline">\(B\)</span> 和 <span class="math inline">\(A\)</span> 是相似矩阵，具有相同的特征值。由上述关系，可以构造迭代格式</p>
+<p><span class="math display">\[
+\begin{aligned}
+    A^{(k)} = Q^{(k)}R^{(k)}\\
+    A^{(k+1)} = R^{(k)}Q^{(k)}
+\end{aligned}
+\]</span></p>
+<p>可以证明，这个序列 <span class="math inline">\(\{A^{(k)}\}\)</span> <strong>本质收敛</strong>于上三角矩阵或分块上三角矩阵。如果矩阵 <span class="math inline">\(A\)</span> 的特征值不全为实数，那么会收敛于分块上三角矩阵；如果矩阵 <span class="math inline">\(A\)</span> 的特征值全为实数，那么会收敛于上三角矩阵。如果是分块上三角矩阵，那么对角块一定是 <span class="math inline">\(1\times 1\)</span> 或者 <span class="math inline">\(2 \times 2\)</span> 矩阵，其中 <span class="math inline">\(2 \times 2\)</span> 的分块矩阵对应一对复数特征值。这种分块上三角矩阵又称为<strong>拟上三角矩阵</strong>。</p>
+<p>上面提到本质收敛，指的是这个序列中只有对角块元素是确定收敛的，其他位置的元素不一定收敛。当然，由于我们只是需要求出特征值，因此对 <span class="math inline">\(A^{(k)}\)</span> 的非对角块元素不感兴趣，因此本质收敛不影响特征值的求解。</p>
+<p>QR方法可以快速求出矩阵的所有特征值，但并不能求出相应的特征向量。如果我们还需要求出对应的特征向量，则可以通过结合原点平移的反幂法进行对应特征向量的求解。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Numerical-Analysis/" rel="tag"># Numerical Analysis</a>
+              <a href="/tags/Mathematics/" rel="tag"># Mathematics</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/12/12/Debian%E5%BD%BB%E5%BA%95%E5%88%A0%E9%99%A4DE%E7%9A%84%E6%96%B9%E6%B3%95/" rel="prev" title="Debian彻底删除DE的方法">
+                  <i class="fa fa-chevron-left"></i> Debian彻底删除DE的方法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/12/13/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-QR%E5%88%86%E8%A7%A3/" rel="next" title="数值分析笔记-QR分解">
+                  数值分析笔记-QR分解 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sean Zhou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

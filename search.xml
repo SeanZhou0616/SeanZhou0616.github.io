@@ -1696,97 +1696,6 @@ D\boldsymbol{x}^{(k+1)} = L\boldsymbol{x}^{(k+1)}+U\boldsymbol{x}^{(k)}+\boldsym
       </tags>
   </entry>
   <entry>
-    <title>数值分析笔记-最小二乘法</title>
-    <url>/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="由函数表估计函数关系的常见方法">由函数表估计函数关系的常见方法</h2>
-<ol type="1">
-<li>多项式插值</li>
-<li>样条曲线拟合</li>
-</ol>
-<p>多项式插值是一种很简单的函数拟合方法，对于关系比较简单的函数表来说效果还可以，但是如果函数表中的点复杂一些，就会有很大的误差，而且很容易出现Runge现象；样条曲线拟合是一种很好的函数拟合方式，每两个函数点之间都进行一次三次样条插值，且在插值点上能够实现一阶或两阶导数相等，但是计算量非常大。</p>
-<p>上面提到的两种方法都有各自的优势和弊端。下面介绍另外一种函数拟合的方式——最小二乘法。最小二乘法可以克服数值振荡的问题，同时计算量也能够得到控制。</p>
-<span id="more"></span>
-<h2 id="什么是最小二乘法">什么是最小二乘法？</h2>
-<p>最小二乘法是这样一系列操作：在函数空间 <span class="math inline">\(\Phi\)</span> 中，求一个最优的函数 <span class="math inline">\(s^*(x)\)</span>，使得</p>
-<p><span class="math display">\[
-\sum_{i=0}^m\omega_i [s^*(x_i) - f(x_i)]^2=min_{s(x)\in \Phi} \sum_{i=0}^m \omega_i [s(x_i) - f(x_i)]^2
-\]</span></p>
-<p>其中 <span class="math inline">\(\omega_i\)</span> 表示 <span class="math inline">\(x=x_i\)</span> 处的权。最小二乘法本质上是函数逼近。</p>
-<h2 id="最小二乘法的具体做法">最小二乘法的具体做法</h2>
-<p>求上面所述的 <span class="math inline">\(s^*(x)\)</span> 可以等价为求一系列 <span class="math inline">\(\{a_n\}\)</span> 使得</p>
-<p><span class="math display">\[
-\sum_{i=0}^m [a_i\varphi_i(x_i)-f(x_i)]^2
-\]</span></p>
-<p>取得极小值。为此可以写出在第 <span class="math inline">\(k\)</span> 个基函数 <span class="math inline">\(\varphi_k(x)\)</span> 上的法方程</p>
-<p><span class="math display">\[
-\sum_{j=0}^m (\varphi_j, \varphi_k)a_j = (f, \varphi_k), k = 0, 1, 2, ..., n
-\]</span></p>
-<p>其中，<span class="math inline">\((f, g)\)</span> 表示函数 <span class="math inline">\(f\)</span> 和 <span class="math inline">\(g\)</span> 在所有插值点上的函数值之积求和。法方程可以总结为被逼近函数 <span class="math inline">\(f(x)\)</span> 与基函数 <span class="math inline">\(\varphi_k(x)\)</span> 在插值点上的积之总和等于基函数 <span class="math inline">\(\varphi_k(x)\)</span> 与其他所有线性无关基函数 <span class="math inline">\(\varphi_j(x)\)</span> 在插值点上的积之总和的加权和，其中加权系数为 <span class="math inline">\(a_j\)</span>。</p>
-<p>法方程展开可以得到以下等式</p>
-<p><span class="math display">\[
-\sum_{j=0}^m a_j\sum_{i=0}^n \omega_i(x_i) \varphi_j(x_i) \varphi_k(x_i) = \sum_{i=0}^n \omega_i(x_i) \varphi_k(x_i) f(x_i), k=0, 1, 2, ..., n
-\]</span></p>
-<p><em>由法方程可以推导出 <span class="math inline">\(s^*(x)\)</span> 的唯一性</em> 由于 <span class="math inline">\({\varphi(x)}\)</span> 是一组线性无关的基函数，因此上述方程组是非奇异的，那么必然能够解出唯一的一组 <span class="math inline">\(\{a_j\}\)</span>，所以 <span class="math inline">\(s^*(x)\)</span> 存在且唯一。</p>
-<h2 id="最小二乘逼近的技巧">最小二乘逼近的技巧</h2>
-<p>提高最小二乘法拟合精度的技巧主要在于选择合适的函数空间 <span class="math inline">\(\Phi\)</span>。所谓选择合适的函数空间，其实就是选择合适的拟合模型，这一点对于做ECM拟合的人来说应该是非常熟悉的事情了。一种常用的模型是多项式模型 <span class="math inline">\(\{x^n\}\)</span>，但用这个模型进行最小二乘法拟合的效果比多项式插值可能还要差，因为多项式的次数太高了，很容易出现病态问题——即函数表的数据稍有变化，拟合函数的参数 <span class="math inline">\(a_j\)</span> 就出现剧烈的变化。所以多项式模型做最小二乘逼近是很少使用的。</p>
-<p>一种比较好的方法是，采用<strong>正交多项式族</strong>作为基函数。所谓的正交多项式族，是指一些形如 <span class="math inline">\(ax^3 + bx^2 + cx\)</span> 以及 <span class="math inline">\(ax^2 + bx + c\)</span> 的函数组成的一组基函数，这些多项式函数两两正交。</p>
-<h3 id="正交多项式族">正交多项式族</h3>
-<p>正交多项式族可以用以下公式求得</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp;p_0(x) = 1\\
-&amp;p_{k+1}(x) = (x -\alpha_k)p_k(x) - \beta_{k-1} p_{k-1}(x)\\
-\end{aligned}
-\]</span></p>
-<p>其中 <span class="math display">\[
-\begin{aligned}
-&amp; \alpha_k = \frac{(xp_k, p_k)}{(p_k, p_k)}\\
-&amp; \beta_{k-1} = \frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\\
-\end{aligned}
-\]</span></p>
-<p>同样，<span class="math inline">\((p_k, p_k)\)</span> 表示函数 <span class="math inline">\(p_k(x)\)</span> 和自己在所有插值点上的函数值之积求和。</p>
-<p>由于正交多项式族是通过给定的插值点构造出来的，因此最易于计算的一组正交多项式族应当满足在插值点上正交，即在插值点上与其他所有基函数的函数值之积求和恰好为0，那么法方程就可以简化为</p>
-<p><span class="math display">\[
-a_k(\varphi_k, \varphi_k) = (f, \varphi_k), k= 0, 1, 2, ..., n
-\]</span></p>
-<p>所以，加权系数 <span class="math inline">\({a_k}\)</span> 的表达式就变得非常简单</p>
-<p><span class="math display">\[
-a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
-\]</span></p>
-<h3 id="利用正交多项式族进行最小二乘逼近">利用正交多项式族进行最小二乘逼近</h3>
-<ol type="1">
-<li>写出第 <span class="math inline">\(k\)</span> 项正交多项式 <span class="math inline">\(p_k(x) = (x - \alpha_{k-1})p_{k-1}(x) - \beta_{k-2}p_{k-2}(x)\)</span></li>
-<li>由 <span class="math inline">\(p_k(x)\)</span> 可以计算得到 <span class="math inline">\(a_k=\displaystyle\frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}\)</span></li>
-<li>第 <span class="math inline">\(k\)</span> 项正交多项式基函数 <span class="math inline">\(g_k(x)=a_kp_k(x)+g_{k-1}(x)\)</span></li>
-<li>为了求出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span>，必须求出 <span class="math inline">\(\alpha_k\)</span> 和 <span class="math inline">\(\beta_{k-1}\)</span>，<span class="math inline">\(\alpha_k=\displaystyle\frac{(xp_k, p_k)}{(p_k, p_k)}\)</span>, <span class="math inline">\(\beta_{k-1} = \displaystyle\frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\)</span></li>
-<li>写出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span></li>
-</ol>
-<h2 id="周期函数逼近">周期函数逼近</h2>
-<p>如果被逼近函数是一个周期函数，那么可以在函数空间 <span class="math inline">\(\Phi = \{1, sinx, cosx, sin2x, cos2x, ..., sinnx, cosnx\}\)</span> 上求最佳平方逼近函数 <span class="math inline">\(s_n(x) = \displaystyle\frac{a_0}{2} + \sum_{j=1}^n(a_jcosjx + b_jsinjx)\)</span>，其中</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp;a_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) cosjxdx, \ j = 0, 1, ...,n\\
-&amp;b_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) sinjxdx, \ j = 1, 2, ..., n
-\end{aligned}
-\]</span></p>
-<p>其实实际应用中不可能进行连续积分，一般只能给出离散的采样点 <span class="math inline">\((x_i, y_i)\)</span>，那么可以将上面的连续积分离散化，得到</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp;a_j = \frac{2}{N}\sum_{i=0}^{N-1}y_icoskx_i, \  k=0, 1, ..., n\\
-&amp;b_j = \frac{2}{N}\sum_{i=0}^{N-1}y_isinkx_i, \ k = 1, 2, ..., n
-\end{aligned}
-\]</span></p>
-<p>不过需要注意，上面的 <span class="math inline">\(x\)</span> 应线性变换至 <span class="math inline">\((0, 2\pi)\)</span>。</p>
-]]></content>
-      <categories>
-        <category>University</category>
-      </categories>
-      <tags>
-        <tag>Numerical Analysis</tag>
-        <tag>Mathematics</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Rust入门-通用编程概念</title>
     <url>/2022/11/07/Rust%E5%85%A5%E9%97%A8-%E9%80%9A%E7%94%A8%E7%BC%96%E7%A8%8B%E6%A6%82%E5%BF%B5/</url>
     <content><![CDATA[<h2 id="变量与可变性">变量与可变性</h2>
@@ -1955,6 +1864,502 @@ a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
       </tags>
   </entry>
   <entry>
+    <title>数值分析笔记-最小二乘法</title>
+    <url>/2022/11/07/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="由函数表估计函数关系的常见方法">由函数表估计函数关系的常见方法</h2>
+<ol type="1">
+<li>多项式插值</li>
+<li>样条曲线拟合</li>
+</ol>
+<p>多项式插值是一种很简单的函数拟合方法，对于关系比较简单的函数表来说效果还可以，但是如果函数表中的点复杂一些，就会有很大的误差，而且很容易出现Runge现象；样条曲线拟合是一种很好的函数拟合方式，每两个函数点之间都进行一次三次样条插值，且在插值点上能够实现一阶或两阶导数相等，但是计算量非常大。</p>
+<p>上面提到的两种方法都有各自的优势和弊端。下面介绍另外一种函数拟合的方式——最小二乘法。最小二乘法可以克服数值振荡的问题，同时计算量也能够得到控制。</p>
+<span id="more"></span>
+<h2 id="什么是最小二乘法">什么是最小二乘法？</h2>
+<p>最小二乘法是这样一系列操作：在函数空间 <span class="math inline">\(\Phi\)</span> 中，求一个最优的函数 <span class="math inline">\(s^*(x)\)</span>，使得</p>
+<p><span class="math display">\[
+\sum_{i=0}^m\omega_i [s^*(x_i) - f(x_i)]^2=min_{s(x)\in \Phi} \sum_{i=0}^m \omega_i [s(x_i) - f(x_i)]^2
+\]</span></p>
+<p>其中 <span class="math inline">\(\omega_i\)</span> 表示 <span class="math inline">\(x=x_i\)</span> 处的权。最小二乘法本质上是函数逼近。</p>
+<h2 id="最小二乘法的具体做法">最小二乘法的具体做法</h2>
+<p>求上面所述的 <span class="math inline">\(s^*(x)\)</span> 可以等价为求一系列 <span class="math inline">\(\{a_n\}\)</span> 使得</p>
+<p><span class="math display">\[
+\sum_{i=0}^m [a_i\varphi_i(x_i)-f(x_i)]^2
+\]</span></p>
+<p>取得极小值。为此可以写出在第 <span class="math inline">\(k\)</span> 个基函数 <span class="math inline">\(\varphi_k(x)\)</span> 上的法方程</p>
+<p><span class="math display">\[
+\sum_{j=0}^m (\varphi_j, \varphi_k)a_j = (f, \varphi_k), k = 0, 1, 2, ..., n
+\]</span></p>
+<p>其中，<span class="math inline">\((f, g)\)</span> 表示函数 <span class="math inline">\(f\)</span> 和 <span class="math inline">\(g\)</span> 在所有插值点上的函数值之积求和。法方程可以总结为被逼近函数 <span class="math inline">\(f(x)\)</span> 与基函数 <span class="math inline">\(\varphi_k(x)\)</span> 在插值点上的积之总和等于基函数 <span class="math inline">\(\varphi_k(x)\)</span> 与其他所有线性无关基函数 <span class="math inline">\(\varphi_j(x)\)</span> 在插值点上的积之总和的加权和，其中加权系数为 <span class="math inline">\(a_j\)</span>。</p>
+<p>法方程展开可以得到以下等式</p>
+<p><span class="math display">\[
+\sum_{j=0}^m a_j\sum_{i=0}^n \omega_i(x_i) \varphi_j(x_i) \varphi_k(x_i) = \sum_{i=0}^n \omega_i(x_i) \varphi_k(x_i) f(x_i), k=0, 1, 2, ..., n
+\]</span></p>
+<p><em>由法方程可以推导出 <span class="math inline">\(s^*(x)\)</span> 的唯一性</em> 由于 <span class="math inline">\({\varphi(x)}\)</span> 是一组线性无关的基函数，因此上述方程组是非奇异的，那么必然能够解出唯一的一组 <span class="math inline">\(\{a_j\}\)</span>，所以 <span class="math inline">\(s^*(x)\)</span> 存在且唯一。</p>
+<h2 id="最小二乘逼近的技巧">最小二乘逼近的技巧</h2>
+<p>提高最小二乘法拟合精度的技巧主要在于选择合适的函数空间 <span class="math inline">\(\Phi\)</span>。所谓选择合适的函数空间，其实就是选择合适的拟合模型，这一点对于做ECM拟合的人来说应该是非常熟悉的事情了。一种常用的模型是多项式模型 <span class="math inline">\(\{x^n\}\)</span>，但用这个模型进行最小二乘法拟合的效果比多项式插值可能还要差，因为多项式的次数太高了，很容易出现病态问题——即函数表的数据稍有变化，拟合函数的参数 <span class="math inline">\(a_j\)</span> 就出现剧烈的变化。所以多项式模型做最小二乘逼近是很少使用的。</p>
+<p>一种比较好的方法是，采用<strong>正交多项式族</strong>作为基函数。所谓的正交多项式族，是指一些形如 <span class="math inline">\(ax^3 + bx^2 + cx\)</span> 以及 <span class="math inline">\(ax^2 + bx + c\)</span> 的函数组成的一组基函数，这些多项式函数两两正交。</p>
+<h3 id="正交多项式族">正交多项式族</h3>
+<p>正交多项式族可以用以下公式求得</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;p_0(x) = 1\\
+&amp;p_{k+1}(x) = (x -\alpha_k)p_k(x) - \beta_{k-1} p_{k-1}(x)\\
+\end{aligned}
+\]</span></p>
+<p>其中 <span class="math display">\[
+\begin{aligned}
+&amp; \alpha_k = \frac{(xp_k, p_k)}{(p_k, p_k)}\\
+&amp; \beta_{k-1} = \frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\\
+\end{aligned}
+\]</span></p>
+<p>同样，<span class="math inline">\((p_k, p_k)\)</span> 表示函数 <span class="math inline">\(p_k(x)\)</span> 和自己在所有插值点上的函数值之积求和。</p>
+<p>由于正交多项式族是通过给定的插值点构造出来的，因此最易于计算的一组正交多项式族应当满足在插值点上正交，即在插值点上与其他所有基函数的函数值之积求和恰好为0，那么法方程就可以简化为</p>
+<p><span class="math display">\[
+a_k(\varphi_k, \varphi_k) = (f, \varphi_k), k= 0, 1, 2, ..., n
+\]</span></p>
+<p>所以，加权系数 <span class="math inline">\({a_k}\)</span> 的表达式就变得非常简单</p>
+<p><span class="math display">\[
+a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
+\]</span></p>
+<h3 id="利用正交多项式族进行最小二乘逼近">利用正交多项式族进行最小二乘逼近</h3>
+<ol type="1">
+<li>写出第 <span class="math inline">\(k\)</span> 项正交多项式 <span class="math inline">\(p_k(x) = (x - \alpha_{k-1})p_{k-1}(x) - \beta_{k-2}p_{k-2}(x)\)</span></li>
+<li>由 <span class="math inline">\(p_k(x)\)</span> 可以计算得到 <span class="math inline">\(a_k=\displaystyle\frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}\)</span></li>
+<li>第 <span class="math inline">\(k\)</span> 项正交多项式基函数 <span class="math inline">\(g_k(x)=a_kp_k(x)+g_{k-1}(x)\)</span></li>
+<li>为了求出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span>，必须求出 <span class="math inline">\(\alpha_k\)</span> 和 <span class="math inline">\(\beta_{k-1}\)</span>，<span class="math inline">\(\alpha_k=\displaystyle\frac{(xp_k, p_k)}{(p_k, p_k)}\)</span>, <span class="math inline">\(\beta_{k-1} = \displaystyle\frac{(p_k, p_k)}{(p_{k-1}, p_{k-1})}\)</span></li>
+<li>写出第 <span class="math inline">\(k+1\)</span> 项正交多项式 <span class="math inline">\(p_{k+1}(x)\)</span></li>
+</ol>
+<h2 id="周期函数逼近">周期函数逼近</h2>
+<p>如果被逼近函数是一个周期函数，那么可以在函数空间 <span class="math inline">\(\Phi = \{1, sinx, cosx, sin2x, cos2x, ..., sinnx, cosnx\}\)</span> 上求最佳平方逼近函数 <span class="math inline">\(s_n(x) = \displaystyle\frac{a_0}{2} + \sum_{j=1}^n(a_jcosjx + b_jsinjx)\)</span>，其中</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) cosjxdx, \ j = 0, 1, ...,n\\
+&amp;b_j = \frac{1}{\pi} \int^{2\pi}_0 f(x) sinjxdx, \ j = 1, 2, ..., n
+\end{aligned}
+\]</span></p>
+<p>其实实际应用中不可能进行连续积分，一般只能给出离散的采样点 <span class="math inline">\((x_i, y_i)\)</span>，那么可以将上面的连续积分离散化，得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;a_j = \frac{2}{N}\sum_{i=0}^{N-1}y_icoskx_i, \  k=0, 1, ..., n\\
+&amp;b_j = \frac{2}{N}\sum_{i=0}^{N-1}y_isinkx_i, \ k = 1, 2, ..., n
+\end{aligned}
+\]</span></p>
+<p>不过需要注意，上面的 <span class="math inline">\(x\)</span> 应线性变换至 <span class="math inline">\((0, 2\pi)\)</span>。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CPP基础查漏补缺</title>
+    <url>/2022/12/11/CPP%E5%9F%BA%E7%A1%80%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/</url>
+    <content><![CDATA[<p>本笔记知识点来自于C++ Primer第5版。</p>
+<span id="more"></span>
+<h2 id="c导言">C++导言</h2>
+<h3 id="标准库的io对象">标准库的IO对象</h3>
+<h4 id="io对象">IO对象</h4>
+<p>标准库中定义了4个常用的IO对象</p>
+<ul>
+<li>cin</li>
+<li>cout</li>
+<li>cerr</li>
+<li>clog</li>
+</ul>
+<p>其中 <code>cin</code> 是一个 <code>istream</code> 对象，剩余的都是 <code>ostream</code> 对象。</p>
+<h4 id="标准库头文件标识">标准库头文件标识</h4>
+<p>如果要在程序中使用这几个IO对象，需要添加头文件</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>注意，由于 <code>iostream</code> 头文件是C++标准库中的头文件，因此使用 <code>&lt;&gt;</code> 标识。普通的头文件使用 <code>""</code> 标识。</p>
+<h4 id="作用域运算符">作用域运算符</h4>
+<p>使用这几个IO对象的时候，需要明确这几个对象的作用域是 <code>std</code>，因此在声明时一定要使用作用域运算符 <code>::</code> 来修饰，例如</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">std::cout</span><br></pre></td></tr></table></figure>
+<h4 id="输入输出运算符">输入输出运算符</h4>
+<p><code>&lt;&lt;</code> 表示一个输出运算符，要求运算符左侧是一个 <code>ostream</code> 对象，右侧是需要写入到指定 <code>ostream</code> 对象的内容，例如</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">std::cout &lt;&lt; <span class="string">&quot;Hello!&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>注意，输出运算符进行一次合法运算以后，会返回一个 <code>ostream</code> 对象，因此 <code>&lt;&lt;</code> 可以在同一行表达式中连续使用，例如</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">std::cout &lt;&lt; <span class="string">&quot;Hello, &quot;</span> &lt;&lt; <span class="string">&quot;world!&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>另外，输出运算符会针对右侧的数据进行自动类型转换，例如</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> i = <span class="number">1</span>;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;i = &quot;</span> &lt;&lt; i;</span><br></pre></td></tr></table></figure>
+<p><code>&gt;&gt;</code> 表示一个输入运算符，要求运算符左侧是一个 <code>istream</code> 对象，右侧是接收来自 <code>istream</code> 对象的数据的对象，例如从命令行接收一个整型数据，有</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> i;</span><br><span class="line">std::cin &gt;&gt; i;</span><br></pre></td></tr></table></figure>
+<p>和输出运算符一样，输入运算符完成一次运算之后，会返回 <code>istream</code> 对象；同样，输入运算符也会进行自动类型转换。</p>
+<h4 id="换行操作符">换行操作符</h4>
+<p><code>std::endl</code> 是一个换行操作符，经常出现在 <code>std::cout</code> 输出的末尾，其作用是输出一个换行符，并强制将stream buffer中的数据刷入到对应的设备中去。例如我们调用一次 <code>std::endl</code> 的时候，会强制将stream buffer中的数据刷到命令行。在程序比较简单的时候，这个刷新buffer的操作不是很明显，因此看起来 <code>std::endl</code> 和 <code>\n</code> 没什么区别。但需要明确的是 <code>std::endl</code> 是一个操作符，而 <code>\n</code> 只是一个转义字符，两者天差地别。</p>
+<h4 id="stdcin-的结束条件"><code>std::cin</code> 的结束条件</h4>
+<p><code>std::cin</code> 在接收到 <code>EOF</code>，即 <code>end of file</code> 标识符的时候，或者 <code>std::cin</code> 的输出无法通过类型转换赋给接收对象的时候，就不再返回 <code>istream</code> 对象，而是会返回无效状态对象。这个结束条件在以 <code>std::cin</code> 的输出语句为条件的 <code>while</code> 循环中特别有效，例如</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (std::cin &gt;&gt; book) &#123;</span><br><span class="line">    new_book += book;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果要在命令行中输入 <code>EOF</code>，可以直接按 <code>Ctrl + D</code>。</p>
+<h4 id="文件重定向">文件重定向</h4>
+<p>假如在我们的代码中，存在一些 <code>std::cin</code> 和 <code>std::cout</code> 语句，那么完全可以把需要输入的内容写在一个文件里，或者将原来输出到命令行的结果输出到一个文件里，例如</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./main &lt;sales_log.txt &gt;out.txt</span><br></pre></td></tr></table></figure>
+<p>经过测试，Linux bash支持文件重定向，但是Windows的CMD好像不支持。</p>
+<h3 id="基本内置类型">基本内置类型</h3>
+<p>C++中有基本内置类型，也可以自定义变量或者说对象类型。基本内置类型分为两大类</p>
+<ol type="1">
+<li>算术类型
+<ol type="1">
+<li>整型
+<ol type="1">
+<li>整型 int</li>
+<li>字符型 char</li>
+<li>布尔型 boolean</li>
+</ol></li>
+<li>浮点型 float</li>
+</ol></li>
+<li>空类型 void</li>
+</ol>
+<p>在C++的认知中，除了空的变量以外，其他的变量都可以看成是数。而计算机能表示的数又只需要分成整数与浮点数，字符、布尔量统统都用整数表示。</p>
+<h4 id="字符类型分类">字符类型分类</h4>
+<p>C++中的字符主要可以分成4类</p>
+<ol type="1">
+<li>普通字符 <code>char</code>，在内存中占8位</li>
+<li>宽字符 <code>wchar_t</code>，在内存中占16位</li>
+<li>16位字符 <code>char16_t</code>，在内存中占16位，用来表示2字节Unicode字符</li>
+<li>32位字符 <code>char32_t</code>，在内存中占32位，用来表示4字节Unicode字符</li>
+</ol>
+<p>注意，对于3字节的Unicode字符，C++中没有提供对应的类型，直接用 <code>char32_t</code> 存就行了。由于目前的字符集最大也只有32位，因此不存在64位的字符类型。</p>
+<h4 id="整型分类">整型分类</h4>
+<p>C++中的整型主要可以分为2大类，一类是 <code>unsigned</code>，即无符号整型；另一类是 <code>signed</code>，即有符号整型。</p>
+<p>根据长度的不同，整型又可以分为4类，分别是</p>
+<ol type="1">
+<li>短整型 <code>short</code>，一般是16位</li>
+<li>普通整型 <code>int</code>，一般是16位</li>
+<li>长整型 <code>long</code>，一般是32位</li>
+<li>超长整型 <code>long long</code>，一般是64位</li>
+</ol>
+<p>在不同的处理器上，C++的上述几种整型对应的字节长度可能是不一致的。例如嵌入式领域中，处理器一般是32位的，而服务器或家用电脑的处理器则普遍是64位的，所以在开发的时候需要特别注意整型的字节长度变化。</p>
+<p>注意，有符号整型的类型转换可能会出现 <code>undefined</code> 情况，这种情况发生在一个有符号整型被赋予了超出其表示范围的数。</p>
+<h4 id="基本内置类型的字面值常量">基本内置类型的字面值常量</h4>
+<p>字面值常量，即 <code>literal</code>，指的是代码中出现的形如 <code>'a'</code>，<code>123</code> 这样的常量。我们平时可能不太注意字面值常量的类型，但事实上字面值也有不同的类型，最明显的就是 <code>12</code> 是整型的字面值常量，而 <code>1.2</code> 则是浮点型的字面值常量。</p>
+<p>字面值常量的类型可以由前缀、后缀以及字面值共同判断，下面给出对应于不同字面值常量类型的标识</p>
+<ol type="1">
+<li>整型 - 用后缀标识不同类型
+<ol type="1">
+<li><code>u</code> 或 <code>U</code> 表示 <code>unsigned</code>，不带 <code>u</code> 或者 <code>U</code> 默认为 <code>signed</code></li>
+<li><code>l</code> 或 <code>L</code> 表示 <code>long</code> 类型，<code>ll</code> 或 <code>LL</code> 表示 <code>long long</code> 类型，不带默认为 <code>int</code> 类型</li>
+<li>上述两种后缀可以结合使用，例如 <code>123ULL</code> 表示 <code>long long</code> 类型的无符号整型</li>
+</ol></li>
+<li>浮点型 - 用后缀标识不同类型
+<ol type="1">
+<li><code>f</code> 或 <code>F</code> 表示 <code>float</code> 类型</li>
+<li><code>l</code> 或 <code>L</code> 表示 <code>double</code> 类型</li>
+<li>例如 <code>0.168F</code> 表示32位浮点数，<code>3.14L</code> 表示64位浮点数</li>
+</ol></li>
+<li>字符型/字符串 - 用前缀标识不同类型
+<ol type="1">
+<li><code>u</code> 表示 <code>char16_t</code> 类型</li>
+<li><code>U</code> 表示 <code>char32_t</code> 类型</li>
+<li><code>L</code> 表示 <code>wchar_t</code> 类型</li>
+<li><code>u8</code> 表示 <code>utf-8</code> 类型字符串</li>
+</ol></li>
+</ol>
+<p>一般很少在代码中出现特别需要标识的字符型字面值，因为一般来说代码都是用ASCII字符集内的字符写成的。</p>
+<p>还有一个C++11标准引入的新特性，即指针的字面值 <code>nullptr</code>。在C++11以前，如果要定义一个空指针，往往通过例如 <code>int *p = 0;</code> 的语句来定义，但是C++11以后，<code>int *p = nullptr;</code> 这种方式定义一个空指针更被推荐。</p>
+<h4 id="变量初始化">变量初始化</h4>
+<p>一个基本内置类型的初始化可以有以下几种形式</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">a</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"><span class="type">int</span> a = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> a&#123;<span class="number">0</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>第一种是最为常规的初始化，第二种初始化方式比较奇葩，类似于利用构造函数的方式进行初始化，一般很少闲着蛋疼对基本内置类型变量这样干。后两种初始化方式统称为<strong>列表初始化</strong>。这个列表初始化有什么好处暂时没有介绍，但是需要注意，如果在列表初始化的时候存在变量精度丢失的可能性，例如用一个浮点型变量的值来初始化一个整型变量，此时编译器将会报错。</p>
+<h4 id="默认初始化">默认初始化</h4>
+<p>基本内置类型的变量如果在全局作用域被定义，但没有显式初始化，那么编译器会默认将其初始化为0；若在非全局作用域被定义，且没有显式初始化，那么编译器会认为这个变量的值是 <code>undefined</code>。而自定义类往往会提供一个无参数的构造函数，所以提供了无参数构造函数的自定义类在定义时不进行显式初始化也没有关系，但如果某一个类仅提供有参数构造函数，那么必须进行显式初始化，且必须给相应的参数，否则编译器将会报错。</p>
+<h3 id="声明和定义">声明和定义</h3>
+<p>C++支持分离式编译(separate compilation)，这使得同一个变量可以在不同的文件中出现，同时也意味着变量的定义和声明应该分离。先来明确变量的定义和声明的区别：</p>
+<ul>
+<li>定义(definition)：为变量分配相应的内存</li>
+<li>声明(declaration)：令变量在当前作用域有效</li>
+</ul>
+<p>也就是说，定义一个变量就是创建一个变量，而声明一个变量，只是让程序知道当前作用域有这样一个可访问的变量。</p>
+<p>那么如何告诉编译器，我们当前是想要声明一个变量、定义一个变量还是同时要定义且声明一个变量呢？C++提供的方案是利用 <code>extern</code> 修饰符和初始化操作共同组合。在编程中，最常见的场景是同时要定义和声明一个变量，例如</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> a;</span><br></pre></td></tr></table></figure>
+<p>这是一句相当简单的语句，但同时说明了两件事情</p>
+<ol type="1">
+<li>我们想要定义一个类型为 <code>int</code> 的变量 <code>a</code></li>
+<li>变量 <code>a</code> 在当前作用域有效</li>
+</ol>
+<p>事实上，任何包含显式初始化的语句都是定义，因为初始化本身就意味着创建一个变量，所以上述语句改为 <code>int a = 1;</code> 也是在声明的同时进行了定义。假如变量 <code>a</code> 已经在别的文件中定义过了，那么在当前文件中就不能二次定义了，此时就需要仅声明变量，只需加上 <code>extern</code> 修饰符，改为</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">int</span> a;</span><br></pre></td></tr></table></figure>
+<p>这是容易理解的，既然是同一变量，那么程序运行时内存中应该仅存在一个同名变量。这就像教室里坐着一位Sean同学，此时办公室里的老师想叫他过去一趟有点事情要交代，那么老师肯定是想要Sean本身过去，而不是Sean的克隆人或者分身过去。所以，如果在同一个程序中出现变量的重复定义，那么编译器是不会认为这个定义和在另一个文件中出现的同名定义指向同一实体的，而是会分别在两个不同的作用域创建两个不同的变量，这两个同名变量之间没有任何关系。</p>
+<p>有没有可能只定义但不声明一个变量呢？比如，在一个头文件中完成对变量的定义（大概率是一个常量），在其他源码中可以通过声明来引用这个变量。这是可以的。前面提到，所有含有显式初始化的语句都是定义，所以显式初始化一个变量，但又这句语句加上 <code>extern</code> 修饰符，这个语句就是一句定义，而不是一句声明了。需要注意，一般这种语句仅仅出现在头文件，或者说出现在全局作用域，因为内容写在头文件和写在全局作用域是等价的；如果块作用域中出现定义但不声明的语句，编译器将会直接报错，因为这没有任何意义。</p>
+]]></content>
+      <tags>
+        <tag>Programming Language</tag>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Debian彻底删除DE的方法</title>
+    <url>/2022/12/12/Debian%E5%BD%BB%E5%BA%95%E5%88%A0%E9%99%A4DE%E7%9A%84%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt remove --purge -y x11-common</span><br><span class="line">sudo apt autoremove -y</span><br><span class="line">sudo apt install deborphan</span><br><span class="line">deborphan | xargs dpkg -P //重复执行多次</span><br><span class="line">sudo apt purge libx11-6 libwayland-client0</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>Technical Issues</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数值分析笔记-QR分解</title>
+    <url>/2022/12/13/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-QR%E5%88%86%E8%A7%A3/</url>
+    <content><![CDATA[<p>QR分解(QR Factorization)，指的是将一个矩阵分解为一个正交矩阵 <span class="math inline">\(Q\)</span> 和一个上三角矩阵 <span class="math inline">\(R\)</span>，所以QR分解也称为正交三角分解。为了更好地介绍QR分解，下面先简单介绍一下正交矩阵的性质。</p>
+<span id="more"></span>
+<h2 id="正交矩阵性质">正交矩阵性质</h2>
+<h3 id="正交矩阵定义">正交矩阵定义</h3>
+<p>若存在一个n阶方阵 <span class="math inline">\(Q\)</span>，满足</p>
+<p><span class="math display">\[
+Q^TQ = QQ^T = I
+\]</span></p>
+<p>那么称 <span class="math inline">\(Q\)</span> 为正交矩阵。</p>
+<h3 id="正交矩阵的基本性质">正交矩阵的基本性质</h3>
+<p>从定义上，很容易看出，正交矩阵的转置就是正交矩阵的逆，即</p>
+<p><span class="math display">\[
+Q^{-1} = Q^T
+\]</span></p>
+<p>另外，正交矩阵的行列式总是 <span class="math inline">\(\pm 1\)</span>，即</p>
+<p><span class="math display">\[
+det(Q) = \pm 1
+\]</span></p>
+<p>实际上正交矩阵可以理解为线性空间中的一个旋转矩阵，如果用正交矩阵去乘一个向量，那么只会改变向量的方向，而不会改变向量的长度。</p>
+<h3 id="几类特殊正交矩阵">几类特殊正交矩阵</h3>
+<h4 id="单位矩阵">单位矩阵</h4>
+<p>单位矩阵就是对角元均为1的方阵。</p>
+<h4 id="置换矩阵">置换矩阵</h4>
+<p>将单位矩阵的某两行或某两列交换一下，可以得到一个置换矩阵。置换矩阵就相当于将一个向量的某两个分量交换了一下位置。</p>
+<p>置换矩阵的乘积仍然是置换矩阵。</p>
+<h4 id="旋转矩阵givens变换">旋转矩阵(Givens变换)</h4>
+<p>若要将一个二维向量逆时针转 <span class="math inline">\(\theta\)</span> 度，可以给这个二维向量乘上一个旋转矩阵</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    cos\theta &amp; sin\theta \\
+    -sin\theta &amp; cos\theta
+\end{pmatrix}
+\]</span></p>
+<p>例如，有一个向量 <span class="math inline">\(\boldsymbol{x} = (rcos\phi, rsin\phi)^T\)</span>，乘上一个旋转矩阵，有</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    cos\theta &amp; sin\theta \\
+    -sin\theta &amp; cos\theta
+\end{pmatrix}
+\begin{pmatrix}
+    rcos\phi \\
+    rsin\phi
+\end{pmatrix}=
+\begin{pmatrix}
+    rcos(\phi + \theta)\\
+    rsin(\phi + \theta)
+\end{pmatrix}
+\]</span></p>
+<p>上述矩阵还可以推广到n维空间，基本上就是上面的 <span class="math inline">\(cos\theta, sin\theta, -sin\theta, cos\theta\)</span> 出现在置换矩阵的 <span class="math inline">\((i, i), (i, j), (j, i), (j, j)\)</span> 位置。这种形式的矩阵称为Givens矩阵，对应的线性变换称为Givens变换。可以看出，实际上置换矩阵就是一种特殊的Givens矩阵。</p>
+<p>我们可以将一个Givens矩阵抽象表示为 <span class="math inline">\(G(i, j, \theta)\)</span>。可以看出，置换矩阵就是 <span class="math inline">\(\theta=\displaystyle\frac{\pi}{2}\)</span> 的Givens矩阵。</p>
+<p>从几何角度来看，一个Givens矩阵 <span class="math inline">\(G(i, j, \theta)\)</span> 对应向量在 <span class="math inline">\(i, j\)</span> 坐标轴对应平面上的 <span class="math inline">\(\theta\)</span> 逆时针旋转。可以发现，对于 <span class="math inline">\(\boldsymbol{y} = G(i, j, \theta) \boldsymbol{x}\)</span>，经过旋转后的向量 <span class="math inline">\(\boldsymbol{y}\)</span> 的非 <span class="math inline">\(i, j\)</span> 行分量不变，第 <span class="math inline">\(i, j\)</span> 行分量分别存在以下变化</p>
+<p><span class="math display">\[
+\begin{aligned}
+    y_i = cos\theta x_i + sin\theta x_j\\
+    y_j = -sin\theta x_i + cos\theta x_j
+\end{aligned}
+\]</span></p>
+<p>也就是Givens矩阵中的4个旋转分量与 <span class="math inline">\(x_i, x_j\)</span> 的线性组合。如果我们希望目标向量 <span class="math inline">\(\boldsymbol{x}\)</span> 通过旋转，可以消去其中一个分量，也就是说目标向量在 <span class="math inline">\((i, j)\)</span> 平面上的投影恰好落在 <span class="math inline">\(i\)</span> 或 <span class="math inline">\(j\)</span> 对应的坐标轴上（一般消去 <span class="math inline">\(j\)</span>），那么可以构造</p>
+<p><span class="math display">\[
+\begin{aligned}
+    cos\theta = \frac{x_i}{\sqrt{x_i^2 + x_j^2}}\\
+    sin\theta = \frac{x_j}{\sqrt{x_i^2 + x_j^2}}
+\end{aligned}
+\]</span></p>
+<p>经过这样的Givens变换，<span class="math inline">\(y_j = 0\)</span>。理论上来说，通过有限次旋转变换，总能将一个列向量变换到与某一个坐标轴平行，那么Givens变换实际上还可以用来实现矩阵的阶梯化。虽然这并不是一种很高效的方法，但是从这个角度来看矩阵，我们会有不同的体会：一个矩阵可以看作一组空间中的空间关系确定的向量，对矩阵进行Givens变换，实际上就是对这一组空间关系确定的向量同时进行旋转变换，甚至可以直接把一个矩阵视为一个刚体。</p>
+<h4 id="反射矩阵householder变换">反射矩阵(Householder变换)</h4>
+<p>反射矩阵顾名思义，就是让一个向量发生镜面反射的矩阵。这个矩阵的表达式如下</p>
+<p><span class="math display">\[
+P = I - 2\boldsymbol{\omega} \boldsymbol{\omega}^T
+\]</span></p>
+<p>我们先将一个向量 <span class="math inline">\(\boldsymbol{v}\)</span> 分解成在某一平面上的投影 <span class="math inline">\(\boldsymbol{v}_1\)</span> 以及法向上的分量 <span class="math inline">\(\boldsymbol{v}_2\)</span>，即</p>
+<p><span class="math display">\[
+\boldsymbol{v} = \boldsymbol{v}_1 + \boldsymbol{v}_2
+\]</span></p>
+<p>经过Householder变换后，可以得到这个向量 <span class="math inline">\(\boldsymbol{v}\)</span> 以上述平面为镜面的镜像 <span class="math inline">\(P\boldsymbol{v}\)</span>，即</p>
+<p><span class="math display">\[
+P\boldsymbol{v} = \boldsymbol{v}_1 - \boldsymbol{v}_2
+\]</span></p>
+<p>Householder变换的一个重要作用是求能将任意向量反射到某一坐标轴上的镜面，即对于任意非0向量 <span class="math inline">\(\boldsymbol{x}\)</span>，找一个变换矩阵 <span class="math inline">\(P\)</span>，使其变换结果满足</p>
+<p><span class="math display">\[
+P\boldsymbol{x} = k\boldsymbol{e}_1
+\]</span></p>
+<p>其中 <span class="math inline">\(\boldsymbol{e}_1\)</span> 表示首元素为1的单位列向量。很明显，<span class="math inline">\(k\)</span> 实际上就是 <span class="math inline">\(\boldsymbol{x}\)</span> 的长度。</p>
+<p>为了构造出Householder矩阵 <span class="math inline">\(P\)</span>，我们可以构造一个向量</p>
+<p><span class="math display">\[
+\boldsymbol{u} = \boldsymbol{x} - k\boldsymbol{e}_1
+\]</span></p>
+<p>此时，<span class="math inline">\(\boldsymbol{u}\)</span> 和 <span class="math inline">\(\boldsymbol{\omega}\)</span> 的关系是</p>
+<p><span class="math display">\[
+\boldsymbol{\omega} = \frac{\boldsymbol{u}}{||\boldsymbol{u}||_2}
+\]</span></p>
+<p>为了使得 <span class="math inline">\(\boldsymbol{x} - k\boldsymbol{e}_1\)</span> 的计算不损失有效位数，可以记 <span class="math inline">\(k = -sign(x_1)||\boldsymbol{x}||_2\)</span>，那么有</p>
+<p><span class="math display">\[
+\boldsymbol{u} = \begin{pmatrix}
+    x_1 +sign(x_1)||\boldsymbol{x}||_2 &amp; x_2 &amp; \cdots &amp; x_n
+\end{pmatrix}^T
+\]</span></p>
+<p>那么Householder矩阵最后就可以表示为</p>
+<p><span class="math display">\[
+P=\frac{I - 2\boldsymbol{u}\boldsymbol{u}^T}{||\boldsymbol{u}||_2^2}
+\]</span></p>
+<h2 id="qr分解">QR分解</h2>
+<p>若矩阵 <span class="math inline">\(A\)</span> 为一n阶方阵，那么存在正交矩阵 <span class="math inline">\(P\)</span>，使得 <span class="math inline">\(PA=R\)</span>，其中 <span class="math inline">\(R\)</span> 为一上三角矩阵。这个定理的证明可以通过Givens变换进行构造，也可以通过Householder变换进行构造，本质上都是将一个列向量在空间中进行旋转，使其某些维度的分量为0。</p>
+<p>另外，若矩阵 <span class="math inline">\(A\)</span> 为非奇异矩阵，则存在正交矩阵 <span class="math inline">\(Q\)</span> 和上三角矩阵 <span class="math inline">\(R\)</span>，满足</p>
+<p><span class="math display">\[
+A = QR
+\]</span></p>
+<p>而且在上三角矩阵的对角元均为正时，分解唯一。</p>
+<p>其实求正交矩阵 <span class="math inline">\(P\)</span> 应该都不需要做Householder变换，因为正交变换不会改变列向量的长度，所以每一次正交变换之前，列向量长度已知，变换后的分量分布已知，那么直接解线性方程组就可以了。</p>
+<h2 id="奇异值分解-singular-value-decompositionsvd">奇异值分解 Singular Value Decomposition(SVD)</h2>
+<h3 id="奇异值">奇异值</h3>
+<p>首先给出奇异值的定义。矩阵 <span class="math inline">\(A\)</span> 的奇异值指的是 <span class="math inline">\(A^HA\)</span> 特征值的非负平方根，记作 <span class="math inline">\(\sigma_i(A) = \sqrt{\lambda_i(A)}\)</span>，其中 <span class="math inline">\(^H\)</span> 表示共轭转置变换。</p>
+<h3 id="奇异值分解">奇异值分解</h3>
+<p>奇异值分解在复数域上，指的是一个 <span class="math inline">\(m\times n\)</span> 的复矩阵 <span class="math inline">\(A\)</span>，可以被分解为以下形式</p>
+<p><span class="math display">\[
+A = USV^H
+\]</span></p>
+<p>其中 <span class="math inline">\(U\)</span> 为 <span class="math inline">\(m\times m\)</span> 的酉矩阵，<span class="math inline">\(V\)</span> 为 <span class="math inline">\(n\times n\)</span> 的酉矩阵，<span class="math inline">\(S\)</span> 为 <span class="math inline">\(diag(\sigma_1, \sigma_2, \cdots, \sigma_n)\)</span>，其中 <span class="math inline">\(\sigma_i &gt; 0, i \in [1, r], r = rank(A)\)</span>。很明显，<span class="math inline">\(\sigma_i^2\)</span> 是 <span class="math inline">\(A^TA\)</span> 和 <span class="math inline">\(AA^T\)</span> 的特征值。所以奇异值分解和特征值有非常紧密的关系。</p>
+<p>在实数域上，也有类似的结论，不再赘述。这部分在数值分析中的要求不高，仅作了解。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数值分析笔记-矩阵特征值与特征向量的估计</title>
+    <url>/2022/12/13/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%9F%A9%E9%98%B5%E7%89%B9%E5%BE%81%E5%80%BC%E4%B8%8E%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F%E7%9A%84%E4%BC%B0%E8%AE%A1/</url>
+    <content><![CDATA[<h2 id="引言">引言</h2>
+<p>在矩阵分析中，我们已经回顾了矩阵的特征值求解以及特征向量求解方法。对于n阶方阵 <span class="math inline">\(A\)</span>，若有 <span class="math inline">\(\lambda \in C, \boldsymbol{x} \in C^n\)</span>，其中 <span class="math inline">\(\boldsymbol{x} \neq \boldsymbol{0}\)</span>，且满足</p>
+<p><span class="math display">\[
+A\boldsymbol{x} = \lambda \boldsymbol{x}
+\]</span></p>
+<p>那么称 <span class="math inline">\(\lambda\)</span> 为矩阵 <span class="math inline">\(A\)</span> 的特征值，<span class="math inline">\(\boldsymbol{x}\)</span> 为对应的特征向量。</p>
+<span id="more"></span>
+<p>由上述表达式，可以得到</p>
+<p><span class="math display">\[
+(A - \lambda I)\boldsymbol{x} = 0
+\]</span></p>
+<p>由于 <span class="math inline">\(det(A - \lambda I)\)</span> 为一n次 <span class="math inline">\(\lambda\)</span> 多项式，由介值定理知在复数域上必然存在n个零点。那么根据特征值和特征向量的定义，<span class="math inline">\(det(A-\lambda I)\)</span> 的零点实际上就是矩阵 <span class="math inline">\(A\)</span> 的特征值，而与各特征值对应的满足 <span class="math inline">\((A - \lambda I)\boldsymbol{x} = 0\)</span> 的 <span class="math inline">\(\boldsymbol{x}\)</span> 就是对应的特征向量。</p>
+<p>若矩阵 <span class="math inline">\(A\)</span> 的阶数较低，<span class="math inline">\(det(A - \lambda I)\)</span> 的次数也比较低，此时多项式零点的求解相对而言不太困难，因此可以直接通过多项式求零点的方式求出所有特征值，再通过待定系数法求解得到所有对应的特征向量。但是，当矩阵的阶数较高时，<span class="math inline">\(\lambda\)</span> 多项式求零点的误差会变得很大，此时特征值就不够准确了，相应的特征向量也会与真值之间存在很大的误差。因此，对于高阶矩阵的特征值估计，需要有一种稳定而精确的求解方法。</p>
+<p>为了更好地引出数值分析中高阶矩阵的特征值求解方法，下面先引入一些与矩阵特征值相关的结论。</p>
+<h3 id="矩阵特征值相关结论">矩阵特征值相关结论</h3>
+<h4 id="特征值基础性质">特征值基础性质</h4>
+<p>矩阵的所有特征值之和为矩阵的迹，所有特征值之积为矩阵的行列式，即</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;\sum_{i=1}^n \lambda_i = tr(A) \\
+    &amp;\prod_{i=1}^n \lambda_i = det(A)
+\end{aligned}
+\]</span></p>
+<p>相似矩阵的特征值相同，即对于两个矩阵 <span class="math inline">\(A, B\)</span>，若存在可逆矩阵 <span class="math inline">\(P\)</span> 满足</p>
+<p><span class="math display">\[
+A = P^{-1}BP
+\]</span></p>
+<p>则矩阵 <span class="math inline">\(A, B\)</span> 相似，且有相同的特征值。</p>
+<h4 id="gerschgorin圆盘定理">Gerschgorin圆盘定理</h4>
+<p>若有n阶矩阵 <span class="math inline">\(A\)</span>，则其第 <span class="math inline">\(i\)</span> 个特征值一定满足</p>
+<p><span class="math display">\[
+|\lambda_i - a_{ii}| \leq \sum_{j=1, j\neq i}^n |a_{ij}|
+\]</span></p>
+<p>即n阶矩阵的第 <span class="math inline">\(i\)</span> 个特征值一定落在以 <span class="math inline">\(a_{ii}\)</span> 为原点，以同行所有其他元素的绝对值之和为半径的复平面圆盘上。Gerschgorin圆盘定理说明了对角占优矩阵一定是非奇异矩阵。（对角占优矩阵的性质见<a href="/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/" title="数值分析笔记-线性方程组的迭代解法">数值分析笔记-线性方程组的迭代解法</a>）</p>
+<h4 id="rayleigh商相关性质">Rayleigh商相关性质</h4>
+<p>Rayleigh商指的是，n阶实对称矩阵 <span class="math inline">\(A\)</span> 关于任一非零向量 <span class="math inline">\(\boldsymbol{x}\)</span> 的下列表达式</p>
+<p><span class="math display">\[
+R(\boldsymbol{x}) = \frac{(A\boldsymbol{x}, \boldsymbol{x})}{(\boldsymbol{x}, \boldsymbol{x})}
+\]</span></p>
+<p>Rayleigh商的取值范围恰好在矩阵 <span class="math inline">\(A\)</span> 的最大特征值与最小特征值之间，Rayleigh商的最大值恰为矩阵 <span class="math inline">\(A\)</span> 的最大特征值，最小值恰为矩阵 <span class="math inline">\(A\)</span> 的最小特征值。</p>
+<h2 id="幂方法">幂方法</h2>
+<h3 id="乘幂法">乘幂法</h3>
+<p>乘幂法是计算实矩阵按模最大特征值 <span class="math inline">\(|\lambda|_{max}\)</span> 及其特征向量的迭代方法，其优势在于计算按模最大特征值的同时还能得到对应的特征向量。在应用中，乘幂法常用于计算已知特征值对应的特征向量。</p>
+<p>乘幂法的基本假设是，矩阵 <span class="math inline">\(A\)</span> 的所有特征向量均线性无关。如果矩阵 <span class="math inline">\(A\)</span> 的所有特征向量线性无关，那么任意一个 <span class="math inline">\(n\)</span> 维向量都可以表示为矩阵 <span class="math inline">\(A\)</span> 的所有特征向量的线性组合，即</p>
+<p><span class="math display">\[
+\boldsymbol{v} = \sum_{i=1}^n \alpha_i \boldsymbol{x}_i
+\]</span></p>
+<p>结合特征值的方程 <span class="math inline">\(A\boldsymbol{x}_i = \lambda_i \boldsymbol{x}_i\)</span>，可以直接得到</p>
+<p><span class="math display">\[
+A\boldsymbol{v} = \sum_{i=1}^n \alpha_i \lambda_i \boldsymbol{x}_i
+\]</span></p>
+<p>若令 <span class="math inline">\(\alpha_i \lambda_i = \beta_i\)</span>，可以发现上述结果将又能表示为矩阵 <span class="math inline">\(A\)</span> 的所有特征向量的线性组合</p>
+<p><span class="math display">\[
+A\boldsymbol{v} = \sum_{i=1}^n \beta_i \boldsymbol{x}_i
+\]</span></p>
+<p>也就是说，我们可以反复用矩阵 <span class="math inline">\(A\)</span> 去乘这个向量，最后得到的结果仍然是特征向量的线性组合，而且不同特征向量分量的系数是有规律的</p>
+<p><span class="math display">\[
+A^k\boldsymbol{v} = \sum_{i=1}^n \alpha_i \lambda_i^k \boldsymbol{x}_i
+\]</span></p>
+<p>我们将 <span class="math inline">\(A^k \boldsymbol{v}\)</span> 记作 <span class="math inline">\(\boldsymbol{v}^{(k)}\)</span>，那么初始的 <span class="math inline">\(\boldsymbol{v}\)</span> 可以记作 <span class="math inline">\(\boldsymbol{v}^{(0)}\)</span>，此时就可以形成迭代格式</p>
+<p><span class="math display">\[
+\boldsymbol{v}^{(k+1)} = A\boldsymbol{v}^{(k)}
+\]</span></p>
+<p>若矩阵 <span class="math inline">\(A\)</span> 的特征值各不相同，那么总存在一个按模最大特征值 <span class="math inline">\(|\lambda|_{max}\)</span>。假定第i个特征值就是按模最大特征值，注意到 <span class="math inline">\(\boldsymbol{v}^{(k)}\)</span> 的第i个分量系数是 <span class="math inline">\(\alpha_i \lambda_i^k\)</span>，那么随着 <span class="math inline">\(k\)</span> 的增大，按模最大特征值对应的分量系数将远远大于其他分量系数，在 <span class="math inline">\(k\rightarrow \infty\)</span> 时，有</p>
+<p><span class="math display">\[
+\lim_{k \rightarrow \infty}\boldsymbol{v}^{(k)} = \alpha_i\lambda_i^k\boldsymbol{x}_i, \ (\lambda_i = |\lambda|_{max})
+\]</span></p>
+<p>实际迭代中，只要k取到一个比较大的值，那么 <span class="math inline">\(\boldsymbol{v}^{(k)} \approx \alpha_i \lambda_i^k \boldsymbol{x}_i\)</span> 就可以近似成立了。此时，再进行一次迭代，然后作商可得</p>
+<p><span class="math display">\[
+\frac{\boldsymbol{v}^{(k+1)}}{\boldsymbol{v}^{(k)}} \approx \lambda_i
+\]</span></p>
+<p>注意到 <span class="math inline">\(\boldsymbol{v}^{(k+1)} = A\boldsymbol{v}^{(k)}\)</span>，又有 <span class="math inline">\(\boldsymbol{v}^{(k+1)}=\lambda_i\boldsymbol{v}^{(k)}\)</span>，那么</p>
+<p><span class="math display">\[
+A\boldsymbol{v}^{(k)} = \lambda_i \boldsymbol{v}^{(k)}
+\]</span></p>
+<p>所以可以看出，<span class="math inline">\(\boldsymbol{v}^{(k)}\)</span> 恰为与最后估计得到的特征值对应的特征向量。所以前面提到，乘幂法的特点就是在计算特征值的同时，计算得到特征向量。或者说，乘幂法的本质就是在不断地迭代特征向量。</p>
+<h3 id="乘幂法的问题以及改进思路">乘幂法的问题以及改进思路</h3>
+<p>在实际编程中，我们会发现利用乘幂法进行特征向量迭代的过程中，由于不断地进行乘幂，特征向量的计算可能会出现溢出的问题。这是容易理解的，因为特征值如果大于1，那么特征向量每次迭代都会变大，导致出现上溢；如果特征值小于1的话，也可能会因为每次迭代都越来越接近0，而导致出现下溢。</p>
+<p>实际上特征向量的绝对值对我们来说并没有意义，我们只要知道特征向量各分量之间的关系就可以了，所以可以在每一次迭代过程中都进行一次类似于正则化的操作。当然，完全没有必要将特征向量的长度保持为1，我们可以在每次迭代过程中，找出绝对值最大的分量，然后用这个分量去除特征向量即可。这样的计算量比较小，而且总能将特征向量的所有分量限制在 <span class="math inline">\([-1, 1]\)</span> 范围内。</p>
+<p>上面就是乘幂法的改进算法，其实只是解决了数值计算时溢出的问题，另外能将计算结果限定在数值精度相对较高的浮点表示范围内，提高计算精度，但原理上没有任何区别。</p>
+<p>乘幂法的优点在于计算非常简单，在大型稀疏矩阵的按模最大特征值计算中很有用。但是，乘幂法的收敛速度取决于按模最大特征值与按模次大特征值的比例，如果两个特征值的绝对值非常接近，那么乘幂法的收敛速度将会非常缓慢。</p>
+<h3 id="反幂法">反幂法</h3>
+<p>和乘幂法类似的，如果想要求矩阵 <span class="math inline">\(A\)</span> 的按模最小特征值，那么只需要通过不断地用矩阵 <span class="math inline">\(A\)</span> 的逆矩阵 <span class="math inline">\(A^{-1}\)</span> 去乘一个向量，就可以得到按模最小特征值 <span class="math inline">\(|\lambda^{-1}|_{max}\)</span>，这是因为，矩阵 <span class="math inline">\(A\)</span> 的按模最小特征值就是逆矩阵 <span class="math inline">\(A^{-1}\)</span> 的按模最大特征值。</p>
+<p>那么与乘幂法基本上完全平行的，有</p>
+<p><span class="math display">\[
+\boldsymbol{v}^{(k+1)} = A^{-1}\boldsymbol{v}^{(k)}
+\]</span></p>
+<p>当然，计算 <span class="math inline">\(A\)</span> 的逆矩阵 <span class="math inline">\(A^{-1}\)</span> 可能并不容易，所以可以将上述迭代格式转换为</p>
+<p><span class="math display">\[
+A\boldsymbol{v}^{(k+1)} = \boldsymbol{v}^{(k)}
+\]</span></p>
+<p>变为线性方程组求解问题。反幂法与乘幂法在原理上完全一致，所以性质上也基本完全相同。</p>
+<h3 id="结合原点平移的反幂法">结合原点平移的反幂法</h3>
+<p>假如矩阵 <span class="math inline">\(A\)</span> 某一特征值 <span class="math inline">\(\lambda_i\)</span> 的近似解已知，记为 <span class="math inline">\(p_i\)</span>，那么可以近似认为 <span class="math inline">\(A - p_iI\)</span> 的按模最小特征值就是 <span class="math inline">\(\lambda_i - p_i\)</span>。此时，再利用反幂法，就可以求出 <span class="math inline">\(\lambda_i\)</span> 的更精确的解。</p>
+<h2 id="qr方法qr-factorization">QR方法(QR Factorization)</h2>
+<p>QR方法是计算中小型矩阵的所有特征值的最有效方法之一，具有收敛速度快、稳定等特点。QR方法的原理如下</p>
+<p>对于n阶方阵 <span class="math inline">\(A\)</span>，可以将其分解为</p>
+<p><span class="math display">\[
+A = QR
+\]</span></p>
+<p>若将上述分解得到的正交矩阵和上三角矩阵交换位置进行矩阵乘法，得到</p>
+<p><span class="math display">\[
+B = RQ
+\]</span></p>
+<p>可以发现，矩阵 <span class="math inline">\(A\)</span> 和 <span class="math inline">\(B\)</span> 之间有这样的关系</p>
+<p><span class="math display">\[
+B = Q^{-1}AQ
+\]</span></p>
+<p>由于 <span class="math inline">\(Q\)</span> 是正交矩阵，所以矩阵 <span class="math inline">\(B\)</span> 和 <span class="math inline">\(A\)</span> 是相似矩阵，具有相同的特征值。由上述关系，可以构造迭代格式</p>
+<p><span class="math display">\[
+\begin{aligned}
+    A^{(k)} = Q^{(k)}R^{(k)}\\
+    A^{(k+1)} = R^{(k)}Q^{(k)}
+\end{aligned}
+\]</span></p>
+<p>可以证明，这个序列 <span class="math inline">\(\{A^{(k)}\}\)</span> <strong>本质收敛</strong>于上三角矩阵或分块上三角矩阵。如果矩阵 <span class="math inline">\(A\)</span> 的特征值不全为实数，那么会收敛于分块上三角矩阵；如果矩阵 <span class="math inline">\(A\)</span> 的特征值全为实数，那么会收敛于上三角矩阵。如果是分块上三角矩阵，那么对角块一定是 <span class="math inline">\(1\times 1\)</span> 或者 <span class="math inline">\(2 \times 2\)</span> 矩阵，其中 <span class="math inline">\(2 \times 2\)</span> 的分块矩阵对应一对复数特征值。这种分块上三角矩阵又称为<strong>拟上三角矩阵</strong>。</p>
+<p>上面提到本质收敛，指的是这个序列中只有对角块元素是确定收敛的，其他位置的元素不一定收敛。当然，由于我们只是需要求出特征值，因此对 <span class="math inline">\(A^{(k)}\)</span> 的非对角块元素不感兴趣，因此本质收敛不影响特征值的求解。</p>
+<p>QR方法可以快速求出矩阵的所有特征值，但并不能求出相应的特征向量。如果我们还需要求出对应的特征向量，则可以通过结合原点平移的反幂法进行对应特征向量的求解。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ubuntu下强制apt走代理</title>
     <url>/2022/12/05/Ubuntu%E4%B8%8B%E5%BC%BA%E5%88%B6apt%E8%B5%B0%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[<p>今天闲着没事，鼓捣了一下Rock Pi，发现 <code>export http_proxy</code> 对 <code>apt</code> 不起作用。查了一下，发现可以通过以下命令强制 <code>apt</code> 走代理。</p>
@@ -1962,6 +2367,9 @@ a_k = \frac{(f, \varphi_k)}{(\varphi_k, \varphi_k)}
 <p>或者新建 <code>/etc/apt/apt.conf.d/proxy.conf</code>，输入</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Acquire::http::Proxy &quot;http://192.168.2.101:7890&quot;;</span><br><span class="line">Acquire::https::Proxy &quot;http://192.168.2.101:7890&quot;;</span><br></pre></td></tr></table></figure>
 ]]></content>
+      <tags>
+        <tag>Technical Issues</tag>
+      </tags>
   </entry>
   <entry>
     <title>数值分析作业-第七章</title>
