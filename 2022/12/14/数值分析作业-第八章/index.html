@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"seanzhou0616.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="姓名：周晓 学号：2231573">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数值分析作业-第八章">
+<meta property="og:url" content="http://seanzhou0616.github.io/2022/12/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E5%85%AB%E7%AB%A0/">
+<meta property="og:site_name" content="Elysium">
+<meta property="og:description" content="姓名：周晓 学号：2231573">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-14T02:11:23.000Z">
+<meta property="article:modified_time" content="2022-12-15T15:17:22.255Z">
+<meta property="article:author" content="Sean Zhou">
+<meta property="article:tag" content="Numerical Analysis">
+<meta property="article:tag" content="Mathematics">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://seanzhou0616.github.io/2022/12/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E5%85%AB%E7%AB%A0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://seanzhou0616.github.io/2022/12/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E5%85%AB%E7%AB%A0/","path":"2022/12/14/数值分析作业-第八章/","title":"数值分析作业-第八章"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数值分析作业-第八章 | Elysium</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Elysium</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Tech, Race, Game</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">第一题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">第二题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">第三题</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sean Zhou"
+      src="/images/Yeah.jpg">
+  <p class="site-author-name" itemprop="name">Sean Zhou</p>
+  <div class="site-description" itemprop="description">Sean Zhou's personal blog.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/SeanZhou0616" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SeanZhou0616" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:seanzhou616@gmail.com" title="E-Mail → mailto:seanzhou616@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/12/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E5%85%AB%E7%AB%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数值分析作业-第八章 | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数值分析作业-第八章
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-12-14 10:11:23" itemprop="dateCreated datePublished" datetime="2022-12-14T10:11:23+08:00">2022-12-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-12-15 23:17:22" itemprop="dateModified" datetime="2022-12-15T23:17:22+08:00">2022-12-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/University/" itemprop="url" rel="index"><span itemprop="name">University</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>姓名：周晓</p>
+<p>学号：2231573</p>
+<span id="more"></span>
+<h2 id="第一题">第一题</h2>
+<p>由题设，要求矩阵</p>
+<p><span class="math display">\[
+A = \begin{pmatrix}
+    6 &amp; 2 &amp; 1 \\
+    2 &amp; 3 &amp; 1\\
+    1 &amp; 1 &amp; 1
+\end{pmatrix}
+\]</span></p>
+<p>最接近于6的特征值以及相应的特征向量，那么很明显，可以利用结合原点平移的方法进行求解。构造矩阵</p>
+<p><span class="math display">\[
+B = A - p_iI = A - 6 I = \begin{pmatrix}
+    0 &amp; 2 &amp; 1 \\
+    2 &amp; -3 &amp; 1 \\
+    1 &amp; 1 &amp; -5
+\end{pmatrix}
+\]</span></p>
+<p>令初始特征向量 <span class="math inline">\(\boldsymbol{v}^{(0)} = (1, 1, 1)^T\)</span>，建立迭代格式</p>
+<p><span class="math display">\[
+B\boldsymbol{v}^{(k+1)} = \boldsymbol{v}^{(k)}
+\]</span></p>
+<p>实际上，通过计算上述矩阵的行列式，发现 <span class="math inline">\(det(A) = 9\)</span>，因此可以直接使用逆矩阵的形式进行反幂法计算</p>
+<p><span class="math display">\[
+\boldsymbol{v}^{(k+1)} = B^{-1}\boldsymbol{v}^{(k)}
+\]</span></p>
+<p>那么可以根据上述思路进行MATLAB编程，代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[lambda, v]</span> = <span class="title">prob1</span><span class="params">()</span></span></span><br><span class="line">    A = [<span class="number">6</span> <span class="number">2</span> <span class="number">1</span>; <span class="number">2</span> <span class="number">3</span> <span class="number">1</span>; <span class="number">1</span> <span class="number">1</span> <span class="number">1</span>];</span><br><span class="line">    B = A - <span class="number">6</span> * <span class="built_in">eye</span>(<span class="number">3</span>);</span><br><span class="line">    v_k = [<span class="number">1</span>; <span class="number">1</span>; <span class="number">1</span>];</span><br><span class="line">    lambda_k = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">eps</span> = <span class="number">1e-10</span>;</span><br><span class="line">    v_kk = B \ v_k;</span><br><span class="line">    lambda_kk = <span class="built_in">max</span>(<span class="built_in">abs</span>(v_kk));</span><br><span class="line">    v_kk = v_kk ./ lambda_kk;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="built_in">abs</span>(<span class="number">1</span> / lambda_kk -  <span class="number">1</span> / lambda_k) &gt; <span class="built_in">eps</span></span><br><span class="line">        v_k = v_kk;</span><br><span class="line">        lambda_k = lambda_kk;</span><br><span class="line">        v_kk = B \ v_k;</span><br><span class="line">        lambda_kk = <span class="built_in">max</span>(<span class="built_in">abs</span>(v_kk));</span><br><span class="line">        v_kk = v_kk ./ lambda_kk;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    lambda = <span class="number">1</span> / lambda_kk + <span class="number">6</span>;</span><br><span class="line">    v = v_kk;</span><br><span class="line"></span><br><span class="line">    fprintf(<span class="string">&quot;矩阵A最接近于6的特征值是%.15f\n&quot;</span>, lambda);</span><br><span class="line">    <span class="built_in">disp</span>(<span class="string">&quot;对应的特征向量为&quot;</span>);</span><br><span class="line">    <span class="built_in">disp</span>(v);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[lambda, v] = prob1();</span><br></pre></td></tr></table></figure>
+<p>可以得到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">矩阵A最接近于6的特征值是7.287992138948172</span><br><span class="line">对应的特征向量为</span><br><span class="line">    1.0000</span><br><span class="line">    0.5229</span><br><span class="line">    0.2422</span><br></pre></td></tr></table></figure>
+<p>那么矩阵 <span class="math inline">\(A\)</span> 最接近6的特征值为</p>
+<p><span class="math display">\[
+\lambda = 7.287992138948172
+\]</span></p>
+<p>对应的特征向量为</p>
+<p><span class="math display">\[
+\boldsymbol{x} = \begin{pmatrix}
+    1.0000\\
+    0.522900166899952\\
+    0.242191805148267\\
+\end{pmatrix}
+\]</span></p>
+<h2 id="第二题">第二题</h2>
+<p>由于本体不要求计算特征向量，而QR方法又比较易于使用，因此考虑利用QR方法求出相应矩阵的所有特征值，然后计算最大特征值与最小特征值之商。</p>
+<p>MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cond</span> = <span class="title">prob2</span><span class="params">(n)</span></span></span><br><span class="line">    A = <span class="number">2</span> * <span class="built_in">eye</span>(n);</span><br><span class="line">    I = <span class="number">-1</span> * <span class="built_in">eye</span>(n<span class="number">-1</span>);</span><br><span class="line">    A = A + [<span class="built_in">zeros</span>(n<span class="number">-1</span>, <span class="number">1</span>) I; <span class="built_in">zeros</span>(<span class="number">1</span>, n)] + [<span class="built_in">zeros</span>(<span class="number">1</span>, n); I <span class="built_in">zeros</span>(n<span class="number">-1</span>, <span class="number">1</span>)];</span><br><span class="line"></span><br><span class="line">    A_k = A;</span><br><span class="line">    [Q_k, R_k] = qr(A_k);</span><br><span class="line">    A_kk = R_k * Q_k;</span><br><span class="line">    <span class="built_in">eps</span> = <span class="number">1e-10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> norm(<span class="built_in">diag</span>(A_kk - A_k)) &gt; <span class="built_in">eps</span></span><br><span class="line">        A_k = A_kk;</span><br><span class="line">        [Q_k, R_k] = qr(A_k);</span><br><span class="line">        A_kk = R_k * Q_k;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    [~, idx_max] = <span class="built_in">max</span>(<span class="built_in">abs</span>(<span class="built_in">diag</span>(A_kk)));</span><br><span class="line">    [~, idx_min] = <span class="built_in">min</span>(<span class="built_in">abs</span>(<span class="built_in">diag</span>(A_kk)));</span><br><span class="line">    A_diag = <span class="built_in">diag</span>(A_kk);</span><br><span class="line">    lambda_max = A_diag(idx_max);</span><br><span class="line">    lambda_min = A_diag(idx_min);</span><br><span class="line">    cond = lambda_max / lambda_min;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">prob2_all</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">for</span> n = <span class="number">2</span>: <span class="number">2</span>: <span class="number">40</span></span><br><span class="line">        fprintf(<span class="string">&quot;n为%d时，对应的条件数为%.15f\n&quot;</span>, n, prob2(n));</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prob2_all()</span><br></pre></td></tr></table></figure>
+<p>可以得到输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">n为2时，对应的条件数为2.999999999971672</span><br><span class="line">n为4时，对应的条件数为9.472135954855640</span><br><span class="line">n为6时，对应的条件数为19.195669357189242</span><br><span class="line">n为8时，对应的条件数为32.163437475044624</span><br><span class="line">n为10时，对应的条件数为48.374150072583596</span><br><span class="line">n为12时，对应的条件数为67.827429056731631</span><br><span class="line">n为14时，对应的条件数为90.523130945694305</span><br><span class="line">n为16时，对应的条件数为116.461191538634793</span><br><span class="line">n为18时，对应的条件数为145.641578606754450</span><br><span class="line">n为20时，对应的条件数为178.064274521456809</span><br><span class="line">n为22时，对应的条件数为213.729268972798252</span><br><span class="line">n为24时，对应的条件数为252.636555608622160</span><br><span class="line">n为26时，对应的条件数为294.786130345219306</span><br><span class="line">n为28时，对应的条件数为340.177990456071655</span><br><span class="line">n为30时，对应的条件数为388.812134052344049</span><br><span class="line">n为32时，对应的条件数为440.688559820123601</span><br><span class="line">n为34时，对应的条件数为495.807266786053674</span><br><span class="line">n为36时，对应的条件数为554.168254249880306</span><br><span class="line">n为38时，对应的条件数为615.771521681101376</span><br><span class="line">n为40时，对应的条件数为680.617068663575196</span><br></pre></td></tr></table></figure>
+<h2 id="第三题">第三题</h2>
+<p>对于Leslie矩阵，可以将其理解为种群的一次繁衍迭代变换。下面先从各个年龄组的视角出发，考虑种群的一次繁衍迭代过程。</p>
+<p>假定 <span class="math inline">\(x_1^{(k)}, x_2^{(k)}, \cdots, x_n^{(k)}\)</span> 是目标种群第 <span class="math inline">\(k\)</span> 个世代的各年龄组个体数量，<span class="math inline">\(b_1, b_2, \cdots, b_n\)</span> 是各个年龄组的繁衍率，<span class="math inline">\(s_1, s_2, \cdots, s_{n-1}\)</span> 是各个年龄组的存活率，那么考虑第 <span class="math inline">\(k+1\)</span> 世代各年龄组个体数量，最年轻的年龄组个体数量应为</p>
+<p><span class="math display">\[
+x_1^{(k+1)} = \sum_{i=1}^nb_ix_i^{(k)}
+\]</span></p>
+<p>所有的年龄组都在这次繁衍迭代中经历一次“死亡筛选”，所以除了最年轻的年龄组以外，其他年龄组的个体数量恰为上个迭代周期中相邻的更年轻的年龄组个体数量乘以相应的存活率，即</p>
+<p><span class="math display">\[
+x_i^{(k+1)} = s_{i-1}x_i^{(k)}, i \in \mathcal Z[2, n]
+\]</span></p>
+<p>最年老的年龄组在这一次繁衍迭代中全部死亡，所以年龄组的数量总是保持不变。</p>
+<p>经过上述讨论，可以看出，上述繁衍迭代过程可以用矩阵运算表示</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    b_1 &amp; b_2 &amp; \cdots &amp; b_{n-1} &amp; b_n\\
+    s_1 &amp; \\
+    &amp; s_2 \\
+    &amp;&amp; \ddots \\
+    &amp;&amp;&amp;s_{n-1} &amp;0\\
+\end{pmatrix}
+\begin{pmatrix}
+    x_1^{(k)} \\ x_2^{(k)} \\ \vdots \\ x_n^{(k)}
+\end{pmatrix}=
+\begin{pmatrix}
+    x_1^{(k+1)} \\
+    x_2^{(k+1)} \\
+    \vdots \\
+    x_n^{(k+1)}
+\end{pmatrix}
+\]</span></p>
+<p>等式左侧的矩阵也就是题设中的Leslie矩阵。从矩阵求按模最大特征值的幂方法视角来看，假如Leslie矩阵的按模最大特征值大于1，那么由</p>
+<p><span class="math display">\[
+\lambda_{max}\boldsymbol{x}^{(k)} = \boldsymbol{x}^{(k+1)}
+\]</span></p>
+<p>可知 <span class="math inline">\(\{\boldsymbol{x}^{(k)}\}\)</span> 一定是一个单调递增的序列。同理，若按模最大特征值小于1，则种群规模单调递减。只有按模最大特征值恰为1时，种群规模才会保持恒定。</p>
+<p>下面我们来讨论如何使得按模最大特征值恰好取到1。根据题设，可以通过认为干预，使得题中种群的Leslie矩阵变为</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    ub_1 &amp; ub_2 &amp; ub_3 &amp; ub_4 &amp; ub_5 &amp; ub_6 &amp; ub_7 &amp; ub_8 \\
+    s_1 \\
+    &amp; s_2 \\
+    &amp;&amp; ks_3 \\
+    &amp;&amp;&amp; ks_4 \\
+    &amp;&amp;&amp;&amp; ks_5 \\
+    &amp;&amp;&amp;&amp;&amp; ks_6\\
+    &amp;&amp;&amp;&amp;&amp;&amp; ks_7 &amp; 0\\
+\end{pmatrix}
+\]</span></p>
+<p>为了使得上述矩阵的按模最大特征值为1，首先我们需要明确，上述矩阵的按模最大特征值一定是 <span class="math inline">\(x_1^{(k)}\)</span> 对应的特征值，因为一旦种群数量达到稳态，那么由于任意 <span class="math inline">\(i&gt;1\)</span> 的 <span class="math inline">\(x_i\)</span> 都是由 <span class="math inline">\(x_1\)</span> 乘以一个小于1的系数迭代而来，所以 <span class="math inline">\(x_1\)</span> 一定是每一世代个体数量最多的年龄组。另外，由于种群达到稳态，因此</p>
+<p><span class="math display">\[
+\lim_{k\rightarrow \infty}x_1^{(k)} = C
+\]</span></p>
+<p><span class="math inline">\(C\)</span> 表示一个常数。注意到</p>
+<p><span class="math display">\[
+x_1^{(k+1)} = u\sum_{i=1}^n b_i x_i^{(k)}
+\]</span></p>
+<p>而任一 <span class="math inline">\(x_i\)</span> 总是由某个世代的 <span class="math inline">\(x_1\)</span> 演变而来，因此可以将上式改写为</p>
+<p><span class="math display">\[
+x_1^{(k+1)} = u\sum_{i=1}^n k^{i-3}b_i \prod_{j=1}^{i-1}s_j x_1^{(k-i+1)}
+\]</span></p>
+<p>注意，<span class="math inline">\(k^{i-3}\)</span> 这一项是题设中的调节参数，与上标中的 <span class="math inline">\(^{(k)}\)</span> 没有关系；另外，当 <span class="math inline">\(i&lt;3\)</span> 的时候，由题设 <span class="math inline">\(k^{i-3}=1\)</span>。由于种群在按模最大特征值为1时我们认为种群达到稳态，因此 <span class="math inline">\(x_1^{(k)}\)</span> 是一个常数，所以上式中所有世代的 <span class="math inline">\(x_1\)</span> 均认为是相同的值，可以直接消去等式中所有的 <span class="math inline">\(x_1\)</span>，得到</p>
+<p><span class="math display">\[
+1 = u\sum_{i=1}^n k^{i-3}b_i \prod_{j=1}^{i-1}s_j
+\]</span></p>
+<p>对于本题来说，上面这个式子是可以展开的</p>
+<p><span class="math display">\[
+1 = u[b_7\prod_{j=1}^6s_j k^4+b_6\prod_{j=1}^5s_jk^3+b_5\prod_{j=1}^4s_jk^2+b_4\prod_{j=1}^3s_jk+b_3\prod_{j=1}^2s_j]
+\]</span></p>
+<p>所以，只要参数 <span class="math inline">\(k, u\)</span> 在 <span class="math inline">\((0, 1)\)</span> 区间满足上述关系，即可满足目标Leslie矩阵按模最大特征值为1的条件。</p>
+<p>编写如下代码</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">b = [<span class="number">0</span>; <span class="number">0</span>; <span class="number">5</span>; <span class="number">4</span>; <span class="number">3</span>; <span class="number">2</span>; <span class="number">0.5</span>; <span class="number">0</span>];</span><br><span class="line">s = [<span class="number">0.85</span>; <span class="number">0.92</span>; <span class="number">0.91</span>; <span class="number">0.87</span>; <span class="number">0.83</span>; <span class="number">0.76</span>; <span class="number">0.66</span>];</span><br><span class="line"></span><br><span class="line">a1 = b(<span class="number">7</span>) * prod(s(<span class="number">1</span>:<span class="number">6</span>));</span><br><span class="line">a2 = b(<span class="number">6</span>) * prod(s(<span class="number">1</span>:<span class="number">5</span>));</span><br><span class="line">a3 = b(<span class="number">5</span>) * prod(s(<span class="number">1</span>:<span class="number">4</span>));</span><br><span class="line">a4 = b(<span class="number">4</span>) * prod(s(<span class="number">1</span>:<span class="number">3</span>));</span><br><span class="line">a5 = b(<span class="number">3</span>) * prod(s(<span class="number">1</span>:<span class="number">2</span>));</span><br><span class="line">fprintf(<span class="string">&quot;a1=%.15f\na2=%.10f\na3=%.10f\na4=%.10f\na5=%.10f\n&quot;</span>, a1, a2, a3, a4, a5);</span><br></pre></td></tr></table></figure>
+<p>可以得到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a1=0.195267104760000</span><br><span class="line">a2=1.0277216040</span><br><span class="line">a3=1.8573282000</span><br><span class="line">a4=2.8464800000</span><br><span class="line">a5=3.9100000000</span><br></pre></td></tr></table></figure>
+<p>即</p>
+<p><span class="math display">\[
+f(k) = 0.19526710476k^4 + 1.027721604k^3 + 1.8573282k^2 + 2.84648k+3.91
+\]</span></p>
+<p>上述函数在 <span class="math inline">\((0, 1)\)</span> 区间显然是单调递增的。代入端点，可得</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;f(0) = 3.91\\
+    &amp;f(1) = 9.83679690876
+\end{aligned}
+\]</span></p>
+<p>对上述两个值求倒数，可以得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+    u_{max} = 0.255754475703325\\
+    u_{min} = 0.101659108068955
+\end{aligned}
+\]</span></p>
+<p>所以，若 <span class="math inline">\(k\)</span> 在 <span class="math inline">\((0, 1)\)</span> 区间内变化，那么 <span class="math inline">\(u\)</span> 将在 <span class="math inline">\((u_{min}, u_{max})\)</span> 区间变化。</p>
+<p>如果给出 <span class="math inline">\(k, u\)</span> 的控制成本，那么还可以进一步地给出成本最低的方案。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Numerical-Analysis/" rel="tag"># Numerical Analysis</a>
+              <a href="/tags/Mathematics/" rel="tag"># Mathematics</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/12/13/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-QR%E5%88%86%E8%A7%A3/" rel="prev" title="数值分析笔记-QR分解">
+                  <i class="fa fa-chevron-left"></i> 数值分析笔记-QR分解
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Sean Zhou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

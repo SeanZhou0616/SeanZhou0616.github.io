@@ -2360,6 +2360,165 @@ B = Q^{-1}AQ
       </tags>
   </entry>
   <entry>
+    <title>数值分析作业-第八章</title>
+    <url>/2022/12/14/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E4%BD%9C%E4%B8%9A-%E7%AC%AC%E5%85%AB%E7%AB%A0/</url>
+    <content><![CDATA[<p>姓名：周晓</p>
+<p>学号：2231573</p>
+<span id="more"></span>
+<h2 id="第一题">第一题</h2>
+<p>由题设，要求矩阵</p>
+<p><span class="math display">\[
+A = \begin{pmatrix}
+    6 &amp; 2 &amp; 1 \\
+    2 &amp; 3 &amp; 1\\
+    1 &amp; 1 &amp; 1
+\end{pmatrix}
+\]</span></p>
+<p>最接近于6的特征值以及相应的特征向量，那么很明显，可以利用结合原点平移的方法进行求解。构造矩阵</p>
+<p><span class="math display">\[
+B = A - p_iI = A - 6 I = \begin{pmatrix}
+    0 &amp; 2 &amp; 1 \\
+    2 &amp; -3 &amp; 1 \\
+    1 &amp; 1 &amp; -5
+\end{pmatrix}
+\]</span></p>
+<p>令初始特征向量 <span class="math inline">\(\boldsymbol{v}^{(0)} = (1, 1, 1)^T\)</span>，建立迭代格式</p>
+<p><span class="math display">\[
+B\boldsymbol{v}^{(k+1)} = \boldsymbol{v}^{(k)}
+\]</span></p>
+<p>实际上，通过计算上述矩阵的行列式，发现 <span class="math inline">\(det(A) = 9\)</span>，因此可以直接使用逆矩阵的形式进行反幂法计算</p>
+<p><span class="math display">\[
+\boldsymbol{v}^{(k+1)} = B^{-1}\boldsymbol{v}^{(k)}
+\]</span></p>
+<p>那么可以根据上述思路进行MATLAB编程，代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">[lambda, v]</span> = <span class="title">prob1</span><span class="params">()</span></span></span><br><span class="line">    A = [<span class="number">6</span> <span class="number">2</span> <span class="number">1</span>; <span class="number">2</span> <span class="number">3</span> <span class="number">1</span>; <span class="number">1</span> <span class="number">1</span> <span class="number">1</span>];</span><br><span class="line">    B = A - <span class="number">6</span> * <span class="built_in">eye</span>(<span class="number">3</span>);</span><br><span class="line">    v_k = [<span class="number">1</span>; <span class="number">1</span>; <span class="number">1</span>];</span><br><span class="line">    lambda_k = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">eps</span> = <span class="number">1e-10</span>;</span><br><span class="line">    v_kk = B \ v_k;</span><br><span class="line">    lambda_kk = <span class="built_in">max</span>(<span class="built_in">abs</span>(v_kk));</span><br><span class="line">    v_kk = v_kk ./ lambda_kk;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="built_in">abs</span>(<span class="number">1</span> / lambda_kk -  <span class="number">1</span> / lambda_k) &gt; <span class="built_in">eps</span></span><br><span class="line">        v_k = v_kk;</span><br><span class="line">        lambda_k = lambda_kk;</span><br><span class="line">        v_kk = B \ v_k;</span><br><span class="line">        lambda_kk = <span class="built_in">max</span>(<span class="built_in">abs</span>(v_kk));</span><br><span class="line">        v_kk = v_kk ./ lambda_kk;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    lambda = <span class="number">1</span> / lambda_kk + <span class="number">6</span>;</span><br><span class="line">    v = v_kk;</span><br><span class="line"></span><br><span class="line">    fprintf(<span class="string">&quot;矩阵A最接近于6的特征值是%.15f\n&quot;</span>, lambda);</span><br><span class="line">    <span class="built_in">disp</span>(<span class="string">&quot;对应的特征向量为&quot;</span>);</span><br><span class="line">    <span class="built_in">disp</span>(v);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">[lambda, v] = prob1();</span><br></pre></td></tr></table></figure>
+<p>可以得到</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">矩阵A最接近于6的特征值是7.287992138948172</span><br><span class="line">对应的特征向量为</span><br><span class="line">    1.0000</span><br><span class="line">    0.5229</span><br><span class="line">    0.2422</span><br></pre></td></tr></table></figure>
+<p>那么矩阵 <span class="math inline">\(A\)</span> 最接近6的特征值为</p>
+<p><span class="math display">\[
+\lambda = 7.287992138948172
+\]</span></p>
+<p>对应的特征向量为</p>
+<p><span class="math display">\[
+\boldsymbol{x} = \begin{pmatrix}
+    1.0000\\
+    0.522900166899952\\
+    0.242191805148267\\
+\end{pmatrix}
+\]</span></p>
+<h2 id="第二题">第二题</h2>
+<p>由于本体不要求计算特征向量，而QR方法又比较易于使用，因此考虑利用QR方法求出相应矩阵的所有特征值，然后计算最大特征值与最小特征值之商。</p>
+<p>MATLAB代码如下</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cond</span> = <span class="title">prob2</span><span class="params">(n)</span></span></span><br><span class="line">    A = <span class="number">2</span> * <span class="built_in">eye</span>(n);</span><br><span class="line">    I = <span class="number">-1</span> * <span class="built_in">eye</span>(n<span class="number">-1</span>);</span><br><span class="line">    A = A + [<span class="built_in">zeros</span>(n<span class="number">-1</span>, <span class="number">1</span>) I; <span class="built_in">zeros</span>(<span class="number">1</span>, n)] + [<span class="built_in">zeros</span>(<span class="number">1</span>, n); I <span class="built_in">zeros</span>(n<span class="number">-1</span>, <span class="number">1</span>)];</span><br><span class="line"></span><br><span class="line">    A_k = A;</span><br><span class="line">    [Q_k, R_k] = qr(A_k);</span><br><span class="line">    A_kk = R_k * Q_k;</span><br><span class="line">    <span class="built_in">eps</span> = <span class="number">1e-10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> norm(<span class="built_in">diag</span>(A_kk - A_k)) &gt; <span class="built_in">eps</span></span><br><span class="line">        A_k = A_kk;</span><br><span class="line">        [Q_k, R_k] = qr(A_k);</span><br><span class="line">        A_kk = R_k * Q_k;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    [~, idx_max] = <span class="built_in">max</span>(<span class="built_in">abs</span>(<span class="built_in">diag</span>(A_kk)));</span><br><span class="line">    [~, idx_min] = <span class="built_in">min</span>(<span class="built_in">abs</span>(<span class="built_in">diag</span>(A_kk)));</span><br><span class="line">    A_diag = <span class="built_in">diag</span>(A_kk);</span><br><span class="line">    lambda_max = A_diag(idx_max);</span><br><span class="line">    lambda_min = A_diag(idx_min);</span><br><span class="line">    cond = lambda_max / lambda_min;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">prob2_all</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">for</span> n = <span class="number">2</span>: <span class="number">2</span>: <span class="number">40</span></span><br><span class="line">        fprintf(<span class="string">&quot;n为%d时，对应的条件数为%.15f\n&quot;</span>, n, prob2(n));</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>在命令行中输入</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">prob2_all()</span><br></pre></td></tr></table></figure>
+<p>可以得到输出</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">n为2时，对应的条件数为2.999999999971672</span><br><span class="line">n为4时，对应的条件数为9.472135954855640</span><br><span class="line">n为6时，对应的条件数为19.195669357189242</span><br><span class="line">n为8时，对应的条件数为32.163437475044624</span><br><span class="line">n为10时，对应的条件数为48.374150072583596</span><br><span class="line">n为12时，对应的条件数为67.827429056731631</span><br><span class="line">n为14时，对应的条件数为90.523130945694305</span><br><span class="line">n为16时，对应的条件数为116.461191538634793</span><br><span class="line">n为18时，对应的条件数为145.641578606754450</span><br><span class="line">n为20时，对应的条件数为178.064274521456809</span><br><span class="line">n为22时，对应的条件数为213.729268972798252</span><br><span class="line">n为24时，对应的条件数为252.636555608622160</span><br><span class="line">n为26时，对应的条件数为294.786130345219306</span><br><span class="line">n为28时，对应的条件数为340.177990456071655</span><br><span class="line">n为30时，对应的条件数为388.812134052344049</span><br><span class="line">n为32时，对应的条件数为440.688559820123601</span><br><span class="line">n为34时，对应的条件数为495.807266786053674</span><br><span class="line">n为36时，对应的条件数为554.168254249880306</span><br><span class="line">n为38时，对应的条件数为615.771521681101376</span><br><span class="line">n为40时，对应的条件数为680.617068663575196</span><br></pre></td></tr></table></figure>
+<h2 id="第三题">第三题</h2>
+<p>对于Leslie矩阵，可以将其理解为种群的一次繁衍迭代变换。下面先从各个年龄组的视角出发，考虑种群的一次繁衍迭代过程。</p>
+<p>假定 <span class="math inline">\(x_1^{(k)}, x_2^{(k)}, \cdots, x_n^{(k)}\)</span> 是目标种群第 <span class="math inline">\(k\)</span> 个世代的各年龄组个体数量，<span class="math inline">\(b_1, b_2, \cdots, b_n\)</span> 是各个年龄组的繁衍率，<span class="math inline">\(s_1, s_2, \cdots, s_{n-1}\)</span> 是各个年龄组的存活率，那么考虑第 <span class="math inline">\(k+1\)</span> 世代各年龄组个体数量，最年轻的年龄组个体数量应为</p>
+<p><span class="math display">\[
+x_1^{(k+1)} = \sum_{i=1}^nb_ix_i^{(k)}
+\]</span></p>
+<p>所有的年龄组都在这次繁衍迭代中经历一次“死亡筛选”，所以除了最年轻的年龄组以外，其他年龄组的个体数量恰为上个迭代周期中相邻的更年轻的年龄组个体数量乘以相应的存活率，即</p>
+<p><span class="math display">\[
+x_i^{(k+1)} = s_{i-1}x_i^{(k)}, i \in \mathcal Z[2, n]
+\]</span></p>
+<p>最年老的年龄组在这一次繁衍迭代中全部死亡，所以年龄组的数量总是保持不变。</p>
+<p>经过上述讨论，可以看出，上述繁衍迭代过程可以用矩阵运算表示</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    b_1 &amp; b_2 &amp; \cdots &amp; b_{n-1} &amp; b_n\\
+    s_1 &amp; \\
+    &amp; s_2 \\
+    &amp;&amp; \ddots \\
+    &amp;&amp;&amp;s_{n-1} &amp;0\\
+\end{pmatrix}
+\begin{pmatrix}
+    x_1^{(k)} \\ x_2^{(k)} \\ \vdots \\ x_n^{(k)}
+\end{pmatrix}=
+\begin{pmatrix}
+    x_1^{(k+1)} \\
+    x_2^{(k+1)} \\
+    \vdots \\
+    x_n^{(k+1)}
+\end{pmatrix}
+\]</span></p>
+<p>等式左侧的矩阵也就是题设中的Leslie矩阵。从矩阵求按模最大特征值的幂方法视角来看，假如Leslie矩阵的按模最大特征值大于1，那么由</p>
+<p><span class="math display">\[
+\lambda_{max}\boldsymbol{x}^{(k)} = \boldsymbol{x}^{(k+1)}
+\]</span></p>
+<p>可知 <span class="math inline">\(\{\boldsymbol{x}^{(k)}\}\)</span> 一定是一个单调递增的序列。同理，若按模最大特征值小于1，则种群规模单调递减。只有按模最大特征值恰为1时，种群规模才会保持恒定。</p>
+<p>下面我们来讨论如何使得按模最大特征值恰好取到1。根据题设，可以通过认为干预，使得题中种群的Leslie矩阵变为</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+    ub_1 &amp; ub_2 &amp; ub_3 &amp; ub_4 &amp; ub_5 &amp; ub_6 &amp; ub_7 &amp; ub_8 \\
+    s_1 \\
+    &amp; s_2 \\
+    &amp;&amp; ks_3 \\
+    &amp;&amp;&amp; ks_4 \\
+    &amp;&amp;&amp;&amp; ks_5 \\
+    &amp;&amp;&amp;&amp;&amp; ks_6\\
+    &amp;&amp;&amp;&amp;&amp;&amp; ks_7 &amp; 0\\
+\end{pmatrix}
+\]</span></p>
+<p>为了使得上述矩阵的按模最大特征值为1，首先我们需要明确，上述矩阵的按模最大特征值一定是 <span class="math inline">\(x_1^{(k)}\)</span> 对应的特征值，因为一旦种群数量达到稳态，那么由于任意 <span class="math inline">\(i&gt;1\)</span> 的 <span class="math inline">\(x_i\)</span> 都是由 <span class="math inline">\(x_1\)</span> 乘以一个小于1的系数迭代而来，所以 <span class="math inline">\(x_1\)</span> 一定是每一世代个体数量最多的年龄组。另外，由于种群达到稳态，因此</p>
+<p><span class="math display">\[
+\lim_{k\rightarrow \infty}x_1^{(k)} = C
+\]</span></p>
+<p><span class="math inline">\(C\)</span> 表示一个常数。注意到</p>
+<p><span class="math display">\[
+x_1^{(k+1)} = u\sum_{i=1}^n b_i x_i^{(k)}
+\]</span></p>
+<p>而任一 <span class="math inline">\(x_i\)</span> 总是由某个世代的 <span class="math inline">\(x_1\)</span> 演变而来，因此可以将上式改写为</p>
+<p><span class="math display">\[
+x_1^{(k+1)} = u\sum_{i=1}^n k^{i-3}b_i \prod_{j=1}^{i-1}s_j x_1^{(k-i+1)}
+\]</span></p>
+<p>注意，<span class="math inline">\(k^{i-3}\)</span> 这一项是题设中的调节参数，与上标中的 <span class="math inline">\(^{(k)}\)</span> 没有关系；另外，当 <span class="math inline">\(i&lt;3\)</span> 的时候，由题设 <span class="math inline">\(k^{i-3}=1\)</span>。由于种群在按模最大特征值为1时我们认为种群达到稳态，因此 <span class="math inline">\(x_1^{(k)}\)</span> 是一个常数，所以上式中所有世代的 <span class="math inline">\(x_1\)</span> 均认为是相同的值，可以直接消去等式中所有的 <span class="math inline">\(x_1\)</span>，得到</p>
+<p><span class="math display">\[
+1 = u\sum_{i=1}^n k^{i-3}b_i \prod_{j=1}^{i-1}s_j
+\]</span></p>
+<p>对于本题来说，上面这个式子是可以展开的</p>
+<p><span class="math display">\[
+1 = u[b_7\prod_{j=1}^6s_j k^4+b_6\prod_{j=1}^5s_jk^3+b_5\prod_{j=1}^4s_jk^2+b_4\prod_{j=1}^3s_jk+b_3\prod_{j=1}^2s_j]
+\]</span></p>
+<p>所以，只要参数 <span class="math inline">\(k, u\)</span> 在 <span class="math inline">\((0, 1)\)</span> 区间满足上述关系，即可满足目标Leslie矩阵按模最大特征值为1的条件。</p>
+<p>编写如下代码</p>
+<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">b = [<span class="number">0</span>; <span class="number">0</span>; <span class="number">5</span>; <span class="number">4</span>; <span class="number">3</span>; <span class="number">2</span>; <span class="number">0.5</span>; <span class="number">0</span>];</span><br><span class="line">s = [<span class="number">0.85</span>; <span class="number">0.92</span>; <span class="number">0.91</span>; <span class="number">0.87</span>; <span class="number">0.83</span>; <span class="number">0.76</span>; <span class="number">0.66</span>];</span><br><span class="line"></span><br><span class="line">a1 = b(<span class="number">7</span>) * prod(s(<span class="number">1</span>:<span class="number">6</span>));</span><br><span class="line">a2 = b(<span class="number">6</span>) * prod(s(<span class="number">1</span>:<span class="number">5</span>));</span><br><span class="line">a3 = b(<span class="number">5</span>) * prod(s(<span class="number">1</span>:<span class="number">4</span>));</span><br><span class="line">a4 = b(<span class="number">4</span>) * prod(s(<span class="number">1</span>:<span class="number">3</span>));</span><br><span class="line">a5 = b(<span class="number">3</span>) * prod(s(<span class="number">1</span>:<span class="number">2</span>));</span><br><span class="line">fprintf(<span class="string">&quot;a1=%.15f\na2=%.10f\na3=%.10f\na4=%.10f\na5=%.10f\n&quot;</span>, a1, a2, a3, a4, a5);</span><br></pre></td></tr></table></figure>
+<p>可以得到</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">a1=0.195267104760000</span><br><span class="line">a2=1.0277216040</span><br><span class="line">a3=1.8573282000</span><br><span class="line">a4=2.8464800000</span><br><span class="line">a5=3.9100000000</span><br></pre></td></tr></table></figure>
+<p>即</p>
+<p><span class="math display">\[
+f(k) = 0.19526710476k^4 + 1.027721604k^3 + 1.8573282k^2 + 2.84648k+3.91
+\]</span></p>
+<p>上述函数在 <span class="math inline">\((0, 1)\)</span> 区间显然是单调递增的。代入端点，可得</p>
+<p><span class="math display">\[
+\begin{aligned}
+    &amp;f(0) = 3.91\\
+    &amp;f(1) = 9.83679690876
+\end{aligned}
+\]</span></p>
+<p>对上述两个值求倒数，可以得到</p>
+<p><span class="math display">\[
+\begin{aligned}
+    u_{max} = 0.255754475703325\\
+    u_{min} = 0.101659108068955
+\end{aligned}
+\]</span></p>
+<p>所以，若 <span class="math inline">\(k\)</span> 在 <span class="math inline">\((0, 1)\)</span> 区间内变化，那么 <span class="math inline">\(u\)</span> 将在 <span class="math inline">\((u_{min}, u_{max})\)</span> 区间变化。</p>
+<p>如果给出 <span class="math inline">\(k, u\)</span> 的控制成本，那么还可以进一步地给出成本最低的方案。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Numerical Analysis</tag>
+        <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ubuntu下强制apt走代理</title>
     <url>/2022/12/05/Ubuntu%E4%B8%8B%E5%BC%BA%E5%88%B6apt%E8%B5%B0%E4%BB%A3%E7%90%86/</url>
     <content><![CDATA[<p>今天闲着没事，鼓捣了一下Rock Pi，发现 <code>export http_proxy</code> 对 <code>apt</code> 不起作用。查了一下，发现可以通过以下命令强制 <code>apt</code> 走代理。</p>
@@ -3565,318 +3724,6 @@ var(R_N[f]) = \frac{1}{N^2} E\{\sum_{i=1}^N[f(X_i)-I[f]]^2\}
       </tags>
   </entry>
   <entry>
-    <title>矩阵分析笔记-多项式</title>
-    <url>/2022/11/26/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E5%A4%9A%E9%A1%B9%E5%BC%8F/</url>
-    <content><![CDATA[<p>本章节介绍多项式的一些基础知识，为后续章节中的矩阵分析做基础知识铺垫。</p>
-<span id="more"></span>
-<h2 id="数域">数域</h2>
-<h3 id="数域的概念">数域的概念</h3>
-<p>数域是对四则运算封闭的数集。所谓对四则运算封闭，指的是从数集中随意取出两个数，进行任意<strong>合法</strong>的四则运算以后，得到的结果仍然属于这个数集。注意，这里强调了合法的四则运算，形如除以0这种未定义的运算不计入在内，所以不能以某些数集中存在0元素，而通过不能除以0来判断这个数集不是数域。</p>
-<p>常见的数域有实数集、复数集，但整数集就不是一个数域，因为两个整数做除法可能会得到小数，而小数不属于整数集。</p>
-<h3 id="广义四则运算">广义四则运算</h3>
-<p>前面提到的四则运算仍然是普通的加减乘除，但实际上一个数集如果对广义的四则运算封闭，那么仍然可以称其为数域。</p>
-<p>所谓广义的四则运算，指的是我们可以在一个数集上自定义加法和乘法，只要自定义的加法和乘法满足交换律、结合律、分配律即可，随后只要定义新的加法和乘法的逆运算，即可视为自定义的减法和除法。例如对于素数集，可以定义在加法和乘法后取余数，作为新的加法和乘法，并且这个新的加法和乘法都是存在逆运算的，因此素数集也可以认为是一种数域。</p>
-<p>广义四则运算以及相应的数域属于扩展内容，和主线关系不大。本教材中所提的数域，主要就是有理数、实数和复数域。下面用 <span class="math inline">\(F\)</span> 来表示有理数、实数和复数域，表示下面所提到的内容对这三个数域都成立。</p>
-<h2 id="一元多项式">一元多项式</h2>
-<h3 id="一元多项式的定义">一元多项式的定义</h3>
-<p>若有整数 <span class="math inline">\(n&gt;0\)</span>，<span class="math inline">\(a_0, a_1, \cdots, a_n \in F\)</span> 且 <span class="math inline">\(a_n \neq 0\)</span>，<span class="math inline">\(x\)</span> 是一个<em>文字符号</em>，那么称</p>
-<p><span class="math display">\[
-f(x) = \sum_{k=0}^n a_k x^k
-\]</span></p>
-<p>为数域 <span class="math inline">\(F\)</span> 上的一个一元多项式，<span class="math inline">\(n\)</span> 称为这个一元多项式的次数，也记作 <span class="math inline">\(deg f(x)\)</span>。<span class="math inline">\(a_kx^k\)</span> 称为一元多项式的 <span class="math inline">\(k\)</span> 次项，<span class="math inline">\(a_k\)</span> 称为这个一元多项式的 <span class="math inline">\(k\)</span> 次项系数，<span class="math inline">\(a_0\)</span> 称为0次项或常数项。</p>
-<p><span class="math inline">\(f(x)=0\)</span> 也是一个一元多项式，不过比较特殊，一般称其为<strong>零多项式</strong>，其次数定义为 <span class="math inline">\(-\infty\)</span>。这个定义在后续的应用中会带来很大的方便。</p>
-<p>数域 <span class="math inline">\(F\)</span> 上的一元多项式全体，用 <span class="math inline">\(F[x]\)</span> 表示。</p>
-<h3 id="一元多项式的运算">一元多项式的运算</h3>
-<h4 id="一元多项式相等">一元多项式相等</h4>
-<p>若两个一元多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 除了系数为0的项以外，其他同次项系数全部相等，则称这两个一元多项式相等。</p>
-<h4 id="一元多项式加法">一元多项式加法</h4>
-<p>一元多项式的加法很简单，假定有一个 <span class="math inline">\(n\)</span> 次的一元多项式 <span class="math inline">\(f(x)\)</span> 和一个 <span class="math inline">\(m\)</span> 次的一元多项式 <span class="math inline">\(g(x)\)</span>，并且 <span class="math inline">\(n\geq m\)</span>，可以将这两个一元多项式分别表示为</p>
-<p><span class="math display">\[
-\begin{aligned}
-    f(x) &amp;= \sum_{k=0}^n a_k x^k \\
-    g(x) &amp;= \sum_{k=0}^n b_k x^k, \ b_i = 0 \ (n &gt; i &gt; m)
-\end{aligned}
-\]</span></p>
-<p>那么，两个一元多项式的加法就可以定义为</p>
-<p><span class="math display">\[
-f(x) + g(x) = \sum_{k=0}^n (a_k + b_k)x^k
-\]</span></p>
-<p>显然，一元多项式的减法就是一元多项式加法的逆运算</p>
-<p><span class="math display">\[
-f(x) - g(x) = \sum_{k=0}^n (a_k - b_k)x^k
-\]</span></p>
-<p>一元多项式的加减法对多项式次数的影响是</p>
-<p><span class="math display">\[
-deg[f(x) \pm g(x)] \leq max(m, n)
-\]</span></p>
-<h4 id="一元多项式乘法">一元多项式乘法</h4>
-<p>一元多项式的乘法也很简单，无非就是两个一元多项式的很多个项相乘后合并同类项，然后再相加，可以表示为</p>
-<p><span class="math display">\[
-\begin{aligned}
-    f(x)g(x) &amp;= \sum_{k=0}^{n+m} c_k x^k\\
-    c_k &amp;= \sum_{j=0}^k a_jb_{k-j}
-\end{aligned}
-\]</span></p>
-<p>一元多项式乘法对多项式次数的影响是</p>
-<p><span class="math display">\[
-deg[f(x)g(x)] = m+n
-\]</span></p>
-<p>从这里可以发现，将零多项式的次数定义为 <span class="math inline">\(-\infty\)</span> 很有好处，当 <span class="math inline">\(f(x)=0\)</span> 或 <span class="math inline">\(g(x)=0\)</span> 时，上面的这个多项式次数影响公式仍然成立，而不需要为零多项式进行额外说明。</p>
-<h4 id="一元多项式带余除法">一元多项式带余除法</h4>
-<p>一元多项式不能直接定义乘法的逆运算，但是可以像整数一样定义带余除法，定义如下：对于一元多项式 <span class="math inline">\(f(x), g(x) \in F[x]\)</span>，存在唯一的一组 <span class="math inline">\(q(x), r(x) \in F[x]\)</span>，使得 <span class="math inline">\(f(x) = q(x)g(x) + r(x)\)</span> 成立。<span class="math inline">\(q(x), r(x)\)</span> 分别称为 <span class="math inline">\(f(x)\)</span> 除以 <span class="math inline">\(g(x)\)</span> 所得的商式(quotient)和余式(remainder)。</p>
-<p>其中，必然存在 <span class="math inline">\(deg\ r(x) &lt; deg\ g(x)\)</span>。</p>
-<p>一元多项式的带余除法和整数的带余除法计算基本一致。在计算时，先找被除式的最高次项与除式最高次项的次数差，并对相应的系数做除法，得到商式的最高次项及其系数，然后用这个最高次项乘以除式，并用被除式减去这个乘法结果；随后，再将上述一元多项式减法结果作为新的被除式，重复上述步骤，直到被除式的次数小于除式的次数，那么最后剩下的减法结果就是余式，商式的项也就不再继续更新。本质上，这就是一元多项式的长除法，由于写长除法的LaTeX公式非常麻烦，因此意会即可，反正我也就是用自己的话描述一遍以加深记忆，不会真有人回来看这一段描述文字复习长除法吧！</p>
-<p>需要注意，一元多项式的系数必须属于某一数域，否则多项式带余除法可能会不成立。</p>
-<h4 id="一元多项式整除">一元多项式整除</h4>
-<p>在一元多项式的带余除法中，可能出现余式恰好为0的情况。这种情况称为一元多项式整除，此时被除式称为除式的<strong>倍式</strong>，除式称为被除式的<strong>因式</strong>，和整数整除的倍数、因数概念是一致的。假如 <span class="math inline">\(f(x)\)</span> 可以被 <span class="math inline">\(g(x)\)</span> 整除，那么可以写作 <span class="math inline">\(g(x) | f(x)\)</span>。</p>
-<p>对于任一一元多项式 <span class="math inline">\(f(x)\)</span>，可以发现这个多项式的任意非零倍数以及常数多项式总是能够整除它本身，因此称常数多项式和 <span class="math inline">\(cf(x)\)</span> 为 <span class="math inline">\(f(x)\)</span> 的<strong>平凡因式</strong>；反过来，<span class="math inline">\(f(x)\)</span> 总是能够整除 <span class="math inline">\(cf(x)\)</span> 以及零多项式，因此零多项式和 <span class="math inline">\(cf(x)\)</span> 是 <span class="math inline">\(f(x)\)</span> 的<strong>平凡倍式</strong>。可以看出，<span class="math inline">\(cf(x)\)</span> 既是 <span class="math inline">\(f(x)\)</span> 的平凡因式，又是 <span class="math inline">\(f(x)\)</span> 的平凡倍式。</p>
-<p>关于整除，有以下比较tricky的性质，可以稍微记一下</p>
-<ol type="1">
-<li>如果 <span class="math inline">\(f(x)|g(x)\)</span> 且 <span class="math inline">\(g(x)|f(x)\)</span>，那么 <span class="math inline">\(f(x) = cg(x)\)</span>，<span class="math inline">\(c\)</span> 为非零常数</li>
-<li>整除带有传递性，若 <span class="math inline">\(f(x)|g(x), g(x)|h(x)\)</span>，那么必有 <span class="math inline">\(f(x)|h(x)\)</span></li>
-<li>若 <span class="math inline">\(f(x)|g_j(x), u_j(x) \in F[x], j=1, 2\)</span>，则 <span class="math inline">\(f(x) | u_1(x)g_1(x) + u_2(x) g_2(x)\)</span></li>
-</ol>
-<h4 id="余式定理">余式定理</h4>
-<p>如果除式为一次一元多项式，例如 <span class="math inline">\(g(x)=x-c\)</span>，那么用 <span class="math inline">\(g(x)\)</span> 去除 <span class="math inline">\(f(x)\)</span> 时，余式满足 <span class="math inline">\(r(x)=f(c)\)</span>，证明如下:</p>
-<p>由于 <span class="math inline">\(g(x)\)</span> 除 <span class="math inline">\(f(x)\)</span> 可以表示为 <span class="math inline">\(f(x)=q(x)g(x) + r(x)\)</span>，那么将 <span class="math inline">\(g(x) = x-c\)</span> 代入，可以得到</p>
-<p><span class="math display">\[
-f(x) = (x-c)q(x) + r(x)
-\]</span></p>
-<p>令 <span class="math inline">\(x=c\)</span>，有</p>
-<p><span class="math display">\[
-f(c) = r(c)
-\]</span></p>
-<p>由于除式 <span class="math inline">\(g(x)=x-c\)</span>，次数为一次，那么商式的次数肯定是被除式的次数减一次，这意味着余式 <span class="math inline">\(r(x)\)</span> 是常数多项式，所以余式就是一个常数，压根和 <span class="math inline">\(x\)</span> 没关系，所以 <span class="math inline">\(r(x)=r(c)\)</span>，那么很自然有 <span class="math inline">\(r(x)=f(c)\)</span> 成立。</p>
-<p>从余式定理还可推出，如果 <span class="math inline">\((x-c)|f(x)\)</span> 成立，那么显然，<span class="math inline">\(f(c)=0\)</span>，即 <span class="math inline">\(x = c\)</span> 是多项式 <span class="math inline">\(f(x)\)</span> 的零点。</p>
-<h3 id="最大公因式与最小公倍式">最大公因式与最小公倍式</h3>
-<h4 id="最大公因式">最大公因式</h4>
-<p>和两个整数有公因数一样，多项式也有公因式的概念。假如对于 <span class="math inline">\(f(x), g(x) \in F[x]\)</span>，存在一个多项式 <span class="math inline">\(d(x) \in F[x]\)</span>，满足 <span class="math inline">\(d(x)|f(x)\)</span> 且 <span class="math inline">\(d(x)|g(x)\)</span>，那么称 <span class="math inline">\(d(x)\)</span> 为多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的公因式(Common Divisor)。</p>
-<p>对于多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的某一公因式 <span class="math inline">\(d(x)\)</span>，若 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的任一公因式 <span class="math inline">\(d_i(x)\)</span> 同时也是 <span class="math inline">\(d(x)\)</span> 的因式，那么可以认为 <span class="math inline">\(d(x)\)</span> 是上述两个多项式的其中一个最大公因式(Greatest Common Divisor, gcd)。</p>
-<p>为了更好地介绍最大公因式，下面先说明一个与辗转相除法相关的引理。</p>
-<h5 id="被除式除式和余式的公因式关系">被除式、除式和余式的公因式关系</h5>
-<p>对于 <span class="math inline">\(f(x), g(x), q(x), r(x) \in F[x]\)</span>，若这些多项式满足多项式带余除法关系</p>
-<p><span class="math display">\[
-f(x) = q(x)g(x) + r(x)
-\]</span></p>
-<p>那么，<span class="math inline">\(f(x), g(x)\)</span> 的公因式全体恰为 <span class="math inline">\(g(x), r(x)\)</span> 的公因式全体。</p>
-<p>这条定理的证明很简单，从两个方面考虑：</p>
-<ol type="1">
-<li>若 <span class="math inline">\(\varphi(x)\)</span> 是 <span class="math inline">\(f(x), g(x)\)</span> 的公因式，即 <span class="math inline">\(\varphi(x)|f(x), \varphi(x)|g(x)\)</span>，由于 <span class="math inline">\(r(x) = f(x) - q(x)g(x)\)</span>，显然 <span class="math inline">\(\varphi(x)|r(x)\)</span>，即 <span class="math inline">\(\varphi(x)\)</span> 也是 <span class="math inline">\(r(x)\)</span> 的因式</li>
-<li>若 <span class="math inline">\(\varphi(x)\)</span> 是 <span class="math inline">\(g(x), r(x)\)</span> 的公因式，即 <span class="math inline">\(\varphi(x)|g(x), \varphi(x)|r(x)\)</span>，由于 <span class="math inline">\(f(x) = q(x)g(x) + r(x)\)</span>，显然 <span class="math inline">\(\varphi(x)|f(x)\)</span>，即 <span class="math inline">\(\varphi(x)\)</span> 也是 <span class="math inline">\(f(x)\)</span> 的因式</li>
-</ol>
-<p>上面这个被除式、除式和余式的公因式关系是辗转相除法获取两个多项式最大公因式的理论基础，需要牢记。</p>
-<h5 id="最大公因式的存在性以及辗转相除法">最大公因式的存在性以及辗转相除法</h5>
-<p>对于 <span class="math inline">\(f(x), g(x) \in F[x]\)</span>，这两个多项式的最大公因式一定存在。下面进行最大公因式存在性的证明。</p>
-<p>前面提到，被除式 <span class="math inline">\(f(x)\)</span> 和除式 <span class="math inline">\(g(x)\)</span> 的公因式全体与除式 <span class="math inline">\(g(x)\)</span> 和余式 <span class="math inline">\(r(x)\)</span> 的公因式全体是完全一致的，那么再用余式 <span class="math inline">\(r(x)\)</span> 去除原来的除式 <span class="math inline">\(g(x)\)</span>，如果无法整除的话又会产生新的余式 <span class="math inline">\(r_1(x)\)</span>，新的余式 <span class="math inline">\(r_1(x)\)</span> 和新的除式 <span class="math inline">\(r(x)\)</span> 的公因式全体和最原始的 <span class="math inline">\(f(x), g(x)\)</span> 的公因式全体仍然完全一致。这种关系可以概括为<em>公因式的传递关系</em>。</p>
-<p>由于多项式带余除法一定会导致余式次数小于除式次数，那么经过有限次多项式带余除法后，一定能将余式的次数降至 <span class="math inline">\(-\infty\)</span>，也就是余式为0多项式。这意味着，在反复进行上述操作后，经过有限次迭代，一定能找到一组除式 <span class="math inline">\(r_{s-1}(x)\)</span> 和余式 <span class="math inline">\(r_s(x)\)</span>，满足 <span class="math inline">\(r_s(x)|r_{s-1}(x)\)</span>，此时 <span class="math inline">\(r_{s}(x)\)</span> 与 <span class="math inline">\(r_{s-1}(x)\)</span> 的最大公因式恰为 <span class="math inline">\(r_{s}(x)\)</span> 本身，那么根据公因式的传递关系，<span class="math inline">\(r_{s}(x)\)</span> 恰为最原始的被除式和除式，即 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的最大公因式。上面这样的反复用余式去除除式，以获取原始被除式和除式的最大公因式的方法，称为<strong>辗转相除法</strong>。</p>
-<p>不过需要注意，多项式的最大公因式不是唯一的，例如 <span class="math inline">\(d(x)\)</span> 是 <span class="math inline">\(f(x), g(x)\)</span> 的最大公因式，<span class="math inline">\(cd(x)\)</span> 也是 <span class="math inline">\(f(x), g(x)\)</span> 的最大公因式，其中 <span class="math inline">\(c\)</span> 是一个非零常数。不过一般来说，我们会用这一堆最大公因式中最高次系数为1的那个多项式作为典型的最大公因式，这个最大公因式记作 <span class="math inline">\(\displaystyle gcd(f(x), g(x))\)</span>。</p>
-<p>多项式的辗转相除法和整数求最大公因数的辗转相除法在本质上是完全相同的。</p>
-<h5 id="最大公因式的线性表示">最大公因式的线性表示</h5>
-<p>两个多项式的最大公因式可以表示为这两个多项式的线性组合。若有 <span class="math inline">\(f(x), g(x), r_s(x) \in F[x]\)</span>，其中 <span class="math inline">\(r_s(x) = \displaystyle gcd(f(x), g(x))\)</span>，那么存在 <span class="math inline">\(u(x), v(x) \in F[x]\)</span>，使得</p>
-<p><span class="math display">\[
-r_s(x) = u(x)f(x) + v(x)g(x)
-\]</span></p>
-<p>上式成立的理由其实很简单。由 <span class="math inline">\(f(x) = q(x)g(x) + r(x)\)</span> 可以倒推 <span class="math inline">\(r(x) = f(x) - q(x)g(x)\)</span>，即余式可以表示为被除式和除式的线性组合。而根据辗转相除法，两个多项式的最大公因式实际上就是大量的被除式和除式的线性组合嵌套计算而来的，因此最大公因式可以通过一系列线性嵌套，最终表示为原始被除式和除式的线性组合。</p>
-<h5 id="多项式互素">多项式互素</h5>
-<p>若 <span class="math inline">\(f(x), g(x) \in F[x]\)</span> 满足 <span class="math inline">\(\displaystyle gcd(f(x), g(x)) = 1\)</span>，则称多项式 <span class="math inline">\(f(x)\)</span> 与 <span class="math inline">\(g(x)\)</span> 互素。</p>
-<p>多项式互素的充要条件是存在 <span class="math inline">\(u(x), v(x) \in F[x]\)</span>，满足</p>
-<p><span class="math display">\[
-u(x)f(x) + v(x)g(x) = 1
-\]</span></p>
-<p>必要性可以直接从最大公因式的线性表示得到；至于充分性，假如 <span class="math inline">\(\varphi(x)\)</span> 是多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的最大公因式，且有上述线性组合等式成立，那么因为 <span class="math inline">\(\varphi(x)|f(x)\)</span> 且 <span class="math inline">\(\varphi(x)|g(x)\)</span>，所以显然 <span class="math inline">\(\varphi(x)|u(x)f(x) + v(x)g(x)\)</span>，即 <span class="math inline">\(\varphi(x)|1\)</span>，这意味着 <span class="math inline">\(\varphi(x)=1\)</span>，即 <span class="math inline">\(\displaystyle gcd(f(x), g(x)) = 1\)</span>，多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 互素。</p>
-<p>由多项式互素可以得到以下推论：</p>
-<ol type="1">
-<li>若 <span class="math inline">\(d_1(x), d_2(x)\)</span> 是多项式 <span class="math inline">\(f(x)\)</span> 的两个互素因式，那么 <span class="math inline">\(d_1(x)d_2(x)|f(x)\)</span></li>
-<li>若多项式 <span class="math inline">\(f(x), g(x)\)</span> 互素，且 <span class="math inline">\(f(x)|g(x)h(x)\)</span>，那么 <span class="math inline">\(f(x)|h(x)\)</span></li>
-</ol>
-<h5 id="多个多项式的最大公因式求解">多个多项式的最大公因式求解</h5>
-<p>多个多项式的最大公因式求解问题可以分解为其中一个多项式与其余多项式的最大公因式之间的最大公因式求解问题，也就是可以转换为最大公因式嵌套求解问题。例如，要求n个多项式的最大公因式，那么先取其中的两个多项式求最大公因式，然后用求出的最大公因式替换掉这两个多项式，使其变为n-1个多项式求最大公因式的问题，以此类推。</p>
-<h4 id="最小公倍式">最小公倍式</h4>
-<p>若有 <span class="math inline">\(f(x), g(x), m(x) \in F[x]\)</span>，满足 <span class="math inline">\(f(x)|m(x), g(x)|m(x)\)</span>，则称 <span class="math inline">\(m(x)\)</span> 是多项式 <span class="math inline">\(f(x), g(x)\)</span> 的一个公倍式(Common Multiple)。若对于这两个多项式的任意公倍式 <span class="math inline">\(m_i(x)\)</span>，都有 <span class="math inline">\(m(x)|m_i(x)\)</span>，则称 <span class="math inline">\(m(x)\)</span> 是 <span class="math inline">\(f(x), g(x)\)</span> 的最小公倍式(Least Common Multiple)。</p>
-<h5 id="最小公倍式的计算">最小公倍式的计算</h5>
-<p>最小公倍式的计算公式如下</p>
-<p><span class="math display">\[
-\frac{f(x)g(x)}{gcd(f(x), g(x))}
-\]</span></p>
-<p>证明过程比较巧妙。记 <span class="math inline">\(d(x) = gcd(f(x), g(x))\)</span>，并做 <span class="math inline">\(f_1(x) = \displaystyle \frac{f(x)}{d(x)}, g_1(x) = \frac{g(x)}{d(x)}\)</span>，显然 <span class="math inline">\(f_1(x)\)</span> 和 <span class="math inline">\(g_1(x)\)</span> 互素。此时有</p>
-<p><span class="math display">\[
-\frac{f(x)g(x)}{gcd(f(x), g(x))} = \frac{f(x)g(x)}{d(x)} = f_1(x)d(x)g_1(x)
-\]</span></p>
-<p>若记 <span class="math inline">\(m(x)\)</span> 为 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的任一公倍式，那么需要证明 <span class="math inline">\(f_1(x)d(x)g_1(x)|m(x)\)</span>。</p>
-<p>记 <span class="math inline">\(m(x) = f(x)p(x), m(x) = g(x)q(x)\)</span>，那么可以推出 <span class="math inline">\(\displaystyle \frac{m(x)}{d(x)} = f_1(x)p(x) = g_1(x)q(x)\)</span>，由于 <span class="math inline">\(f_1(x)|f_1(x)p(x)\)</span>，所以 <span class="math inline">\(f_1(x)|g_1(x)q(x)\)</span>。而 <span class="math inline">\(f_1(x)\)</span> 和 <span class="math inline">\(g_1(x)\)</span> 互素，因此 <span class="math inline">\(f_1(x)|q(x)\)</span>。</p>
-<p>由于 <span class="math inline">\(g_1(x)d(x)|g_1(x)d(x)q(x)\)</span>，且 <span class="math inline">\(f_1(x)|q(x)\)</span>，因此 <span class="math inline">\(g_1(x)d(x)f_1(x)|g_1(x)d(x)q(x)\)</span>，即 <span class="math inline">\(g_1(x)d(x)f_1(x)|m(x)\)</span>，证毕。</p>
-<p>和最大公因式一样，最小公倍式也不止一个。简单起见，将最高次系数为1的最小公倍数记为 <span class="math inline">\(lcm(f(x), g(x))\)</span>。</p>
-<h2 id="插值多项式与中国剩余定理">插值多项式与中国剩余定理</h2>
-<h3 id="lagrange插值多项式">Lagrange插值多项式</h3>
-<p>在数值分析中，我们对插值多项式已经做过了比较详细的介绍，下面简单重复一下Lagrange插值多项式的定义。首先重新描述一下多项式插值问题：对于 <span class="math inline">\(x_i, y_i\)</span> 共 <span class="math inline">\(2k\)</span> 个数，找到插值多项式 <span class="math inline">\(f(x)\)</span>，使得 <span class="math inline">\(f(x_i) = y_i\)</span>。Lagrange插值多项式是一种插值多项式的表示方法，其表达式如下</p>
-<p><span class="math display">\[
-L(x) = \sum_{i=1}^k \frac{P_i(x)}{P_i(x_i)}y_i
-\]</span></p>
-<p>上述 <span class="math inline">\(P_i(x) = \displaystyle\sum_{j=1, j\neq i}^k (x-x_j)\)</span>。这个 <span class="math inline">\(P_i(x)\)</span> 的定义非常巧妙，假定 <span class="math inline">\(j \in [1, k]\)</span> 且 <span class="math inline">\(j \neq i\)</span>，那么</p>
-<p><span class="math display">\[
-P_i(x_j) = 0
-\]</span></p>
-<p>所以 <span class="math inline">\(L(x_i) = \displaystyle\frac{P_i(x_i)}{P_i(x_i)}y_i=y_i\)</span>。这样恰好能够满足所有的插值条件。</p>
-<p>Lagrange插值多项式和余数定理有着非常紧密的关系。事实上，从余数定理的角度观察插值条件 <span class="math inline">\(f(x_i) = y_i\)</span>，可以发现 <span class="math inline">\(y_i\)</span> 实际上就是 <span class="math inline">\(f(x)\)</span> 被 <span class="math inline">\(x-x_i\)</span> 所除得到的余数。那么只需构造这样一个多项式，除了 <span class="math inline">\(y_i\)</span> 所在项以外，其他项中均含因式 <span class="math inline">\(x-x_i\)</span>；而 <span class="math inline">\(y_i\)</span> 所在项的系数在 <span class="math inline">\(x=x_i\)</span> 时恰好为1。Lagrange插值多项式完美地满足了上述条件。</p>
-<h4 id="同余">同余</h4>
-<p>若多项式 <span class="math inline">\(f_1(x), f_2(x)\)</span> 被 <span class="math inline">\(g(x)\)</span> 除有相同的余数，称 <span class="math inline">\(f_1(x), f_2(x)\)</span> 关于 <span class="math inline">\(g(x)\)</span> 同余，表示为 <span class="math inline">\(f_1(x) \equiv f_2(x) \ mod \ g(x)\)</span>。同余的充要条件是</p>
-<p><span class="math display">\[
-g(x)|(f_1(x) - f_2(x))
-\]</span></p>
-<p>同余可以推出其他的一些定理，但不过多赘述。</p>
-<p>如果从同余的角度来看，由于常数多项式除一次多项式的余数就是这个常数多项式本身，所以可以认为Lagrange插值多项式满足这样的同余关系</p>
-<p><span class="math display">\[
-L(x) \equiv y_i \ mod\ x-x_i, i \in [1, k]
-\]</span></p>
-<p>即Lagrange插值多项式与多项式 <span class="math inline">\(y_i\)</span> 关于多项式 <span class="math inline">\(x-x_i\)</span> 同余。也就是说，对于这一类特殊的多项式，是能找到一个多项式，同时满足 <span class="math inline">\(k\)</span> 个同余条件的。那么更一般的，对于 <span class="math inline">\(g_i(x), r_i(x)\)</span> 共 <span class="math inline">\(2k\)</span> 个多项式，其中 <span class="math inline">\(g_i(x)\)</span> 的次数均大于1且两两互素，那么能够找到一个多项式 <span class="math inline">\(f(x)\)</span>，同时满足</p>
-<p><span class="math display">\[
-f(x) \equiv r_i(x) \ mod \ g_i(x), i \in [1, k]
-\]</span></p>
-<p>这样的关系呢？答案是肯定的。</p>
-<h3 id="中国剩余定理">中国剩余定理</h3>
-<p>中国剩余定理包括以下两部分内容</p>
-<ol type="1">
-<li>存在 <span class="math inline">\(f(x)\)</span> 满足 <span class="math inline">\(f(x) \equiv r_i(x) \ mod \ g_i(x), i \in [1, k]\)</span></li>
-<li>若允许 <span class="math inline">\(deg f(x) &gt; deg\prod_{i=1}^kg_i(x)\)</span>，那么满足上述要求的 <span class="math inline">\(f(x)\)</span> 不唯一，而且如果 <span class="math inline">\(f_1(x)\)</span> 与 <span class="math inline">\(f_2(x)\)</span> 均满足上述要求且 <span class="math inline">\(f_1(x)\)</span> 的次数高于 <span class="math inline">\(f_2(x)\)</span>，那么有 <span class="math inline">\(f_1(x) \equiv f_2(x) \ mod \ \prod_{i=1}^kg_i(x)\)</span>；若要求 <span class="math inline">\(deg f(x) &lt; deg \prod_{i=1}^kg_i(x)\)</span>，则满足上述要求的 <span class="math inline">\(f(x)\)</span> 存在且唯一</li>
-</ol>
-<p>构造中国剩余定理对应的多项式与构造Lagrange插值多项式本质上是一样的。对于Lagrange插值多项式，注意到为了保证 <span class="math inline">\(L(x)\)</span> 除以 <span class="math inline">\(x-x_i\)</span> 的余式中有 <span class="math inline">\(y_i\)</span> 这一项， <span class="math inline">\(\displaystyle\frac{P_i(x)}{P_i(x_i)}\)</span> 与 <span class="math inline">\(x-x_i\)</span> 必须是互素的。同理，对于中国剩余定理多项式，假定其中第 <span class="math inline">\(i\)</span> 项元素为 <span class="math inline">\(Q_i(x)r_i(x)\)</span>，那么该项元素的系数 <span class="math inline">\(Q_i(x)\)</span> 也应该与 <span class="math inline">\(g_i(x)\)</span> 互素。为此，<span class="math inline">\(Q_i(x)\)</span> 中应当与Lagrange插值多项式的 <span class="math inline">\(\displaystyle \prod_{j=1, j\neq i}^kx-x_i\)</span> 类似的，含有 <span class="math inline">\(\displaystyle\prod_{j=1, j\neq i}^kg_j(x)\)</span> 元素。</p>
-<p>所以，可以记</p>
-<p><span class="math display">\[
-q_i(x) = \prod_{j=1, j\neq i}^k g_j(x)
-\]</span></p>
-<p>由于中国剩余定理中限定了 <span class="math inline">\(g_i(x)\)</span> 之间必须两两互素，因此 <span class="math inline">\(q_i(x)\)</span> 与 <span class="math inline">\(g_i(x)\)</span> 也是互素的。那么，可以将其表示为 <span class="math inline">\(1\)</span> 的线性组合</p>
-<p><span class="math display">\[
-u(x)q_i(x) + v(x)g_i(x) = 1
-\]</span></p>
-<p>那么 <span class="math inline">\(u(x)q_i(x) = 1 - v(x)g_i(x) \equiv 1 \ mod \  g_i(x)\)</span>。令 <span class="math inline">\(Q_i(x) = u(x)q_i(x)\)</span>，可以得到</p>
-<p><span class="math display">\[
-f(x) = \sum_{i=1}^kQ_i(x)r_i(x)
-\]</span></p>
-<p>这里直接令 <span class="math inline">\(Q_i(x) = q_i(x)\)</span> 也可以得到符合要求的 <span class="math inline">\(f(x)\)</span>，令 <span class="math inline">\(Q_i(x) = u(x)q_i(x)\)</span> 的作用是为了说明 <span class="math inline">\(f(x)\)</span> 在不限定次数的情况下不唯一。</p>
-<p>中国剩余定理的实质是，利用余式和除式条件，建立约束条件，求出满足约束条件的多项式。</p>
-<h3 id="余式定理lagrange插值多项式和中国剩余定理的综合应用">余式定理、Lagrange插值多项式和中国剩余定理的综合应用</h3>
-<p>下面的例子展示了如何综合应用余式定理、Lagrange插值多项式以及中国剩余定理，进行问题的求解。</p>
-<p>例题：对于 <span class="math inline">\(f(x)=x^{20}\)</span>，求关于 <span class="math inline">\((x-2)(x-3)\)</span> 的余式。</p>
-<p>首先，利用余式定理，可以得到</p>
-<p><span class="math display">\[
-\begin{cases}
-    f(x) \equiv f(2) \ mod \ (x-2)\\
-    f(x) \equiv f(3) \ mod \ (x-3)
-\end{cases}
-\]</span></p>
-<p>即</p>
-<p><span class="math display">\[
-\begin{cases}
-    f(x) \equiv 2^{20} \ mod \ (x-2)\\
-    f(x) \equiv 3^{20} \ mod \ (x-3)
-\end{cases}
-\]</span></p>
-<p>根据中国剩余定理，可以构造 <span class="math inline">\(\tilde f(x)\)</span>，满足</p>
-<p><span class="math display">\[
-f(x) \equiv \tilde f(x) \ mod \ (x-2)(x-3)
-\]</span></p>
-<p>记 <span class="math inline">\(g_1(x) = x-2, g_2(x) = x-3, r_1(x) = 2^{20}, r_2(x) = 3^{20}\)</span>，那么 <span class="math inline">\(q_1(x) = x-3, q_2(x) = x-2\)</span>。</p>
-<p>由中国剩余定理和Lagrange插值多项式，<span class="math inline">\(\tilde f(x)\)</span> 构造如下</p>
-<p><span class="math display">\[
-\tilde f(x) = \sum_{i=1}^2 Q_i(x)r_i(x)=\frac{x-3}{2-3}2^{20}+\frac{x-2}{3-2}3^{20}= (3^{20}-2^{20})x+(3 \cdot 2^{20} - 2 \cdot 3^{20})
-\]</span></p>
-<p>这里应用Lagrange插值多项式主要是规避 <span class="math inline">\(u(x)q_i(x)+v(x)g_i(x)=1\)</span> 的计算。实际上也可以手动去计算，如下</p>
-<p><span class="math display">\[
-\begin{cases}
-    u_1(x)q_1(x) + v_1(x)g_1(x) = 1\\
-    u_2(x)q_2(x) + v_2(x)g_2(x) = 1
-\end{cases}
-\]</span></p>
-<p>将 <span class="math inline">\(q_i(x), g_i(x)\)</span> 代入，有</p>
-<p><span class="math display">\[
-\begin{cases}
-    u_1(x)(x-3)+v_1(x)(x-2)=1\\
-    u_2(x)(x-2) + v_2(x)(x-3) = 1
-\end{cases}
-\]</span></p>
-<p>可以得到一组解</p>
-<p><span class="math display">\[
-\begin{cases}
-    u_1(x) = -1, \ v_1(x) = 1\\
-    u_2(x)= 1, \ v_2(x) = -1
-\end{cases}
-\]</span></p>
-<p>那么 <span class="math inline">\(Q_1(x) = u_1(x) q_1(x) = -(x-3), Q_2(x) = u_2(x)q_2(x) = x-2\)</span>，结果和上面用Lagrange插值多项式构造的结果是一致的。如果 <span class="math inline">\(r_i(x)\)</span> 不是常数项或 <span class="math inline">\(g_i(x)\)</span> 不是一次多项式，那么Lagrange插值多项式就无法使用了，必须按照上面的步骤来。</p>
-<h2 id="因式分解与不可约多项式">因式分解与不可约多项式</h2>
-<h3 id="不可约多项式">不可约多项式</h3>
-<p>对于 <span class="math inline">\(F[x]\)</span> 上的非常值多项式 <span class="math inline">\(p(x)\)</span>，若其因式全体恰为平凡因式，那么称 <span class="math inline">\(p(x)\)</span> 是 <span class="math inline">\(F[x]\)</span> 上的<strong>不可约多项式</strong>；否则，<span class="math inline">\(p(x)\)</span> 是 <span class="math inline">\(F[x]\)</span> 上的可约多项式。</p>
-<p>按照定义，一次多项式均为不可约多项式。注意，多项式是否可约与其数域有密切联系，例如 <span class="math inline">\(x^2+1\)</span> 在实数域上是不可约多项式，在复数域上就是可约多项式了。</p>
-<p>不可约多项式在多项式中的地位就类似于素数在整数中的地位，也具有一系列特殊性质。</p>
-<h4 id="不可约多项式的性质">不可约多项式的性质</h4>
-<ol type="1">
-<li>不可约多项式 <span class="math inline">\(p(x)\)</span> 和数域中任一多项式 <span class="math inline">\(f(x)\)</span> 只可能存在两种关系，要么 <span class="math inline">\(p(x)\)</span> 是 <span class="math inline">\(f(x)\)</span> 的因式，要么 <span class="math inline">\(p(x)\)</span> 和 <span class="math inline">\(f(x)\)</span> 互素</li>
-<li>若不可约多项式 <span class="math inline">\(p(x)\)</span> 和多项式 <span class="math inline">\(f(x), g(x)\)</span> 之间满足 <span class="math inline">\(p(x)|f(x)g(x)\)</span>，那么有 <span class="math inline">\(p(x)|f(x)\)</span> 或 <span class="math inline">\(p(x)|g(x)\)</span> 之中至少一项成立</li>
-<li>若不可约多项式 <span class="math inline">\(p(x)\)</span> 和 <span class="math inline">\(n\)</span> 个多项式 <span class="math inline">\(f_i(x)\)</span> 之间满足 <span class="math inline">\(p(x)|\prod_if_i(x)\)</span>，则至少有 <span class="math inline">\(p(x)|f_i(x)\)</span> 之中的一项成立</li>
-</ol>
-<h4 id="不可约多项式的判定条件">不可约多项式的判定条件</h4>
-<p>在复数域上，一个多项式不可约的充要条件是该多项式为一次多项式，这可以由<strong>代数学基本定理</strong>推得：任意一个n次复数多项式恰有n个根。</p>
-<p>在实数域上，情况会稍微复杂一些，一个多项式不可约的充要条件是满足以下两个条件的其中一个：</p>
-<ol type="1">
-<li>多项式为一次实数多项式</li>
-<li>多项式是无实根的二次实数多项式</li>
-</ol>
-<h3 id="因式分解的唯一性">因式分解的唯一性</h3>
-<p>对于任一 <span class="math inline">\(f(x) \in F[x]\)</span>，都可以分解为有限个不可约多项式的乘积，而且这个分解在不考虑非0常数多项式因子的时候是唯一的。可以将所有不可约多项式因式的最高次项系数提取出来，然后将相同的不可约因式用幂次表示，可以将数域上的任一多项式表示为</p>
-<p><span class="math display">\[
-f(x) = a\prod_i p_i^{\alpha_i}(x)
-\]</span></p>
-<p>这样的表达式称为多项式 <span class="math inline">\(f(x)\)</span> 在数域 <span class="math inline">\(F[x]\)</span> 上的<strong>标准分解式</strong>。显然，如果两个多项式的标准分解式已知，那么很容易直接写出这两个多项式的最大公因式。</p>
-<h4 id="复数多项式的因式分解定理">复数多项式的因式分解定理</h4>
-<p>根据复数多项式因式分解的充要条件，任一复数多项式可以分解为以下形式</p>
-<p><span class="math display">\[
-f(x) = a\prod_i (x-r_i)^{\alpha_i}
-\]</span></p>
-<h4 id="实数多项式的因式分解定理">实数多项式的因式分解定理</h4>
-<p>实数多项式的因式分解和复数多项式是类似的，区别在于实数多项式还可能分解出无实根的二次多项式因式</p>
-<p><span class="math display">\[
-f(x) = a \prod_i (x-r_i)^{\alpha_i} \prod_j (x^2 + q_jx+p_j)^{\alpha_j}
-\]</span></p>
-<h3 id="因式分解是困难的">因式分解是困难的</h3>
-<p>因式分解定理只是证明了多项式可以分解为标准分解式，但是并没有给出具体的分解方法。事实上，高次实数、复数多项式基本上是无法进行分解的。但至少，实数、复数多项式是否可约是很好判断的，而对于有理数多项式而言，判断可约也是困难的。</p>
-<h3 id="eisenstein判别法">Eisenstein判别法</h3>
-<p>Eisenstein给出了一种对于有理数多项式的充分但不一定是必要的判别方法。假如一个有理数多项式能够通过提取系数，表示为一个有理数与一个整数多项式之积，那么如果存在一个素数，满足</p>
-<ol type="1">
-<li>该素数无法整除整数多项式最高次项系数，且该素数的平方无法整数整数多项式常数项次数</li>
-<li>该素数可以整除除了整数多项式最高次项和常数项系数以外的所有项系数</li>
-</ol>
-<p>那么原有理数多项式就是可约的。</p>
-<h2 id="多项式的导数">多项式的导数</h2>
-<p>多项式的求导很容易，下面主要讨论多项式导数的两个重要用途。</p>
-<h3 id="判断多项式是否有重根">判断多项式是否有重根</h3>
-<p>通过判断多项式与其导数多项式是否互素，可以判断多项式是否在复数域上有重根。多项式 <span class="math inline">\(f(x)\)</span> 在复数域上没有重根的充要条件是 <span class="math inline">\(gcd(f(x), f&#39;(x)) = 1\)</span>，即 <span class="math inline">\(f(x)\)</span> 与 <span class="math inline">\(f&#39;(x)\)</span> 互素。</p>
-<h3 id="计算多项式关于高次因子的余式">计算多项式关于高次因子的余式</h3>
-<p>首先，对于一个连续函数，我们知道可以用泰勒公式对其进行无穷级数展开</p>
-<p><span class="math display">\[
-f(x) = \sum_{i=1}^{\infty}\frac{f^{(i)}(x_0)}{i!}(x-x_0)^{i}
-\]</span></p>
-<p>对于一个 <span class="math inline">\(n\)</span> 次多项式来说，可以用截止第 <span class="math inline">\(n\)</span> 项的泰勒级数来表示</p>
-<p><span class="math display">\[
-f_n(x) = \sum_{i=1}^n\frac{f_n^{(i)}(x_0)}{i!}(x-x_0)^i
-\]</span></p>
-<p>根据这个级数展开，很容易得到</p>
-<p><span class="math display">\[
-f_n(x) \equiv \sum_{i=1}^{m-1}\frac{f_n^{(i)}(x_0)}{i!}(x-x_0)^i \ mod \ (x-x_0)^m
-\]</span></p>
-<h2 id="零化多项式">零化多项式</h2>
-<p>下面用一个例子来引出零化多项式。</p>
-<p>假如我们想要求出 <span class="math inline">\(f(x) = 2x^3 - x^2 - 5x + 4\)</span> 在 <span class="math inline">\(x=\sqrt{2}+1\)</span> 时的值，可以通过代入 <span class="math inline">\(x\)</span> 的值的方式进行求解，但是当多项式次数很高时，计算量非常大。由于已知 <span class="math inline">\(x=\sqrt{2}+1\)</span>，那么有 <span class="math inline">\((x-1)^2=2\)</span>，即 <span class="math inline">\(x^2 -2x-1=0\)</span>。那么我们可以用 <span class="math inline">\(x^2 -2x-1=0\)</span> 去除 <span class="math inline">\(f(x)\)</span>，然后得到一个次数较低的余式，将 <span class="math inline">\(x=\sqrt{2}+1\)</span> 代入这个次数较低的余式，得到的结果和直接代入原多项式是一致的，因为因式 <span class="math inline">\(x^2-2x-1\)</span> 一定等于0，从而实现计算量的降低。</p>
-<p>在代数上，如果常数 <span class="math inline">\(c\)</span> 是某一多项式的根，那么称 <span class="math inline">\(f(x)\)</span> 为 <span class="math inline">\(c\)</span> 的一个<strong>零化多项式</strong>。注意，不是所有常数都存在零化多项式的，有零化多项式的常数称为<strong>代数数</strong>，没有零化多项式的常数称为<strong>超越数</strong>，例如 <span class="math inline">\(e, \pi\)</span> 等。</p>
-<p>关于零化多项式，还有一个定理：某个常数 <span class="math inline">\(c\)</span> 的两个零化多项式的最大公因式也是 <span class="math inline">\(c\)</span> 的零化多项式。另外，一个常数 <span class="math inline">\(c\)</span> 如果有零化多项式，那么这个零化多项式中一定存在一类次数最小的多项式，称为常数 <span class="math inline">\(c\)</span> 的<strong>最小多项式</strong>。</p>
-]]></content>
-      <categories>
-        <category>University</category>
-      </categories>
-      <tags>
-        <tag>Mathematics</tag>
-        <tag>Matrix Analysis</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数值分析笔记-线性方程组的迭代解法</title>
     <url>/2022/11/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84%E8%BF%AD%E4%BB%A3%E8%A7%A3%E6%B3%95/</url>
     <content><![CDATA[<h2 id="范数和条件数">范数和条件数</h2>
@@ -4266,6 +4113,318 @@ L^{-1}AL^{-T}\boldsymbol{y} = L^{-1}\boldsymbol{b}, \ L^{-T}\boldsymbol{y} = \bo
       <tags>
         <tag>Numerical Analysis</tag>
         <tag>Mathematics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>矩阵分析笔记-多项式</title>
+    <url>/2022/11/26/%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E5%A4%9A%E9%A1%B9%E5%BC%8F/</url>
+    <content><![CDATA[<p>本章节介绍多项式的一些基础知识，为后续章节中的矩阵分析做基础知识铺垫。</p>
+<span id="more"></span>
+<h2 id="数域">数域</h2>
+<h3 id="数域的概念">数域的概念</h3>
+<p>数域是对四则运算封闭的数集。所谓对四则运算封闭，指的是从数集中随意取出两个数，进行任意<strong>合法</strong>的四则运算以后，得到的结果仍然属于这个数集。注意，这里强调了合法的四则运算，形如除以0这种未定义的运算不计入在内，所以不能以某些数集中存在0元素，而通过不能除以0来判断这个数集不是数域。</p>
+<p>常见的数域有实数集、复数集，但整数集就不是一个数域，因为两个整数做除法可能会得到小数，而小数不属于整数集。</p>
+<h3 id="广义四则运算">广义四则运算</h3>
+<p>前面提到的四则运算仍然是普通的加减乘除，但实际上一个数集如果对广义的四则运算封闭，那么仍然可以称其为数域。</p>
+<p>所谓广义的四则运算，指的是我们可以在一个数集上自定义加法和乘法，只要自定义的加法和乘法满足交换律、结合律、分配律即可，随后只要定义新的加法和乘法的逆运算，即可视为自定义的减法和除法。例如对于素数集，可以定义在加法和乘法后取余数，作为新的加法和乘法，并且这个新的加法和乘法都是存在逆运算的，因此素数集也可以认为是一种数域。</p>
+<p>广义四则运算以及相应的数域属于扩展内容，和主线关系不大。本教材中所提的数域，主要就是有理数、实数和复数域。下面用 <span class="math inline">\(F\)</span> 来表示有理数、实数和复数域，表示下面所提到的内容对这三个数域都成立。</p>
+<h2 id="一元多项式">一元多项式</h2>
+<h3 id="一元多项式的定义">一元多项式的定义</h3>
+<p>若有整数 <span class="math inline">\(n&gt;0\)</span>，<span class="math inline">\(a_0, a_1, \cdots, a_n \in F\)</span> 且 <span class="math inline">\(a_n \neq 0\)</span>，<span class="math inline">\(x\)</span> 是一个<em>文字符号</em>，那么称</p>
+<p><span class="math display">\[
+f(x) = \sum_{k=0}^n a_k x^k
+\]</span></p>
+<p>为数域 <span class="math inline">\(F\)</span> 上的一个一元多项式，<span class="math inline">\(n\)</span> 称为这个一元多项式的次数，也记作 <span class="math inline">\(deg f(x)\)</span>。<span class="math inline">\(a_kx^k\)</span> 称为一元多项式的 <span class="math inline">\(k\)</span> 次项，<span class="math inline">\(a_k\)</span> 称为这个一元多项式的 <span class="math inline">\(k\)</span> 次项系数，<span class="math inline">\(a_0\)</span> 称为0次项或常数项。</p>
+<p><span class="math inline">\(f(x)=0\)</span> 也是一个一元多项式，不过比较特殊，一般称其为<strong>零多项式</strong>，其次数定义为 <span class="math inline">\(-\infty\)</span>。这个定义在后续的应用中会带来很大的方便。</p>
+<p>数域 <span class="math inline">\(F\)</span> 上的一元多项式全体，用 <span class="math inline">\(F[x]\)</span> 表示。</p>
+<h3 id="一元多项式的运算">一元多项式的运算</h3>
+<h4 id="一元多项式相等">一元多项式相等</h4>
+<p>若两个一元多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 除了系数为0的项以外，其他同次项系数全部相等，则称这两个一元多项式相等。</p>
+<h4 id="一元多项式加法">一元多项式加法</h4>
+<p>一元多项式的加法很简单，假定有一个 <span class="math inline">\(n\)</span> 次的一元多项式 <span class="math inline">\(f(x)\)</span> 和一个 <span class="math inline">\(m\)</span> 次的一元多项式 <span class="math inline">\(g(x)\)</span>，并且 <span class="math inline">\(n\geq m\)</span>，可以将这两个一元多项式分别表示为</p>
+<p><span class="math display">\[
+\begin{aligned}
+    f(x) &amp;= \sum_{k=0}^n a_k x^k \\
+    g(x) &amp;= \sum_{k=0}^n b_k x^k, \ b_i = 0 \ (n &gt; i &gt; m)
+\end{aligned}
+\]</span></p>
+<p>那么，两个一元多项式的加法就可以定义为</p>
+<p><span class="math display">\[
+f(x) + g(x) = \sum_{k=0}^n (a_k + b_k)x^k
+\]</span></p>
+<p>显然，一元多项式的减法就是一元多项式加法的逆运算</p>
+<p><span class="math display">\[
+f(x) - g(x) = \sum_{k=0}^n (a_k - b_k)x^k
+\]</span></p>
+<p>一元多项式的加减法对多项式次数的影响是</p>
+<p><span class="math display">\[
+deg[f(x) \pm g(x)] \leq max(m, n)
+\]</span></p>
+<h4 id="一元多项式乘法">一元多项式乘法</h4>
+<p>一元多项式的乘法也很简单，无非就是两个一元多项式的很多个项相乘后合并同类项，然后再相加，可以表示为</p>
+<p><span class="math display">\[
+\begin{aligned}
+    f(x)g(x) &amp;= \sum_{k=0}^{n+m} c_k x^k\\
+    c_k &amp;= \sum_{j=0}^k a_jb_{k-j}
+\end{aligned}
+\]</span></p>
+<p>一元多项式乘法对多项式次数的影响是</p>
+<p><span class="math display">\[
+deg[f(x)g(x)] = m+n
+\]</span></p>
+<p>从这里可以发现，将零多项式的次数定义为 <span class="math inline">\(-\infty\)</span> 很有好处，当 <span class="math inline">\(f(x)=0\)</span> 或 <span class="math inline">\(g(x)=0\)</span> 时，上面的这个多项式次数影响公式仍然成立，而不需要为零多项式进行额外说明。</p>
+<h4 id="一元多项式带余除法">一元多项式带余除法</h4>
+<p>一元多项式不能直接定义乘法的逆运算，但是可以像整数一样定义带余除法，定义如下：对于一元多项式 <span class="math inline">\(f(x), g(x) \in F[x]\)</span>，存在唯一的一组 <span class="math inline">\(q(x), r(x) \in F[x]\)</span>，使得 <span class="math inline">\(f(x) = q(x)g(x) + r(x)\)</span> 成立。<span class="math inline">\(q(x), r(x)\)</span> 分别称为 <span class="math inline">\(f(x)\)</span> 除以 <span class="math inline">\(g(x)\)</span> 所得的商式(quotient)和余式(remainder)。</p>
+<p>其中，必然存在 <span class="math inline">\(deg\ r(x) &lt; deg\ g(x)\)</span>。</p>
+<p>一元多项式的带余除法和整数的带余除法计算基本一致。在计算时，先找被除式的最高次项与除式最高次项的次数差，并对相应的系数做除法，得到商式的最高次项及其系数，然后用这个最高次项乘以除式，并用被除式减去这个乘法结果；随后，再将上述一元多项式减法结果作为新的被除式，重复上述步骤，直到被除式的次数小于除式的次数，那么最后剩下的减法结果就是余式，商式的项也就不再继续更新。本质上，这就是一元多项式的长除法，由于写长除法的LaTeX公式非常麻烦，因此意会即可，反正我也就是用自己的话描述一遍以加深记忆，不会真有人回来看这一段描述文字复习长除法吧！</p>
+<p>需要注意，一元多项式的系数必须属于某一数域，否则多项式带余除法可能会不成立。</p>
+<h4 id="一元多项式整除">一元多项式整除</h4>
+<p>在一元多项式的带余除法中，可能出现余式恰好为0的情况。这种情况称为一元多项式整除，此时被除式称为除式的<strong>倍式</strong>，除式称为被除式的<strong>因式</strong>，和整数整除的倍数、因数概念是一致的。假如 <span class="math inline">\(f(x)\)</span> 可以被 <span class="math inline">\(g(x)\)</span> 整除，那么可以写作 <span class="math inline">\(g(x) | f(x)\)</span>。</p>
+<p>对于任一一元多项式 <span class="math inline">\(f(x)\)</span>，可以发现这个多项式的任意非零倍数以及常数多项式总是能够整除它本身，因此称常数多项式和 <span class="math inline">\(cf(x)\)</span> 为 <span class="math inline">\(f(x)\)</span> 的<strong>平凡因式</strong>；反过来，<span class="math inline">\(f(x)\)</span> 总是能够整除 <span class="math inline">\(cf(x)\)</span> 以及零多项式，因此零多项式和 <span class="math inline">\(cf(x)\)</span> 是 <span class="math inline">\(f(x)\)</span> 的<strong>平凡倍式</strong>。可以看出，<span class="math inline">\(cf(x)\)</span> 既是 <span class="math inline">\(f(x)\)</span> 的平凡因式，又是 <span class="math inline">\(f(x)\)</span> 的平凡倍式。</p>
+<p>关于整除，有以下比较tricky的性质，可以稍微记一下</p>
+<ol type="1">
+<li>如果 <span class="math inline">\(f(x)|g(x)\)</span> 且 <span class="math inline">\(g(x)|f(x)\)</span>，那么 <span class="math inline">\(f(x) = cg(x)\)</span>，<span class="math inline">\(c\)</span> 为非零常数</li>
+<li>整除带有传递性，若 <span class="math inline">\(f(x)|g(x), g(x)|h(x)\)</span>，那么必有 <span class="math inline">\(f(x)|h(x)\)</span></li>
+<li>若 <span class="math inline">\(f(x)|g_j(x), u_j(x) \in F[x], j=1, 2\)</span>，则 <span class="math inline">\(f(x) | u_1(x)g_1(x) + u_2(x) g_2(x)\)</span></li>
+</ol>
+<h4 id="余式定理">余式定理</h4>
+<p>如果除式为一次一元多项式，例如 <span class="math inline">\(g(x)=x-c\)</span>，那么用 <span class="math inline">\(g(x)\)</span> 去除 <span class="math inline">\(f(x)\)</span> 时，余式满足 <span class="math inline">\(r(x)=f(c)\)</span>，证明如下:</p>
+<p>由于 <span class="math inline">\(g(x)\)</span> 除 <span class="math inline">\(f(x)\)</span> 可以表示为 <span class="math inline">\(f(x)=q(x)g(x) + r(x)\)</span>，那么将 <span class="math inline">\(g(x) = x-c\)</span> 代入，可以得到</p>
+<p><span class="math display">\[
+f(x) = (x-c)q(x) + r(x)
+\]</span></p>
+<p>令 <span class="math inline">\(x=c\)</span>，有</p>
+<p><span class="math display">\[
+f(c) = r(c)
+\]</span></p>
+<p>由于除式 <span class="math inline">\(g(x)=x-c\)</span>，次数为一次，那么商式的次数肯定是被除式的次数减一次，这意味着余式 <span class="math inline">\(r(x)\)</span> 是常数多项式，所以余式就是一个常数，压根和 <span class="math inline">\(x\)</span> 没关系，所以 <span class="math inline">\(r(x)=r(c)\)</span>，那么很自然有 <span class="math inline">\(r(x)=f(c)\)</span> 成立。</p>
+<p>从余式定理还可推出，如果 <span class="math inline">\((x-c)|f(x)\)</span> 成立，那么显然，<span class="math inline">\(f(c)=0\)</span>，即 <span class="math inline">\(x = c\)</span> 是多项式 <span class="math inline">\(f(x)\)</span> 的零点。</p>
+<h3 id="最大公因式与最小公倍式">最大公因式与最小公倍式</h3>
+<h4 id="最大公因式">最大公因式</h4>
+<p>和两个整数有公因数一样，多项式也有公因式的概念。假如对于 <span class="math inline">\(f(x), g(x) \in F[x]\)</span>，存在一个多项式 <span class="math inline">\(d(x) \in F[x]\)</span>，满足 <span class="math inline">\(d(x)|f(x)\)</span> 且 <span class="math inline">\(d(x)|g(x)\)</span>，那么称 <span class="math inline">\(d(x)\)</span> 为多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的公因式(Common Divisor)。</p>
+<p>对于多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的某一公因式 <span class="math inline">\(d(x)\)</span>，若 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的任一公因式 <span class="math inline">\(d_i(x)\)</span> 同时也是 <span class="math inline">\(d(x)\)</span> 的因式，那么可以认为 <span class="math inline">\(d(x)\)</span> 是上述两个多项式的其中一个最大公因式(Greatest Common Divisor, gcd)。</p>
+<p>为了更好地介绍最大公因式，下面先说明一个与辗转相除法相关的引理。</p>
+<h5 id="被除式除式和余式的公因式关系">被除式、除式和余式的公因式关系</h5>
+<p>对于 <span class="math inline">\(f(x), g(x), q(x), r(x) \in F[x]\)</span>，若这些多项式满足多项式带余除法关系</p>
+<p><span class="math display">\[
+f(x) = q(x)g(x) + r(x)
+\]</span></p>
+<p>那么，<span class="math inline">\(f(x), g(x)\)</span> 的公因式全体恰为 <span class="math inline">\(g(x), r(x)\)</span> 的公因式全体。</p>
+<p>这条定理的证明很简单，从两个方面考虑：</p>
+<ol type="1">
+<li>若 <span class="math inline">\(\varphi(x)\)</span> 是 <span class="math inline">\(f(x), g(x)\)</span> 的公因式，即 <span class="math inline">\(\varphi(x)|f(x), \varphi(x)|g(x)\)</span>，由于 <span class="math inline">\(r(x) = f(x) - q(x)g(x)\)</span>，显然 <span class="math inline">\(\varphi(x)|r(x)\)</span>，即 <span class="math inline">\(\varphi(x)\)</span> 也是 <span class="math inline">\(r(x)\)</span> 的因式</li>
+<li>若 <span class="math inline">\(\varphi(x)\)</span> 是 <span class="math inline">\(g(x), r(x)\)</span> 的公因式，即 <span class="math inline">\(\varphi(x)|g(x), \varphi(x)|r(x)\)</span>，由于 <span class="math inline">\(f(x) = q(x)g(x) + r(x)\)</span>，显然 <span class="math inline">\(\varphi(x)|f(x)\)</span>，即 <span class="math inline">\(\varphi(x)\)</span> 也是 <span class="math inline">\(f(x)\)</span> 的因式</li>
+</ol>
+<p>上面这个被除式、除式和余式的公因式关系是辗转相除法获取两个多项式最大公因式的理论基础，需要牢记。</p>
+<h5 id="最大公因式的存在性以及辗转相除法">最大公因式的存在性以及辗转相除法</h5>
+<p>对于 <span class="math inline">\(f(x), g(x) \in F[x]\)</span>，这两个多项式的最大公因式一定存在。下面进行最大公因式存在性的证明。</p>
+<p>前面提到，被除式 <span class="math inline">\(f(x)\)</span> 和除式 <span class="math inline">\(g(x)\)</span> 的公因式全体与除式 <span class="math inline">\(g(x)\)</span> 和余式 <span class="math inline">\(r(x)\)</span> 的公因式全体是完全一致的，那么再用余式 <span class="math inline">\(r(x)\)</span> 去除原来的除式 <span class="math inline">\(g(x)\)</span>，如果无法整除的话又会产生新的余式 <span class="math inline">\(r_1(x)\)</span>，新的余式 <span class="math inline">\(r_1(x)\)</span> 和新的除式 <span class="math inline">\(r(x)\)</span> 的公因式全体和最原始的 <span class="math inline">\(f(x), g(x)\)</span> 的公因式全体仍然完全一致。这种关系可以概括为<em>公因式的传递关系</em>。</p>
+<p>由于多项式带余除法一定会导致余式次数小于除式次数，那么经过有限次多项式带余除法后，一定能将余式的次数降至 <span class="math inline">\(-\infty\)</span>，也就是余式为0多项式。这意味着，在反复进行上述操作后，经过有限次迭代，一定能找到一组除式 <span class="math inline">\(r_{s-1}(x)\)</span> 和余式 <span class="math inline">\(r_s(x)\)</span>，满足 <span class="math inline">\(r_s(x)|r_{s-1}(x)\)</span>，此时 <span class="math inline">\(r_{s}(x)\)</span> 与 <span class="math inline">\(r_{s-1}(x)\)</span> 的最大公因式恰为 <span class="math inline">\(r_{s}(x)\)</span> 本身，那么根据公因式的传递关系，<span class="math inline">\(r_{s}(x)\)</span> 恰为最原始的被除式和除式，即 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的最大公因式。上面这样的反复用余式去除除式，以获取原始被除式和除式的最大公因式的方法，称为<strong>辗转相除法</strong>。</p>
+<p>不过需要注意，多项式的最大公因式不是唯一的，例如 <span class="math inline">\(d(x)\)</span> 是 <span class="math inline">\(f(x), g(x)\)</span> 的最大公因式，<span class="math inline">\(cd(x)\)</span> 也是 <span class="math inline">\(f(x), g(x)\)</span> 的最大公因式，其中 <span class="math inline">\(c\)</span> 是一个非零常数。不过一般来说，我们会用这一堆最大公因式中最高次系数为1的那个多项式作为典型的最大公因式，这个最大公因式记作 <span class="math inline">\(\displaystyle gcd(f(x), g(x))\)</span>。</p>
+<p>多项式的辗转相除法和整数求最大公因数的辗转相除法在本质上是完全相同的。</p>
+<h5 id="最大公因式的线性表示">最大公因式的线性表示</h5>
+<p>两个多项式的最大公因式可以表示为这两个多项式的线性组合。若有 <span class="math inline">\(f(x), g(x), r_s(x) \in F[x]\)</span>，其中 <span class="math inline">\(r_s(x) = \displaystyle gcd(f(x), g(x))\)</span>，那么存在 <span class="math inline">\(u(x), v(x) \in F[x]\)</span>，使得</p>
+<p><span class="math display">\[
+r_s(x) = u(x)f(x) + v(x)g(x)
+\]</span></p>
+<p>上式成立的理由其实很简单。由 <span class="math inline">\(f(x) = q(x)g(x) + r(x)\)</span> 可以倒推 <span class="math inline">\(r(x) = f(x) - q(x)g(x)\)</span>，即余式可以表示为被除式和除式的线性组合。而根据辗转相除法，两个多项式的最大公因式实际上就是大量的被除式和除式的线性组合嵌套计算而来的，因此最大公因式可以通过一系列线性嵌套，最终表示为原始被除式和除式的线性组合。</p>
+<h5 id="多项式互素">多项式互素</h5>
+<p>若 <span class="math inline">\(f(x), g(x) \in F[x]\)</span> 满足 <span class="math inline">\(\displaystyle gcd(f(x), g(x)) = 1\)</span>，则称多项式 <span class="math inline">\(f(x)\)</span> 与 <span class="math inline">\(g(x)\)</span> 互素。</p>
+<p>多项式互素的充要条件是存在 <span class="math inline">\(u(x), v(x) \in F[x]\)</span>，满足</p>
+<p><span class="math display">\[
+u(x)f(x) + v(x)g(x) = 1
+\]</span></p>
+<p>必要性可以直接从最大公因式的线性表示得到；至于充分性，假如 <span class="math inline">\(\varphi(x)\)</span> 是多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的最大公因式，且有上述线性组合等式成立，那么因为 <span class="math inline">\(\varphi(x)|f(x)\)</span> 且 <span class="math inline">\(\varphi(x)|g(x)\)</span>，所以显然 <span class="math inline">\(\varphi(x)|u(x)f(x) + v(x)g(x)\)</span>，即 <span class="math inline">\(\varphi(x)|1\)</span>，这意味着 <span class="math inline">\(\varphi(x)=1\)</span>，即 <span class="math inline">\(\displaystyle gcd(f(x), g(x)) = 1\)</span>，多项式 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 互素。</p>
+<p>由多项式互素可以得到以下推论：</p>
+<ol type="1">
+<li>若 <span class="math inline">\(d_1(x), d_2(x)\)</span> 是多项式 <span class="math inline">\(f(x)\)</span> 的两个互素因式，那么 <span class="math inline">\(d_1(x)d_2(x)|f(x)\)</span></li>
+<li>若多项式 <span class="math inline">\(f(x), g(x)\)</span> 互素，且 <span class="math inline">\(f(x)|g(x)h(x)\)</span>，那么 <span class="math inline">\(f(x)|h(x)\)</span></li>
+</ol>
+<h5 id="多个多项式的最大公因式求解">多个多项式的最大公因式求解</h5>
+<p>多个多项式的最大公因式求解问题可以分解为其中一个多项式与其余多项式的最大公因式之间的最大公因式求解问题，也就是可以转换为最大公因式嵌套求解问题。例如，要求n个多项式的最大公因式，那么先取其中的两个多项式求最大公因式，然后用求出的最大公因式替换掉这两个多项式，使其变为n-1个多项式求最大公因式的问题，以此类推。</p>
+<h4 id="最小公倍式">最小公倍式</h4>
+<p>若有 <span class="math inline">\(f(x), g(x), m(x) \in F[x]\)</span>，满足 <span class="math inline">\(f(x)|m(x), g(x)|m(x)\)</span>，则称 <span class="math inline">\(m(x)\)</span> 是多项式 <span class="math inline">\(f(x), g(x)\)</span> 的一个公倍式(Common Multiple)。若对于这两个多项式的任意公倍式 <span class="math inline">\(m_i(x)\)</span>，都有 <span class="math inline">\(m(x)|m_i(x)\)</span>，则称 <span class="math inline">\(m(x)\)</span> 是 <span class="math inline">\(f(x), g(x)\)</span> 的最小公倍式(Least Common Multiple)。</p>
+<h5 id="最小公倍式的计算">最小公倍式的计算</h5>
+<p>最小公倍式的计算公式如下</p>
+<p><span class="math display">\[
+\frac{f(x)g(x)}{gcd(f(x), g(x))}
+\]</span></p>
+<p>证明过程比较巧妙。记 <span class="math inline">\(d(x) = gcd(f(x), g(x))\)</span>，并做 <span class="math inline">\(f_1(x) = \displaystyle \frac{f(x)}{d(x)}, g_1(x) = \frac{g(x)}{d(x)}\)</span>，显然 <span class="math inline">\(f_1(x)\)</span> 和 <span class="math inline">\(g_1(x)\)</span> 互素。此时有</p>
+<p><span class="math display">\[
+\frac{f(x)g(x)}{gcd(f(x), g(x))} = \frac{f(x)g(x)}{d(x)} = f_1(x)d(x)g_1(x)
+\]</span></p>
+<p>若记 <span class="math inline">\(m(x)\)</span> 为 <span class="math inline">\(f(x)\)</span> 和 <span class="math inline">\(g(x)\)</span> 的任一公倍式，那么需要证明 <span class="math inline">\(f_1(x)d(x)g_1(x)|m(x)\)</span>。</p>
+<p>记 <span class="math inline">\(m(x) = f(x)p(x), m(x) = g(x)q(x)\)</span>，那么可以推出 <span class="math inline">\(\displaystyle \frac{m(x)}{d(x)} = f_1(x)p(x) = g_1(x)q(x)\)</span>，由于 <span class="math inline">\(f_1(x)|f_1(x)p(x)\)</span>，所以 <span class="math inline">\(f_1(x)|g_1(x)q(x)\)</span>。而 <span class="math inline">\(f_1(x)\)</span> 和 <span class="math inline">\(g_1(x)\)</span> 互素，因此 <span class="math inline">\(f_1(x)|q(x)\)</span>。</p>
+<p>由于 <span class="math inline">\(g_1(x)d(x)|g_1(x)d(x)q(x)\)</span>，且 <span class="math inline">\(f_1(x)|q(x)\)</span>，因此 <span class="math inline">\(g_1(x)d(x)f_1(x)|g_1(x)d(x)q(x)\)</span>，即 <span class="math inline">\(g_1(x)d(x)f_1(x)|m(x)\)</span>，证毕。</p>
+<p>和最大公因式一样，最小公倍式也不止一个。简单起见，将最高次系数为1的最小公倍数记为 <span class="math inline">\(lcm(f(x), g(x))\)</span>。</p>
+<h2 id="插值多项式与中国剩余定理">插值多项式与中国剩余定理</h2>
+<h3 id="lagrange插值多项式">Lagrange插值多项式</h3>
+<p>在数值分析中，我们对插值多项式已经做过了比较详细的介绍，下面简单重复一下Lagrange插值多项式的定义。首先重新描述一下多项式插值问题：对于 <span class="math inline">\(x_i, y_i\)</span> 共 <span class="math inline">\(2k\)</span> 个数，找到插值多项式 <span class="math inline">\(f(x)\)</span>，使得 <span class="math inline">\(f(x_i) = y_i\)</span>。Lagrange插值多项式是一种插值多项式的表示方法，其表达式如下</p>
+<p><span class="math display">\[
+L(x) = \sum_{i=1}^k \frac{P_i(x)}{P_i(x_i)}y_i
+\]</span></p>
+<p>上述 <span class="math inline">\(P_i(x) = \displaystyle\sum_{j=1, j\neq i}^k (x-x_j)\)</span>。这个 <span class="math inline">\(P_i(x)\)</span> 的定义非常巧妙，假定 <span class="math inline">\(j \in [1, k]\)</span> 且 <span class="math inline">\(j \neq i\)</span>，那么</p>
+<p><span class="math display">\[
+P_i(x_j) = 0
+\]</span></p>
+<p>所以 <span class="math inline">\(L(x_i) = \displaystyle\frac{P_i(x_i)}{P_i(x_i)}y_i=y_i\)</span>。这样恰好能够满足所有的插值条件。</p>
+<p>Lagrange插值多项式和余数定理有着非常紧密的关系。事实上，从余数定理的角度观察插值条件 <span class="math inline">\(f(x_i) = y_i\)</span>，可以发现 <span class="math inline">\(y_i\)</span> 实际上就是 <span class="math inline">\(f(x)\)</span> 被 <span class="math inline">\(x-x_i\)</span> 所除得到的余数。那么只需构造这样一个多项式，除了 <span class="math inline">\(y_i\)</span> 所在项以外，其他项中均含因式 <span class="math inline">\(x-x_i\)</span>；而 <span class="math inline">\(y_i\)</span> 所在项的系数在 <span class="math inline">\(x=x_i\)</span> 时恰好为1。Lagrange插值多项式完美地满足了上述条件。</p>
+<h4 id="同余">同余</h4>
+<p>若多项式 <span class="math inline">\(f_1(x), f_2(x)\)</span> 被 <span class="math inline">\(g(x)\)</span> 除有相同的余数，称 <span class="math inline">\(f_1(x), f_2(x)\)</span> 关于 <span class="math inline">\(g(x)\)</span> 同余，表示为 <span class="math inline">\(f_1(x) \equiv f_2(x) \ mod \ g(x)\)</span>。同余的充要条件是</p>
+<p><span class="math display">\[
+g(x)|(f_1(x) - f_2(x))
+\]</span></p>
+<p>同余可以推出其他的一些定理，但不过多赘述。</p>
+<p>如果从同余的角度来看，由于常数多项式除一次多项式的余数就是这个常数多项式本身，所以可以认为Lagrange插值多项式满足这样的同余关系</p>
+<p><span class="math display">\[
+L(x) \equiv y_i \ mod\ x-x_i, i \in [1, k]
+\]</span></p>
+<p>即Lagrange插值多项式与多项式 <span class="math inline">\(y_i\)</span> 关于多项式 <span class="math inline">\(x-x_i\)</span> 同余。也就是说，对于这一类特殊的多项式，是能找到一个多项式，同时满足 <span class="math inline">\(k\)</span> 个同余条件的。那么更一般的，对于 <span class="math inline">\(g_i(x), r_i(x)\)</span> 共 <span class="math inline">\(2k\)</span> 个多项式，其中 <span class="math inline">\(g_i(x)\)</span> 的次数均大于1且两两互素，那么能够找到一个多项式 <span class="math inline">\(f(x)\)</span>，同时满足</p>
+<p><span class="math display">\[
+f(x) \equiv r_i(x) \ mod \ g_i(x), i \in [1, k]
+\]</span></p>
+<p>这样的关系呢？答案是肯定的。</p>
+<h3 id="中国剩余定理">中国剩余定理</h3>
+<p>中国剩余定理包括以下两部分内容</p>
+<ol type="1">
+<li>存在 <span class="math inline">\(f(x)\)</span> 满足 <span class="math inline">\(f(x) \equiv r_i(x) \ mod \ g_i(x), i \in [1, k]\)</span></li>
+<li>若允许 <span class="math inline">\(deg f(x) &gt; deg\prod_{i=1}^kg_i(x)\)</span>，那么满足上述要求的 <span class="math inline">\(f(x)\)</span> 不唯一，而且如果 <span class="math inline">\(f_1(x)\)</span> 与 <span class="math inline">\(f_2(x)\)</span> 均满足上述要求且 <span class="math inline">\(f_1(x)\)</span> 的次数高于 <span class="math inline">\(f_2(x)\)</span>，那么有 <span class="math inline">\(f_1(x) \equiv f_2(x) \ mod \ \prod_{i=1}^kg_i(x)\)</span>；若要求 <span class="math inline">\(deg f(x) &lt; deg \prod_{i=1}^kg_i(x)\)</span>，则满足上述要求的 <span class="math inline">\(f(x)\)</span> 存在且唯一</li>
+</ol>
+<p>构造中国剩余定理对应的多项式与构造Lagrange插值多项式本质上是一样的。对于Lagrange插值多项式，注意到为了保证 <span class="math inline">\(L(x)\)</span> 除以 <span class="math inline">\(x-x_i\)</span> 的余式中有 <span class="math inline">\(y_i\)</span> 这一项， <span class="math inline">\(\displaystyle\frac{P_i(x)}{P_i(x_i)}\)</span> 与 <span class="math inline">\(x-x_i\)</span> 必须是互素的。同理，对于中国剩余定理多项式，假定其中第 <span class="math inline">\(i\)</span> 项元素为 <span class="math inline">\(Q_i(x)r_i(x)\)</span>，那么该项元素的系数 <span class="math inline">\(Q_i(x)\)</span> 也应该与 <span class="math inline">\(g_i(x)\)</span> 互素。为此，<span class="math inline">\(Q_i(x)\)</span> 中应当与Lagrange插值多项式的 <span class="math inline">\(\displaystyle \prod_{j=1, j\neq i}^kx-x_i\)</span> 类似的，含有 <span class="math inline">\(\displaystyle\prod_{j=1, j\neq i}^kg_j(x)\)</span> 元素。</p>
+<p>所以，可以记</p>
+<p><span class="math display">\[
+q_i(x) = \prod_{j=1, j\neq i}^k g_j(x)
+\]</span></p>
+<p>由于中国剩余定理中限定了 <span class="math inline">\(g_i(x)\)</span> 之间必须两两互素，因此 <span class="math inline">\(q_i(x)\)</span> 与 <span class="math inline">\(g_i(x)\)</span> 也是互素的。那么，可以将其表示为 <span class="math inline">\(1\)</span> 的线性组合</p>
+<p><span class="math display">\[
+u(x)q_i(x) + v(x)g_i(x) = 1
+\]</span></p>
+<p>那么 <span class="math inline">\(u(x)q_i(x) = 1 - v(x)g_i(x) \equiv 1 \ mod \  g_i(x)\)</span>。令 <span class="math inline">\(Q_i(x) = u(x)q_i(x)\)</span>，可以得到</p>
+<p><span class="math display">\[
+f(x) = \sum_{i=1}^kQ_i(x)r_i(x)
+\]</span></p>
+<p>这里直接令 <span class="math inline">\(Q_i(x) = q_i(x)\)</span> 也可以得到符合要求的 <span class="math inline">\(f(x)\)</span>，令 <span class="math inline">\(Q_i(x) = u(x)q_i(x)\)</span> 的作用是为了说明 <span class="math inline">\(f(x)\)</span> 在不限定次数的情况下不唯一。</p>
+<p>中国剩余定理的实质是，利用余式和除式条件，建立约束条件，求出满足约束条件的多项式。</p>
+<h3 id="余式定理lagrange插值多项式和中国剩余定理的综合应用">余式定理、Lagrange插值多项式和中国剩余定理的综合应用</h3>
+<p>下面的例子展示了如何综合应用余式定理、Lagrange插值多项式以及中国剩余定理，进行问题的求解。</p>
+<p>例题：对于 <span class="math inline">\(f(x)=x^{20}\)</span>，求关于 <span class="math inline">\((x-2)(x-3)\)</span> 的余式。</p>
+<p>首先，利用余式定理，可以得到</p>
+<p><span class="math display">\[
+\begin{cases}
+    f(x) \equiv f(2) \ mod \ (x-2)\\
+    f(x) \equiv f(3) \ mod \ (x-3)
+\end{cases}
+\]</span></p>
+<p>即</p>
+<p><span class="math display">\[
+\begin{cases}
+    f(x) \equiv 2^{20} \ mod \ (x-2)\\
+    f(x) \equiv 3^{20} \ mod \ (x-3)
+\end{cases}
+\]</span></p>
+<p>根据中国剩余定理，可以构造 <span class="math inline">\(\tilde f(x)\)</span>，满足</p>
+<p><span class="math display">\[
+f(x) \equiv \tilde f(x) \ mod \ (x-2)(x-3)
+\]</span></p>
+<p>记 <span class="math inline">\(g_1(x) = x-2, g_2(x) = x-3, r_1(x) = 2^{20}, r_2(x) = 3^{20}\)</span>，那么 <span class="math inline">\(q_1(x) = x-3, q_2(x) = x-2\)</span>。</p>
+<p>由中国剩余定理和Lagrange插值多项式，<span class="math inline">\(\tilde f(x)\)</span> 构造如下</p>
+<p><span class="math display">\[
+\tilde f(x) = \sum_{i=1}^2 Q_i(x)r_i(x)=\frac{x-3}{2-3}2^{20}+\frac{x-2}{3-2}3^{20}= (3^{20}-2^{20})x+(3 \cdot 2^{20} - 2 \cdot 3^{20})
+\]</span></p>
+<p>这里应用Lagrange插值多项式主要是规避 <span class="math inline">\(u(x)q_i(x)+v(x)g_i(x)=1\)</span> 的计算。实际上也可以手动去计算，如下</p>
+<p><span class="math display">\[
+\begin{cases}
+    u_1(x)q_1(x) + v_1(x)g_1(x) = 1\\
+    u_2(x)q_2(x) + v_2(x)g_2(x) = 1
+\end{cases}
+\]</span></p>
+<p>将 <span class="math inline">\(q_i(x), g_i(x)\)</span> 代入，有</p>
+<p><span class="math display">\[
+\begin{cases}
+    u_1(x)(x-3)+v_1(x)(x-2)=1\\
+    u_2(x)(x-2) + v_2(x)(x-3) = 1
+\end{cases}
+\]</span></p>
+<p>可以得到一组解</p>
+<p><span class="math display">\[
+\begin{cases}
+    u_1(x) = -1, \ v_1(x) = 1\\
+    u_2(x)= 1, \ v_2(x) = -1
+\end{cases}
+\]</span></p>
+<p>那么 <span class="math inline">\(Q_1(x) = u_1(x) q_1(x) = -(x-3), Q_2(x) = u_2(x)q_2(x) = x-2\)</span>，结果和上面用Lagrange插值多项式构造的结果是一致的。如果 <span class="math inline">\(r_i(x)\)</span> 不是常数项或 <span class="math inline">\(g_i(x)\)</span> 不是一次多项式，那么Lagrange插值多项式就无法使用了，必须按照上面的步骤来。</p>
+<h2 id="因式分解与不可约多项式">因式分解与不可约多项式</h2>
+<h3 id="不可约多项式">不可约多项式</h3>
+<p>对于 <span class="math inline">\(F[x]\)</span> 上的非常值多项式 <span class="math inline">\(p(x)\)</span>，若其因式全体恰为平凡因式，那么称 <span class="math inline">\(p(x)\)</span> 是 <span class="math inline">\(F[x]\)</span> 上的<strong>不可约多项式</strong>；否则，<span class="math inline">\(p(x)\)</span> 是 <span class="math inline">\(F[x]\)</span> 上的可约多项式。</p>
+<p>按照定义，一次多项式均为不可约多项式。注意，多项式是否可约与其数域有密切联系，例如 <span class="math inline">\(x^2+1\)</span> 在实数域上是不可约多项式，在复数域上就是可约多项式了。</p>
+<p>不可约多项式在多项式中的地位就类似于素数在整数中的地位，也具有一系列特殊性质。</p>
+<h4 id="不可约多项式的性质">不可约多项式的性质</h4>
+<ol type="1">
+<li>不可约多项式 <span class="math inline">\(p(x)\)</span> 和数域中任一多项式 <span class="math inline">\(f(x)\)</span> 只可能存在两种关系，要么 <span class="math inline">\(p(x)\)</span> 是 <span class="math inline">\(f(x)\)</span> 的因式，要么 <span class="math inline">\(p(x)\)</span> 和 <span class="math inline">\(f(x)\)</span> 互素</li>
+<li>若不可约多项式 <span class="math inline">\(p(x)\)</span> 和多项式 <span class="math inline">\(f(x), g(x)\)</span> 之间满足 <span class="math inline">\(p(x)|f(x)g(x)\)</span>，那么有 <span class="math inline">\(p(x)|f(x)\)</span> 或 <span class="math inline">\(p(x)|g(x)\)</span> 之中至少一项成立</li>
+<li>若不可约多项式 <span class="math inline">\(p(x)\)</span> 和 <span class="math inline">\(n\)</span> 个多项式 <span class="math inline">\(f_i(x)\)</span> 之间满足 <span class="math inline">\(p(x)|\prod_if_i(x)\)</span>，则至少有 <span class="math inline">\(p(x)|f_i(x)\)</span> 之中的一项成立</li>
+</ol>
+<h4 id="不可约多项式的判定条件">不可约多项式的判定条件</h4>
+<p>在复数域上，一个多项式不可约的充要条件是该多项式为一次多项式，这可以由<strong>代数学基本定理</strong>推得：任意一个n次复数多项式恰有n个根。</p>
+<p>在实数域上，情况会稍微复杂一些，一个多项式不可约的充要条件是满足以下两个条件的其中一个：</p>
+<ol type="1">
+<li>多项式为一次实数多项式</li>
+<li>多项式是无实根的二次实数多项式</li>
+</ol>
+<h3 id="因式分解的唯一性">因式分解的唯一性</h3>
+<p>对于任一 <span class="math inline">\(f(x) \in F[x]\)</span>，都可以分解为有限个不可约多项式的乘积，而且这个分解在不考虑非0常数多项式因子的时候是唯一的。可以将所有不可约多项式因式的最高次项系数提取出来，然后将相同的不可约因式用幂次表示，可以将数域上的任一多项式表示为</p>
+<p><span class="math display">\[
+f(x) = a\prod_i p_i^{\alpha_i}(x)
+\]</span></p>
+<p>这样的表达式称为多项式 <span class="math inline">\(f(x)\)</span> 在数域 <span class="math inline">\(F[x]\)</span> 上的<strong>标准分解式</strong>。显然，如果两个多项式的标准分解式已知，那么很容易直接写出这两个多项式的最大公因式。</p>
+<h4 id="复数多项式的因式分解定理">复数多项式的因式分解定理</h4>
+<p>根据复数多项式因式分解的充要条件，任一复数多项式可以分解为以下形式</p>
+<p><span class="math display">\[
+f(x) = a\prod_i (x-r_i)^{\alpha_i}
+\]</span></p>
+<h4 id="实数多项式的因式分解定理">实数多项式的因式分解定理</h4>
+<p>实数多项式的因式分解和复数多项式是类似的，区别在于实数多项式还可能分解出无实根的二次多项式因式</p>
+<p><span class="math display">\[
+f(x) = a \prod_i (x-r_i)^{\alpha_i} \prod_j (x^2 + q_jx+p_j)^{\alpha_j}
+\]</span></p>
+<h3 id="因式分解是困难的">因式分解是困难的</h3>
+<p>因式分解定理只是证明了多项式可以分解为标准分解式，但是并没有给出具体的分解方法。事实上，高次实数、复数多项式基本上是无法进行分解的。但至少，实数、复数多项式是否可约是很好判断的，而对于有理数多项式而言，判断可约也是困难的。</p>
+<h3 id="eisenstein判别法">Eisenstein判别法</h3>
+<p>Eisenstein给出了一种对于有理数多项式的充分但不一定是必要的判别方法。假如一个有理数多项式能够通过提取系数，表示为一个有理数与一个整数多项式之积，那么如果存在一个素数，满足</p>
+<ol type="1">
+<li>该素数无法整除整数多项式最高次项系数，且该素数的平方无法整数整数多项式常数项次数</li>
+<li>该素数可以整除除了整数多项式最高次项和常数项系数以外的所有项系数</li>
+</ol>
+<p>那么原有理数多项式就是可约的。</p>
+<h2 id="多项式的导数">多项式的导数</h2>
+<p>多项式的求导很容易，下面主要讨论多项式导数的两个重要用途。</p>
+<h3 id="判断多项式是否有重根">判断多项式是否有重根</h3>
+<p>通过判断多项式与其导数多项式是否互素，可以判断多项式是否在复数域上有重根。多项式 <span class="math inline">\(f(x)\)</span> 在复数域上没有重根的充要条件是 <span class="math inline">\(gcd(f(x), f&#39;(x)) = 1\)</span>，即 <span class="math inline">\(f(x)\)</span> 与 <span class="math inline">\(f&#39;(x)\)</span> 互素。</p>
+<h3 id="计算多项式关于高次因子的余式">计算多项式关于高次因子的余式</h3>
+<p>首先，对于一个连续函数，我们知道可以用泰勒公式对其进行无穷级数展开</p>
+<p><span class="math display">\[
+f(x) = \sum_{i=1}^{\infty}\frac{f^{(i)}(x_0)}{i!}(x-x_0)^{i}
+\]</span></p>
+<p>对于一个 <span class="math inline">\(n\)</span> 次多项式来说，可以用截止第 <span class="math inline">\(n\)</span> 项的泰勒级数来表示</p>
+<p><span class="math display">\[
+f_n(x) = \sum_{i=1}^n\frac{f_n^{(i)}(x_0)}{i!}(x-x_0)^i
+\]</span></p>
+<p>根据这个级数展开，很容易得到</p>
+<p><span class="math display">\[
+f_n(x) \equiv \sum_{i=1}^{m-1}\frac{f_n^{(i)}(x_0)}{i!}(x-x_0)^i \ mod \ (x-x_0)^m
+\]</span></p>
+<h2 id="零化多项式">零化多项式</h2>
+<p>下面用一个例子来引出零化多项式。</p>
+<p>假如我们想要求出 <span class="math inline">\(f(x) = 2x^3 - x^2 - 5x + 4\)</span> 在 <span class="math inline">\(x=\sqrt{2}+1\)</span> 时的值，可以通过代入 <span class="math inline">\(x\)</span> 的值的方式进行求解，但是当多项式次数很高时，计算量非常大。由于已知 <span class="math inline">\(x=\sqrt{2}+1\)</span>，那么有 <span class="math inline">\((x-1)^2=2\)</span>，即 <span class="math inline">\(x^2 -2x-1=0\)</span>。那么我们可以用 <span class="math inline">\(x^2 -2x-1=0\)</span> 去除 <span class="math inline">\(f(x)\)</span>，然后得到一个次数较低的余式，将 <span class="math inline">\(x=\sqrt{2}+1\)</span> 代入这个次数较低的余式，得到的结果和直接代入原多项式是一致的，因为因式 <span class="math inline">\(x^2-2x-1\)</span> 一定等于0，从而实现计算量的降低。</p>
+<p>在代数上，如果常数 <span class="math inline">\(c\)</span> 是某一多项式的根，那么称 <span class="math inline">\(f(x)\)</span> 为 <span class="math inline">\(c\)</span> 的一个<strong>零化多项式</strong>。注意，不是所有常数都存在零化多项式的，有零化多项式的常数称为<strong>代数数</strong>，没有零化多项式的常数称为<strong>超越数</strong>，例如 <span class="math inline">\(e, \pi\)</span> 等。</p>
+<p>关于零化多项式，还有一个定理：某个常数 <span class="math inline">\(c\)</span> 的两个零化多项式的最大公因式也是 <span class="math inline">\(c\)</span> 的零化多项式。另外，一个常数 <span class="math inline">\(c\)</span> 如果有零化多项式，那么这个零化多项式中一定存在一类次数最小的多项式，称为常数 <span class="math inline">\(c\)</span> 的<strong>最小多项式</strong>。</p>
+]]></content>
+      <categories>
+        <category>University</category>
+      </categories>
+      <tags>
+        <tag>Mathematics</tag>
+        <tag>Matrix Analysis</tag>
       </tags>
   </entry>
   <entry>
