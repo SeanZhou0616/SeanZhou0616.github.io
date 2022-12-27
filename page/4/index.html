@@ -159,7 +159,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -208,6 +208,211 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/" class="post-title-link" itemprop="url">统计学习方法-模型评估与选择</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-02 21:54:15 / 修改时间：22:03:49" itemprop="dateCreated datePublished" datetime="2022-11-02T21:54:15+08:00">2022-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Computer-Science/" itemprop="url" rel="index"><span itemprop="name">Computer Science</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="模型评估参数">模型评估参数</h2>
+<h3 id="训练误差">训练误差</h3>
+<p>将训练得到的模型记为 <span class="math inline">\(Y = \hat f(X)\)</span>，那么训练误差就是模型 <span class="math inline">\(\hat f\)</span> 在训练集 <span class="math inline">\(T\)</span> 中的经验风险函数。</p>
+<p><span class="math display">\[
+R_{emp}(\hat f) = \frac{1}{N}\sum^N_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \in T
+\]</span></p>
+<h3 id="测试误差">测试误差</h3>
+<p>测试误差指的是模型 <span class="math inline">\(\hat f\)</span> 在测试集中的经验风险函数。</p>
+<p><span class="math display">\[
+e_{test} = \frac{1}{N&#39;}\sum^{N&#39;}_{i=1}L(y_i, \hat f(x_i)), (x_i, y_i) \in T_{test}
+\]</span></p>
+<h3 id="模型评估方法">模型评估方法</h3>
+<p>训练误差对于模型的好坏评价意义不大，主要用来判断假设空间选取是否合适；测试误差对于模型的泛化能力评估意义比较大。</p>
+<h2 id="交叉验证-cross-validation">交叉验证 Cross Validation</h2>
+<p>为了更好地评估训练得到模型的性能，交叉验证是必要的。利用测试集进行模型泛化能力的评估是交叉验证的结果，本小节的重点是记录交叉验证的方法，或者说如何进行训练集和测试集的划分。</p>
+<h3 id="简单交叉验证">简单交叉验证</h3>
+<p>随机将数据集的70%作为训练集，剩余30%作为测试集。</p>
+<h3 id="s折交叉验证-s-fold">S折交叉验证 S-Fold</h3>
+<p>S折交叉验证是工业中最常用的交叉验证方法，因为这种方法能最大程度上发挥数据集的作用。具体的做法是，将数据集随机分成S个子集，随后进行S次迭代，每一次迭代都将S个子集中的其中一个子集作为测试集，其他的S-1个子集作为训练集。经过S次迭代之后，选出平均测试误差最小的模型作为最优模型。</p>
+<h3 id="留一交叉验证-leave-one-cut">留一交叉验证 Leave-one-cut</h3>
+<p>留一交叉验证是S折交叉验证的一种特殊情况，即取S的值为样本容量。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://seanzhou0616.github.io/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/Yeah.jpg">
+      <meta itemprop="name" content="Sean Zhou">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elysium">
+      <meta itemprop="description" content="Sean Zhou's personal blog.">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Elysium">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/" class="post-title-link" itemprop="url">统计学习方法-无监督学习概述</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-02 21:45:40 / 修改时间：22:04:21" itemprop="dateCreated datePublished" datetime="2022-11-02T21:45:40+08:00">2022-11-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Computer-Science/" itemprop="url" rel="index"><span itemprop="name">Computer Science</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>本文是李航老师的《统计学习方法》无监督学习部分的学习笔记。</p>
+<h2 id="概述">概述</h2>
+<h3 id="特征">特征</h3>
+<ul>
+<li>数据集无标签 <span class="math inline">\(U = \{x_1, x_2, ..., x_n\}\)</span></li>
+</ul>
+<p>一般用 <span class="math inline">\(z=g_{\theta}(x)\)</span> 或 <span class="math inline">\(P_{\theta}(z|x)\)</span> 来表示模型，其中 <span class="math inline">\(z\)</span> 表示分析结果，以与监督学习区分。</p>
+<h3 id="常用方法">常用方法</h3>
+<ol type="1">
+<li>聚类</li>
+<li>降维 Dimensionality Reduction</li>
+<li>概率模型估计
+<ol type="1">
+<li>混合模型</li>
+<li>概率图模型
+<ol type="1">
+<li>有向图模型</li>
+<li>无向图模型</li>
+</ol></li>
+</ol></li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/11/02/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%BF%B0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
