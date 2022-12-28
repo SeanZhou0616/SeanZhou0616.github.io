@@ -359,9 +359,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2022-12-27 11:49:05 / 修改时间：14:28:16" itemprop="dateCreated datePublished" datetime="2022-12-27T11:49:05+08:00">2022-12-27</time>
+      <time title="创建时间：2022-12-27 11:49:05" itemprop="dateCreated datePublished" datetime="2022-12-27T11:49:05+08:00">2022-12-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-12-28 09:43:01" itemprop="dateModified" datetime="2022-12-28T09:43:01+08:00">2022-12-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -385,55 +391,14 @@
     <div class="post-body" itemprop="articleBody">
           <h2 id="本章主要内容">本章主要内容</h2>
 <p>本章主要研究两类问题，一类是一阶常微分方程的初值问题，另一类是二阶常微分方程的边值问题。</p>
-<p>一阶常微分方程的初值问题是本章研究的主要问题，形式如下</p>
-<p><span class="math display">\[
-\begin{cases}
-    \boldsymbol{y}&#39; = \boldsymbol{f}(x, \boldsymbol{y}), \ x \in [a, b] \\
-    \boldsymbol{y}(\boldsymbol{a}) = \boldsymbol{y}_0
-\end{cases}
-\]</span></p>
-<p>其中 <span class="math inline">\(\boldsymbol{y}(x)\)</span> 是定义在 <span class="math inline">\([a, b]\)</span> 上的m维函数向量，<span class="math inline">\(\boldsymbol{f}(x, \boldsymbol{y})\)</span> 是定义在m+1维区域</p>
-<p><span class="math display">\[
-G = \{(x, \boldsymbol{y})|x \in [a, b], \boldsymbol{y} \in \mathbb{R^m}\}
-\]</span></p>
-<p>上的m维已知函数向量。假如 <span class="math inline">\(\boldsymbol{f}(x, \boldsymbol{y})\)</span> 在区域 <span class="math inline">\(G\)</span> 上连续，且关于 <span class="math inline">\(\boldsymbol{y}\)</span> 满足Lipschitz条件，那么初值问题存在唯一解，且解连续依赖于初始条件和右端项。本章主要研究 <span class="math inline">\(m=1\)</span> 时的一阶常微分方程组初值问题。</p>
-<p>Lipschitz条件，指的是对于任意 <span class="math inline">\(x\in[a, b], \boldsymbol{y} \in \mathbb{R}^m, \boldsymbol{z}\in\mathbb{R}^m\)</span>，总存在 <span class="math inline">\(L&gt;0\)</span> 满足</p>
-<p><span class="math display">\[
-||\boldsymbol{f}(x, \boldsymbol{y}) - \boldsymbol{f}(x, \boldsymbol{z})|| \leq L||\boldsymbol{y} - \boldsymbol{z}||
-\]</span></p>
-<p>二阶常微分方程的边值问题，指的是对于以下形式的方程组</p>
-<p><span class="math display">\[
-\begin{cases}
-    -y&#39;&#39; + q(x) y = f(x), \ x\in[a, b]\\
-    y(a) = \alpha, \ y(b) = \beta
-\end{cases}
-\]</span></p>
-<p>其中 <span class="math inline">\(q(x), f(x)\)</span> 在区间 <span class="math inline">\([a, b]\)</span> 上连续，<span class="math inline">\(q(x) &gt;0\)</span>。这里也可以假设上述边值问题存在唯一解，且解连续依赖于边界条件以及右端项。</p>
-<p>注意，上面两类问题的解指的是 <span class="math inline">\(\boldsymbol{y} = \boldsymbol{y}(x)\)</span> 这一函数向量在区间 <span class="math inline">\([a,b]\)</span> 上的数值分布。本章内考虑 <span class="math inline">\(\boldsymbol{y}\)</span> 在区间 <span class="math inline">\([a,b]\)</span> 上的定步长分布。</p>
-<h2 id="欧拉公式及其改进">欧拉公式及其改进</h2>
-<h3 id="欧拉公式">欧拉公式</h3>
-<p>欧拉公式是解一阶常微分方程初值问题的一种古老方法，基本思路是用 <span class="math inline">\(\boldsymbol{y}\)</span> 的差商近似 <span class="math inline">\(\boldsymbol{y}&#39;\)</span>，从而将微分问题转为代数问题。下面仅考虑 <span class="math inline">\(m=1\)</span> 的问题，所以 <span class="math inline">\(y\)</span> 不再加粗表示。</p>
-<p>欧拉公式的思路如下：</p>
-<p>在点 <span class="math inline">\(x = x_n\)</span> 处，有</p>
-<p><span class="math display">\[
-y&#39;(x_n) = f(x_n, y(x_n))
-\]</span></p>
-<p>用差商近似一阶微分，有</p>
-<p><span class="math display">\[
-y&#39;(x_n) \approx \frac{y(x_{n+1}) - y(x_n)}{h}
-\]</span></p>
-<p>其中 <span class="math inline">\(h\)</span> 为步长，即 <span class="math inline">\(x_{n+1} - x_n\)</span>。那么，原微分方程可改写为</p>
-<p><span class="math display">\[
-y(x_{n+1}) \approx y(x_n)+hf(x_n, y(x_n))
-\]</span></p>
-<p>由于 <span class="math inline">\(y(x_n)\)</span> 的真值是未知的，所以只能用 <span class="math inline">\(y(x_n)\)</span> 的近似值来替代真值。注意，初值 <span class="math inline">\(y(a) = y_0\)</span> 是已知的，那么从 <span class="math inline">\(x_0=a\)</span> 出发，代入上述代数方程，可以得到近似值序列 <span class="math inline">\(\{y_n\}\)</span>。也就是说，欧拉公式的形式如下</p>
-<p><span class="math display">\[
-y_{n+1} = y_n + hf(x_n, y_n)
-\]</span></p>
-<p>欧拉公式有明确的几何意义。对于一阶常微分方程 <span class="math inline">\(y&#39; = f(x, y)\)</span>，本质上描述的是从已知的一点 <span class="math inline">\((a, y_0)\)</span> 出发，在区间 <span class="math inline">\([a, b]\)</span> 上形成的一条连续曲线；而欧拉公式则相当于用一条折线去近似这条连续曲线。很显然，当 <span class="math inline">\(h\rightarrow 0\)</span> 时，欧拉公式的解也趋向于真值。欧拉公式因其明确的几何意义，又被称为欧拉折线法。</p>
-<h3 id="欧拉公式的改进">欧拉公式的改进</h3>
-<p>欧拉折线法的数值误差比较大，而且误差随着区间长度的增长而增大，离初值点越远误差越大。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/12/27/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E7%AC%94%E8%AE%B0-%E5%B8%B8%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B%E5%88%9D%E8%BE%B9%E5%80%BC%E9%97%AE%E9%A2%98%E6%95%B0%E5%80%BC%E8%A7%A3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
